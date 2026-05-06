@@ -1,5 +1,7 @@
 # @gtk-js/gtk-css
 
+## 0.1.2
+
 ## 0.1.1
 
 ### Patch Changes

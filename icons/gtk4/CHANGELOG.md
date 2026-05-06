@@ -1,5 +1,11 @@
 # @gtk-js/gtk4-icons
 
+## 0.1.2
+
+### Patch Changes
+
+- @gtk-js/icon-helpers@0.1.2
+
 ## 0.1.1
 
 ### Patch Changes
