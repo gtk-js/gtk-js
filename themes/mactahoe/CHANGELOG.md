@@ -1,5 +1,11 @@
 # @gtk-js/theme-mactahoe
 
+## 0.0.3
+
+### Patch Changes
+
+- @gtk-js/gtk-css@0.1.2
+
 ## 0.0.2
 
 ### Patch Changes

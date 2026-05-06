@@ -1,5 +1,13 @@
 # @gtk-js/gtk4
 
+## 0.1.2
+
+### Patch Changes
+
+- c85b2c6: Fix allocateShadow MutationObserver not being created when theme CSS hasn't been injected yet
+  - @gtk-js/icon-helpers@0.1.2
+  - @gtk-js/icons-gtk4@0.1.2
+
 ## 0.1.1
 
 ### Patch Changes

@@ -1,5 +1,14 @@
 # @gtk-js/adwaita
 
+## 0.1.2
+
+### Patch Changes
+
+- Updated dependencies [c85b2c6]
+  - @gtk-js/gtk4@0.1.2
+  - @gtk-js/icons-adwaita@0.1.2
+  - @gtk-js/theme-adwaita@0.0.3
+
 ## 0.1.1
 
 ### Patch Changes
