@@ -198,6 +198,11 @@ export const GtkWindow = forwardRef<HTMLDivElement, GtkWindowProps>(function Gtk
         characterData: true,
         attributes: true,
       });
+      // If the theme is a <link> stylesheet, mutations won't fire when it
+      // finishes loading — listen for the load event to re-measure.
+      if (themeNode.tagName === "LINK") {
+        themeNode.addEventListener("load", scheduleUpdate);
+      }
     } else {
       // Theme hasn't been injected yet — watch <head> for its creation,
       // then pivot to watching the theme node itself.
@@ -212,18 +217,24 @@ export const GtkWindow = forwardRef<HTMLDivElement, GtkWindowProps>(function Gtk
           characterData: true,
           attributes: true,
         });
+        if (node.tagName === "LINK") {
+          node.addEventListener("load", scheduleUpdate);
+        }
       });
       headObserver.observe(document.head, { childList: true });
 
       return () => {
         headObserver.disconnect();
         observer.disconnect();
+        const node = document.getElementById("gtk-js-theme");
+        if (node?.tagName === "LINK") node.removeEventListener("load", scheduleUpdate);
         if (frame) window.cancelAnimationFrame(frame);
       };
     }
 
     return () => {
       observer.disconnect();
+      if (themeNode.tagName === "LINK") themeNode.removeEventListener("load", scheduleUpdate);
       if (frame) window.cancelAnimationFrame(frame);
     };
   }, [allocateShadow, maximized]);
