@@ -185,22 +185,43 @@ export const GtkWindow = forwardRef<HTMLDivElement, GtkWindowProps>(function Gtk
       });
     };
 
+    const observer = new MutationObserver(() => {
+      scheduleUpdate();
+    });
+
     const themeNode = document.getElementById("gtk-js-theme");
-    if (!themeNode) {
+    if (themeNode) {
+      // Theme already exists — watch for CSS changes (e.g. color scheme switch).
+      observer.observe(themeNode, {
+        childList: true,
+        subtree: true,
+        characterData: true,
+        attributes: true,
+      });
+    } else {
+      // Theme hasn't been injected yet — watch <head> for its creation,
+      // then pivot to watching the theme node itself.
+      const headObserver = new MutationObserver(() => {
+        const node = document.getElementById("gtk-js-theme");
+        if (!node) return;
+        headObserver.disconnect();
+        scheduleUpdate();
+        observer.observe(node, {
+          childList: true,
+          subtree: true,
+          characterData: true,
+          attributes: true,
+        });
+      });
+      headObserver.observe(document.head, { childList: true });
+
       return () => {
+        headObserver.disconnect();
+        observer.disconnect();
         if (frame) window.cancelAnimationFrame(frame);
       };
     }
 
-    const observer = new MutationObserver(() => {
-      scheduleUpdate();
-    });
-    observer.observe(themeNode, {
-      childList: true,
-      subtree: true,
-      characterData: true,
-      attributes: true,
-    });
     return () => {
       observer.disconnect();
       if (frame) window.cancelAnimationFrame(frame);
