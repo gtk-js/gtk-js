@@ -1,4 +1,4 @@
-# @gtk-js/gtk4-icons
+# @gtk-js/icons-gtk4
 
 ## 0.1.3
 
