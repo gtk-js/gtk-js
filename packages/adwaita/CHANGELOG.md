@@ -1,5 +1,14 @@
 # @gtk-js/adwaita
 
+## [0.1.6](https://github.com/gtk-js/gtk-js/compare/adwaita-v0.1.5...adwaita-v0.1.6) (2026-05-10)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @gtk-js/gtk4 bumped to 0.1.6
+
 ## 0.1.3
 
 ### Patch Changes

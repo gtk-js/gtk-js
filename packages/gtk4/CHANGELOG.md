@@ -1,5 +1,12 @@
 # @gtk-js/gtk4
 
+## [0.1.6](https://github.com/gtk-js/gtk-js/compare/gtk4-v0.1.5...gtk4-v0.1.6) (2026-05-10)
+
+
+### Features
+
+* add useUnderline prop to GtkButton ([#31](https://github.com/gtk-js/gtk-js/issues/31)) ([5cfb75b](https://github.com/gtk-js/gtk-js/commit/5cfb75bb450e544312f032b6a3a2633ba75da081))
+
 ## 0.1.3
 
 ### Patch Changes

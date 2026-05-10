@@ -3,7 +3,7 @@
   "publishConfig": {
     "access": "public"
   },
-  "version": "0.1.5",
+  "version": "0.1.6",
   "type": "module",
   "main": "dist/index.js",
   "files": [
@@ -22,7 +22,7 @@
   },
   "dependencies": {
     "@gtk-js/icons-adwaita": "workspace:*",
-    "@gtk-js/gtk4": "workspace:*",
+    "@gtk-js/gtk4": "0.1.6",
     "@gtk-js/theme-adwaita": "workspace:*"
   },
   "devDependencies": {
