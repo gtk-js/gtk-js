@@ -5,10 +5,20 @@
   },
   "version": "0.1.2",
   "type": "module",
-  "main": "src/index.ts",
+  "main": "dist/index.js",
+  "files": [
+    "dist",
+    "src"
+  ],
   "exports": {
-    ".": "./src/index.ts",
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
     "./build": "./src/build-helpers.ts"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json && bun build src/index.ts --outdir dist --format esm --packages external"
   },
   "peerDependencies": {
     "react": "^18 || ^19"

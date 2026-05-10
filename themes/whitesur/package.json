@@ -4,16 +4,23 @@
     "access": "public"
   },
   "version": "0.0.3",
-  "main": "src/index.ts",
+  "main": "dist/index.js",
+  "files": [
+    "dist",
+    "src"
+  ],
   "dependencies": {
     "@gtk-js/gtk-css": "workspace:*",
     "fast-xml-parser": "^5.5.10"
   },
   "exports": {
-    ".": "./src/index.ts"
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
   },
   "scripts": {
-    "build": "bun build.ts"
+    "build": "bun build.ts && tsc -p tsconfig.build.json && bun build src/index.ts --outdir dist --format esm --packages external"
   },
   "type": "module"
 }
