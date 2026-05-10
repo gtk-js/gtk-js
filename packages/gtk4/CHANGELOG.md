@@ -1,5 +1,14 @@
 # @gtk-js/gtk4
 
+## 0.1.3
+
+### Patch Changes
+
+- 4b57fdb: Bundle packages with `bun build` before publishing. CSS text imports (`with { type: "text" }`) are now inlined as string literals, fixing compatibility with Vite and other bundlers that don't support import attributes. Package exports now point to compiled ESM with `.d.ts` declarations rather than raw TypeScript source.
+- Updated dependencies [4b57fdb]
+  - @gtk-js/icon-helpers@0.1.3
+  - @gtk-js/icons-gtk4@0.1.3
+
 ## 0.1.2
 
 ### Patch Changes
