@@ -1,4 +1,4 @@
-# @gtk-js/adwaita-icons
+# @gtk-js/icons-adwaita
 
 ## 0.1.3
 
