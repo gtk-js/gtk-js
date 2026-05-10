@@ -48,13 +48,13 @@ export { AdwExpanderRow } from "./components/expander-row.tsx";
 export type { AdwHeaderBarProps } from "./components/header-bar.tsx";
 // Phase 5: Navigation & Layout
 export { AdwHeaderBar } from "./components/header-bar.tsx";
+export type { AdwNavigationSplitViewProps } from "./components/navigation-split-view.tsx";
+export { AdwNavigationSplitView } from "./components/navigation-split-view.tsx";
 export type {
   AdwNavigationPageProps,
   AdwNavigationViewProps,
 } from "./components/navigation-view.tsx";
 export { AdwNavigationView, useNavigation } from "./components/navigation-view.tsx";
-export type { AdwNavigationSplitViewProps } from "./components/navigation-split-view.tsx";
-export { AdwNavigationSplitView } from "./components/navigation-split-view.tsx";
 export type { AdwOverlaySplitViewProps } from "./components/overlay-split-view.tsx";
 export { AdwOverlaySplitView } from "./components/overlay-split-view.tsx";
 export type { AdwPasswordEntryRowProps } from "./components/password-entry-row.tsx";
