@@ -189,8 +189,25 @@ const remapPseudoClasses: Plugin = {
   Rule(rule) {
     let sel = rule.selector;
 
-    // :backdrop → [data-backdrop]
-    sel = sel.replace(/:backdrop/g, "[data-backdrop]");
+    // :backdrop → window-level propagating state.
+    // In upstream GTK, GTK_STATE_FLAG_BACKDROP propagates to ALL descendants
+    // (via GTK_STATE_FLAGS_DO_SET_PROPAGATE in gtkwidget.c:488-489).
+    // So ".gtk-headerbar:backdrop" means "headerbar in an unfocused window".
+    // We set [data-backdrop] only on the .gtk-window element and rewrite
+    // selectors to use ancestor matching for descendants.
+    sel = sel
+      .split(",")
+      .map((s) => {
+        s = s.trim();
+        if (!s.includes(":backdrop")) return s;
+        if (/\.gtk-window[\w.-]*:backdrop/.test(s)) {
+          // Selector targets the window itself — apply attribute directly
+          return s.replace(/:backdrop/g, "[data-backdrop]");
+        }
+        // Selector targets a descendant — prepend window ancestor
+        return `.gtk-window[data-backdrop] ${s.replace(/:backdrop/g, "")}`;
+      })
+      .join(", ");
 
     // :drop(active) → [data-drop-active]
     sel = sel.replace(/:drop\(active\)/g, "[data-drop-active]");

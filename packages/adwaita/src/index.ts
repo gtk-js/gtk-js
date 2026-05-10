@@ -48,6 +48,8 @@ export { AdwExpanderRow } from "./components/expander-row.tsx";
 export type { AdwHeaderBarProps } from "./components/header-bar.tsx";
 // Phase 5: Navigation & Layout
 export { AdwHeaderBar } from "./components/header-bar.tsx";
+export type { AdwLeafletPageProps, AdwLeafletProps } from "./components/leaflet.tsx";
+export { AdwLeaflet, AdwLeafletPage, useLeafletNavigation } from "./components/leaflet.tsx";
 export type { AdwNavigationSplitViewProps } from "./components/navigation-split-view.tsx";
 export { AdwNavigationSplitView } from "./components/navigation-split-view.tsx";
 export type {

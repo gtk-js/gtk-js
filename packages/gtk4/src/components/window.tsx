@@ -4,6 +4,7 @@ import {
   type HTMLAttributes,
   type ReactNode,
   useCallback,
+  useEffect,
   useLayoutEffect,
   useMemo,
   useRef,
@@ -311,6 +312,22 @@ export const GtkWindow = forwardRef<HTMLDivElement, GtkWindowProps>(function Gtk
     };
   }, [allocateShadow, maximized]);
 
+  // Backdrop state: GTK windows darken when unfocused.
+  // The Adwaita CSS uses :backdrop (transformed to [data-backdrop] by gtk-css).
+  // @see upstream/gtk/gtk/gtkwindow.c — gtk_window_focus_in/out
+  const [backdrop, setBackdrop] = useState(!document.hasFocus());
+
+  useEffect(() => {
+    const onFocus = () => setBackdrop(false);
+    const onBlur = () => setBackdrop(true);
+    window.addEventListener("focus", onFocus);
+    window.addEventListener("blur", onBlur);
+    return () => {
+      window.removeEventListener("focus", onFocus);
+      window.removeEventListener("blur", onBlur);
+    };
+  }, []);
+
   const showHandles = allocateShadow && !maximized && !!onResize;
 
   const windowElement = (
@@ -321,6 +338,7 @@ export const GtkWindow = forwardRef<HTMLDivElement, GtkWindowProps>(function Gtk
       style={
         allocateShadow ? { width: "100%", height: "100%", position: "relative", ...style } : style
       }
+      data-backdrop={backdrop || undefined}
       {...rest}
     >
       {titlebar && <div className="titlebar">{titlebar}</div>}
