@@ -7,6 +7,21 @@ import React, {
 } from "react";
 import { alignAttrs, type GtkAlignProps } from "../types.ts";
 
+/** Parse a mnemonic label: `_Save` → renders "S" with a low underline. */
+function parseMnemonicLabel(text: string): ReactNode {
+  const idx = text.indexOf("_");
+  if (idx === -1 || idx === text.length - 1) return text;
+  return (
+    <>
+      {text.slice(0, idx)}
+      <span style={{ textDecoration: "underline", textUnderlinePosition: "under" }}>
+        {text[idx + 1]}
+      </span>
+      {text.slice(idx + 2)}
+    </>
+  );
+}
+
 export interface GtkButtonProps
   extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, "children">,
     GtkAlignProps {
@@ -18,6 +33,8 @@ export interface GtkButtonProps
   hasFrame?: boolean;
   /** Whether the label can shrink (ellipsize). */
   canShrink?: boolean;
+  /** Whether underlines in the label indicate mnemonics. */
+  useUnderline?: boolean;
   /** Callback when the button is clicked. */
   onClicked?: () => void;
   /** Custom child widget. Overrides label/iconName if provided. */
@@ -39,6 +56,7 @@ export const GtkButton = forwardRef<HTMLButtonElement, GtkButtonProps>(function 
     iconName,
     hasFrame = true,
     canShrink = false,
+    useUnderline = false,
     onClicked,
     children,
     halign,
@@ -113,7 +131,7 @@ export const GtkButton = forwardRef<HTMLButtonElement, GtkButtonProps>(function 
               className="gtk-label"
               style={canShrink ? { overflow: "hidden", textOverflow: "ellipsis" } : undefined}
             >
-              {label}
+              {useUnderline ? parseMnemonicLabel(label!) : label}
             </span>
           )}
         </>
