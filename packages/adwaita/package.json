@@ -5,13 +5,20 @@
   },
   "version": "0.1.2",
   "type": "module",
-  "main": "src/index.ts",
+  "main": "dist/index.js",
+  "files": [
+    "dist",
+    "src"
+  ],
   "exports": {
-    ".": "./src/index.ts",
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
     "./adwaita.css": "./dist/adwaita.css"
   },
   "scripts": {
-    "build:css": "bun build.ts"
+    "build": "bun build.ts && tsc -p tsconfig.build.json && bun build src/index.ts --outdir dist --format esm --packages external"
   },
   "dependencies": {
     "@gtk-js/icons-adwaita": "workspace:*",

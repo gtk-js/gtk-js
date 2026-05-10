@@ -1,17 +1,13 @@
 import React, {
   forwardRef,
   type HTMLAttributes,
-  type ReactNode,
   useCallback,
   useEffect,
   useLayoutEffect,
   useRef,
   useState,
 } from "react";
-import {
-  type AdwNavigationPageProps,
-  NavContext,
-} from "./navigation-view.tsx";
+import { type AdwNavigationPageProps, NavContext } from "./navigation-view.tsx";
 
 // Re-export the page props type for consumers
 export type { AdwNavigationPageProps };
@@ -157,13 +153,10 @@ function CollapsedNavigator({
     let transform = "translateX(0)";
     let transitionStyle = "none";
     let zIndex = 0;
-    let onTransitionEnd:
-      | ((event: React.TransitionEvent<HTMLDivElement>) => void)
-      | undefined;
+    let onTransitionEnd: ((event: React.TransitionEvent<HTMLDivElement>) => void) | undefined;
 
     if (activeTransition) {
-      transitionStyle =
-        activeTransition.phase === "running" ? PAGE_TRANSITION : "none";
+      transitionStyle = activeTransition.phase === "running" ? PAGE_TRANSITION : "none";
       const isPush = activeTransition.direction === "push";
       const isEntering = role === "entering";
 
@@ -181,8 +174,7 @@ function CollapsedNavigator({
         zIndex = isEntering ? 1 : 0;
         // Only the entering page listens for transitionEnd to clear the transition
         if (isEntering) {
-          onTransitionEnd = (event) =>
-            handleTransitionEnd(event, activeTransition.key);
+          onTransitionEnd = (event) => handleTransitionEnd(event, activeTransition.key);
         }
       }
     }
@@ -261,68 +253,62 @@ const uncollapsedNavContext = {
  *
  * @see https://gnome.pages.gitlab.gnome.org/libadwaita/doc/1-latest/class.NavigationSplitView.html
  */
-export const AdwNavigationSplitView = forwardRef<
-  HTMLDivElement,
-  AdwNavigationSplitViewProps
->(function AdwNavigationSplitView(
-  {
-    sidebar,
-    content,
-    collapsed = false,
-    showContent = false,
-    sidebarWidthFraction = 0.25,
-    minSidebarWidth = 180,
-    maxSidebarWidth = 280,
-    onShowContentChanged,
-    className,
-    style,
-    ...rest
-  },
-  ref,
-) {
-  const classes = ["gtk-navigation-split-view"];
-  if (collapsed) classes.push("collapsed");
-  if (className) classes.push(className);
+export const AdwNavigationSplitView = forwardRef<HTMLDivElement, AdwNavigationSplitViewProps>(
+  function AdwNavigationSplitView(
+    {
+      sidebar,
+      content,
+      collapsed = false,
+      showContent = false,
+      sidebarWidthFraction = 0.25,
+      minSidebarWidth = 180,
+      maxSidebarWidth = 280,
+      onShowContentChanged,
+      className,
+      style,
+      ...rest
+    },
+    ref,
+  ) {
+    const classes = ["gtk-navigation-split-view"];
+    if (collapsed) classes.push("collapsed");
+    if (className) classes.push(className);
 
-  if (collapsed) {
+    if (collapsed) {
+      return (
+        <div ref={ref} className={classes.join(" ")} style={style} {...rest}>
+          <CollapsedNavigator
+            sidebar={sidebar}
+            content={content}
+            showContent={showContent}
+            onShowContentChanged={onShowContentChanged}
+          />
+        </div>
+      );
+    }
+
     return (
-      <div
-        ref={ref}
-        className={classes.join(" ")}
-        style={style}
-        {...rest}
-      >
-        <CollapsedNavigator
-          sidebar={sidebar}
-          content={content}
-          showContent={showContent}
-          onShowContentChanged={onShowContentChanged}
-        />
-      </div>
-    );
-  }
-
-  return (
-    <NavContext.Provider value={uncollapsedNavContext}>
-      <div
-        ref={ref}
-        className={classes.join(" ")}
-        style={{ display: "flex", ...style }}
-        {...rest}
-      >
+      <NavContext.Provider value={uncollapsedNavContext}>
         <div
-          className="widget sidebar-pane"
-          style={{
-            width: `clamp(${minSidebarWidth}px, ${sidebarWidthFraction * 100}%, ${maxSidebarWidth}px)`,
-            flexShrink: 0,
-          }}
+          ref={ref}
+          className={classes.join(" ")}
+          style={{ display: "flex", ...style }}
+          {...rest}
         >
-          {sidebar.children}
+          <div
+            className="widget sidebar-pane"
+            style={{
+              width: `clamp(${minSidebarWidth}px, ${sidebarWidthFraction * 100}%, ${maxSidebarWidth}px)`,
+              flexShrink: 0,
+            }}
+          >
+            {sidebar.children}
+          </div>
+          <div className="widget content-pane" style={{ flex: 1, minWidth: 0 }}>
+            {content.children}
+          </div>
         </div>
-        <div className="widget content-pane" style={{ flex: 1, minWidth: 0 }}>
-          {content.children}
-        </div>
-      </div>
-    </NavContext.Provider>
-  );
-});
+      </NavContext.Provider>
+    );
+  },
+);

@@ -9,7 +9,7 @@
   ],
   "scripts": {
     "dev": "bun run --cwd packages/website dev",
-    "build:packages": "bun run --cwd themes/adwaita build && bun run --cwd themes/whitesur build && bun run --cwd themes/mactahoe build && bun run --cwd themes/fluent build && bun run --cwd packages/gtk4 build:css && bun run --cwd icons/gtk4 build && bun run --cwd packages/adwaita build:css && bun run --cwd icons/adwaita build && bun run --cwd icons/whitesur build && bun run --cwd icons/mactahoe build && bun run --cwd icons/fluent build",
+    "build:packages": "bun run --filter '!@gtk-js/website' build",
     "build": "bun run build:packages && bun run --cwd packages/website build",
     "check": "biome check . && tsc --noEmit && bun run --cwd packages/website tsc --noEmit",
     "fix": "biome check . --write",

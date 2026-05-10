@@ -95,10 +95,4 @@ for (const [key, css] of Object.entries(results)) {
   writeFileSync(`${outDir}${key}.css`, css);
 }
 
-// Write JS index that exports all variants as named string constants
-const indexLines = Object.keys(results).map(
-  (key) => `export { default as ${key} } from "./${key}.css" with { type: "text" };`,
-);
-writeFileSync(`${outDir}index.ts`, indexLines.join("\n") + "\n");
-
 console.log(`Built ${Object.keys(results).length} Fluent variants.`);

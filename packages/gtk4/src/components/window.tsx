@@ -1,6 +1,6 @@
 import {
-  forwardRef,
   type CSSProperties,
+  forwardRef,
   type HTMLAttributes,
   type ReactNode,
   useCallback,
@@ -93,15 +93,87 @@ type ResizeDirection =
 
 const HANDLE_EDGES: { direction: ResizeDirection; style: CSSProperties }[] = [
   // Edges
-  { direction: "North", style: { top: -HANDLE_SIZE / 2, left: HANDLE_SIZE, right: HANDLE_SIZE, height: HANDLE_SIZE, cursor: "n-resize" } },
-  { direction: "South", style: { bottom: -HANDLE_SIZE / 2, left: HANDLE_SIZE, right: HANDLE_SIZE, height: HANDLE_SIZE, cursor: "s-resize" } },
-  { direction: "West", style: { left: -HANDLE_SIZE / 2, top: HANDLE_SIZE, bottom: HANDLE_SIZE, width: HANDLE_SIZE, cursor: "w-resize" } },
-  { direction: "East", style: { right: -HANDLE_SIZE / 2, top: HANDLE_SIZE, bottom: HANDLE_SIZE, width: HANDLE_SIZE, cursor: "e-resize" } },
+  {
+    direction: "North",
+    style: {
+      top: -HANDLE_SIZE / 2,
+      left: HANDLE_SIZE,
+      right: HANDLE_SIZE,
+      height: HANDLE_SIZE,
+      cursor: "n-resize",
+    },
+  },
+  {
+    direction: "South",
+    style: {
+      bottom: -HANDLE_SIZE / 2,
+      left: HANDLE_SIZE,
+      right: HANDLE_SIZE,
+      height: HANDLE_SIZE,
+      cursor: "s-resize",
+    },
+  },
+  {
+    direction: "West",
+    style: {
+      left: -HANDLE_SIZE / 2,
+      top: HANDLE_SIZE,
+      bottom: HANDLE_SIZE,
+      width: HANDLE_SIZE,
+      cursor: "w-resize",
+    },
+  },
+  {
+    direction: "East",
+    style: {
+      right: -HANDLE_SIZE / 2,
+      top: HANDLE_SIZE,
+      bottom: HANDLE_SIZE,
+      width: HANDLE_SIZE,
+      cursor: "e-resize",
+    },
+  },
   // Corners
-  { direction: "NorthWest", style: { top: -HANDLE_SIZE / 2, left: -HANDLE_SIZE / 2, width: HANDLE_SIZE * 2, height: HANDLE_SIZE * 2, cursor: "nw-resize" } },
-  { direction: "NorthEast", style: { top: -HANDLE_SIZE / 2, right: -HANDLE_SIZE / 2, width: HANDLE_SIZE * 2, height: HANDLE_SIZE * 2, cursor: "ne-resize" } },
-  { direction: "SouthWest", style: { bottom: -HANDLE_SIZE / 2, left: -HANDLE_SIZE / 2, width: HANDLE_SIZE * 2, height: HANDLE_SIZE * 2, cursor: "sw-resize" } },
-  { direction: "SouthEast", style: { bottom: -HANDLE_SIZE / 2, right: -HANDLE_SIZE / 2, width: HANDLE_SIZE * 2, height: HANDLE_SIZE * 2, cursor: "se-resize" } },
+  {
+    direction: "NorthWest",
+    style: {
+      top: -HANDLE_SIZE / 2,
+      left: -HANDLE_SIZE / 2,
+      width: HANDLE_SIZE * 2,
+      height: HANDLE_SIZE * 2,
+      cursor: "nw-resize",
+    },
+  },
+  {
+    direction: "NorthEast",
+    style: {
+      top: -HANDLE_SIZE / 2,
+      right: -HANDLE_SIZE / 2,
+      width: HANDLE_SIZE * 2,
+      height: HANDLE_SIZE * 2,
+      cursor: "ne-resize",
+    },
+  },
+  {
+    direction: "SouthWest",
+    style: {
+      bottom: -HANDLE_SIZE / 2,
+      left: -HANDLE_SIZE / 2,
+      width: HANDLE_SIZE * 2,
+      height: HANDLE_SIZE * 2,
+      cursor: "sw-resize",
+    },
+  },
+  {
+    direction: "SouthEast",
+    style: {
+      bottom: -HANDLE_SIZE / 2,
+      right: -HANDLE_SIZE / 2,
+      width: HANDLE_SIZE * 2,
+      height: HANDLE_SIZE * 2,
+      cursor: "se-resize",
+    },
+  },
 ];
 
 /**
@@ -247,9 +319,7 @@ export const GtkWindow = forwardRef<HTMLDivElement, GtkWindowProps>(function Gtk
       className={classes.join(" ")}
       {...(!allocateShadow ? alignAttrs(halign, valign) : {})}
       style={
-        allocateShadow
-          ? { width: "100%", height: "100%", position: "relative", ...style }
-          : style
+        allocateShadow ? { width: "100%", height: "100%", position: "relative", ...style } : style
       }
       {...rest}
     >
