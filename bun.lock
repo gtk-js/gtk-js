@@ -13,7 +13,7 @@
     },
     "icons/adwaita": {
       "name": "@gtk-js/icons-adwaita",
-      "version": "0.1.0",
+      "version": "0.1.5",
       "dependencies": {
         "@gtk-js/icon-helpers": "workspace:*",
       },
@@ -26,7 +26,7 @@
     },
     "icons/fluent": {
       "name": "@gtk-js/icons-fluent",
-      "version": "0.1.0",
+      "version": "0.1.5",
       "dependencies": {
         "@gtk-js/icon-helpers": "workspace:*",
       },
@@ -39,7 +39,7 @@
     },
     "icons/gtk4": {
       "name": "@gtk-js/icons-gtk4",
-      "version": "0.1.0",
+      "version": "0.1.5",
       "dependencies": {
         "@gtk-js/icon-helpers": "workspace:*",
       },
@@ -52,7 +52,7 @@
     },
     "icons/mactahoe": {
       "name": "@gtk-js/icons-mactahoe",
-      "version": "0.1.0",
+      "version": "0.1.5",
       "dependencies": {
         "@gtk-js/icon-helpers": "workspace:*",
       },
@@ -65,7 +65,7 @@
     },
     "icons/whitesur": {
       "name": "@gtk-js/icons-whitesur",
-      "version": "0.1.0",
+      "version": "0.1.5",
       "dependencies": {
         "@gtk-js/icon-helpers": "workspace:*",
       },
@@ -78,7 +78,7 @@
     },
     "packages/adwaita": {
       "name": "@gtk-js/adwaita",
-      "version": "0.1.0",
+      "version": "0.1.5",
       "dependencies": {
         "@gtk-js/gtk4": "workspace:*",
         "@gtk-js/icons-adwaita": "workspace:*",
@@ -96,7 +96,7 @@
     },
     "packages/gtk-css": {
       "name": "@gtk-js/gtk-css",
-      "version": "0.1.0",
+      "version": "0.1.5",
       "dependencies": {
         "postcss": "^8.5.8",
         "sass": "^1.99.0",
@@ -104,7 +104,7 @@
     },
     "packages/gtk4": {
       "name": "@gtk-js/gtk4",
-      "version": "0.1.0",
+      "version": "0.1.5",
       "dependencies": {
         "@gtk-js/icon-helpers": "workspace:*",
         "@gtk-js/icons-gtk4": "workspace:*",
@@ -121,7 +121,7 @@
     },
     "packages/icon-helpers": {
       "name": "@gtk-js/icon-helpers",
-      "version": "0.1.0",
+      "version": "0.1.5",
       "devDependencies": {
         "@types/react": "^19",
       },
@@ -176,21 +176,21 @@
     },
     "themes/adwaita": {
       "name": "@gtk-js/theme-adwaita",
-      "version": "0.0.1",
+      "version": "0.0.6",
       "dependencies": {
         "@gtk-js/gtk-css": "workspace:*",
       },
     },
     "themes/fluent": {
       "name": "@gtk-js/theme-fluent",
-      "version": "0.0.1",
+      "version": "0.0.6",
       "dependencies": {
         "@gtk-js/gtk-css": "workspace:*",
       },
     },
     "themes/mactahoe": {
       "name": "@gtk-js/theme-mactahoe",
-      "version": "0.0.1",
+      "version": "0.0.6",
       "dependencies": {
         "@gtk-js/gtk-css": "workspace:*",
         "fast-xml-parser": "^5.5.10",
@@ -198,7 +198,7 @@
     },
     "themes/whitesur": {
       "name": "@gtk-js/theme-whitesur",
-      "version": "0.0.1",
+      "version": "0.0.6",
       "dependencies": {
         "@gtk-js/gtk-css": "workspace:*",
         "fast-xml-parser": "^5.5.10",
