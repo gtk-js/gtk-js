@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const DialogPassword = createGtkIcon("dialog-password", [["rect",{"x":"2","y":"2","width":"12","height":"12","rx":"2","fill":"currentColor"}],["path",{"d":"m8 2.9788194c-1.6568542 0-3 1.3431458-3 3v2.0211806h-1v5h7.975521v-5h-0.975521v-2.0211806c0-1.6568542-1.3431458-3-3-3zm0 1c1.1045695 0 2 0.8954305 2 2v2.0211806h-4v-2.0211806c0-1.1045695 0.8954305-2 2-2z","fill":"currentColor"}]]);
+export const DialogPassword = createGtkIcon("dialog-password", [["path",{"d":"m5 3c-1.108 0-2 0.892-2 2v12c0 1.108 0.892 2 2 2h12c1.108 0 2-0.892 2-2v-12c0-1.108-0.892-2-2-2h-12zm0 1h12c0.554 0 1 0.446 1 1v12c0 0.554-0.446 1-1 1h-12c-0.554 0-1-0.446-1-1v-12c0-0.554 0.446-1 1-1zm6 1a3 3 0 0 0-3 3v3h-2v6h10v-6h-2v-3a3 3 0 0 0-3-3zm0 1a2 2 0 0 1 2 2v3h-4v-3a2 2 0 0 1 2-2z","fill":"currentColor"}]]);

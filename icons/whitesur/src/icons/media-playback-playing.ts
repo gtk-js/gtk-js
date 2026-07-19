@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const MediaPlaybackPlaying = createGtkIcon("media-playback-playing", [["path",{"d":"m6 5v6l5-3z","fill":"currentColor"}],["path",{"d":"m8 0a8 8 0 0 0-8 8 8 8 0 0 0 8 8 8 8 0 0 0 8-8 8 8 0 0 0-8-8zm0 1a7 7 0 0 1 7 7 7 7 0 0 1-7 7 7 7 0 0 1-7-7 7 7 0 0 1 7-7z","fill":"currentColor"}]]);
+export const MediaPlaybackPlaying = createGtkIcon("media-playback-playing", [["path",{"d":"m11 3a8 8 0 0 0-8 8 8 8 0 0 0 8 8 8 8 0 0 0 8-8 8 8 0 0 0-8-8zm0 1a7 7 0 0 1 7 7 7 7 0 0 1-7 7 7 7 0 0 1-7-7 7 7 0 0 1 7-7z","fill":"currentColor"}],["path",{"d":"m9.498 7.5723c-0.26595 0.011578-0.49805 0.18369-0.49805 0.46875v5.9063c0 0.41453 0.46559 0.61778 0.86328 0.38086l4.873-2.8691c0.35533-0.20313 0.34686-0.71884 0-0.92188l-4.873-2.877c-0.11636-0.066104-0.24435-0.093154-0.36523-0.087891z","fill":"currentColor"}]]);

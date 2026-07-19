@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const ViewMultipleObjects = createGtkIcon("view-multiple-objects", [["path",{"d":"M 2 3 L 2 8 L 10 8 L 10 3 L 2 3 z M 11 3 L 11 8 L 14 8 L 14 3 L 11 3 z M 3 4 L 9 4 L 9 7 L 3 7 L 3 4 z M 2 9 L 2 14 L 14 14 L 14 9 L 2 9 z M 3 10 L 13 10 L 13 13 L 3 13 L 3 10 z "}]]);
+export const ViewMultipleObjects = createGtkIcon("view-multiple-objects", [["path",{"d":"M 3 4 L 3 11 L 13 11 L 13 4 L 3 4 z M 14 4 L 14 11 L 19 11 L 19 4 L 14 4 z M 4 5 L 12 5 L 12 10 L 4 10 L 4 5 z M 3 12 L 3 19 L 19 19 L 19 12 L 3 12 z M 4 13 L 18 13 L 18 18 L 4 18 L 4 13 z "}]]);

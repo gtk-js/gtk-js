@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const ApplicationMsonenote = createGtkIcon("application-msonenote", [["path",{"fill":"currentColor","d":"M3 2c-.554 0-1 .446-1 1v10c0 .554.446 1 1 1h8c.554 0 1-.446 1-1h1c.554 0 1-.446 1-1v-2a.976.976 0 0 0-.152-.5A.976.976 0 0 0 14 9V7a.976.976 0 0 0-.152-.5A.976.976 0 0 0 14 6V4c0-.554-.446-1-1-1h-1c0-.554-.446-1-1-1zm0 1h8v10H3zm1 1v2h6V4zm8 0h1v2h-1zM4 7v1h6V7zm8 0h1v2h-1zM4 9v1h6V9zm8 1h1v2h-1zm-8 1v1h6v-1z"}]]);
+export const ApplicationMsonenote = createGtkIcon("application-msonenote", [["path",{"d":"M4 3c-.554 0-1 .446-1 1v14c0 .554.446 1 1 1h11c.554 0 1-.446 1-1v-1h2c.554 0 1-.446 1-1v-3a.975.975 0 0 0-.152-.5A.975.975 0 0 0 19 12V9a.975.975 0 0 0-.152-.5A.975.975 0 0 0 19 8V5c0-.554-.446-1-1-1h-2c0-.554-.446-1-1-1H4zm0 1h11v14H4V4zm1 1v3h9V5H5zm11 0h2v3h-2V5zm0 4h2v3h-2V9zM5 10v1h9v-1H5zm0 2v1h9v-1H5zm11 1h2v3h-2v-3zM5 14v1h9v-1H5zm0 2v1h9v-1H5z","fill":"currentColor"}]]);

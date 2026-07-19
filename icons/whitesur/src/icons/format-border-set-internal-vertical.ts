@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const FormatBorderSetInternalVertical = createGtkIcon("format-border-set-internal-vertical", [["path",{"d":"m15 1h-6v1h5v5h-5v1h5v5h-5v1h6v-12zm-7 0h-6v13h6v-1h-5v-5h5v-1h-5v-5h5z","fill":"currentColor"}],["path",{"d":"m14 13h-5v-5h5zm0-6h-5v-5h5zm-6 6h-5v-5h5zm0-6h-5v-5h5z","fill":"currentColor","fillOpacity":".5"}]]);
+export const FormatBorderSetInternalVertical = createGtkIcon("format-border-set-internal-vertical", [["path",{"d":"M 3 2 L 3 3 L 3 10 L 3 11 L 3 18 L 3 19 L 4 19 L 19 19 L 20 19 L 20 18 L 20 11 L 20 10 L 20 3 L 20 2 L 19 2 L 4 2 L 3 2 z M 4 3 L 19 3 L 19 10 L 4 10 L 4 3 z M 4 11 L 19 11 L 19 18 L 4 18 L 4 11 z "}],["path",{"d":"M 4 3 L 4 10 L 11 10 L 11 3 L 4 3 z M 12 3 L 12 10 L 19 10 L 19 3 L 12 3 z M 4 11 L 4 18 L 11 18 L 11 11 L 4 11 z M 12 11 L 12 18 L 19 18 L 19 11 L 12 11 z "}],["path",{"d":"M 11 2 L 11 19 L 12 19 L 12 2 L 11 2 z "}]]);

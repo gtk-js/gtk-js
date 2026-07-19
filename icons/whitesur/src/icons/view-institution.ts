@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const ViewInstitution = createGtkIcon("view-institution", [["path",{"d":"m8 2.0039062-6 3.8984376v1.0976562h1v6h-1v1h12v-1h-1v-6h1v-1.0976562zm0 1.1933594 4.310547 2.8027344h-8.6210939zm-4 3.8027344h1v6h-1zm2 0h4v6h-1v-2h-2v2h-1zm5 0h1v6h-1z"}]]);
+export const ViewInstitution = createGtkIcon("view-institution", [["path",{"d":"M 11 3 L 3 7.6230469 L 3 7.9980469 L 3 9 L 4 9 L 4 10 L 4 18 L 3 18 L 3 19 L 19 19 L 19 18 L 18 18 L 18 10 L 18 9 L 19 9 L 19 7.9980469 L 19 7.6230469 L 11 3 z M 11 4.15625 L 17.650391 7.9980469 L 4.3496094 7.9980469 L 11 4.15625 z M 5 9 L 7 9 L 7 10 L 7 18 L 5 18 L 5 10 L 5 9 z M 8 9 L 14 9 L 14 10 L 14 18 L 13 18 L 13 14 L 9 14 L 9 18 L 8 18 L 8 10 L 8 9 z M 15 9 L 17 9 L 17 10 L 17 18 L 15 18 L 15 10 L 15 9 z "}]]);

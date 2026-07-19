@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const LayerBottom = createGtkIcon("layer-bottom", [["path",{"d":"M 3.9980469 3 L 3.9980469 11.029297 L 2.6542969 9.5917969 L 1.9980469 10.279297 L 4.3105469 12.779297 L 4.4980469 12.998047 L 4.6875 12.779297 L 7 10.279297 L 6.34375 9.5917969 L 5 11.029297 L 5 3 L 3.9980469 3 z M 10 3 L 7 6 L 11 6 L 14 3 L 10 3 z M 10 7 L 7 10 L 11 10 L 14 7 L 10 7 z "}],["path",{"d":"m 11,14 3,-3 -6,0 -3,3 z"}]]);
+export const LayerBottom = createGtkIcon("layer-bottom", [["path",{"d":"M7.5 1h1v11h-1z"}],["path",{"d":"M9.849 2.536h5v1h-5z","transform":"rotate(45)"}],["path",{"d":"M-1.464 13.849h5v1h-5z","transform":"scale(-1 1) rotate(45)"}],["path",{"d":"M1 14h14v1H1z"}],["path",{"d":"M1 1v1h5V1H1zm9 0v1h5V1h-5zM1 5v1h5V5H1zm9 0v1h5V5h-5z"}]]);

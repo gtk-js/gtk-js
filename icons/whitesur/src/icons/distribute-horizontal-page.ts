@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const DistributeHorizontalPage = createGtkIcon("distribute-horizontal-page", [["path",{"d":"M 1 1 L 1 15 L 11 15 L 13 15 L 15 13 L 15 12 L 15 1 L 1 1 z M 2 2 L 14 2 L 14 12 L 12 12 L 12 14 L 2 14 L 2 2 z M 3 4 L 3 12 L 7 12 L 7 4 L 3 4 z M 9 4 L 9 12 L 11 12 L 11 11 L 10 11 L 10 5 L 12 5 L 12 11 L 13 11 L 13 4 L 9 4 z M 4 5 L 6 5 L 6 11 L 4 11 L 4 5 z "}]]);
+export const DistributeHorizontalPage = createGtkIcon("distribute-horizontal-page", [["path",{"d":"m3 3v1 15h1 11l1.333984-1 1.666016-1.25 1-.75v-12-1h-16m1 1h14v12h-3v2h-11v-14m1 3v8h5v-8h-5m7 0v8h5v-8h-5m-6 1h3v6h-3v-6m7 0h3v6h-3v-6"}]]);

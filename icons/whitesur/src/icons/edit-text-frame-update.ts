@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const EditTextFrameUpdate = createGtkIcon("edit-text-frame-update", [["path",{"d":"m 7,2 0,1 5,0 0,7 -3,0 0,3 -5,0 0,-7 -1,0 0,8 7,0 3,-3 0,-9 -6,0 z M 5,5 5,6 11,6 11,5 5,5 Z m 0,3 0,1 6,0 0,-1 -6,0 z m 0,3 0,1 3,0 0,-1 -3,0 z"}],["path",{"d":"M 2,2 4,5 6,2 Z"}]]);
+export const EditTextFrameUpdate = createGtkIcon("edit-text-frame-update", [["path",{"d":"m 9,3 0,1 8,0 0,10 -4,0 0,1 0,3 -8,0 0,-10 -1,0 0,11 1,0 8,0 1,0 0,-0.0098 L 14.007812,19 18,15.007812 18,15 18,13.59375 18,3 17,3 9,3 m 0,3 0,1 6,0 0,-1 -6,0 m -2,3 0,1 8,0 0,-1 -8,0 m 0,3 0,1 8,0 0,-1 -8,0 m 0,3 0,1 4,0 0,-1 -4,0"}],["path",{"d":"M 3,3 5,6 7,3 Z"}]]);

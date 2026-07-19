@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const InputMouseClickRight = createGtkIcon("input-mouse-click-right", [["path",{"d":"M8 2a4 4 0 0 0-4 4v4a4 4 0 0 0 4 4h1a4 4 0 0 0 4-4V6a4 4 0 0 0-4-4zm0 1h1a3 3 0 0 1 3 3v4a3 3 0 0 1-3 3H8a3 3 0 0 1-3-3V6a3 3 0 0 1 3-3zm0 1v3h1V4z","fill":"currentColor"}],["path",{"d":"M9 3a3 3 0 0 1 3 3v2H9z","fill":"currentColor"}]]);
+export const InputMouseClickRight = createGtkIcon("input-mouse-click-right", [["path",{"d":"M10 3a5 5 0 0 0-5 5v6a5 5 0 0 0 5 5h2a5 5 0 0 0 5-5V8a5 5 0 0 0-5-5zm0 1h2a4 4 0 0 1 4 4v6a4 4 0 0 1-4 4h-2a4 4 0 0 1-4-4V8a4 4 0 0 1 4-4zm0 1v5h2V5z","fill":"currentColor"}],["path",{"d":"M12 4v7h4V8a4 4 0 0 0-4-4z","fill":"currentColor"}]]);

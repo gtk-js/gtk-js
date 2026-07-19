@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const TextXPascal = createGtkIcon("text-x-pascal", [["path",{"fill":"currentColor","d":"M7 2v12h1V7.95a3.486 3.486 0 0 0 2.5 1.053c1.939 0 3.5-1.561 3.5-3.5s-1.561-3.5-3.5-3.5c-.983 0-1.865.404-2.5 1.053V2.003zm3.5 1C11.885 3 13 4.115 13 5.5S11.885 8 10.5 8A2.495 2.495 0 0 1 8 5.5C8 4.115 9.115 3 10.5 3M3 7a1 1 0 0 0-1 1 1 1 0 0 0 1 1 1 1 0 0 0 1-1 1 1 0 0 0-1-1"}]]);
+export const TextXPascal = createGtkIcon("text-x-pascal", [["path",{"d":"M335 538.31v14.052h1v-7.361a4 4 0 0 0 3 1.361 4 4 0 1 0 0-8 4 4 0 0 0-3 1.362v-1.415h-1zm4 1.052a3 3 0 1 1 0 6 3 3 0 0 1 0-6z"}],["circle",{"cx":"331","cy":"544.362","r":"1","strokeWidth":"2"}]]);

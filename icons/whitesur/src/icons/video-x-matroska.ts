@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const VideoXMatroska = createGtkIcon("video-x-matroska", [["path",{"d":"M2 2v12h12V2zm3 1h6v4H5zM3 4h1v1H3zm9 0h1v1h-1zM3 7.5h1v1H3zm9 0h1v1h-1zM5 9h6v4H5zm-2 2h1v1H3zm9 0h1v1h-1z","fill":"currentColor"}]]);
+export const VideoXMatroska = createGtkIcon("video-x-matroska", [["path",{"d":"M3 3.5v15h16v-15H3zm1 1h1v1H4v-1zm2 0h10V10H6V4.5zm11 0h1v1h-1v-1zm-13 3h1v1H4v-1zm13 0h1v1h-1v-1zm-13 3h1v1H4v-1zm13 0h1v1h-1v-1zM6 12h10v5.5H6V12zm-2 1.5h1v1H4v-1zm13 0h1v1h-1v-1zm-13 3h1v1H4v-1zm13 0h1v1h-1v-1z","fill":"currentColor","overflow":"visible"}]]);

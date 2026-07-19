@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const ApplicationXChm = createGtkIcon("application-x-chm", [["path",{"fill":"currentColor","d":"M7.5 3a5.5 5.5 0 1 0 0 11 5.5 5.5 0 1 0 0-11m0 1C9.985 4 12 6.01 12 8.5c0 2.485-2.01 4.5-4.5 4.5C5.015 13 3 10.99 3 8.5 3 6.015 5.01 4 7.5 4M7 5v1h1V5zm0 2v5h1V7z"}]]);
+export const ApplicationXChm = createGtkIcon("application-x-chm", [["path",{"d":"M10 6h2v2h-2zM10 9h2v7h-2z"}],["path",{"d":"M11 3c-4.432 0-8 3.568-8 8s3.568 8 8 8 8-3.568 8-8-3.568-8-8-8zm0 1c3.878 0 7 3.122 7 7s-3.122 7-7 7-7-3.122-7-7 3.122-7 7-7z"}]]);

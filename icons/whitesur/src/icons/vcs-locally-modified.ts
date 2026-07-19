@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const VcsLocallyModified = createGtkIcon("vcs-locally-modified", [["path",{"d":"M 8 1 A 7 7 0 0 0 1 8 A 7 7 0 0 0 8 15 A 7 7 0 0 0 15 8 A 7 7 0 0 0 8 1 z "}],["path",{"d":"M 8 4 L 8 6 L 6.5800781 6 C 4.4324271 6 3 6.7511 3 9 C 3 11.3399 6 12 6 12 C 6 12 4.3097549 10.552231 4.6230469 9.5820312 C 4.8849889 8.7708312 5.960384 8 6.9375 8 L 8 8 L 8 10 L 13 7 L 8 4 z "}]]);
+export const VcsLocallyModified = createGtkIcon("vcs-locally-modified", [["rect",{"transform":"matrix(0 -1 -1 0 0 0)","width":"4.233","height":"4.233","x":"-298.323","y":"-3.175","rx":"2.117","ry":"2.117","fill":"currentColor"}],["path",{"d":"M1.058 294.916l1.284.893-1.284.893v-.496H.926c-.27 0-.51.174-.583.397-.087.268.285.794.285.794s-.793-.298-.793-.943c0-.62.397-1.042.992-1.042h.231z","fontWeight":"400","fontFamily":"Sans","overflow":"visible","fill":"currentColor"}]]);

@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const ImageVndDwg = createGtkIcon("image-vnd-dwg", [["path",{"fill":"currentColor","fillRule":"evenodd","d":"M7 2v2h2V2zm-.131 2.357l-1.98.531.818.818L7 5.358v-1zm2.131 0v1l3.057.82L9 6.995v7h.131l4.861-1.303.008.002v-7.04l-.008.002-4.861-1.303zm-5.689.953L2 5.662V13l6 1V7l-4.391-.732.52-.139zM13 6.962v4.432l-3-.805V7.767zm-3 4.664l2.057.551L10 12.73z"}]]);
+export const ImageVndDwg = createGtkIcon("image-vnd-dwg", [["path",{"d":"M10 3v3h3V3h-3zm0 3.25L7 7l.824.824L10 7.281V6.25zm3 .25v1.031l3.938.985L12 9.75v9L19 17V8l-6-1.5zM4.867 7.533L3 8v9l8 2v-9L5.062 8.516l.63-.157-.825-.826zM18 9.281v6.44l-5-1.25v-3.94l5-1.25zM13 15.5l3.941.984-3.941.987V15.5z","fill":"currentColor","fillRule":"evenodd"}]]);

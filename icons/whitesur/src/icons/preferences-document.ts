@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const PreferencesDocument = createGtkIcon("preferences-document", [["rect",{"width":"22","height":"22","rx":"6","ry":"6"}],["path",{"d":"M7 3C5.338 3 4 4.338 4 6v10c0 1.662 1.338 3 3 3h8c1.662 0 3-1.338 3-3V8l-5-5h-1zm0 1h5v5h5v7c0 1.108-.892 2-2 2H7c-1.108 0-2-.892-2-2V6c0-1.108.892-2 2-2m6 .414L16.586 8H13Z"}]]);
+export const PreferencesDocument = createGtkIcon("preferences-document", [["rect",{"width":"28","height":"28","x":"2","y":"2","rx":"7","ry":"7"}],["path",{"d":"M9 2C5.122 2 2 5.122 2 9v14c0 3.878 3.122 7 7 7h14c3.878 0 7-3.122 7-7V9c0-3.878-3.122-7-7-7zm0 .5h14c3.601 0 6.5 2.899 6.5 6.5v14c0 3.601-2.899 6.5-6.5 6.5H9A6.486 6.486 0 0 1 2.5 23V9c0-3.601 2.899-6.5 6.5-6.5"}],["path",{"d":"M12 8c-1.662 0-3 1.338-3 3v10c0 1.662 1.338 3 3 3h8c1.662 0 3-1.338 3-3v-8l-5-5h-1zm0 1h5v5h5v7c0 1.108-.892 2-2 2h-8c-1.108 0-2-.892-2-2V11c0-1.108.892-2 2-2m6 .414L21.586 13H18Z"}]]);

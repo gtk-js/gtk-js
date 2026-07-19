@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const DrawGeometryInactive = createGtkIcon("draw-geometry-inactive", [["path",{"d":"m1.9893 1.4893c-0.12781 0-0.25558 0.04855-0.35352 0.14648-0.19587 0.19587-0.19587 0.51116 0 0.70703l5.6562 5.6562-5.6562 5.6582c-0.19587 0.19587-0.19587 0.51116 0 0.70703s0.51116 0.19587 0.70703 0l5.6562-5.6582 5.6582 5.6582c0.19587 0.19587 0.51116 0.19587 0.70703 0s0.19587-0.51116 0-0.70703l-5.6582-5.6582 5.6582-5.6562c0.19587-0.19587 0.19587-0.51116 0-0.70703s-0.51116-0.19587-0.70703 0l-5.6582 5.6562-5.6562-5.6562c-0.097934-0.097934-0.22571-0.14648-0.35352-0.14648z","fill":"currentColor","fillOpacity":".99608","strokeLinecap":"round","strokeLinejoin":"round","strokeWidth":".42521"}]]);
+export const DrawGeometryInactive = createGtkIcon("draw-geometry-inactive", [["path",{"d":"m2.697 1.99-.707.707L7.293 8 1.99 13.303l.707.707L8 8.707l5.303 5.303.707-.707L8.707 8l5.303-5.303-.707-.707L8 7.293Z"}]]);

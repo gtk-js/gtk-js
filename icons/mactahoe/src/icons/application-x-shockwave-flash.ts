@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const ApplicationXShockwaveFlash = createGtkIcon("application-x-shockwave-flash", [["path",{"d":"M13 2.01v2.414c-2.511.042-3.128 2.393-3.128 2.393H12v2.414H8.83C7.064 14.461 3 13.995 3 13.995v-2.414s2.579.459 3.894-4.15C8.539 1.665 13 2.01 13 2.01","fill":"currentColor"}]]);
+export const ApplicationXShockwaveFlash = createGtkIcon("application-x-shockwave-flash", [["path",{"d":"M17.406 3c-1.168.017-5.962.505-7.88 7.232-1.74 6.097-5.178 5.533-5.182 5.536 0 0-.346-.025-.344-.028V19l.346-.002c.18-.036 5.405.608 7.76-6.365h4.228V9.414h-2.838s.822-3.133 4.17-3.19c0 0 .34-.004.334-.005V3h-.344v.006c-.006 0-.09-.008-.25-.006z","fill":"currentColor","overflow":"visible"}]]);

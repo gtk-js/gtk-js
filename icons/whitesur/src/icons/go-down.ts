@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const GoDown = createGtkIcon("go-down", [["path",{"d":"m8 11.5l-6-6.251.719-.749 4.125 4.298 1.156 1.237 1.156-1.237 4.125-4.298.719.749-4.125 4.298z"}]]);
+export const GoDown = createGtkIcon("go-down", [["path",{"d":"m3.707031 7l-.707031.707031 6.125 6.125 1.875 1.875 1.875-1.875 6.125-6.125-.707031-.707031-6.125 6.125-1.167969 1.167969-1.167969-1.167969-6.125-6.125"}]]);

@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const DataError = createGtkIcon("data-error", [["rect",{"x":"2","y":"2","width":"12","height":"12","rx":"2","fill":"currentColor"}],["path",{"d":"M 5.414,4 4,5.414 6.586,8 4,10.586 5.414,12 8,9.414 10.586,12 12,10.586 9.414,8 12,5.414 10.586,4 8,6.586 Z","fill":"currentColor"}]]);
+export const DataError = createGtkIcon("data-error", [["path",{"d":"m5 3c-1.108 0-2 0.892-2 2v12c0 1.108 0.892 2 2 2h12c1.108 0 2-0.892 2-2v-12c0-1.108-0.892-2-2-2zm0 1h12c0.554 0 1 0.446 1 1v12c0 0.554-0.446 1-1 1h-12c-0.554 0-1-0.446-1-1v-12c0-0.554 0.446-1 1-1z","fill":"currentColor"}],["path",{"d":"M 6.414,5 5,6.414 9.586,11 5,15.586 6.414,17 11,12.414 15.586,17 17,15.586 12.414,11 17,6.414 15.586,5 11,9.586 Z","fill":"currentColor"}]]);

@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const InputCapsOn = createGtkIcon("input-caps-on", [["path",{"d":"M 8 2 L 2 8 L 5 8 L 5 14 L 11 14 L 11 8 L 14 8 L 8 2 z M 8 3.4140625 L 11.585938 7 L 10 7 L 10 8 L 10 13 L 6 13 L 6 8 L 6 7 L 4.4140625 7 L 8 3.4140625 z "}]]);
+export const InputCapsOn = createGtkIcon("input-caps-on", [["path",{"d":"m7 2.998c-1.662 0-3 1.338-3 3v7c0 2 1 3.0003 3 4l4.0059 2.002 3.9941-2.002c1.9955-1 3-2 3-4v-7c0-1.662-1.338-3-3-3zm0 1.002h8c1.108 0 2 0.892 2 2v6c0 1.108-0.892 2-2 2h-8c-1.108 0-2-0.892-2-2v-6c0-1.108 0.892-2 2-2z","fill":"currentColor"}],["path",{"d":"m10.438 6-2.4375 6h1.0742l0.40625-1h3.0391l0.40625 1h1.0742l-2.4395-6h-0.53711l-0.02344 0.01-0.02344-0.01zm0.5625 1.2578 1.1133 2.7422h-2.2266z","fill":"currentColor"}]]);

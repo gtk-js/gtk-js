@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const FolderMac = createGtkIcon("folder-mac", [["path",{"d":"m2 2v12h12v-12zm1 2h10v9h-10zm2.8 1.5 1.7 2.721-2.1 3.279h1.2l1.5-2.416 1.5 2.416h1.1l-2-3.279 1.7-2.721h-1.2l-1.1 1.857-1.1-1.857z"}]]);
+export const FolderMac = createGtkIcon("folder-mac", [["path",{"d":"M 3,3 V 19 H 19 V 3 Z M 4,6 H 18 V 18 H 4 Z m 4.0644531,1 2.2851559,4.322266 -2.7929684,4.699218 h 1.5800782 l 2.0019532,-3.445312 2,3.445312 h 1.507812 c 0.0173,-0.0145 0.03674,-0.02837 0.05274,-0.04297 L 12,11.322266 14.21875,7 H 12.603516 L 11.136719,10.064453 9.6699219,7 Z"}]]);

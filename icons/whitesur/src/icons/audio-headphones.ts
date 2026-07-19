@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const AudioHeadphones = createGtkIcon("audio-headphones", [["path",{"d":"M8 1.004c-3.315 0-6 2.685-6 6v5h1v-5c0-2.779 2.222-5 5-5 2.779 0 5 2.221 5 5v5h1v-5c0-3.315-2.684-6-6-6zm-4 8v6h1s1 0 1-1v-4c0-1-1-1-1-1zm7 0s-1 0-1 1v4c0 1 1 1 1 1h1v-6z"}]]);
+export const AudioHeadphones = createGtkIcon("audio-headphones", [["path",{"fill":"currentColor","d":"m10.906 3a7 7 0 0 0-6.9062 7v6h1v-6a6 6 0 0 1 6-6 6 6 0 0 1 6 6v6h1v-6a7 7 0 0 0-7-7 7 7 0 0 0-0.09375 0zm-4.9062 10v6h1s1 0 1-1v-4c0-1-1-1-1-1h-1zm9 0s-1 0-1 1v4c0 1 1 1 1 1h1v-6h-1z"}]]);

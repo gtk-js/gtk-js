@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const FcitxZiranma = createGtkIcon("fcitx-ziranma", [["path",{"d":"m6.68 1.615 0.64 0.77-1.937 1.615h7.617v10h-10v-10h0.818zm-2.68 3.385v2h6v1h-6v2h6v1h-6v2h8v-8z","fill":"currentColor"}],["path",{"d":"m3 0c-1.662 0-3 1.338-3 3v10c0 1.662 1.338 3 3 3h9.9989c1.662 0 3-1.338 3-3v-10c0-1.662-1.338-3-3-3zm0 1h9.9989c1.108 0 2 0.892 2 2v10c0 1.108-0.892 2-2 2h-9.9989c-1.108 0-2-0.892-2-2v-10c0-1.108 0.892-2 2-2z","fill":"currentColor"}]]);
+export const FcitxZiranma = createGtkIcon("fcitx-ziranma", [["path",{"fill":"currentColor","d":"m9.68 4.615.64.77L8.385 7H16v10H6V7h.818zM7 8v2h6v1H7v2h6v1H7v2h8V8Z"}],["path",{"fill":"currentColor","d":"M6 3C4.34 3 3 4.338 3 6v10c0 1.662 1.339 3 3 3h10c1.661 0 3-1.338 3-3V6c0-1.662-1.339-3-3-3zm0 1h10c1.107 0 2 .892 2 2v10c0 1.108-.893 2-2 2H6c-1.107 0-2-.892-2-2V6c0-1.108.893-2 2-2"}]]);

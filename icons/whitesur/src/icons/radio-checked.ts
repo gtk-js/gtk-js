@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const RadioChecked = createGtkIcon("radio-checked", [["path",{"d":"m8 0a8 8 0 0 0-8 8 8 8 0 0 0 8 8 8 8 0 0 0 8-8 8 8 0 0 0-8-8zm0 1a7 7 0 0 1 7 7 7 7 0 0 1-7 7 7 7 0 0 1-7-7 7 7 0 0 1 7-7z","fill":"currentColor"}],["circle",{"cx":"8","cy":"8","r":"2","fill":"currentColor"}]]);
+export const RadioChecked = createGtkIcon("radio-checked", [["path",{}]]);

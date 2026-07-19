@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const MediaRepeatNone = createGtkIcon("media-repeat-none", [["path",{"d":"M 11 3.5 L 11 5 L 5 5 C 3.338 5 2 6.338 2 8 L 3 8 C 3 6.892 3.892 6 5 6 L 11 6 L 11 7.5 L 14 5.5 L 11 3.5 z M 5 8.5 L 2 10.5 L 5 12.5 L 5 11 L 7 11 L 7 10 L 5 10 L 5 8.5 z "}],["path",{"d":"M 8.99,8 8,8.99 10.01,11 8,13.01 8.99,14 11,11.99 13.01,14 14,13.01 11.99,11 14,8.99 13.01,8 11,10.01 Z"}]]);
+export const MediaRepeatNone = createGtkIcon("media-repeat-none", [["path",{"d":"m16 5v2h-10c-1.662 0-3 1.338-3 3v1h1v-1c0-1.108 0.892-2 2-2h10v2l3-2.5zm-3 9h-7v-2l-3 2.5 3 2.5v-2h7z","fill":"currentColor"}],["path",{"d":"m14.834 12-0.83398 0.83398 1.666 1.666-1.666 1.666 0.83398 0.83398 1.666-1.666 1.666 1.666 0.83398-0.83398-1.666-1.666 1.666-1.666-0.83398-0.83398-1.666 1.666z","fill":"currentColor"}]]);

@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const Video = createGtkIcon("video", [["path",{"d":"M 3 3 L 3 19 L 19 19 L 19 3 L 3 3 z M 6 4 L 16 4 L 16 9.9003906 L 6 9.9003906 L 6 4 z M 4 5 L 5 5 L 5 6 L 4 6 L 4 5 z M 17 5 L 18 5 L 18 6 L 17 6 L 17 5 z M 4 7 L 5 7 L 5 8 L 4 8 L 4 7 z M 17 7 L 18 7 L 18 8 L 17 8 L 17 7 z M 4 9 L 5 9 L 5 10 L 4 10 L 4 9 z M 17 9.0996094 L 18 9.0996094 L 18 10.099609 L 17 10.099609 L 17 9.0996094 z M 4 12 L 5 12 L 5 13 L 4 13 L 4 12 z M 6 12 L 16 12 L 16 18 L 6 18 L 6 12 z M 17 12 L 18 12 L 18 13 L 17 13 L 17 12 z M 4 14 L 5 14 L 5 15 L 4 15 L 4 14 z M 17 14 L 18 14 L 18 15 L 17 15 L 17 14 z M 4 16 L 5 16 L 5 17 L 4 17 L 4 16 z M 17 16 L 18 16 L 18 17 L 17 17 L 17 16 z "}]]);
+export const Video = createGtkIcon("video", [["path",{"d":"M2 2v12h12V2H2zm3 1h6v4H5V3zM3 4h1v1H3V4zm9 0h1v1h-1V4zM3 7.5h1v1H3v-1zm9 0h1v1h-1v-1zM5 9h6v4H5V9zm-2 2h1v1H3v-1zm9 0h1v1h-1v-1z","fill":"currentColor"}]]);

@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const ObjectStrokeStyle = createGtkIcon("object-stroke-style", [["path",{"d":"M 2 2 L 2 4 L 13 4 L 13 2 L 2 2 z M 2 6 L 2 8 L 4 8 L 4 6 L 2 6 z M 5 6 L 5 8 L 7 8 L 7 6 L 5 6 z M 8 6 L 8 8 L 10 8 L 10 6 L 8 6 z M 11 6 L 11 8 L 13 8 L 13 6 L 11 6 z M 2 10 L 2 11 L 13 11 L 13 10 L 2 10 z M 2 13 L 2 14 L 3 14 L 3 13 L 2 13 z M 4 13 L 4 14 L 5 14 L 5 13 L 4 13 z M 6 13 L 6 14 L 7 14 L 7 13 L 6 13 z M 8 13 L 8 14 L 9 14 L 9 13 L 8 13 z M 10 13 L 10 14 L 11 14 L 11 13 L 10 13 z M 12 13 L 12 14 L 13 14 L 13 13 L 12 13 z "}]]);
+export const ObjectStrokeStyle = createGtkIcon("object-stroke-style", [["path",{"d":"M8.496-8.132h6v1h-6z","transform":"rotate(45)"}],["path",{"d":"M2.132-14.496h6v1h-6z","transform":"scale(1 -1) rotate(45)"}],["path",{"d":"M0 4h15v1H0zm0 6h3v1H0zm8 0h3v1H8zm-8 5h16v1H0z"}]]);

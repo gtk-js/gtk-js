@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const XOfficeDocument = createGtkIcon("x-office-document", [["path",{"fill":"currentColor","strokeWidth":"1.4","d":"M2 2v1h6V2zm0 3v1h12V5zm0 3v1h5V8zm6 0v6h6V8zm1 1h4v4H9zm-7 1v1h5v-1zm0 3v1h5v-1z"}]]);
+export const XOfficeDocument = createGtkIcon("x-office-document", [["path",{"d":"M3 3v1h8V3H3zm0 4v1h16V7H3zm0 4v1h7v-1H3zm8 0v8h8v-8h-8zm1 1h6v6h-6v-6zm-9 2v1h7v-1H3zm0 4v1h7v-1H3z","fill":"currentColor","strokeLinecap":"round","strokeLinejoin":"round","strokeWidth":"2"}]]);

@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const EditSelectAll = createGtkIcon("edit-select-all", [["path",{"d":"m4 4v3h3v-3zm5 0v3h3v-3zm-5 5v3h3v-3zm5 0v3h3v-3z","fill":"currentColor"}],["path",{"d":"m3 1c-1.108 0-2 0.892-2 2v2h1v-2c0-0.554 0.446-1 1-1h2v-1h-2zm8 0v1h2c0.554 0 1 0.446 1 1v2h1v-2c0-1.108-0.892-2-2-2h-2zm-10 10v2c0 1.108 0.892 2 2 2h2v-1h-2c-0.554 0-1-0.446-1-1v-2h-1zm13 0v2c0 0.554-0.446 1-1 1h-2v1h2c1.108 0 2-0.892 2-2v-2h-1z","fill":"currentColor"}]]);
+export const EditSelectAll = createGtkIcon("edit-select-all", [["path",{"d":"m7 7v3h3v-3zm5 0v3h3v-3zm-5 5v3h3v-3zm5 0v3h3v-3z","fill":"currentColor"}],["path",{"d":"m6 3c-1.662 0-3 1.338-3 3v2h1v-2c0-1.108 0.892-2 2-2h2v-1h-2zm8 0v1h2c1.108 0 2 0.892 2 2v2h1v-2c0-1.662-1.338-3-3-3h-2zm-11 11v2c0 1.662 1.338 3 3 3h2v-1h-2c-1.108 0-2-0.892-2-2v-2h-1zm15 0v2c0 1.108-0.892 2-2 2h-2v1h2c1.662 0 3-1.338 3-3v-2h-1z","fill":"currentColor"}]]);

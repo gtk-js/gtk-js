@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const MessagePartial = createGtkIcon("message-partial", [["path",{"fill":"currentColor","d":"M2 3v10h5.9v-1H3v-.063l3.906-3.344.75.75.244.266V8.213L7.687 8H6.109L3 10.656V4.687l2.328 2.328.344-1.031L3.688 4h2.646l.332-1H2.687zm6 0v1h4.313l-1.617 1.617-.688 2.063L13 4.688v5.969l-3.102-2.65-.332.994L13 11.939v.063H8.566l-.332 1H14v-10h-.688z"}]]);
+export const MessagePartial = createGtkIcon("message-partial", [["path",{"d":"M3 5v12h8v-1H4v-.377l.17-.16L7.863 12H6.734L4 14.562V6h.105l3.438 3.223.389-.698L5.238 6h4.096l.555-1H3zm8 0v1h5.762l-4.266 4h1.133l4.266-4H18v8.562l-2.982-2.794-.387.695 3.2 3 .169.16V16h-5.334l-.555 1H19V5h-8z","strokeOpacity":".55","fill":"currentColor","strokeWidth":"2.8"}]]);

@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const ApplicationXLyx = createGtkIcon("application-x-lyx", [["path",{"fill":"currentColor","d":"M2 2v1h12V2zm4.268 2l.018.486L9.716 9l-3.715 4.445V14h8v-2.777h-.572c0 .555.15.9-.338 1.232-.534.365-1.238.434-1.857.434H8.287L11.144 9 8.287 4.555h1.68c1.191 0 2.886-.107 3.357 1.285.081.238.085.688.105.938h.572V4.001zM2 5v1h4V5zm0 2v1h5V7zm0 3v1h5v-1zm0 2v1h4v-1z"}]]);
+export const ApplicationXLyx = createGtkIcon("application-x-lyx", [["path",{"d":"M3 3v1h16V3H3zm6 2.666v1.025l4.287 5.643L9 17.463V19h10v-4h-.564c0 .74.001 1.496-.649 1.94-.712.486-1.651.578-2.476.578h-3.93l3.808-5.184-3.808-5.928h2.238c1.588 0 3.848-.143 4.477 1.713.107.317.178 1.548.205 1.881H19V5.666H9zM3 7v1h5V7H3zm0 3v1h7v-1H3zm0 3v1h7v-1H3zm0 3v1h5v-1H3z","fill":"currentColor"}]]);

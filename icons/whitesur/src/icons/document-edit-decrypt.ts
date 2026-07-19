@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const DocumentEditDecrypt = createGtkIcon("document-edit-decrypt", [["path",{"d":"M 3 2 L 3 4 L 5 4 L 5 2 L 3 2 z M 7 2 L 7 4 L 9 4 L 9 2 L 7 2 z M 11 2 L 11 4 L 13 4 L 13 2 L 11 2 z M 5 5 L 5 7 L 7 7 L 7 5 L 5 5 z M 9 5 L 9 7 L 11 7 L 11 5 L 9 5 z M 3 7 L 3 14 L 9 14 L 10 14 L 13 11 L 13 10 L 13 7 L 12 7 L 12 10 L 9 10 L 9 13 L 4 13 L 4 7 L 3 7 z "}]]);
+export const DocumentEditDecrypt = createGtkIcon("document-edit-decrypt", [["path",{"d":"m4 2.998v2.002h2v-2h2v2h2v-2h2v2h2v-2h2v2h2v-2.002h-14m2 3.002v2h2v-2h-2m4 0v2h2v-2h-2m4 0v2h2v-2h-2m-10 3v2h14v-2h-2v2h1-12 1v-2h-2m4 0v2h2v-2h-2m4 0v2h2v-2h-2","fill":"currentColor"}],["path",{"d":"m4 11v5c0 1.662 1.338 3 3 3h5 1l5-5v-3h-1v2h-5v5h-5c-1.108 0-2-0.892-2-2v-5h-1zm9 3h3.5859l-3.5859 3.5859v-3.5859z","fill":"currentColor"}]]);

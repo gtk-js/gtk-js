@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const ApplicationXRuby = createGtkIcon("application-x-ruby", [["path",{"fill":"currentColor","d":"M6 2v2h1V2zm3 0v2h1V2zm3.877.994L11.984 4.5l.875.5.893-1.537zm-9.764.068l-.844.5.926 1.506.844-.5zM4 5L2 7l6 7 6-7-2-2zm.438 1h3.063v1H3.438zm4.063 0h3.063l1 1H8.501zM4.157 8h3.344v3.887zm4.344 0h3.344l-3.344 3.887z"}]]);
+export const ApplicationXRuby = createGtkIcon("application-x-ruby", [["path",{"d":"M8.5 3v2h1V3h-1zm4 0v2h1V3h-1zM4.56 4.08l-.8.602 1.2 1.6.8-.6-1.2-1.602zm12.88 0l-1.2 1.602.8.6 1.2-1.6-.8-.602zM7 6L3 9l8 10 8-10-4-3H7zm.334 1H10.5v1.5H5.334l2-1.5zM11.5 7h3.166l2 1.5H11.5V7zM4.68 9.5h5.82v7.275L4.68 9.5zm6.82 0h5.82l-5.82 7.275V9.5z","fill":"currentColor","fillRule":"evenodd"}]]);

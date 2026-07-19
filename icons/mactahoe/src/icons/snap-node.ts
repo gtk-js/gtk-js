@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const SnapNode = createGtkIcon("snap-node", [["path",{"d":"M 11 6 L 11 7 L 8 7 L 8 8 L 11 8 L 11 9 L 14 9 L 14 6 L 11 6 z M 2 7 L 2 8 L 3 8 L 3 7 L 2 7 z M 4 7 L 4 8 L 5 8 L 5 7 L 4 7 z M 6 7 L 6 8 L 7 8 L 7 7 L 6 7 z "}]]);
+export const SnapNode = createGtkIcon("snap-node", [["path",{"d":"M 16 10 L 16 11 L 13 11 L 13 12 L 16 12 L 16 13 L 19 13 L 19 10 L 16 10 z M 3 11 L 3 12 L 4 12 L 4 11 L 3 11 z M 5 11 L 5 12 L 6 12 L 6 11 L 5 11 z M 7 11 L 7 12 L 8 12 L 8 11 L 7 11 z M 9 11 L 9 12 L 10 12 L 10 11 L 9 11 z M 11 11 L 11 12 L 12 12 L 12 11 L 11 11 z "}]]);

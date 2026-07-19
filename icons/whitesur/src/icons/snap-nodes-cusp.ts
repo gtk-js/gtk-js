@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const SnapNodesCusp = createGtkIcon("snap-nodes-cusp", [["path",{"d":"M 5,3 5,4 11,4 11,3 5,3 Z M 3,5 3,11 4,11 4,5 3,5 Z m 9,0 0,6 1,0 0,-6 -1,0 z m -7,7 0,1 6,0 0,-1 -6,0 z"}],["path",{"d":"M 2 2 L 2 5 L 5 5 L 5 2 L 2 2 z M 11 2 L 11 5 L 14 5 L 14 2 L 11 2 z M 3 3 L 4 3 L 4 4 L 3 4 L 3 3 z M 12 3 L 13 3 L 13 4 L 12 4 L 12 3 z M 2 11 L 2 14 L 5 14 L 5 11 L 2 11 z M 11 11 L 11 14 L 14 14 L 14 11 L 11 11 z M 3 12 L 4 12 L 4 13 L 3 13 L 3 12 z M 12 12 L 13 12 L 13 13 L 12 13 L 12 12 z "}]]);
+export const SnapNodesCusp = createGtkIcon("snap-nodes-cusp", [["path",{"d":"m6 4v1h10v-1zm-2 2v10h1v-10zm13 0v10h1v-10zm-11 11v1h10v-1z","fill":"currentColor"}],["path",{"d":"m2 2v4h4v-4zm14 0v4h4v-4zm-13 1h2v2h-2zm14 0h2v2h-2zm-15 13v4h4v-4zm14 0v4h4v-4zm-13 1h2v2h-2zm14 0h2v2h-2z","fill":"currentColor"}]]);

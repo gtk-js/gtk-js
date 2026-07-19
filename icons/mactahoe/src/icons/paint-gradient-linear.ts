@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const PaintGradientLinear = createGtkIcon("paint-gradient-linear", [["path",{"d":"m423.71 533.79v10.5 0.75 0.75h12v-0.75-0.75-10.5z","fill":"currentColor"}]]);
+export const PaintGradientLinear = createGtkIcon("paint-gradient-linear", [["rect",{"width":"2","height":"16","fill":"currentColor"}],["rect",{"x":"2","width":"2","height":"16","fill":"currentColor","opacity":".9"}],["rect",{"x":"4","width":"2","height":"16","fill":"currentColor","opacity":".7"}],["rect",{"x":"6","width":"2","height":"16","fill":"currentColor","opacity":".6"}],["rect",{"x":"8","width":"2","height":"16","fill":"currentColor","opacity":".5"}],["rect",{"x":"10","width":"2","height":"16","fill":"currentColor","opacity":".4"}],["rect",{"x":"12","width":"2","height":"16","fill":"currentColor","opacity":".3"}],["rect",{"x":"14","width":"2","height":"16","fill":"currentColor","opacity":".2"}]]);

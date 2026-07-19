@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const FolderWindows = createGtkIcon("folder-windows", [["path",{"d":"M 2 2 L 2 14 L 14 14 L 14 2 L 2 2 z M 3 3 L 13 3 L 13 11 L 3 11 L 3 3 z M 5 4 L 5 6 L 7 6 L 7 4 L 5 4 z M 9 4 L 9 6 L 11 6 L 11 4 L 9 4 z M 5 8 L 5 10 L 7 10 L 7 8 L 5 8 z M 9 8 L 9 10 L 11 10 L 11 8 L 9 8 z M 3 12 L 13 12 L 13 13 L 3 13 L 3 12 z "}]]);
+export const FolderWindows = createGtkIcon("folder-windows", [["path",{"d":"M 3 3 L 3 19 L 19 19 L 19 3 L 3 3 z M 4 6 L 18 6 L 18 18 L 4 18 L 4 6 z M 7 8 L 7 11.5 L 10.5 11.5 L 10.5 8 L 7 8 z M 11.5 8 L 11.5 11.5 L 15 11.5 L 15 8 L 11.5 8 z M 7 12.5 L 7 16 L 10.5 16 L 10.5 12.5 L 7 12.5 z M 11.5 12.5 L 11.5 16 L 15 16 L 15 12.5 L 11.5 12.5 z "}]]);

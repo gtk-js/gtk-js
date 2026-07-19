@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const CloneOriginal = createGtkIcon("clone-original", [["path",{"d":"m0 0h16v16h-16z","opacity":"0"}],["path",{"d":"m7 8a3 3 0 0 1-3 3 3 3 0 0 1-3-3 3 3 0 0 1 3-3 3 3 0 0 1 3 3","fill":"currentColor","strokeWidth":".89533"}],["path",{"d":"m15 8a3 3 0 0 1-3 3 3 3 0 0 1-3-3 3 3 0 0 1 3-3 3 3 0 0 1 3 3z","fill":"currentColor","opacity":".35","strokeWidth":".89533"}]]);
+export const CloneOriginal = createGtkIcon("clone-original", [["path",{"d":"M4 5a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3zm0 1a2 2 0 0 1 2 2 2 2 0 0 1-2 2 2 2 0 0 1-2-2 2 2 0 0 1 2-2z"}],["path",{"d":"M12 5a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3zm0 1a2 2 0 0 1 2 2 2 2 0 0 1-2 2 2 2 0 0 1-2-2 2 2 0 0 1 2-2z"}]]);

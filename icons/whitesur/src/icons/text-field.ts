@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const TextField = createGtkIcon("text-field", [["path",{"d":"m2 2v1h2v10h-2v1h5v-1h-2v-10h2v-1zm5 8v2h7v-2h-1v1h-5v-1z"}]]);
+export const TextField = createGtkIcon("text-field", [["path",{"d":"M 3 3 L 3 4 L 5 4 L 5 18 L 3 18 L 3 19 L 8 19 L 8 18 L 6 18 L 6 4 L 8 4 L 8 3 L 3 3 z M 8 15 L 8 17 L 9 17 L 18 17 L 19 17 L 19 16 L 19 15 L 18 15 L 18 16 L 9 16 L 9 15 L 8 15 z "}]]);

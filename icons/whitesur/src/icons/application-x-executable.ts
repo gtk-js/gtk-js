@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const ApplicationXExecutable = createGtkIcon("application-x-executable", [["path",{"d":"M1 1v14h14V1zm1 3h12v10H2zm5 1v5h2V5zm0 6v2h2v-2z","fill":"currentColor"}]]);
+export const ApplicationXExecutable = createGtkIcon("application-x-executable", [["path",{"d":"M3 3v16h16V3zm1 3h14v12H4zm6 2v6h2V8zm0 6.944V16l2 .056V15z","fill":"currentColor"}]]);

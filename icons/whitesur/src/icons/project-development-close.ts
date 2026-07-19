@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const ProjectDevelopmentClose = createGtkIcon("project-development-close", [["path",{"d":"M 2 2 L 2 14 L 8 14 L 8 13 L 3 13 L 3 5 L 13 5 L 13 8 L 14 8 L 14 2 L 3 2 L 2 2 z "}],["path",{"d":"M 9.71,9 9.003,9.707 10.796,11.5 9.003,13.293 9.71,14 11.503,12.207 13.296,14 14.003,13.293 12.21,11.5 14.003,9.707 13.296,9 11.503,10.793 Z"}]]);
+export const ProjectDevelopmentClose = createGtkIcon("project-development-close", [["path",{"d":"m14.707 14-0.70703 0.70703 1.793 1.793-1.793 1.793 0.70703 0.70703 1.793-1.793 1.793 1.793 0.70703-0.70703-1.793-1.793 1.793-1.793-0.70703-0.70703-1.793 1.793-1.793-1.793z","fill":"currentColor"}],["path",{"d":"m6 3c-1.662 0-3 1.338-3 3v10c0 1.662 1.338 3 3 3h7v-1h-7c-1.108 0-2-0.892-2-2v-7c0-1.108 0.892-2 2-2h10c1.108 0 2 0.892 2 2v4h1v-7c0-1.662-1.338-3-3-3h-10z","fill":"currentColor"}]]);

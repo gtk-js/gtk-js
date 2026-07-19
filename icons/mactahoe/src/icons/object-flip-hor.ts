@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const ObjectFlipHor = createGtkIcon("object-flip-hor", [["path",{"d":"m5 4-2.9922 3.0098c-0.0026007 2.34e-5 -0.0052119-2.34e-5 -0.0078125 0v0.0078125l-1 1.0059 4 3.9766v-3.0371c1.9984-0.013051 4.001 0.0043729 6 0.019531v3.0176l4-3.9766-1-1.0059v-0.017578c-0.005844-1.46e-5 -0.011734 1.47e-5 -0.017578 0l-2.9824-3v2.9941c-1.9994-0.0046844-4.0007-0.008749-6-0.0019531v-2.9922z","fill":"currentColor"}]]);
+export const ObjectFlipHor = createGtkIcon("object-flip-hor", [["path",{"d":"M10.263-4.95h6v1h-6z","transform":"rotate(45)"}],["path",{"d":"M-1.05-16.263h6v1h-6z","transform":"scale(1 -1) rotate(45)"}],["path",{"d":"M-1.05 6.364h6v1h-6z","transform":"scale(-1 1) rotate(45)"}],["path",{"d":"M-12.364-4.95h6v1h-6z","transform":"rotate(-135)"}],["path",{"d":"M2 7.5h12v1H2z"}]]);

@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const FolderGoogleDrive = createGtkIcon("folder-google-drive", [["path",{"d":"M 5.5 0.98046875 L 10.5 9.9804688 L 16 9.9804688 L 10.666016 0.98046875 L 5.5 0.98046875 z M 5 2.0195312 L 0 11.019531 L 2.6660156 15.019531 L 7.6992188 7.0195312 L 5 2.0195312 z M 6.5 10.960938 L 4 14.958984 L 13.332031 14.958984 L 16 10.960938 L 6.5 10.960938 z"}]]);
+export const FolderGoogleDrive = createGtkIcon("folder-google-drive", [["path",{"d":"m8.5 3.9805 5 9h5.5l-5.334-9zm-0.5 1.0391-5 9 2.666 4 5.0332-8zm1.5 8.9413-2.5 3.9981h9.3319l2.6679-3.9981z","fill":"currentColor"}]]);

@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const WindowNext = createGtkIcon("window-next", [["path",{"d":"M 6.8007812,6 10,9 6.8007812,12 6,11.25 8.4003906,9 6,6.75 Z","fill":"currentColor"}],["path",{"d":"m13 1c1.108 0 2 0.892 2 2v10c0 1.108-0.892 2-2 2h-10c-1.108 0-2-0.892-2-2v-10c0-1.108 0.892-2 2-2zm0 3h-10c-0.554 0-1 0.446-1 1v8c0 0.554 0.446 1 1 1h10c0.554 0 1-0.446 1-1v-8c0-0.554-0.446-1-1-1z","fill":"currentColor"}]]);
+export const WindowNext = createGtkIcon("window-next", [["path",{"d":"M 9.8007812,9 13,12 9.8007812,15 9,14.25 11.400391,12 9,9.75 Z","fill":"currentColor"}],["path",{"d":"m6 3c-1.662 0-3 1.338-3 3v10c0 1.662 1.338 3 3 3h10c1.662 0 3-1.338 3-3v-10c0-1.662-1.338-3-3-3zm0 3h10c1.108 0 2 0.892 2 2v8c0 1.108-0.892 2-2 2h-10c-1.108 0-2-0.892-2-2v-8c0-1.108 0.892-2 2-2z","fill":"currentColor"}]]);

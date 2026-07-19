@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const ApplicationXKplato = createGtkIcon("application-x-kplato", [["path",{"d":"M2 2v12h12V2h-2v2h-2V2H6v2H4V2zm1 3h10v8H3z"}],["path",{"d":"M7 9v3h1v-1h3v1h1V9h-1v1H8V9zM4 6v3h1V8h4v1h1V6H9v1H5V6z"}]]);
+export const ApplicationXKplato = createGtkIcon("application-x-kplato", [["path",{"d":"M5 8v3h1v-1h4v1h1V8h-1v1H6V8H5zm6 6v3h1v-1h4v1h1v-3h-1v1h-4v-1h-1z"}],["path",{"d":"M6 3S5 3 5 4H3v15h16V4h-2c0-1-1-1-1-1h-3s-1 0-1 1h-2c0-1-1-1-1-1H6zm0 1h3v1H6V4zm7 0h3v1h-3V4zM4 7h14v11H4V7z"}]]);

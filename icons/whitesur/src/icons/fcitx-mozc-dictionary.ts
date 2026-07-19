@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const FcitxMozcDictionary = createGtkIcon("fcitx-mozc-dictionary", [["path",{"d":"M 3 0 C 1.892 0 1 0.892 1 2 L 1 14 C 1 15.108 1.892 16 3 16 L 4 16 L 4 0 L 3 0 z M 5 0 L 5 16 L 13 16 C 14.108 16 15 15.108 15 14 L 15 2 C 15 0.892 14.108 0 13 0 L 5 0 z M 7 3 L 13 3 L 13 4 L 7 4 L 7 3 z M 7 6 L 13 6 L 13 7 L 7 7 L 7 6 z M 7 9 L 13 9 L 13 10 L 7 10 L 7 9 z M 7 12 L 13 12 L 13 13 L 7 13 L 7 12 z"}]]);
+export const FcitxMozcDictionary = createGtkIcon("fcitx-mozc-dictionary", [["path",{"d":"M6 3c-1.108 0-2 .892-2 2v12c0 1.108.892 2 2 2h1V3Zm2 0v16h8c1.108 0 2-.892 2-2V5c0-1.108-.892-2-2-2Zm2 3h6v1h-6zm0 3h6v1h-6zm0 3h6v1h-6zm0 3h6v1h-6z"}]]);

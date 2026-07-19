@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const AmarokChangeLanguage = createGtkIcon("amarok-change-language", [["path",{"d":"M 2 2 L 2 3 L 2 8 L 3 8 L 6 8 L 6 10 L 6 11 L 9 14 L 9 11 L 13 11 L 14 11 L 14 6 L 14 5 L 13 5 L 10 5 L 10 2 L 3 2 L 2 2 z M 3 3 L 9 3 L 9 5 L 9 6 L 9 7 L 7 7 L 6 7 L 3 7 L 3 3 z M 10 6 L 13 6 L 13 10 L 8 10 L 7 10 L 7 8 L 8 8 L 8 10 L 10 8 L 10 7 L 10 6 z "}]]);
+export const AmarokChangeLanguage = createGtkIcon("amarok-change-language", [["path",{"d":"m5 3c-1.108 0-2 0.892-2 2v4c0 1.108 0.892 2 2 2h3v2c0 1.108 0.892 2 2 2l3 4v-4h4c1.108 0 2-0.892 2-2v-4c0-1.108-0.892-2-2-2h-3v-2c0-1.108-0.892-2-2-2h-7zm0 1h7c0.554 0 1 0.446 1 1v4c0 0.554-0.446 1-1 1h-7c-0.554 0-1-0.446-1-1v-4c0-0.554 0.446-1 1-1zm9 4h3c0.554 0 1 0.446 1 1v4c0 0.554-0.446 1-1 1h-7c-0.554 0-1-0.446-1-1v-2h1v3l2-3c1.108 0 2-0.892 2-2v-1z","fill":"currentColor"}]]);

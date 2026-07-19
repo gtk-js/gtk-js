@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const GnumericFont = createGtkIcon("gnumeric-font", [["path",{"d":"m7.3835 3-4.383 11h1.357l1.189-3h4.928l1.152 3h1.373l-4.252-11zm0.68 1.328c0.113 0.376 0.711 2.082 1.797 5.115l0.225 0.557h-4.143z","fill":"currentColor"}]]);
+export const GnumericFont = createGtkIcon("gnumeric-font", [["path",{"d":"m9.910156 4-3.3144529 9.59375-0.1230469 0.40625-1.4726562 4h1.6582031l1.625-4.4375h5.4335939l1.625 4.4375h1.658203l-1.472656-4-0.123047-0.40625-3.314453-9.59375h-1.964844zm1.105469 1.9375 2.179687 6.34375h-4.3906245z","fill":"currentColor"}]]);

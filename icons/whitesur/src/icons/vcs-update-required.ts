@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const VcsUpdateRequired = createGtkIcon("vcs-update-required", [["path",{"d":"M 8 1 A 7 7 0 0 0 1 8 A 7 7 0 0 0 8 15 A 7 7 0 0 0 15 8 A 7 7 0 0 0 8 1 z "}],["path",{"d":"M 8 2 L 8 3 A 5 5 0 0 0 3 8 A 5 5 0 0 0 8 13 A 5 5 0 0 0 13 8 L 11 8 A 3 3 0 0 1 8 11 A 3 3 0 0 1 5 8 A 3 3 0 0 1 8 5 L 8 6 L 11 4 L 8 2 z "}]]);
+export const VcsUpdateRequired = createGtkIcon("vcs-update-required", [["circle",{"cx":"12","cy":"12","r":"10","fill":"currentColor","transform":"matrix(.8 0 0 .8 1.4 1.4)"}],["path",{"d":"M8 9l3-3 3 3z"}],["rect",{"ry":"0","y":"9","x":"10","height":"5","width":"2"}]]);

@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const DialogInputDevices = createGtkIcon("dialog-input-devices", [["path",{"d":"m7 1c-2.2091 0-4 1.7909-4 4v6c0 2.2091 1.7909 4 4 4h3c2.2091 0 4-1.7909 4-4v-6c0-2.2091-1.7909-4-4-4zm0 1h3c1.6569 0 3 1.3431 3 3v6c0 1.6569-1.3431 3-3 3h-3c-1.6569 0-3-1.3431-3-3v-6c0-1.6569 1.3431-3 3-3zm1 1v3h1v-3z","fill":"currentColor"}]]);
+export const DialogInputDevices = createGtkIcon("dialog-input-devices", [["path",{"d":"M10 3a5 5 0 0 0-5 5v6a5 5 0 0 0 5 5h2a5 5 0 0 0 5-5V8a5 5 0 0 0-5-5zm0 1h2a4 4 0 0 1 4 4v6a4 4 0 0 1-4 4h-2a4 4 0 0 1-4-4V8a4 4 0 0 1 4-4zm0 1v5h2V5z","fill":"currentColor"}]]);

@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const ApplicationXJava = createGtkIcon("application-x-java", [["path",{"fill":"currentColor","d":"M7 2v3h1V2zM5 3v2h1V3zm4 0v2h1V3zM3 4v1h1V4zM2 6v4c0 1.813 1.01 3 3 3H3v1h8v-1H9c1.572 0 2.507-.727 3-2h1c1 0 1-.003 1-1.094V8.812c0-1.818 0-1.813-1-1.813h-1v-1zm1 1h8v3c0 1.511-1.338 2-3 2H6c-1.662 0-3-.489-3-2zm9 1h1v2h-1z"}]]);
+export const ApplicationXJava = createGtkIcon("application-x-java", [["path",{"d":"M8 3v4h1V3H8zm2 1v3h1V4h-1zM6 5v2h1V5H6zm6 0v2h1V5h-1zM4 6v1h1V6H4zm10 0v1h1V6h-1zM3 8v6a4 3.99 0 0 0 0 .01A4 3.99 0 0 0 7 18H4v1h11v-1h-3a4 3.99 0 0 0 4-3.99 4 3.99 0 0 0 0-.01h2c.554 0 1-.446 1-1v-3c0-.554-.446-1-1-1h-2V8H3zm1 1h11v5a3 3 0 0 1-3 3H7a3 3 0 0 1-3-3V9zm12 1h2v3h-2v-3z","fill":"currentColor"}]]);

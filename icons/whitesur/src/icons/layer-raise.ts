@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const LayerRaise = createGtkIcon("layer-raise", [["path",{"d":"m 5,3 -3,3 9,0 3,-3 z m 6.498047,4.0019531 -0.1875,0.21875 -2.3125001,2.5 0.65625,0.6874999 1.3437501,-1.4374999 0,5.0292969 1,0 0,-5.0292969 0.002,0 1.34375,1.4374999 L 14,9.7207031 l -2.3125,-2.5 z M 5,11 l -3,3 5,0 3,-3 z"}],["path",{"d":"m 5,7 -3,3 5,0 3,-3 z"}]]);
+export const LayerRaise = createGtkIcon("layer-raise", [["path",{"d":"M7.5-11h1v7h-1z","transform":"scale(1 -1)"}],["path",{"d":"M-1.465-8.778h5v1h-5z","transform":"scale(1 -1) rotate(45)"}],["path",{"d":"M-12.778 2.535h5v1h-5z","transform":"rotate(-135)"}],["path",{"d":"M1-2h14v1H1z","transform":"scale(1 -1)"}],["path",{"d":"M1 11v-1h5v1zm9 0v-1h5v1z"}],["path",{"d":"M1-15h14v1H1z","transform":"scale(1 -1)"}]]);

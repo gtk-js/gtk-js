@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const ApplicationXZerosize = createGtkIcon("application-x-zerosize", [["path",{"fill":"currentColor","d":"M3 14V2h6l4 4v8H4zm1-1h8V6H9V3H4z"}]]);
+export const ApplicationXZerosize = createGtkIcon("application-x-zerosize", [["path",{"d":"M4 19V3h10v.01l.008-.01L18 6.992V19H4zm1-1h12V8h-4V4H5v14z","fill":"currentColor"}]]);

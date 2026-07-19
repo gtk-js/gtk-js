@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const ChangesPrevent = createGtkIcon("changes-prevent", [["path",{"d":"m8 1c-2.216 0-4 1.784-4 4v2h2v-2c0-1.108 0.892-2 2-2s2 0.892 2 2v2h2v-2c0-2.216-1.784-4-4-4z","fill":"currentColor","stroke":"currentColor","strokeOpacity":".33725"}],["rect",{"transform":"matrix(0,-1,-1,0,0,0)","x":"-15","y":"-14","width":"8","height":"12","rx":"1","ry":"1","fill":"currentColor","stroke":"currentColor","strokeOpacity":".7451"}]]);
+export const ChangesPrevent = createGtkIcon("changes-prevent", [["path",{"d":"m8 0c-2.216 0-4 1.784-4 4v2h1v-2c0-1.662 1.338-3 3-3s3 1.338 3 3v2h1v-2c0-2.216-1.784-4-4-4zm-4 6c-1.108 0-2 0.892-2 2v5c0 1.108 0.892 2 2 2h8c1.108 0 2-0.892 2-2v-5c0-1.108-0.892-2-2-2zm0 1h8c0.554 0 1 0.446 1 1v5c0 0.554-0.446 1-1 1h-8c-0.554 0-1-0.446-1-1v-5c0-0.554 0.446-1 1-1z","fill":"currentColor"}]]);

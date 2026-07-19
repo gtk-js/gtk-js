@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const Horizontal = createGtkIcon("horizontal", [["path",{"d":"m3 1c-1.108 0-2 0.892-2 2v10c0 1.108 0.892 2 2 2h10c1.108 0 2-0.892 2-2v-10c0-1.108-0.892-2-2-2zm0 1h10c0.554 0 1 0.446 1 1v10c0 0.554-0.446 1-1 1h-10c-0.554 0-1-0.446-1-1v-10c0-0.554 0.446-1 1-1z","fill":"currentColor","strokeLinecap":"round","strokeLinejoin":"round","strokeWidth":"2"}],["rect",{"x":"2","y":"2","width":"6","height":"12","rx":"0","ry":"0","fill":"currentColor","opacity":".35","strokeLinecap":"round","strokeLinejoin":"round","strokeWidth":"2"}]]);
+export const Horizontal = createGtkIcon("horizontal", [["rect",{"width":"6","height":"12","x":"2","y":"2","rx":"0","ry":"0"}],["path",{"d":"M3 1c-1.108 0-2 .892-2 2v10c0 1.108.892 2 2 2h10c1.108 0 2-.892 2-2V3c0-1.108-.892-2-2-2Zm0 1h10c.554 0 1 .446 1 1v10c0 .554-.446 1-1 1H3c-.554 0-1-.446-1-1V3c0-.554.446-1 1-1Z"}]]);

@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const EditLineWidth = createGtkIcon("edit-line-width", [["path",{"d":"M.53.53v.264h3.174V.529zm0 1.057v.53h3.174v-.53zm0 1.323v.794h3.174V2.91z","fill":"currentColor"}]]);
+export const EditLineWidth = createGtkIcon("edit-line-width", [["path",{"d":"m3 3v0.9978739h16v-0.9978739zm0 2.9974014v2.0033073h16v-2.0033073zm0 4.0028346v3.001181h16v-3.001181zm0 5.000709v3.999055h16v-3.999055z","fill":"currentColor"}]]);

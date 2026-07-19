@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const GnumericLinkExternal = createGtkIcon("gnumeric-link-external", [["path",{"d":"M 4 5 L 4 7 L 2 7 L 2 8 L 4 8 L 4 10 L 5 10 L 7 10 L 7 9 L 5 9 L 5 6 L 7 6 L 7 5 L 5 5 L 4 5 z M 9 5 L 9 6 L 11 6 L 11 9 L 9 9 L 9 10 L 11 10 L 12 10 L 12 9 L 12 8 L 14 8 L 14 7 L 12 7 L 12 6 L 12 5 L 11 5 L 9 5 z M 7 7 L 7 8 L 9 8 L 9 7 L 7 7 z "}]]);
+export const GnumericLinkExternal = createGtkIcon("gnumeric-link-external", [["path",{"d":"m6 5v2h-3v1h3v2h4v-1h-3v-3h3v-1zm6 0v1h3v3h-3v1h4v-2h3v-1h-3v-2zm-2 2v1h2v-1z","fill":"currentColor"}],["path",{"d":"m16 14v2h-2v1h2v2h1v-2h2v-1h-2v-2z","fill":"currentColor"}]]);

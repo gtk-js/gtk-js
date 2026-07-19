@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const TextCsv = createGtkIcon("text-csv", [["path",{"fill":"currentColor","d":"M2 2v12h7v-1H6v-3h3V9H6V6h4v2h1V6h2v2h1V2H3zm1 1h10v2H3zm0 3h2v3H3zm8.5 3c-.831 0-1.5.638-1.5 1.43 0 .763.623 1.376 1.412 1.42.057.262.087.528.088.795A3.77 3.77 0 0 1 11.242 14c1.1-.734 1.756-1.933 1.758-3.213v-.357C13 9.638 12.331 9 11.5 9M3 10h2v3H3z"}]]);
+export const TextCsv = createGtkIcon("text-csv", [["path",{"d":"M3 3v16h11V9h4v4h1V3H3zm1 1h14v4H4V4zm0 5h4v4H4V9zm5 0h4v4H9V9zm-5 5h4v4H4v-4zm5 0h4v4H9v-4z","strokeWidth":"2"}],["path",{"d":"M16.5 14c-.831 0-1.5.638-1.5 1.43 0 .763.623 1.376 1.412 1.42.058.261.087.528.088.795A3.773 3.773 0 0 1 16.242 19c1.1-.734 1.756-1.933 1.758-3.213v-.357c0-.792-.669-1.43-1.5-1.43z"}]]);

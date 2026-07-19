@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const Realization = createGtkIcon("realization", [["path",{"d":"M 7.5 2 L 4 9 L 7 9 L 7 11 L 8 11 L 8 9 L 11 9 L 7.5 2 z M 7.5 4.2363281 L 9.3828125 8 L 5.6171875 8 L 7.5 4.2363281 z M 7 12 L 7 14 L 8 14 L 8 12 L 7 12 z "}],["path",{"d":"m 7.5,4.24 -2.383,4.764 4.766,0 z"}]]);
+export const Realization = createGtkIcon("realization", [["path",{"d":"M 10.5 3 L 7 10 L 8 10 L 8.1171875 10 L 10 10 L 10 13 L 11 13 L 11 10 L 12.882812 10 L 13 10 L 14 10 L 10.5 3 z M 10.5 5.2363281 L 12.382812 9 L 8.6171875 9 L 10.5 5.2363281 z M 10 14 L 10 16 L 11 16 L 11 14 L 10 14 z M 10 17 L 10 19 L 11 19 L 11 17 L 10 17 z "}],["path",{"d":"M 10.5 5.2363281 L 8.1171875 10 L 12.882812 10 L 10.5 5.2363281 z "}]]);

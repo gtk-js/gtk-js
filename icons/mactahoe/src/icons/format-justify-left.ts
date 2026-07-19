@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const FormatJustifyLeft = createGtkIcon("format-justify-left", [["path",{"d":"M 2 2 L 2 3 L 14 3 L 14 2 L 2 2 z M 2 4 L 2 5 L 9 5 L 9 4 L 2 4 z M 2 7 L 2 8 L 12 8 L 12 7 L 2 7 z M 2 9 L 2 10 L 7 10 L 7 9 L 2 9 z M 2 12 L 2 13 L 10 13 L 10 12 L 2 12 z M 12 13 L 12 14 L 14 14 L 14 13 L 12 13 z "}]]);
+export const FormatJustifyLeft = createGtkIcon("format-justify-left", [["path",{"d":"M 3 3 L 3 4 L 19 4 L 19 3 L 3 3 z M 3 5 L 3 6 L 12 6 L 12 5 L 3 5 z M 3 9 L 3 10 L 13 10 L 13 9 L 3 9 z M 3 11 L 3 12 L 7 12 L 7 11 L 3 11 z M 3 15 L 3 16 L 13 16 L 13 15 L 3 15 z M 3 17 L 3 18 L 10 18 L 10 17 L 3 17 z M 11 18 L 11 19 L 13 19 L 13 18 L 11 18 z "}]]);

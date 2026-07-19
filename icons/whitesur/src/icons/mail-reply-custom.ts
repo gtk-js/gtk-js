@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const MailReplyCustom = createGtkIcon("mail-reply-custom", [["path",{"d":"M 7 3 L 2 7 L 7 11 L 7 8 L 14 8 L 14 6 L 7 6 L 7 3 z M 11.5 9 L 11.021484 10.345703 L 9.7324219 9.7324219 L 10.345703 11.021484 L 9 11.5 L 10.345703 11.978516 L 9.7324219 13.267578 L 11.021484 12.654297 L 11.5 14 L 11.978516 12.654297 L 13.267578 13.267578 L 12.654297 11.978516 L 14 11.5 L 12.654297 11.021484 L 13.267578 9.7324219 L 11.978516 10.345703 L 11.5 9 z "}]]);
+export const MailReplyCustom = createGtkIcon("mail-reply-custom", [["path",{"d":"m4 13-3 3 3 3v-2h2v-2h-2z","fill":"currentColor"}],["path",{"d":"m5 2c-1.108 0-2 0.892-2 2v2c-1.108 0-2 0.892-2 2v5h1v-3h18v7c0 0.554-0.446 1-1 1h-12v1h12c1.108 0 2-0.892 2-2v-9c0-1.108-0.892-2-2-2v-2c0-1.108-0.892-2-2-2h-12zm0 1h12c0.554 0 1 0.446 1 1v2 1 2h-14v-2-1-2c0-0.554 0.446-1 1-1zm-2 4v2h-1v-1c0-0.554 0.446-1 1-1zm16 0c0.554 0 1 0.446 1 1v1h-1v-2z","fill":"currentColor"}]]);

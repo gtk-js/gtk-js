@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const ApplicationXCdImage = createGtkIcon("application-x-cd-image", [["path",{"fill":"currentColor","d":"M8 2a6 6 0 1 0 0 12A6 6 0 0 0 8 2m0 1a5 5 0 1 1-.001 10.001A5 5 0 0 1 8 3m0 1a4 4 0 0 0-4 4h2a2 2 0 0 1 2-2zm0 3a1 1 0 0 0-1 1 1 1 0 0 0 1 1 1 1 0 0 0 1-1 1 1 0 0 0-1-1m2 1a2 2 0 0 1-2 2v2a4 4 0 0 0 4-4z"}]]);
+export const ApplicationXCdImage = createGtkIcon("application-x-cd-image", [["path",{"d":"M11 3c-4.432 0-8 3.568-8 8s3.568 8 8 8 8-3.568 8-8-3.568-8-8-8zm0 1c3.878 0 7 3.122 7 7s-3.122 7-7 7-7-3.122-7-7 3.122-7 7-7zm0 1c-3.324 0-6 2.676-6 6h3c0-1.662 1.338-3 3-3V5zm0 4c-1.108 0-2 .892-2 2s.892 2 2 2 2-.892 2-2-.892-2-2-2zm0 1c.554 0 1 .446 1 1s-.446 1-1 1-1-.446-1-1 .446-1 1-1zm3 1c0 1.662-1.338 3-3 3v3c3.324 0 6-2.676 6-6h-3z","fill":"currentColor"}]]);

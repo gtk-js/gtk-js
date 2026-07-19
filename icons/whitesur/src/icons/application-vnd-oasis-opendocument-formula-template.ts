@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const ApplicationVndOasisOpendocumentFormulaTemplate = createGtkIcon("application-vnd-oasis-opendocument-formula-template", [["path",{"d":"M13.996 3.654l-7 .004-2.441 6.691L3 7.654H2v1h.428l2.133 3.693 3.02-7.693h6.42zm-4 2c-1.662 0-3 1.338-3 3a2.993 2.993 0 0 0 5 2.225v.775h1v-6h-1v.775a2.98 2.98 0 0 0-2-.775m0 1c1.108 0 2 .892 2 2s-.892 2-2 2-2-.892-2-2 .892-2 2-2","fill":"currentColor"}]]);
+export const ApplicationVndOasisOpendocumentFormulaTemplate = createGtkIcon("application-vnd-oasis-opendocument-formula-template", [["path",{"d":"M19 5l-9.332.006L6.5 14.5 4.334 11H3v1h1l2.5 5 3.941-11H19zm-5 3a4 4 0 1 0 0 8 4 4 0 0 0 3-1.361V16h1V8h-1v1.361A4 4 0 0 0 14 8zm0 1a3 3 0 1 1 0 6 3 3 0 0 1 0-6z","fill":"currentColor"}]]);

@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const ApplicationXFictionbookXml = createGtkIcon("application-x-fictionbook-xml", [["path",{"d":"M12 4.293L8.293 8 12 11.707l.354-.353L15.707 8z","fill":"currentColor"}],["path",{"d":"M4 2v12h3.5a.5.5 0 0 0 .5-.5v-8a.5.5 0 0 0-.5-.5H5V2zm1 4h2v7H5zM1.5 2a.5.5 0 0 0-.5.5V5H0v1h1v8h1V6h1V5H2V3h1V2z","fill":"currentColor"}]]);
+export const ApplicationXFictionbookXml = createGtkIcon("application-x-fictionbook-xml", [["path",{"d":"M17 6l-5 5 5 5 5-5z","fill":"currentColor"}],["path",{"d":"M2.5 3a.5.5 0 0 0-.5.5V7H1v1h1v11h1V8h2V7H3V4h2V3zM6 3v16h4.5a.5.5 0 0 0 .5-.5v-11a.5.5 0 0 0-.5-.5H7V3zm1 5h3v10H7z","fill":"currentColor"}]]);

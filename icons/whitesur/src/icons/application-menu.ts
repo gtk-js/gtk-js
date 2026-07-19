@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const ApplicationMenu = createGtkIcon("application-menu", [["path",{"d":"m8 0a8 8 0 0 0-8 8 8 8 0 0 0 8 8 8 8 0 0 0 8-8 8 8 0 0 0-8-8zm0 1a7 7 0 0 1 7 7 7 7 0 0 1-7 7 7 7 0 0 1-7-7 7 7 0 0 1 7-7z"}],["circle",{"cx":"4","cy":"8","r":"1"}],["circle",{"cx":"8","cy":"8","r":"1"}],["circle",{"cx":"12","cy":"8","r":"1"}]]);
+export const ApplicationMenu = createGtkIcon("application-menu", [["circle",{"cx":"6","cy":"11","r":"1","fill":"currentColor"}],["circle",{"cx":"11","cy":"11","r":"1","fill":"currentColor"}],["circle",{"cx":"16","cy":"11","r":"1","fill":"currentColor"}],["path",{"d":"m10.99 2a9 9 0 0 0-8.9902 9 9 9 0 0 0 9 9 9 9 0 0 0 9-9 9 9 0 0 0-9-9 9 9 0 0 0-0.009766 0zm0.009766 1a8 8 0 0 1 8 8 8 8 0 0 1-8 8 8 8 0 0 1-8-8 8 8 0 0 1 8-8z","fill":"currentColor"}]]);

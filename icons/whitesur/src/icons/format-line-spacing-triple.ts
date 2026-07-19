@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const FormatLineSpacingTriple = createGtkIcon("format-line-spacing-triple", [["path",{"d":"M 5 2 L 5 3 L 2 3 L 2 4 L 2 12 L 2 13 L 5 13 L 5 14 L 14 14 L 14 11 L 5 11 L 5 12 L 3 12 L 3 9 L 4 9 L 4 7 L 3 7 L 3 4 L 5 4 L 5 5 L 14 5 L 14 2 L 5 2 z "}]]);
+export const FormatLineSpacingTriple = createGtkIcon("format-line-spacing-triple", [["path",{"d":"m7 3v1h-3-1v6 2 6h1 3v1h12v-3h-12v1h-3v-5h1v-2h-1v-5h3v1h12v-3z"}]]);

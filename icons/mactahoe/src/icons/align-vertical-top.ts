@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const AlignVerticalTop = createGtkIcon("align-vertical-top", [["path",{"d":"M 2 2 L 2 3 L 14 3 L 14 2 L 2 2 z M 2 4 L 2 9 L 7 9 L 7 4 L 2 4 z M 9 4 L 9 14 L 14 14 L 14 4 L 9 4 z M 3 5 L 6 5 L 6 8 L 3 8 L 3 5 z M 10 5 L 13 5 L 13 13 L 10 13 L 10 5 z "}]]);
+export const AlignVerticalTop = createGtkIcon("align-vertical-top", [["path",{"d":"m9 4c-1.108 0-2 0.892-2 2v2c0 1.108 0.892 2 2 2h9c1.108 0 2-0.892 2-2v-2c0-1.108-0.892-2-2-2zm0 1h9c0.554 0 1 0.446 1 1v2c0 0.554-0.446 1-1 1h-9c-0.554 0-1-0.446-1-1v-2c0-0.554 0.446-1 1-1z"}],["path",{"d":"m9 14c-1.108 0-2 0.892-2 2v2c0 1.108 0.892 2 2 2h2c1.108 0 2-0.892 2-2v-2c0-1.108-0.892-2-2-2zm0 1h2c0.554 0 1 0.446 1 1v2c0 0.554-0.446 1-1 1h-2c-0.554 0-1-0.446-1-1v-2c0-0.554 0.446-1 1-1z"}],["rect",{"x":"4","y":"4","width":"1","height":"16","rx":".5","ry":".5"}]]);

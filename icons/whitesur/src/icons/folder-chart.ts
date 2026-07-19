@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const FolderChart = createGtkIcon("folder-chart", [["path",{"d":"M 12 2 L 12 12 L 13 12 L 13 2 L 12 2 z M 6 5 L 6 12 L 7 12 L 7 5 L 6 5 z M 9 8 L 9 12 L 10 12 L 10 8 L 9 8 z M 3 10 L 3 12 L 4 12 L 4 10 L 3 10 z M 2 13 L 2 14 L 14 14 L 14 13 L 2 13 z "}]]);
+export const FolderChart = createGtkIcon("folder-chart", [["path",{"d":"M 16 3 L 16 17 L 17 17 L 17 3 L 16 3 z M 8 7 L 8 17 L 9 17 L 9 7 L 8 7 z M 12 11 L 12 17 L 13 17 L 13 11 L 12 11 z M 4 13 L 4 17 L 5 17 L 5 13 L 4 13 z M 3 18 L 3 19 L 18 19 L 18 18 L 3 18 z "}]]);

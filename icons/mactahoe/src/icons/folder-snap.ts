@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const FolderSnap = createGtkIcon("folder-snap", [["path",{"d":"M 1 2 L 8 9 L 8 4.5 L 1 2 z M 8.5 4.5 L 14 7 L 12.5 4.5 L 8.5 4.5 z M 8.3 4.65 L 8.25 8.65 L 11 6 L 8.3 4.65 z M 6.25 7.75 L 3 14 L 7.8 9.25 L 6.25 7.75 z "}]]);
+export const FolderSnap = createGtkIcon("folder-snap", [["path",{"d":"m 2,3 9.5,9 V 6 Z M 12,6 20,9.6666664 18,6 Z m 0,0.5566389 V 12 L 15.84615,8.3333333 Z M 9.5127119,11 3,20 11,12.5 Z"}]]);

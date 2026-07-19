@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const ColorGradient = createGtkIcon("color-gradient", [["path",{"d":"M 11 3 L 11 4 L 4 4 L 4 11 L 3 11 L 3 12 L 3 13 L 4 13 L 5 13 L 5 12 L 12 12 L 12 5 L 13 5 L 13 3 L 11 3 z "}],["path",{"d":"m10 2v3.281l-4.719 4.719h-3.281v4h4v-3.281l4.719-4.719h3.281v-4zm1 1h2v2h-2zm-8 8h2v2h-2z"}]]);
+export const ColorGradient = createGtkIcon("color-gradient", [["path",{"d":"M 16 4 L 16 5 L 5 5 L 5 16 L 4 16 L 4 18 L 6 18 L 6 17 L 17 17 L 17 6 L 18 6 L 18 4 L 16 4 z ","transform":"translate(0,1030.36)"}],["path",{"d":"M 15 3 L 15 6.2929688 L 13 8.2929688 L 9.8183594 11.474609 L 6.2929688 15 L 3 15 L 3 19 L 7 19 L 7 15.707031 L 10.525391 12.181641 L 13.707031 9 L 15.707031 7 L 19 7 L 19 3 L 15 3 z M 16 4 L 18 4 L 18 6 L 16 6 L 16 4 z M 4 16 L 6 16 L 6 18 L 4 18 L 4 16 z ","transform":"translate(0,1030.36)"}]]);

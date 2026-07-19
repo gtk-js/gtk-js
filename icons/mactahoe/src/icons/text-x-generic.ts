@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const TextXGeneric = createGtkIcon("text-x-generic", [["path",{"fill":"currentColor","strokeWidth":"1.4","d":"M2 2v1h6V2zm0 3v1h12V5zm0 3v1h6V8zm0 2v1h12v-1zm0 3v1h9v-1z"}]]);
+export const TextXGeneric = createGtkIcon("text-x-generic", [["path",{"d":"M3 3h8v1H3zM3 7h16v1H3zM3 14h16v1H3zM3 11h8v1H3zM3 18h12v1H3z"}]]);

@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const TextUnkern = createGtkIcon("text-unkern", [["path",{"d":"M 2 2 L 2 14 L 3 14 L 8 14 L 8 13 L 3 13 L 3 2 L 2 2 z M 5 2 L 5 3 L 9 3 L 9 7 L 10 7 L 10 3 L 14 3 L 14 2 L 5 2 z "}],["path",{"d":"M 9.99,8 9,8.99 11.01,11 9,13.01 9.99,14 12,11.99 14.01,14 15,13.01 12.99,11 15,8.99 14.01,8 12,10.01 Z"}]]);
+export const TextUnkern = createGtkIcon("text-unkern", [["path",{"d":"M196 633.362h1v8h-1zm7 0h1v8h-1z","transform":"translate(-195 -627.361)"}],["path",{"d":"M198 640.362h4v1h-4z","transform":"translate(-195 -627.361)"}],["path",{"d":"M1 2v2l1-1h2.5v6l-1 1h3l-1-1V3H8l1 1V2Z"}],["path",{"d":"m10.525 9.818-.707.707 2.121 2.121-2.12 2.122.706.707 2.121-2.121 2.122 2.12.707-.706-2.121-2.122 2.12-2.12-.706-.708-2.122 2.121z"}]]);

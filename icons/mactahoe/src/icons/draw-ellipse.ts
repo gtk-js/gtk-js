@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const DrawEllipse = createGtkIcon("draw-ellipse", [["path",{"d":"M 8 3 A 6 5 0 0 0 2 8 A 6 5 0 0 0 8 13 A 6 5 0 0 0 14 8 A 6 5 0 0 0 8 3 z M 8 4 A 5 4 0 0 1 13 8 A 5 4 0 0 1 8 12 A 5 4 0 0 1 3 8 A 5 4 0 0 1 8 4 z "}]]);
+export const DrawEllipse = createGtkIcon("draw-ellipse", [["path",{"d":"M11 5A8 6 0 0 0 3 11 8 6 0 0 0 11 17 8 6 0 0 0 19 11 8 6 0 0 0 11 5M11 6A7 5 0 0 1 18 11 7 5 0 0 1 11 16 7 5 0 0 1 4 11 7 5 0 0 1 11 6"}]]);

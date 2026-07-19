@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const FillRuleNonzero = createGtkIcon("fill-rule-nonzero", [["path",{"d":"m4.18 2c-1.467 0-2.188 1.687-2.18 3.797.013 3.516 2.056 8.203 6.02 8.203 3.899 0 5.938-4.687 5.976-8.203.023-2.109-.678-3.797-2.133-3.797-1.22 0-2.654.926-3.867 2.203-1.206-1.27-2.609-2.203-3.82-2.203"}]]);
+export const FillRuleNonzero = createGtkIcon("fill-rule-nonzero", [["path",{"d":"m8.022 16c8.3167 0 10.308-16 5.136-16-5.2376 0-13.473 12.802-5.1072 12.802 8.2615 0 0.072-12.802-5.1456-12.802s-3.3472 16 5.1168 16z","fill":"currentColor","strokeWidth":".8"}]]);

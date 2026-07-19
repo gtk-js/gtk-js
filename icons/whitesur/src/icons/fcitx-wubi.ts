@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const FcitxWubi = createGtkIcon("fcitx-wubi", [["path",{"d":"m3 3h9v1h-4.098l-0.666 3h3.764v5h2v1h-10v-1h2.1l0.888-4h-1.988v-1h2.21l0.667-3h-3.877zm4.014 5-0.891 4h3.877v-4z","fill":"currentColor"}],["path",{"d":"m3 0c-1.662 0-3 1.338-3 3v10c0 1.662 1.338 3 3 3h9.9989c1.662 0 3-1.338 3-3v-10c0-1.662-1.338-3-3-3zm0 1h9.9989c1.108 0 2 0.892 2 2v10c0 1.108-0.892 2-2 2h-9.9989c-1.108 0-2-0.892-2-2v-10c0-1.108 0.892-2 2-2z","fill":"currentColor"}]]);
+export const FcitxWubi = createGtkIcon("fcitx-wubi", [["path",{"fill":"currentColor","d":"M6 6h9v1h-4.097l-.666 3H14v5h2v1H6v-1h2.1l.888-4H7v-1h2.21l.667-3H6zm4.015 5-.891 4H13v-4z"}],["path",{"fill":"currentColor","d":"M6 3C4.34 3 3 4.338 3 6v10c0 1.662 1.339 3 3 3h10c1.661 0 3-1.338 3-3V6c0-1.662-1.339-3-3-3zm0 1h10c1.107 0 2 .892 2 2v10c0 1.108-.893 2-2 2H6c-1.107 0-2-.892-2-2V6c0-1.108.893-2 2-2"}]]);

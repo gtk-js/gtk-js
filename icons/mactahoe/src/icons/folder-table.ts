@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const FolderTable = createGtkIcon("folder-table", [["path",{"d":"M 2 2 L 2 14 L 14 14 L 14 2 L 3 2 L 2 2 z M 3 3 L 13 3 L 13 5 L 3 5 L 3 3 z M 3 6 L 5 6 L 5 9 L 3 9 L 3 6 z M 6 6 L 10 6 L 10 9 L 6 9 L 6 6 z M 11 6 L 13 6 L 13 9 L 11 9 L 11 6 z M 3 10 L 5 10 L 5 13 L 3 13 L 3 10 z M 6 10 L 10 10 L 10 13 L 6 13 L 6 10 z M 11 10 L 13 10 L 13 13 L 11 13 L 11 10 z "}]]);
+export const FolderTable = createGtkIcon("folder-table", [["path",{"d":"M 3 3 L 3 19 L 19 19 L 19 3 L 3 3 z M 4 4 L 18 4 L 18 8 L 4 8 L 4 4 z M 4 9 L 8 9 L 8 13 L 4 13 L 4 9 z M 9 9 L 13 9 L 13 13 L 9 13 L 9 9 z M 14 9 L 18 9 L 18 13 L 14 13 L 14 9 z M 4 14 L 8 14 L 8 18 L 4 18 L 4 14 z M 9 14 L 13 14 L 13 18 L 9 18 L 9 14 z M 14 14 L 18 14 L 18 18 L 14 18 L 14 14 z "}]]);

@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const ViewFinancialCategoryEdit = createGtkIcon("view-financial-category-edit", [["path",{"d":"m2 2v1h11v2h1v-3h-12zm0 2v10h4v-1h-3v-8h9v-1h-10zm2 2v1h2v-1h-2zm3 0v1c2.271 0.034398 1 0 1 0h5v1h1v-2h-7zm5 2-4 4v2h2l4-4-2-2zm-8 1v1h1v-1h-1zm7.6895 0.68945 0.5918 0.5918-2.9688 2.9844v0.015625l-0.59375-0.59375 2.9707-2.998zm-7.6895 1.3105v1h2v-1h-2z","fill":"currentColor"}]]);
+export const ViewFinancialCategoryEdit = createGtkIcon("view-financial-category-edit", [["path",{"d":"m3 3v3h1v-2h14v5h1v-6h-16zm0 4v12h6v-1h-5v-10h8v1h1v-2h-10zm2 3v1h4v-1h-4zm5 0v9h2v-1h-1v-7h7v1h1v-2h-9zm-5 3v1h2v-1h-2zm12 0-4 4v2h2l4-4-2-2zm-0.31055 1.6895 0.5918 0.5918-2.9688 2.9844v0.015625l-0.59375-0.59375 2.9707-2.998zm-11.689 0.31055v1h4v-1h-4z","fill":"currentColor"}]]);

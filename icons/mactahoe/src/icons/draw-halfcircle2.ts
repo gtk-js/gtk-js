@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const DrawHalfcircle2 = createGtkIcon("draw-halfcircle2", [["path",{"d":"m7 2h1c3.314 0 6 2.684 6 5.996 0 3.311-2.686 5.996-6 5.996-.069.019-1 0-1 0v-10.992zm1 .999v9.993c2.761 0 5-2.237 5-4.997 0-2.76-2.239-4.997-5-4.997"}]]);
+export const DrawHalfcircle2 = createGtkIcon("draw-halfcircle2", [["path",{"d":"m562.28572 610.6479c4.432 0 8 3.568 8 8 0 4.432-3.568 8-8 8h-1v-16h1m0 1v14c3.878 0 7-3.122 7-7 0-3.878-3.122-7-7-7","transform":"translate(-551.28571-607.64789)"}]]);

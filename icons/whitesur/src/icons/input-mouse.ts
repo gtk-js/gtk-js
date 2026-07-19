@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const InputMouse = createGtkIcon("input-mouse", [["path",{"d":"M6.5 1.004a4.501 4.501 0 0 0-4.5 4.5v6c0 2.484 2.016 4.5 4.5 4.5h2c2.484 0 4.5-2.016 4.5-4.5v-6c0-2.484-2.016-4.5-4.5-4.5zm0 1H7v4H3v-.5c0-1.948 1.553-3.5 3.5-3.5zm1.5 0h.5c1.948 0 3.5 1.552 3.5 3.5v.5H8zm-5 5h9v4.5c0 1.948-1.552 3.5-3.5 3.5h-2a3.481 3.481 0 0 1-3.5-3.5z"}]]);
+export const InputMouse = createGtkIcon("input-mouse", [["path",{"d":"m9 3c-2.77 0-5 2.23-5 5v1 6c0 2.77 2.23 5 5 5h3c2.77 0 5-2.23 5-5v-6-1c0-2.77-2.23-5-5-5h-3zm0 1h1v4h-5c0-2.216 1.784-4 4-4zm2 0h1c2.216 0 4 1.784 4 4h-5v-4zm-6 5h11v6c0 2.216-1.784 4-4 4h-3c-2.216 0-4-1.784-4-4v-6z","fill":"currentColor"}]]);

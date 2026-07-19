@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const OrgXfceScreenshooter = createGtkIcon("org-xfce-screenshooter", [["path",{"d":"M11 12h5v1h-5z"}],["path",{"d":"M13 10h1v5h-1zM13 8h1v1h-1zM1 8h1v1H1zM13 4h1v1h-1zM1 4h1v1H1zM13 2h1v1h-1zM1 2h1v1H1zM1 10h1v1H1zM1 12h1v1H1zM3 12h1v1H3zM5 12h1v1H5zM7 12h1v1H7zM3 2h1v1H3zM5 2h1v1H5zM7 2h1v1H7zM11 2h1v1h-1zM9 12h1v1H9zM9 2h1v1H9zM13 6h1v1h-1zM1 6h1v1H1z"}]]);
+export const OrgXfceScreenshooter = createGtkIcon("org-xfce-screenshooter", [["path",{"d":"m11 12h5v1h-5z"}],["path",{"d":"m13 10h1v5h-1zm0-2h1v1h-1zm-12 0h1v1h-1zm12-4h1v1h-1zm-12 0h1v1h-1zm12-2h1v1h-1zm-12 0h1v1h-1zm0 8h1v1h-1zm0 2h1v1h-1zm2 0h1v1h-1zm2 0h1v1h-1zm2 0h1v1h-1zm-4-10h1v1h-1zm2 0h1v1h-1zm2 0h1v1h-1zm4 0h1v1h-1zm-2 10h1v1h-1zm0-10h1v1h-1zm4 4h1v1h-1zm-12 0h1v1h-1z"}]]);

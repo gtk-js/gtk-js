@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const ViewFilter = createGtkIcon("view-filter", [["path",{"d":"M 3 2 L 2 3 L 2 4 L 2 4.3125 L 6 9.96875 L 6 10 L 6 12 L 10 14 L 10 10 L 10 9.96875 L 14 4.3125 L 14 3 L 13 2 L 9 2 L 7.25 2 L 3 2 z M 3 3 L 7.25 3 L 9 3 L 13 3 L 13 4 L 9 9.625 L 9 10 L 9 11 L 9 12 L 7 11 L 7 10 L 7 9.625 L 3 4 L 3 3 z "}]]);
+export const ViewFilter = createGtkIcon("view-filter", [["path",{"d":"M 5 3 L 4 4 L 4 5 L 4 5.3046875 L 9 12.367188 L 9 16 L 9 16.039062 L 12.990234 19 L 13 19 L 13 12.367188 L 18 5.3046875 L 18 4 L 17 3 L 5 3 z M 5 4 L 17 4 L 17 4.9882812 L 12.035156 12 L 12 12 L 12 12.048828 L 12 13 L 12 17.019531 L 10 15.535156 L 10 13 L 10 12.048828 L 10 12 L 9.9648438 12 L 5 4.9882812 L 5 4 z M 6 5 L 8 8 L 8 6 L 10 5 L 6 5 z "}]]);

@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const ApplicationXKexiConnectiondata = createGtkIcon("application-x-kexi-connectiondata", [["path",{"fill":"currentColor","d":"M8 2a6 2 0 0 0-6 2v4a6 2 0 0 0 5 1.97V12H5v-1H2v3h3v-1h6v1h3v-3h-3v1H9V9.971A6 2 0 0 0 14 8V4a6 2 0 0 0-6-2m0 1a5 1 0 0 1 5 1 5 1 0 0 1-5 1 5 1 0 0 1-5-1 5 1 0 0 1 5-1M3 5.102A6 2 0 0 0 8 6a6 2 0 0 0 5-.896V8a5 1 0 0 1-5 1 5 1 0 0 1-5-1V6.896zM3 12h1v1H3zm9 0h1v1h-1z"}]]);
+export const ApplicationXKexiConnectiondata = createGtkIcon("application-x-kexi-connectiondata", [["path",{"d":"M11 3a8 3 0 0 0-8 3v5a8 3 0 0 0 7 2.973V16H7v-1H3v4h4v-1h8v1h4v-4h-4v1h-3v-2.027A8 3 0 0 0 19 11V6a8 3 0 0 0-8-3zm0 1a7 2 0 0 1 7 2 7 2 0 0 1-7 2 7 2 0 0 1-7-2 7 2 0 0 1 7-2zm7 3.445V11a7 2 0 0 1-7 2 7 2 0 0 1-7-2V7.451A8 3 0 0 0 11 9a8 3 0 0 0 7-1.555zM4 16h2v2H4v-2zm12 0h2v2h-2v-2z","fill":"currentColor"}]]);

@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const PreferencesDesktopTextToSpeech = createGtkIcon("preferences-desktop-text-to-speech", [["rect",{"width":"22","height":"22","rx":"6","ry":"6"}],["path",{"d":"M9 4v6h6v3l3-3V4Zm1 1h7v4h-7Zm-2.5 5-.5.4-2 1.666V12H4v4h1v-.066L7 17.6l.5.4H8v-8z"}]]);
+export const PreferencesDesktopTextToSpeech = createGtkIcon("preferences-desktop-text-to-speech", [["rect",{"width":"28","height":"28","x":"386.571","y":"517.798","rx":"7","ry":"7"}],["path",{"d":"M9 2C5.122 2 2 5.122 2 9v14c0 3.878 3.122 7 7 7h14c3.878 0 7-3.122 7-7V9c0-3.878-3.122-7-7-7zm0 .5h14c3.601 0 6.5 2.899 6.5 6.5v14c0 3.601-2.899 6.5-6.5 6.5H9A6.486 6.486 0 0 1 2.5 23V9c0-3.601 2.899-6.5 6.5-6.5"}],["path",{"d":"M14 9v6h6v3l3-3V9zm1 1h7v4h-7zm-2.5 5-.5.4-2 1.666V17H9v4h1v-.066l2 1.666.5.4h.5v-8z","transform":"translate(384.571 515.798)"}]]);

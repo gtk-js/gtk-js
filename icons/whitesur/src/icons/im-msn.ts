@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const ImMsn = createGtkIcon("im-msn", [["path",{"d":"m2 2v5h5v-5zm7 0v5h5v-5zm-7 7v5h5v-5zm7 0v5h5v-5z"}]]);
+export const ImMsn = createGtkIcon("im-msn", [["path",{"d":"m3 3v7h7v-7h-7m9 0v7h7v-7h-7m-9 9v7h7v-7h-7m9 0v7h7v-7h-7"}]]);

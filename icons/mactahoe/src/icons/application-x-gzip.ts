@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const ApplicationXGzip = createGtkIcon("application-x-gzip", [["path",{"fill":"currentColor","d":"M2 2v12h12V2zm1 1h4v1h1V3h5v10H3zm5 1v1h1V4zm0 1H7v1h1zm0 1v1h1V6zm0 1H7v1h1zm0 1v1h1V8zm0 1H7v2h2v-1H8z"}]]);
+export const ApplicationXGzip = createGtkIcon("application-x-gzip", [["path",{"d":"M3 3v16h16V3H3zm1 1h6v1h1V4h7v14H4V4zm7 1v1h1V5h-1zm0 1h-1v1h1V6zm0 1v1h1V7h-1zm0 1h-1v1h1V8zm0 1v1h1V9h-1zm0 1h-1v1h1v-1zm0 1v1h1v-1h-1zm0 1h-1v2h2v-1h-1v-1z","fill":"currentColor"}]]);

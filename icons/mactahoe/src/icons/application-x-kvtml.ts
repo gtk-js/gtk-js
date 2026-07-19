@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const ApplicationXKvtml = createGtkIcon("application-x-kvtml", [["path",{"fill":"currentColor","d":"M2 2v12h12V2zm1 1h10v10H3zm1 1v2h8V4zm0 3v1h3V7zm5 0v1h3V7zM4 9v1h3V9zm5 0v1h3V9zm-5 2v1h3v-1zm5 0v1h3v-1z"}]]);
+export const ApplicationXKvtml = createGtkIcon("application-x-kvtml", [["path",{"d":"M3 3v16h16V3H3zm1 1h14v14H4V4z"}],["path",{"d":"M6 6h10v2H6zM6 10h4v1H6zM12 10h4v1h-4zM6 13h4v1H6zM12 13h4v1h-4zM6 16h4v1H6zM12 16h4v1h-4z"}]]);

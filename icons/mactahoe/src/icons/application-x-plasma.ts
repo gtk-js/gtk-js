@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const ApplicationXPlasma = createGtkIcon("application-x-plasma", [["path",{"fill":"currentColor","d":"M5 2a1 1 0 0 0-1 1 1 1 0 0 0 1 1 1 1 0 0 0 1-1 1 1 0 0 0-1-1m5 0L8.06 3.563l2.596 3.218-2.437 2.438L10 11l4-4zM3.5 6A1.5 1.5 0 0 0 2 7.5 1.5 1.5 0 0 0 3.5 9 1.5 1.5 0 0 0 5 7.5 1.5 1.5 0 0 0 3.5 6m3 5A1.5 1.5 0 0 0 5 12.5 1.5 1.5 0 0 0 6.5 14 1.5 1.5 0 0 0 8 12.5 1.5 1.5 0 0 0 6.5 11"}]]);
+export const ApplicationXPlasma = createGtkIcon("application-x-plasma", [["path",{"d":"M7 3c-.554 0-1 .446-1 1s.446 1 1 1 1-.446 1-1-.446-1-1-1zm7 0l-2 2 3 3-3 3 2 2 3-3 2-2-5-5zM4.5 9C3.669 9 3 9.669 3 10.5S3.669 12 4.5 12 6 11.331 6 10.5 5.331 9 4.5 9zM9 15c-1.108 0-2 .892-2 2s.892 2 2 2 2-.892 2-2-.892-2-2-2z","fill":"currentColor"}]]);

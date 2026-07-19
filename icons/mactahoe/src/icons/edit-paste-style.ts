@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const EditPasteStyle = createGtkIcon("edit-paste-style", [["path",{"d":"M 8 2 L 8 7 L 5 7 L 5 8 L 12 8 L 12 7 L 9 7 L 9 2 L 8 2 z M 5 9 C 5 11.76142 4.10457 14 3 14 L 7 14 L 8 14 L 10 14 C 11.10456 14 12 11.76142 12 9 L 10 9 L 8 9 L 7 9 L 5 9 z "}]]);
+export const EditPasteStyle = createGtkIcon("edit-paste-style", [["path",{"fill":"currentColor","d":"M3 1c-1.108 0-2 .892-2 2v11c0 1.108.892 2 2 2h10c1.108 0 2-.892 2-2V3c0-1.108-.892-2-2-2h-2v1l-.002.033H13c.554 0 1 .446 1 1v10.934c0 .554-.446 1-1 1H3c-.554 0-1-.446-1-1V3.033c0-.554.446-1 1-1h2.002L5 2V1H3z"}],["path",{"fill":"currentColor","d":"M6 0c-.554 0-1 .446-1 1v1c0 .554.446 1 1 1h4c.554 0 1-.446 1-1V1c0-.554-.446-1-1-1Zm0 1h4v1H6Z"}],["path",{"d":"M5 4c-.554 0-1 .446-1 1v7c0 .554.446 1 1 1h4l3-3V5c0-.554-.446-1-1-1H5zm0 1h6v4H9c-.554 0-1 .446-1 1v2H5V5zm4 5h1.586L9 11.586V10z"}]]);

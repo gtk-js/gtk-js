@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const DrawSquareInvertedCorners = createGtkIcon("draw-square-inverted-corners", [["path",{"d":"m5 2v2a1 1 0 0 1 -1 1h-2v6h2a1 1 0 0 1 1 1v2h6v-2a1 1 0 0 1 1 -1h2v-6h-2a1 1 0 0 1 -1 -1v-2zm1 1h4v1a2 2 0 0 0 2 2h1v4h-1a2 2 0 0 0 -2 2v1h-4v-1a2 2 0 0 0 -2 -2h-1v-4h1a2 2 0 0 0 2 -2z"}]]);
+export const DrawSquareInvertedCorners = createGtkIcon("draw-square-inverted-corners", [["path",{"d":"m8 4v.507813 1.992188c0 .831-.669 1.5-1.5 1.5h-2.5v1 6 1h2.5c.831 0 1.5.669 1.5 1.5v1.992188.507812h1 6 1v-.507812-1.992188c0-.831.669-1.5 1.5-1.5h1.992188.507812v-1-6-1h-.507812-1.992188c-.831 0-1.5-.669-1.5-1.5v-2.5h-1-6-1m1 1h6v1.5c0 1.385 1.115 2.5 2.5 2.5h1.5v6h-1.5c-1.385 0-2.5 1.115-2.5 2.5v1.5h-6v-1.5c0-1.385-1.115-2.5-2.5-2.5h-1.5v-6h1.5c1.385 0 2.5-1.115 2.5-2.5v-1.5","transform":"translate(-.99999-.99999)"}]]);

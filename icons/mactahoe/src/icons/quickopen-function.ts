@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const QuickopenFunction = createGtkIcon("quickopen-function", [["path",{"d":"M 4 2 L 2 5 L 3 5 L 3 7 L 5 4 L 4 4 L 4 2 z M 9 9 L 9 14 L 14 14 L 14 9 L 9 9 z M 2 10 L 2 11 L 6 11 L 6 10 L 2 10 z M 4 12 L 4 13 L 7 13 L 7 12 L 4 12 z "}]]);
+export const QuickopenFunction = createGtkIcon("quickopen-function", [["path",{"d":"M 7 3 L 3 10 L 5 10 L 5 15 L 9 8 L 7 8 L 7 3 z M 11 11 L 11 19 L 19 19 L 19 11 L 11 11 z M 4 16 L 4 17 L 7 17 L 7 16 L 4 16 z M 6 18 L 6 19 L 10 19 L 10 18 L 6 18 z "}]]);

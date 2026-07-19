@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const ApplicationXMsDosExecutable = createGtkIcon("application-x-ms-dos-executable", [["path",{"d":"M2 2.5v11h12v-11zm1 2h10v8H3zm2 1v2.552h2.508V5.5zm3.514 0v2.552H11V5.5zM5 8.948V11.5h2.508V8.948zm3.514 0V11.5H11V8.948z","fill":"currentColor"}]]);
+export const ApplicationXMsDosExecutable = createGtkIcon("application-x-ms-dos-executable", [["path",{"d":"M3 3v16h16V3zm1 3h14v12H4zm3 2v3.5h3.5V8zm4.5 0v3.5H15V8zM7 12.5V16h3.5v-3.5zm4.5 0V16H15v-3.5z","fill":"currentColor"}]]);

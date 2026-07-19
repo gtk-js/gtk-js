@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const Acrobat = createGtkIcon("acrobat", [["path",{"d":"m3 2v7l2-2 2 2v-7zm5 0v1h4v7h-3v3h-5v-3h-1v4h7l3-3v-9z"}]]);
+export const Acrobat = createGtkIcon("acrobat", [["path",{"d":"m11 3v1h5c0.554 0 1 0.446 1 1v8h-3c-1.108 0-2 0.892-2 2v3h-6c-0.554 0-1-0.446-1-1v-3h-1v3c0 1.108 0.892 2 2 2h6 1.416l4.584-4.5859v-1.4141-8c0-1.108-0.892-2-2-2h-5zm3 11h3l-4 4v-3c0-0.554 0.446-1 1-1z","fill":"currentColor"}],["path",{"transform":"translate(-326 -534.36)","d":"m332 537.36c-1.108 0-2 0.892-2 2v8l3-2 3 2v-10h-4zm1 3h2c-2 3-4 4-4 4s1-4 2-4z","fill":"currentColor"}]]);

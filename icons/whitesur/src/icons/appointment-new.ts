@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const AppointmentNew = createGtkIcon("appointment-new", [["path",{"d":"m7 4v5h5v-1h-4v-4z","fill":"currentColor"}],["path",{"d":"m8 0a8 8 0 0 0-8 8 8 8 0 0 0 8 8 8 8 0 0 0 8-8 8 8 0 0 0-8-8zm0 1a7 7 0 0 1 7 7 7 7 0 0 1-7 7 7 7 0 0 1-7-7 7 7 0 0 1 7-7z"}]]);
+export const AppointmentNew = createGtkIcon("appointment-new", [["path",{"fill":"currentColor","d":"m12 6v6h-6v-1h5v-5z"}],["path",{"d":"m10.99 2a9 9 0 0 0-8.9902 9 9 9 0 0 0 9 9 9 9 0 0 0 9-9 9 9 0 0 0-9-9 9 9 0 0 0-0.0098 0zm0.0098 1a8 8 0 0 1 8 8 8 8 0 0 1-8 8 8 8 0 0 1-8-8 8 8 0 0 1 8-8z","fill":"currentColor"}]]);

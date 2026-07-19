@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const ApplicationMswordTemplate = createGtkIcon("application-msword-template", [["path",{"opacity":".75","fill":"currentColor","d":"M3.5 14c-.554 0-1-.446-1-1V3.001c0-.554.446-1 1-1h9c.554 0 1 .446 1 1v10c0 .553-.446 1-1 1zm0-1h9V3.001h-9zm1-2v-1h7v1zm0-2V8h7v1zm0-2V6h7v1zm0-2V4h7v1z"}]]);
+export const ApplicationMswordTemplate = createGtkIcon("application-msword-template", [["path",{"d":"M5 3c-.554 0-1 .446-1 1v14c0 .554.446 1 1 1h12c.554 0 1-.446 1-1V4c0-.554-.446-1-1-1H5zm0 1h12v14H5V4zm1 2v1h10V6H6zm0 3v1h10V9H6zm0 3v1h10v-1H6zm0 3v1h10v-1H6z","fill":"currentColor","fillOpacity":".749"}]]);

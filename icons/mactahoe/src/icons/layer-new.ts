@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const LayerNew = createGtkIcon("layer-new", [["path",{"d":"M 5 2 L 2 5 L 11 5 L 14 2 L 5 2 z M 5 6 L 2 9 L 7 9 L 10 9 L 13 6 L 10 6 L 7 6 L 5 6 z M 5.4140625 7 L 7 7 L 10 7 L 10.583984 7 L 9.5859375 8 L 7 8 L 4.4160156 8 L 5.4140625 7 z M 11 9 L 11 11 L 9 11 L 9 12 L 11 12 L 11 14 L 12 14 L 12 12 L 14 12 L 14 11 L 12 11 L 12 9 L 11 9 z "}]]);
+export const LayerNew = createGtkIcon("layer-new", [["path",{"d":"M1 12h14v1H1z"}],["path",{"d":"M9 1v3H6v1h3v3h1V5h3V4h-3V1H9z"}]]);

@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const Restoration = createGtkIcon("restoration", [["path",{"d":"M 3 2 L 3 7 L 3 8 L 13 8 L 13 7 L 13 5 L 10 2 L 3 2 Z M 4 3 L 9 3 L 9 6 L 12 6 L 12 7 L 4 7 L 4 3 Z M 3 9 L 3 10 L 3 14 L 13 14 L 13 10 L 13 9 L 3 9 Z M 4 10 L 12 10 L 12 13 L 4 13 L 4 10 Z"}]]);
+export const Restoration = createGtkIcon("restoration", [["path",{"d":"M 4 3 L 4 10 L 5 10 L 17 10 L 18 10 L 18 3 L 17 3 L 5 3 L 4 3 z M 5 4 L 17 4 L 17 9 L 5 9 L 5 4 z M 4 11 L 4 19 L 5 19 L 13 19 L 14 19 L 14 18.990234 L 14.007812 19 L 18 15.007812 L 18 15 L 18 13.59375 L 18 11 L 17 11 L 5 11 L 4 11 z M 5 12 L 17 12 L 17 14 L 13 14 L 13 15 L 13 18 L 5 18 L 5 12 z "}]]);

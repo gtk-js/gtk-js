@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const TextXChangelog = createGtkIcon("text-x-changelog", [["path",{"fill":"currentColor","d":"M2 2v1h12V2zm.5 2a.499.499 0 1 0 0 1 .499.499 0 1 0 0-1M4 4v1h9V4zm0 2v1h4V6zM2.5 9a.499.499 0 1 0 0 1 .499.499 0 1 0 0-1M4 9v1h9V9zm0 2v1h8v-1zm-2 2v1h12v-1z"}]]);
+export const TextXChangelog = createGtkIcon("text-x-changelog", [["path",{"d":"M329 537.362h16v1h-16zM329 552.362h16v1h-16zM332 540.362h11v1h-11zM332 543.362h5v1h-5zM332 546.362h11v1h-11zM332 549.362h5v1h-5z"}],["circle",{"cx":"329.5","cy":"540.862","r":".5"}],["circle",{"cx":"329.5","cy":"546.862","r":".5"}]]);

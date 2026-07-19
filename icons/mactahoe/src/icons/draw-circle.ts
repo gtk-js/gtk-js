@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const DrawCircle = createGtkIcon("draw-circle", [["path",{"d":"M8 2A6 6 0 0 0 2 8 6 6 0 0 0 8 14 6 6 0 0 0 14 8 6 6 0 0 0 8 2M8 3A5 5 0 0 1 13 8 5 5 0 0 1 8 13 5 5 0 0 1 3 8 5 5 0 0 1 8 3"}]]);
+export const DrawCircle = createGtkIcon("draw-circle", [["path",{"d":"m11.00001 3.00001c-4.432 0-8 3.568-8 8 0 4.432 3.568 8 8 8 4.432 0 8-3.568 8-8 0-4.432-3.568-8-8-8m0 1c3.878 0 7 3.122 7 7 0 3.878-3.122 7-7 7-3.878 0-7-3.122-7-7 0-3.878 3.122-7 7-7"}]]);

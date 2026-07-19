@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const LayerDuplicate = createGtkIcon("layer-duplicate", [["path",{"d":"M 5 5 L 2 8 L 11 8 L 14 5 L 5 5 z M 5 9 L 2 12 L 11 12 L 14 9 L 5 9 z "}]]);
+export const LayerDuplicate = createGtkIcon("layer-duplicate", [["path",{"d":"M1 13h14v1H1z"}],["path",{"d":"M1 8h14v1H1z"}]]);

@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const ViewGrid = createGtkIcon("view-grid", [["path",{"d":"M 2 2 L 2 4 L 4 4 L 4 2 L 2 2 z M 7 2 L 7 4 L 9 4 L 9 2 L 7 2 z M 12 2 L 12 4 L 14 4 L 14 2 L 12 2 z M 2 7 L 2 9 L 4 9 L 4 7 L 2 7 z M 7 7 L 7 9 L 9 9 L 9 7 L 7 7 z M 12 7 L 12 9 L 14 9 L 14 7 L 12 7 z M 2 12 L 2 14 L 4 14 L 4 12 L 2 12 z M 7 12 L 7 14 L 9 14 L 9 12 L 7 12 z M 12 12 L 12 14 L 14 14 L 14 12 L 12 12 z "}]]);
+export const ViewGrid = createGtkIcon("view-grid", [["path",{"d":"m4 4v2h2v-2zm6 0v2h2v-2zm6 0v2h2v-2zm-12 6v2h2v-2zm6 0v2h2v-2zm6 0v2h2v-2zm-12 6v2h2v-2zm6 0v2h2v-2zm6 0v2h2v-2z","fill":"currentColor"}]]);

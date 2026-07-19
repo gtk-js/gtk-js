@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const EmblemAdded = createGtkIcon("emblem-added", [["rect",{"width":"16","height":"16","rx":"2","fill":"currentColor"}],["path",{"d":"M2 0C.892 0 0 .892 0 2v12c0 1.108.892 2 2 2h12c1.108 0 2-.892 2-2V2c0-1.108-.892-2-2-2zm0 1h12c.554 0 1 .446 1 1v12c0 .554-.446 1-1 1H2c-.554 0-1-.446-1-1V2c0-.554.446-1 1-1z","fill":"currentColor","fillOpacity":".6"}],["rect",{"x":"7.5","y":"2","width":"1","height":"12","rx":".5","ry":".5","fill":"currentColor","strokeOpacity":".26047"}],["rect",{"transform":"rotate(90)","x":"7.5","y":"-14","width":"1","height":"12","rx":".5","ry":".5","fill":"currentColor","strokeOpacity":".26047"}]]);
+export const EmblemAdded = createGtkIcon("emblem-added", [["rect",{"transform":"matrix(0,-1,-1,0,0,0)","x":"-296.21","y":"-5.027","width":"4.233","height":"4.233","rx":"2.117","ry":"2.117","fill":"currentColor"}],["path",{"d":"m10 6v4h-4v2h4v4h2v-4h4v-2h-4v-4z","fill":"currentColor"}]]);

@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const XKdeNspluginGenerated = createGtkIcon("x-kde-nsplugin-generated", [["path",{"fill":"currentColor","fillRule":"evenodd","d":"M3 3v1H2v9h12V4h-1V3H9v1H7V3zm1 1h2v1h4V4h2v1h1v7H3V5h1z"}]]);
+export const XKdeNspluginGenerated = createGtkIcon("x-kde-nsplugin-generated", [["path",{"d":"M5 4v1H3v13h16V5h-2V4h-5v1h-2V4H5zm1 1h3v1h4V5h3v1h2v11H4V6h2V5z","fill":"currentColor","strokeLinecap":"square","strokeWidth":"2"}]]);

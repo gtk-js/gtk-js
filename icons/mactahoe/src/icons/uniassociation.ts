@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const Uniassociation = createGtkIcon("uniassociation", [["path",{"d":"M 7.5 2 L 4 9 L 4.8945312 9.4472656 L 7 5.2363281 L 7 14 L 8 14 L 8 5.2363281 L 10.105469 9.4472656 L 11 9 L 7.5 2 z "}]]);
+export const Uniassociation = createGtkIcon("uniassociation", [["path",{"d":"M 10.5 3 L 7 10 L 7.8945312 10.447266 L 10 6.2363281 L 10 19 L 11 19 L 11 6.2363281 L 13.105469 10.447266 L 14 10 L 10.5 3 z "}]]);

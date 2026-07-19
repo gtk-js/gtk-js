@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const ApplicationXTheme = createGtkIcon("application-x-theme", [["path",{"fill":"currentColor","d":"M2 2v12h12V2zm6 1h5v1H8zM3 5h3v8H3zm4 0h6v8H7z"}]]);
+export const ApplicationXTheme = createGtkIcon("application-x-theme", [["path",{"d":"M3 3v16h16V3H3zm8 1h7v2h-7V4zM4 7h4v11H4V7zm5 0h9v11H9V7z","fill":"currentColor"}]]);

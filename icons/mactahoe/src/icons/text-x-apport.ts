@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const TextXApport = createGtkIcon("text-x-apport", [["path",{"fill":"currentColor","d":"M1.837 2.069v12h12v-12zm1 1h10v10h-10zm1 2v2h2v-2zm6 0v2h2v-2zm-4 4v1h4v-1zm4 1v1h1v-1zm1 1v1h1v-1zm-5-1h-1v1h1zm-1 1h-1v1h1z"}]]);
+export const TextXApport = createGtkIcon("text-x-apport", [["path",{"d":"M3 3v16h16V3H3zm1 1h14v14H4V4zm1 1v1h1V5H5zm1 1v2h2V6H6zm2 0h1V5H8v1zm0 2v1h1V8H8zM6 8H5v1h1V8zm7-3v1h1V5h-1zm1 1v2h2V6h-2zm2 0h1V5h-1v1zm0 2v1h1V8h-1zm-2 0h-1v1h1V8zm-5 3v2h4v-2H9zm4 2v2h2v-2h-2zm2 2v2h2v-2h-2zm-6-2H7v2h2v-2zm-2 2H5v2h2v-2z","fill":"currentColor"}]]);

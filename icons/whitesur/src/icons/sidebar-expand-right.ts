@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const SidebarExpandRight = createGtkIcon("sidebar-expand-right", [["path",{"d":"m7.9995 4.6465-3.3535 3.3535 3.3535 3.3535 0.70703-0.70703-2.6465-2.6465 2.6465-2.6465z","fill":"currentColor"}],["path",{"d":"m13 1c1.108 0 2 0.892 2 2v10c0 1.108-0.892 2-2 2h-10c-1.108 0-2-0.892-2-2v-10c0-1.108 0.892-2 2-2zm0 1h-2v12h2c0.554 0 1-0.446 1-1v-10c0-0.554-0.446-1-1-1zm-3 0h-7c-0.554 0-1 0.446-1 1v10c0 0.554 0.446 1 1 1h7z","fill":"currentColor"}]]);
+export const SidebarExpandRight = createGtkIcon("sidebar-expand-right", [["path",{"d":"m6 3c-1.662 0-3 1.338-3 3v10c0 1.662 1.338 3 3 3h10c1.662 0 3-1.338 3-3v-10c0-1.662-1.338-3-3-3zm0 1h1v14h-1c-1.108 0-2-0.892-2-2v-10c0-1.108 0.892-2 2-2zm2 0h8c1.108 0 2 0.892 2 2v10c0 1.108-0.892 2-2 2h-8z"}],["path",{"d":"m11 6.6465 4.3535 4.3535-4.3535 4.3535-0.70703-0.70703 3.6465-3.6465-3.6465-3.6465z"}]]);

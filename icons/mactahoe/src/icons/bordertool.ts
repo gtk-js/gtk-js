@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const Bordertool = createGtkIcon("bordertool", [["path",{"d":"m 3.0000059,1033.3622 0,16 15.9999941,0 0,-16 z m 2.6666608,2.6667 10.6666663,0 0,10.6667 -10.6666605,-10e-5 z"}],["path",{"d":"m 4.3333333,1034.6955 5.9e-6,13.3334 13.3333278,0 0,-13.3334 z m 1.3333334,1.3334 10.6666663,0 0,10.6667 -10.6666663,0 z"}]]);
+export const Bordertool = createGtkIcon("bordertool", [["path",{"d":"m 4,1034.3622 0,14 14,0 0,-14 -14,0 z m 1,1 12,0 0,12 -12,0 0,-12 z","transform":"translate(0,-1030.3622)"}],["path",{"d":"M 3 3 L 3 19 L 19 19 L 19 3 L 3 3 z M 4 4 L 18 4 L 18 18 L 4 18 L 4 4 z "}]]);

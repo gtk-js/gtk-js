@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const PathOutset = createGtkIcon("path-outset", [["path",{"d":"M 7 7 L 7 10 L 10 7 L 7 7 z M 14 8 A 6 6 0 0 0 8 14 L 9 14 A 5 5 0 0 1 14 9 L 14 8 z "}],["path",{"d":"M 14,2 A 12.00001,12.00001 0 0 0 2,14 l 1,0 A 11,11 0 0 1 14,3 Z"}]]);
+export const PathOutset = createGtkIcon("path-outset", [["path",{"d":"m5 7 5 5V7Z"}],["path",{"d":"M0 8v1a7 7 0 0 1 7 7h1a8 8 0 0 0-8-8Z"}],["path",{"d":"M0 .018v1C8.11 1.404 14.596 7.89 14.982 16h1C15.594 7.34 8.661.406 0 .018Z"}]]);

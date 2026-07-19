@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const ApplicationXSrt = createGtkIcon("application-x-srt", [["path",{"fill":"currentColor","d":"M2 2v8h3V3h3v2h3V2H3zm1 1h1v1H3zm6 0h1v1H9zM3 5h1v2H3zm3 1v6l2 2v-2h6V6zm1 1h6v4H7zM3 8h1v1H3z"}]]);
+export const ApplicationXSrt = createGtkIcon("application-x-srt", [["path",{"d":"M8 8v7l4 4v-4h7V8H8zm1 1h9v5H9V9z"}],["path",{"d":"M3 3v11h4V7h8V3H3zm1 1h2v2H4V4zm3 0h4v2H7V4zm5 0h2v2h-2V4zM4 7h2v3H4V7zm0 4h2v2H4v-2z"}]]);

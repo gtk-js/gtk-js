@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const MessageRfc822 = createGtkIcon("message-rfc822", [["path",{"fill":"currentColor","d":"M2 3v10h12V3H2.687zm1.688 1h8.625L8 8.313 6.937 7.25zM3 4.688l3.219 3.219L3 10.657zm10 0v5.969l-3.219-2.75zM6.906 8.594l.75.75.344.375.344-.375.75-.75L13 11.938V12H3v-.062z"}]]);
+export const MessageRfc822 = createGtkIcon("message-rfc822", [["path",{"d":"M1 3v16h20V3H1zm1 1h.049l5.974 5.977L2 16V4zm1.463 0h15.074L11 11.537 3.463 4zM19.95 4H20v12l-6.023-6.023L19.95 4zm-11.22 6.684L11 12.95l2.27-2.267 6.267 6.267.463.463V18H2v-.586l.463-.463 6.267-6.267z","strokeOpacity":".55","fill":"currentColor","strokeWidth":"2.8"}]]);

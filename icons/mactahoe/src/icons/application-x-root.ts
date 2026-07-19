@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const ApplicationXRoot = createGtkIcon("application-x-root", [["path",{"d":"m2.3027566 293.2958-.413745 2.43348-.4181498-.88407-1.20628004.69158a2.1764035 2.1847289 0 0 0 .0327503.0958l1.05104484-.48581.6404549 1.32405.488685-3.03403 1.4912348-.0284a2.1764035 2.1847289 0 0 0 -.075885-.0868z","fill":"currentColor","transform":"translate(0 -292.76665)"}]]);
+export const ApplicationXRoot = createGtkIcon("application-x-root", [["path",{"d":"m3.1585364 291.9729-.5516596 3.24464-.5575328-1.17875-1.60837217.9221a2.9018696 2.9129701 0 0 0 .0436667.1277l1.40139227-.64776.8539394 1.76541.6515794-4.04538 1.9883119-.038a2.9018696 2.9129701 0 0 0 -.1011797-.11591z","fill":"currentColor","transform":"translate(0 -291.17915)"}]]);

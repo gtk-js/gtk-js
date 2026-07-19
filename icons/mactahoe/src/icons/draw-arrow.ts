@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const DrawArrow = createGtkIcon("draw-arrow", [["path",{"d":"m9 1.996v1.004l3.31.004-7.998 7.998h-2.31v3h3v-2.315l7.998-7.997v3.31h1v-5zm-6 10.004h1v1h-1z","fill":"currentColor"}]]);
+export const DrawArrow = createGtkIcon("draw-arrow", [["path",{"d":"m13 3v1h4.313l-12 12h-2.313v3h3v-2.313l12-12v4.313h1v-6zm-9 14h1v1h-1z","fill":"currentColor"}]]);

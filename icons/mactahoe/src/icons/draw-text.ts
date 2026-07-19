@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const DrawText = createGtkIcon("draw-text", [["path",{"d":"M 11 2 L 11 3 L 12 3 L 12 13 L 11 13 L 11 14 L 14 14 L 14 13 L 13 13 L 13 3 L 14 3 L 14 2 L 11 2 z M 11 13 L 7.1738281 3 L 5.9453125 3 L 2 13 L 3.2226562 13 L 4.2929688 10.273438 L 8.7265625 10.273438 L 9.7636719 13 L 11 13 z M 6.5566406 4.2070312 C 6.6584806 4.5489213 7.1969681 6.0999019 8.1738281 8.8574219 L 8.375 9.3632812 L 4.6464844 9.3632812 L 6.5566406 4.2070312 z "}]]);
+export const DrawText = createGtkIcon("draw-text", [["path",{"d":"m3 3v3h1v10h-1v3h3v-1h10v1h3v-3h-1v-10h1v-3h-3v1h-10v-1h-3m1 1h1v1h-1v-1m13 0h1v1h-1v-1m-11 1h10v1h1v10h-1v1h-10v-1h-1v-10h1v-1m0 2v2h4v7h2v-7h4v-2h-10m-2 10h1v1h-1v-1m13 0h1v1h-1v-1"}]]);

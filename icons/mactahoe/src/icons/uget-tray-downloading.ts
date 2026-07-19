@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const UgetTrayDownloading = createGtkIcon("uget-tray-downloading", [["path",{"d":"M6.625 1S4.298 1.017 4 3.625V10H2V4H1v5.75C1 11.5 2.75 11 2.75 11H4v1.375C4 15 6.625 15 6.625 15h4.75C14 15 14 12.375 14 12.375V7h-3v2h1l-3 4-3-4h1V4h4v1h3V3.625S14 1 11.375 1z","fill":"currentColor"}],["path",{"d":"M8 5v4a1 1 0 0 1-.252.662L9 11.332l1.252-1.668A1 1 0 0 1 10 9V5H8z","fill":"currentColor"}]]);
+export const UgetTrayDownloading = createGtkIcon("uget-tray-downloading", [["path",{"d":"M10.125 4S7.798 4.017 7.5 6.625V13h-2V7h-1v5.75C4.5 14.5 6.25 14 6.25 14H7.5v1.375C7.5 18 10.125 18 10.125 18h4.75c2.625 0 2.625-2.625 2.625-2.625V10h-3v2h1l-3 4-3-4h1V7h4v1h3V6.625S17.5 4 14.875 4z","fill":"currentColor"}],["path",{"d":"M11.5 8v4a1 1 0 01-.252.662l1.252 1.67 1.252-1.668A1 1 0 0113.5 12V8z","fill":"currentColor"}]]);

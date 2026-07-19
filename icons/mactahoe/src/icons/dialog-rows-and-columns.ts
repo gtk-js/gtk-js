@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const DialogRowsAndColumns = createGtkIcon("dialog-rows-and-columns", [["path",{"d":"M 2 2 L 2 6 L 8 6 L 8 2 L 2 2 z M 9 2 L 9 8 L 14 8 L 14 2 L 9 2 z M 2 9 L 2 14 L 8 14 L 8 9 L 2 9 z M 9 9 L 9 12 L 14 12 L 14 9 L 9 9 z "}]]);
+export const DialogRowsAndColumns = createGtkIcon("dialog-rows-and-columns", [["path",{"d":"M1 1v8h6V1H1zm8 0v4h6V1H9zM2 2h4v6H2V2zm8 0h4v2h-4V2zM9 7v8h6V7H9zm1 1h4v6h-4V8zm-9 3v4h6v-4H1zm1 1h4v2H2v-2z"}]]);

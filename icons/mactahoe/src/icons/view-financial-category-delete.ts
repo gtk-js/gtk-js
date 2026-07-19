@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const ViewFinancialCategoryDelete = createGtkIcon("view-financial-category-delete", [["path",{"d":"m2 2v1h11v2h1v-3h-12zm0 2v10h4v-1h-3v-8h9v-1h-10zm2 2v1h2v-1h-2zm3 0v8h1v-7h5v1h1v-2h-7zm-3 3v1h1v-1h-1zm0 2v1h2v-1h-2z","fill":"currentColor"}],["path",{"d":"m9 11v1h5v-1z","fill":"currentColor"}]]);
+export const ViewFinancialCategoryDelete = createGtkIcon("view-financial-category-delete", [["path",{"d":"m3 3v3h1v-2h14v5h1v-6h-16zm0 4v12h6v-1h-5v-10h8v1h1v-2h-10zm2 3v1h4v-1h-4zm5 0v9h3v-1h-2v-7h7v2h1v-3h-9zm2 2v2h1v-1h4v-1h-5zm-7 1v1h2v-1h-2zm0 2v1h4v-1h-4z","fill":"currentColor"}],["path",{"d":"m14 16v1h5v-1z","fill":"currentColor"}]]);

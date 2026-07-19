@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const DashboardShow = createGtkIcon("dashboard-show", [["path",{"d":"m3 1c-1.108 0-2 0.892-2 2v10c0 1.108 0.892 2 2 2h10c1.108 0 2-0.892 2-2v-10c0-1.108-0.892-2-2-2h-10zm0 1h10c0.554 0 1 0.446 1 1v10c0 0.554-0.446 1-1 1h-10c-0.554 0-1-0.446-1-1v-10c0-0.554 0.446-1 1-1z"}],["rect",{"x":"3","y":"12","width":"10","height":"1","ry":".5"}]]);
+export const DashboardShow = createGtkIcon("dashboard-show", [["path",{"d":"m6 3c-1.662 0-3 1.338-3 3v10c0 1.662 1.338 3 3 3h10c1.662 0 3-1.338 3-3v-10c0-1.662-1.338-3-3-3h-10zm0 1h10c1.108 0 2 0.892 2 2v10c0 1.108-0.892 2-2 2h-10c-1.108 0-2-0.892-2-2v-10c0-1.108 0.892-2 2-2z","fill":"currentColor"}],["rect",{"x":"6","y":"15","width":"10","height":"1","rx":"0","ry":".5","fill":"currentColor"}]]);

@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const DocumentRevert = createGtkIcon("document-revert", [["path",{"d":"m12 1c1.108 0 2 0.892 2 2v7l-5 5h-1.7617a4.5 4.5 0 0 0 0.49805-1h0.26367v-5h5v-6c0-0.554-0.446-1-1-1h-8c-0.554 0-1 0.446-1 1v5.0312a4.5 4.5 0 0 0-1 0.23242v-5.2637c0-1.108 0.892-2 2-2zm0.58594 9h-3.5859v3.5859z"}],["path",{"d":"m3.5 9a3.5 3.5 0 0 1 3.5 3.5 3.5 3.5 0 0 1-3.5 3.5 3.5 3.5 0 0 1-3.5-3.5 3.5 3.5 0 0 1 3.5-3.5zm0.5 1.5-2 2 2 2z"}]]);
+export const DocumentRevert = createGtkIcon("document-revert", [["path",{"d":"m6.5 13a3.5 3.5 0 0 1 3.5 3.5 3.5 3.5 0 0 1-3.5 3.5 3.5 3.5 0 0 1-3.5-3.5 3.5 3.5 0 0 1 3.5-3.5zm0.5 1.5-2 2 2 2z","fill":"currentColor"}],["path",{"d":"m7 3c-1.662 0-3 1.338-3 3v6h1v-6c0-1.108 0.892-2 2-2h8c1.108 0 2 0.892 2 2v7h-5v5h-1v1h1 1l5-5v-1-7c0-1.662-1.338-3-3-3h-8zm6 11h3.5859l-3.5859 3.5859v-3.5859z","fill":"currentColor"}]]);

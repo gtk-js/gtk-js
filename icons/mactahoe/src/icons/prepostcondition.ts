@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const Prepostcondition = createGtkIcon("prepostcondition", [["path",{"d":"m2 3v10h12v-7l-3-3zm1 1h7v3h3v5h-10z"}]]);
+export const Prepostcondition = createGtkIcon("prepostcondition", [["path",{"d":"m3 4v14h16v-10l-1-1-2-2-1-1m-11 1h10v4h4v8h-14z"}]]);

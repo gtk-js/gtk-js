@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const ApplicationPgpEncrypted = createGtkIcon("application-pgp-encrypted", [["path",{"fill":"currentColor","d":"M8 2C6.338 2 5 3.338 5 5v3H3v6h10V8h-2V5c0-1.662-1.338-3-3-3m0 1c1.246 0 2 .546 2 2v3H6V5c0-1.454.754-2 2-2"}]]);
+export const ApplicationPgpEncrypted = createGtkIcon("application-pgp-encrypted", [["path",{"d":"M11 3C8.673 3 6.922 4.785 7 7v4H4v8h14v-8h-3V7c0-2.216-1.673-4-4-4zm0 1c1.744 0 3 1.061 3 3v4H8V7c0-1.939 1.256-3 3-3zm-6 8h12v6H5v-6z","fill":"currentColor"}]]);

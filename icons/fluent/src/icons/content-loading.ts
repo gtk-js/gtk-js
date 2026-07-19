@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const ContentLoading = createGtkIcon("content-loading", [["rect",{"y":"-492","x":"91.997","width":"4","ry":"2","rx":"2","height":"4","overflow":"visible","enableBackground":"new"}],["rect",{"y":"-486","x":"91.997","width":"4","ry":"2","rx":"2","height":"4","overflow":"visible","enableBackground":"new"}],["rect",{"y":"-480","x":"91.997","width":"4","ry":"2","rx":"2","height":"4","overflow":"visible","enableBackground":"new"}]]);
+export const ContentLoading = createGtkIcon("content-loading", [["circle",{"cx":"716","cy":"-183","r":"2"}],["circle",{"cx":"721","cy":"-183","r":"2"}],["circle",{"cx":"726","cy":"-183","r":"2"}]]);

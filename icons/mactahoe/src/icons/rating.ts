@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const Rating = createGtkIcon("rating", [["path",{"d":"m 429.74391,532.79074 -2.1875,4.59602 -4.84212,0.72462 3.47949,3.59343 -0.85449,5.05858 4.33854,-2.37663 4.31348,2.40398 -0.79753,-5.06315 3.52051,-3.57291 -4.83301,-0.75196 z"}]]);
+export const Rating = createGtkIcon("rating", [["circle",{"transform":"scale(1,-1)","cx":"11","cy":"-11","r":"8","fill":"currentColor"}],["path",{"d":"m11 5.556 1.7 3.444 3.8 0.552-2.75 2.6805 0.649 3.785-3.399-1.787-3.399 1.787 0.649-3.785-2.75-2.6805 3.8-0.552z","fill":"currentColor"}]]);

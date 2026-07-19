@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const AddressBookNew = createGtkIcon("address-book-new", [["path",{"d":"M 3 2 L 3 3 L 3 4 L 2 4 L 2 6 L 3 6 L 3 10 L 2 10 L 2 12 L 3 12 L 3 13.5 L 3 14 L 14 14 L 14 13 L 14 3 L 14 2 L 3 2 z M 4 3 L 5 3 L 5 13 L 4 13 L 4 3 z M 6 3 L 13 3 L 13 13 L 6 13 L 6 3 z "}]]);
+export const AddressBookNew = createGtkIcon("address-book-new", [["path",{"d":"m7 3c-1.108 0-2 0.892-2 2v12c0 1.108 0.892 2 2 2h10c1.108 0 2-0.892 2-2v-12c0-1.108-0.892-2-2-2h-10zm0 1h1v14h-1c-0.554 0-1-0.446-1-1v-12c0-0.554 0.446-1 1-1zm2 0h8c0.554 0 1 0.446 1 1v12c0 0.554-0.446 1-1 1h-8v-14zm-6 1v3h1v-3h-1zm0 9v3h1v-3h-1z","fill":"currentColor"}]]);

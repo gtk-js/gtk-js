@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const XMediaPodcast = createGtkIcon("x-media-podcast", [["path",{"fill":"currentColor","d":"M8 2C6.338 2 5 3.338 5 5h2v1H5v2h2v1H5.182a2.984 2.984 0 0 0 5.636 0H9V8h2V6H9V5h2c0-1.662-1.338-3-3-3M3.1 9A4.984 4.984 0 0 0 7 12.893V13l-1 1h4l-1-1v-.107A4.982 4.982 0 0 0 12.9 9h-1.039A3.982 3.982 0 0 1 8 12a3.98 3.98 0 0 1-3.861-3z"}]]);
+export const XMediaPodcast = createGtkIcon("x-media-podcast", [["path",{"d":"M11 3a4 4 0 0 0-3.87 3H10v2H7v2h3v2H7.133A4 4 0 0 0 11 15a4 4 0 0 0 3.87-3H12v-2h3V8h-3V6h2.867A4 4 0 0 0 11 3zm-6 9a6 5 0 0 0 5 4.93V17l-2 2h6l-2-2v-.076A6 5 0 0 0 17 12h-1a5 4 0 0 1-5 4 5 4 0 0 1-5-4H5z","fill":"currentColor","fillRule":"evenodd"}]]);

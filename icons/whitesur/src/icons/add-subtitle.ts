@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const AddSubtitle = createGtkIcon("add-subtitle", [["path",{"d":"m10.005155 10v1h1.994845v-1zm-6.005155-2v1h8v-1zm0 2v1h4v-1zm-2-7v10h12v-10zm1 1h10v8h-10z","fill":"currentColor"}]]);
+export const AddSubtitle = createGtkIcon("add-subtitle", [["path",{"d":"m5 11v1.0039h12v-1.0039zm0 2v1h6.0059v-1zm7.9883 2e-3v0.99805h4.0117v-0.99805z","fill":"currentColor"}],["path",{"d":"m5 5c-1.108 0-2 0.892-2 2v8c0 1.108 0.892 2 2 2h12c1.108 0 2-0.892 2-2v-8c0-1.108-0.892-2-2-2h-12zm0 1h12c0.554 0 1 0.446 1 1v8c0 0.554-0.446 1-1 1h-12c-0.554 0-1-0.446-1-1v-8c0-0.554 0.446-1 1-1z","fill":"currentColor"}]]);

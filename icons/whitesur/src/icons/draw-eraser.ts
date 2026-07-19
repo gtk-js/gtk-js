@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const DrawEraser = createGtkIcon("draw-eraser", [["path",{"d":"M 11 2 L 5 8 L 8 11 L 14 5 L 11 2 z M 3.5 9.5 L 2 11 L 5 14 L 6.5 12.5 L 3.5 9.5 z "}]]);
+export const DrawEraser = createGtkIcon("draw-eraser", [["path",{"d":"m16 4l-8 8 4 4 8-8-4-4m-10 10l-2 2 4 4 2-2-4-4","transform":"translate(-.99999-.99999)"}]]);

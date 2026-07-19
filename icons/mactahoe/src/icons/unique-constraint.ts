@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const UniqueConstraint = createGtkIcon("unique-constraint", [["path",{"d":"m4 2v8c0 2.209 1.791 4 4 4 2.209 0 4-1.791 4-4v-8h-1v8c0 1.657-1.343 3-3 3-1.657 0-3-1.343-3-3v-8z"}]]);
+export const UniqueConstraint = createGtkIcon("unique-constraint", [["path",{"d":"M 5 3 L 5 13 A 6 6 0 0 0 11 19 A 6 6 0 0 0 17 13 L 17 3 L 16 3 L 16 13 A 5 5 0 0 1 11 18 A 5 5 0 0 1 6 13 L 6 3 L 5 3 z "}]]);

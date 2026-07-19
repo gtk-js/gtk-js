@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const BoundingboxRight = createGtkIcon("boundingbox-right", [["path",{"d":"m9.5 1a0.50005 0.50005 0 0 0-0.5 0.5v3.5h1v-3h1v3h1v-3.5a0.50005 0.50005 0 0 0-0.5-0.5h-2zm-0.5 10v3.5a0.50005 0.50005 0 0 0 0.5 0.5h2a0.50005 0.50005 0 0 0 0.5-0.5v-3.5h-1v3h-1v-3h-1z","fill":"currentColor","strokeLinejoin":"round"}],["path",{"d":"m10.5 3.5a4.5 4.5 0 0 0-4.5 4.5 4.5 4.5 0 0 0 4.5 4.5 4.5 4.5 0 0 0 4.5-4.5 4.5 4.5 0 0 0-4.5-4.5zm0 2a2.5 2.5 0 0 1 2.5 2.5 2.5 2.5 0 0 1-2.5 2.5 2.5 2.5 0 0 1-2.5-2.5 2.5 2.5 0 0 1 2.5-2.5z","fill":"currentColor"}]]);
+export const BoundingboxRight = createGtkIcon("boundingbox-right", [["path",{"d":"M12 0v16h-1V0Z"}],["path",{"d":"M16 8c0-2.756-2.244-5-5-5S6 5.244 6 8s2.244 5 5 5 5-2.244 5-5zm-1 0c0 2.215-1.785 4-4 4s-4-1.785-4-4 1.785-4 4-4 4 1.785 4 4z"}]]);

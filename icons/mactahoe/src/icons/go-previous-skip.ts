@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const GoPreviousSkip = createGtkIcon("go-previous-skip", [["path",{"d":"M6.293 8l6-6 .707.707L7.707 8 13 13.293l-.707.707z"}],["path",{"d":"M2.293 8l6-6L9 2.707 3.707 8 9 13.293 8.293 14z"}]]);
+export const GoPreviousSkip = createGtkIcon("go-previous-skip", [["path",{"d":"M18 3.707L17.293 3l-8 8 8 8 .707-.707L10.707 11zm-5 0L12.293 3l-8 8 8 8 .707-.707L5.707 11z","fill":"currentColor"}]]);

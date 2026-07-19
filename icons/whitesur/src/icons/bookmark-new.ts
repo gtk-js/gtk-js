@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const BookmarkNew = createGtkIcon("bookmark-new", [["path",{"fill":"currentColor","d":"m5 0c-1.108 0-2 0.892-2 2v3 1 9l5-1.5938 5 1.5938v-9-1-3c0-1.108-0.892-2-2-2h-6zm0 1h6c0.554 0 1 0.446 1 1v3 2.7246 5.8691l-4-1.1875-4 1.1875v-5.8691-2.7246-3c0-0.554 0.446-1 1-1z"}]]);
+export const BookmarkNew = createGtkIcon("bookmark-new", [["path",{"d":"m7 0c-1.108 0-2 0.892-2 2v16l6-3 6 3v-16c0-1.108-0.892-2-2-2zm0 1h8c0.554 0 1 0.446 1 1v14.419l-5-2.5937-5 2.5937v-14.419c0-0.554 0.446-1 1-1z","fill":"currentColor"}]]);

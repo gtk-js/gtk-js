@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const TextXRpmSpec = createGtkIcon("text-x-rpm-spec", [["path",{"fill":"currentColor","strokeWidth":"1.4","d":"M2 2v1h6V2zm0 3v1h12V5zm0 3v1h5V8zm7 0v3H8v.016L10.984 14h.031l2.984-2.984V11h-1V8zm1 1h2v2h.6L11 12.602 9.4 11h.6zm-8 1v1h3v-1zm0 3v1h5v-1z"}]]);
+export const TextXRpmSpec = createGtkIcon("text-x-rpm-spec", [["path",{"strokeWidth":"6","d":"M3 3h8v1H3zM3 7h16v1H3zM3 11h6v1H3zM3 14h4v1H3zM3 18h6v1H3z"}],["path",{"d":"M12 11v4h-1l4 4 4-4h-1v-4h-6zm1 1h4v3h.584L15 17.584 12.416 15H13v-3z"}]]);

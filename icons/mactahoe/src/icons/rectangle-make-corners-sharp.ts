@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const RectangleMakeCornersSharp = createGtkIcon("rectangle-make-corners-sharp", [["path",{"d":"m423.71 533.79v1h2c4.971 0 9 4.03 9 9v2h1v-2c0-5.523-4.477-10-10-10z"}],["path",{"d":"m423.71 533.79v1h11v11h1v-12z"}]]);
+export const RectangleMakeCornersSharp = createGtkIcon("rectangle-make-corners-sharp", [["path",{"d":"M1 1h1v1H1zm2 0h12v1H3z"}],["path",{"d":"M14 1h1v12h-1zm0 13h1v1h-1z"}]]);

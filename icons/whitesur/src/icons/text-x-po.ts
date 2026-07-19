@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const TextXPo = createGtkIcon("text-x-po", [["path",{"fill":"currentColor","d":"M2 2v6h4v3l3 3v-3h5V5h-4V2H3zm1 1h6v4H3zm7 3h3v4H7V8h1v2l2-2V7z"}]]);
+export const TextXPo = createGtkIcon("text-x-po", [["path",{"d":"M3 3v8h8v3l3-3V3H3zm1 1h9v6H4V4z"}],["path",{"d":"M13 7v1h5v6H9v-4H8v5l4 4v-4h7V7h-6z"}]]);

@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const ApplicationXBittorrent = createGtkIcon("application-x-bittorrent", [["path",{"d":"M8 2c-1.072 3.818-4 6.073-4 8.182S5.791 14 8 14s4-1.709 4-3.818S9.072 5.818 8 2m2.75 6.233a3.429 3.273 0 0 1 .679 1.949A3.429 3.273 0 0 1 8 13.454a3.429 3.273 0 0 1-2.038-.645 4 3.818 0 0 0 .895.1 4 3.818 0 0 0 4-3.818 4 3.818 0 0 0-.107-.858","fill":"currentColor"}]]);
+export const ApplicationXBittorrent = createGtkIcon("application-x-bittorrent", [["path",{"d":"M11 3c-.973 3.405-3.354 6.332-4.404 8.676A4.958 4.958 0 0 0 6 14c0 2.77 2.23 5 5 5s5-2.23 5-5c0-.845-.228-1.627-.596-2.324C14.354 9.332 11.973 6.405 11 3zm2.283 7.717A3.984 3.984 0 0 1 15 14c0 2.216-1.784 4-4 4a3.984 3.984 0 0 1-3.283-1.717c.647.45 1.432.717 2.283.717 2.216 0 4-1.784 4-4 0-.851-.267-1.636-.717-2.283z","fill":"currentColor"}]]);

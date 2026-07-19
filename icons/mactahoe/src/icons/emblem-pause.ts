@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const EmblemPause = createGtkIcon("emblem-pause", [["rect",{"width":"16","height":"16","rx":"2","fill":"currentColor"}],["path",{"d":"M2 0C.892 0 0 .892 0 2v12c0 1.108.892 2 2 2h12c1.108 0 2-.892 2-2V2c0-1.108-.892-2-2-2zm0 1h12c.554 0 1 .446 1 1v12c0 .554-.446 1-1 1H2c-.554 0-1-.446-1-1V2c0-.554.446-1 1-1z","fill":"currentColor","fillOpacity":".6"}],["rect",{"x":"5","y":"4","width":"2","height":"8","rx":"1","ry":"1","fill":"currentColor","strokeOpacity":".26047","strokeWidth":".94281"}],["rect",{"x":"9","y":"4","width":"2","height":"8","rx":"1","ry":"1","fill":"currentColor","strokeOpacity":".26047","strokeWidth":".94281"}]]);
+export const EmblemPause = createGtkIcon("emblem-pause", [["circle",{"r":"20","cy":"24","cx":"24","fill":"currentColor"}],["path",{"fill":"currentColor","d":"M16.5 16.5h5v15h-5zM26.5 16.5h5v15h-5z"}]]);

@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const ApplicationVndNokiaXmlQtResource = createGtkIcon("application-vnd-nokia-xml-qt-resource", [["path",{"d":"m9.09 2l-3.146 11.74.967.26 3.146-11.74zm-3.805 2l-2.961 3.145-.324.348.324.346 2.943 3.162.715-.695-2.621-2.813 2.639-2.797zm5.43 0l-.715.695 2.639 2.797-2.621 2.813.715.695 2.943-3.162.324-.346-.324-.348z","fill":"currentColor","strokeWidth":".1"}]]);
+export const ApplicationVndNokiaXmlQtResource = createGtkIcon("application-vnd-nokia-xml-qt-resource", [["path",{"d":"m563.78571 610.64791-4 15.75384 1 0.24616 4-15.75385-1-0.24615z"}],["path",{"d":"m566.03107 613.64791-0.74534 0.70967 3.66459 4.29032-3.66459 4.29033 0.74534 0.70968 3.97515-4.64516 0.27951-0.35485-0.27951-0.35483-3.97515-4.64516z"}],["path",{"d":"m558.54037 613.64791 0.74534 0.70967-3.66459 4.29032 3.66459 4.29033-0.74534 0.70968-3.97515-4.64516-0.27951-0.35485 0.27951-0.35483 3.97515-4.64516z"}]]);

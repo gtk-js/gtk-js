@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const DialogOkApply = createGtkIcon("dialog-ok-apply", [["path",{"d":"M 13.273438 3.5 L 5.6367188 11.060547 L 2.7265625 8.1796875 L 2 8.9003906 L 4.9082031 11.779297 L 5.6367188 12.5 L 6.7265625 11.419922 L 14 4.2207031 L 13.273438 3.5 z "}]]);
+export const DialogOkApply = createGtkIcon("dialog-ok-apply", [["path",{"d":"m382.8643 530.79077l-10.43876 10.56644-4.14699-4.19772-.70712.71578 4.14699 4.1977-.002.002.70713.71577.002-.002.002.002.70711-.71577-.002-.002 10.43877-10.56645-.70712-.71576z","transform":"translate(-364.57143-525.79075)"}]]);
