@@ -19,6 +19,16 @@ import {
 /** Upstream MIN_SCALE in adw-floating-sheet.c. */
 const MIN_SCALE = 0.8;
 
+/**
+ * adw_floating_sheet_size_allocate(): the space kept around the sheet grows
+ * linearly with the window size, from 30px (horizontally) and 20px
+ * (vertically) at 720px up to 120px at 1440px.
+ */
+function sheetPadding(size: number, minValue: number): number {
+  const t = Math.max(0, (size - 720) / (1440 - 720));
+  return Math.trunc(minValue + (120 - minValue) * t);
+}
+
 export interface FloatingSheetProps extends HTMLAttributes<HTMLDivElement> {
   /** Whether the dialog is presented. Closing plays the close animation before unmounting. */
   open: boolean;
@@ -30,6 +40,13 @@ export interface FloatingSheetProps extends HTMLAttributes<HTMLDivElement> {
   onDimmingClick?: () => void;
   /** Called once the close animation finished and the dialog is gone. */
   onCloseAnimationDone?: () => void;
+  /**
+   * AdwDialog:follows-content-size. When false (AdwDialog's default), the
+   * sheet keeps the natural size it had when presented (set_content_size() on
+   * root), so e.g. navigating to a shorter page doesn't shrink it. Sizes set
+   * in `sheetStyle` are kept either way.
+   */
+  followsContentSize?: boolean;
   portal?: boolean | HTMLElement;
   children?: ReactNode;
 }
@@ -55,6 +72,7 @@ export const FloatingSheet = forwardRef<HTMLDivElement, FloatingSheetProps>(func
     dialogClasses,
     sheetStyle,
     onDimmingClick,
+    followsContentSize = false,
     onCloseAnimationDone,
     portal = false,
     children,
@@ -69,6 +87,7 @@ export const FloatingSheet = forwardRef<HTMLDivElement, FloatingSheetProps>(func
   const progress = useRef(0);
   const dimmingRef = useRef<HTMLDivElement>(null);
   const sheetRef = useRef<HTMLDivElement>(null);
+  const floatingRef = useRef<HTMLDivElement>(null);
   const animation = useRef<SpringAnimationHandle | null>(null);
   const doneRef = useRef(onCloseAnimationDone);
   doneRef.current = onCloseAnimationDone;
@@ -115,6 +134,44 @@ export const FloatingSheet = forwardRef<HTMLDivElement, FloatingSheetProps>(func
     return () => animation.current?.cancel();
   }, [open, mounted]);
 
+  // Fix the natural size at presentation (see followsContentSize). offset*
+  // sizes are layout sizes, unaffected by the opening scale transform.
+  useLayoutEffect(() => {
+    const sheet = sheetRef.current;
+    if (!mounted || !sheet || followsContentSize) return;
+    const fixWidth = sheetStyle?.width === undefined;
+    const fixHeight = sheetStyle?.height === undefined;
+    if (!fixWidth && !fixHeight) return;
+    const { maxWidth, maxHeight } = sheet.style;
+    sheet.style.maxWidth = "none";
+    sheet.style.maxHeight = "none";
+    const { offsetWidth, offsetHeight } = sheet;
+    sheet.style.maxWidth = maxWidth;
+    sheet.style.maxHeight = maxHeight;
+    if (fixWidth) sheet.style.width = `${offsetWidth}px`;
+    if (fixHeight) sheet.style.height = `${offsetHeight}px`;
+    return () => {
+      if (fixWidth) sheet.style.width = "";
+      if (fixHeight) sheet.style.height = "";
+    };
+    // Only when presented, like upstream: sheetStyle is read once.
+  }, [mounted, followsContentSize]);
+
+  // The sheet never gets closer to the window's edges than upstream allows.
+  useLayoutEffect(() => {
+    const floating = floatingRef.current;
+    if (!mounted || !floating) return;
+    const update = () => {
+      const { width, height } = floating.getBoundingClientRect();
+      floating.style.padding = `${sheetPadding(height, 20)}px ${sheetPadding(width, 30)}px`;
+    };
+    update();
+    // The border box doesn't change with the padding, so this can't loop.
+    const observer = new ResizeObserver(update);
+    observer.observe(floating, { box: "border-box" });
+    return () => observer.disconnect();
+  }, [mounted]);
+
   if (!mounted) return null;
 
   const hostInWindow = portal === false && windowElement !== null;
@@ -141,6 +198,7 @@ export const FloatingSheet = forwardRef<HTMLDivElement, FloatingSheetProps>(func
         {...rest}
       >
         <div
+          ref={floatingRef}
           className="gtk-floating-sheet"
           style={{
             position: "absolute",
@@ -163,6 +221,9 @@ export const FloatingSheet = forwardRef<HTMLDivElement, FloatingSheetProps>(func
               position: "relative",
               opacity: 0,
               transform: `scale(${MIN_SCALE})`,
+              // Within the padding (see sheetPadding()), like the allocation.
+              maxWidth: "100%",
+              maxHeight: "100%",
               ...sheetStyle,
             }}
           >
