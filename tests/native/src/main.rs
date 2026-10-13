@@ -79,6 +79,8 @@ enum Command {
     BoxSpacingToolbar,
     BoxHomogeneous,
     CenterBoxDefault,
+    CenterBoxToolbarCenterOnly,
+    CenterBoxToolbarStartEnd,
     ExpanderDefault,
     ExpanderExpanded,
     FlowBoxDefault,
@@ -297,6 +299,8 @@ impl Command {
             Self::BoxSpacingToolbar => Some("box-spacing-toolbar"),
             Self::BoxHomogeneous => Some("box-homogeneous"),
             Self::CenterBoxDefault => Some("center-box-default"),
+            Self::CenterBoxToolbarCenterOnly => Some("center-box-toolbar-center-only"),
+            Self::CenterBoxToolbarStartEnd => Some("center-box-toolbar-start-end"),
             Self::ExpanderDefault => Some("expander-default"),
             Self::ExpanderExpanded => Some("expander-expanded"),
             Self::FlowBoxDefault => Some("flow-box-default"),
@@ -544,6 +548,14 @@ fn create_widget_for_case(name: &str) -> Option<(gtk::Widget, bool)> {
         }
         "box-homogeneous" => widget_case!(cases::box_homogeneous::BoxHomogeneous, false),
         "center-box-default" => widget_case!(cases::center_box_default::CenterBoxDefault, false),
+        "center-box-toolbar-center-only" => widget_case!(
+            cases::center_box_toolbar_center_only::CenterBoxToolbarCenterOnly,
+            false
+        ),
+        "center-box-toolbar-start-end" => widget_case!(
+            cases::center_box_toolbar_start_end::CenterBoxToolbarStartEnd,
+            false
+        ),
         "dropdown-default" => widget_case!(cases::dropdown_default::DropdownDefault, true),
         "expander-default" => widget_case!(cases::expander_default::ExpanderDefault, false),
         "expander-expanded" => widget_case!(cases::expander_expanded::ExpanderExpanded, false),
@@ -953,6 +965,8 @@ fn is_known_case(name: &str) -> bool {
             | "box-spacing-toolbar"
             | "box-homogeneous"
             | "center-box-default"
+            | "center-box-toolbar-center-only"
+            | "center-box-toolbar-start-end"
             | "dropdown-default"
             | "expander-default"
             | "expander-expanded"
