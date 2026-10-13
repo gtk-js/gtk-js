@@ -94,7 +94,7 @@ function WindowControls({
   }
 
   return (
-    <div className={`gtk-windowcontrols gtk-box-layout horizontal ${side}`} style={{ gap: 3 }}>
+    <div className={`gtk-windowcontrols gtk-box-layout horizontal ${side}`}>
       {buttons.map((name) => (
         <WindowControlButton key={name} name={name} onClick={clickHandlers[name]} />
       ))}

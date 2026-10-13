@@ -49,19 +49,11 @@ export const GtkActionBar = forwardRef<HTMLDivElement, GtkActionBarProps>(functi
       <div className="gtk-revealer">
         {/* The start and end boxes always exist, as in GtkActionBar. */}
         <div className="gtk-box gtk-center-layout" {...centerSlotAttrs(true, centerWidget, true)}>
-          <div
-            className="gtk-box gtk-box-layout horizontal start gtk-center-layout-start"
-            style={{ gap: 6 }}
-          >
+          <div className="gtk-box gtk-box-layout horizontal start gtk-center-layout-start">
             {start}
           </div>
           <div className="gtk-center-layout-center">{centerWidget}</div>
-          <div
-            className="gtk-box gtk-box-layout horizontal end gtk-center-layout-end"
-            style={{ gap: 6 }}
-          >
-            {end}
-          </div>
+          <div className="gtk-box gtk-box-layout horizontal end gtk-center-layout-end">{end}</div>
         </div>
       </div>
     </div>
