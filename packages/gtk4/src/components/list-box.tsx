@@ -91,16 +91,25 @@ export const GtkListBox = forwardRef<HTMLDivElement, GtkListBoxProps>(function G
   ref,
 ) {
   const [internalSelected, setSelectedIndices] = useState<Set<number>>(new Set());
+  // Rows with selectable={false} can't be selected (gtk_list_box_select_row()
+  // ignores them).
+  const unselectable = new Set<number>();
+  Children.forEach(children, (child, index) => {
+    if (React.isValidElement<GtkListBoxRowProps>(child) && child.props.selectable === false) {
+      unselectable.add(index);
+    }
+  });
   // Like gtk_list_box_select_row(): nothing is selected in "none" mode, and
   // selecting a row in "single"/"browse" mode unselects the others.
+  const selectableRows = selectedRows?.filter((index) => !unselectable.has(index));
   const controlledSelection =
-    selectedRows === undefined
+    selectableRows === undefined
       ? undefined
       : selectionMode === "none"
         ? []
         : selectionMode === "multiple"
-          ? selectedRows
-          : selectedRows.slice(-1);
+          ? selectableRows
+          : selectableRows.slice(-1);
   const selectedIndices = controlledSelection ? new Set(controlledSelection) : internalSelected;
 
   const classes = ["gtk-list"];
@@ -111,7 +120,7 @@ export const GtkListBox = forwardRef<HTMLDivElement, GtkListBoxProps>(function G
 
   const handleRowClick = useCallback(
     (index: number) => {
-      if (selectionMode === "none") {
+      if (selectionMode === "none" || unselectable.has(index)) {
         if (activateOnSingleClick) onRowActivated?.(index);
         return;
       }
@@ -136,6 +145,7 @@ export const GtkListBox = forwardRef<HTMLDivElement, GtkListBoxProps>(function G
       onSelectedRowsChanged,
       selectedRows,
       selectedIndices,
+      unselectable,
     ],
   );
 

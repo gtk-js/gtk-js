@@ -5,12 +5,18 @@ import type { GtkSelectionMode } from "../types.ts";
 import { GtkListBox, GtkListBoxRow } from "./list-box.tsx";
 
 /** Which of three rows render as selected. */
-function selection(selectionMode: GtkSelectionMode, selectedRows?: number[]): boolean[] {
+function selection(
+  selectionMode: GtkSelectionMode,
+  selectedRows?: number[],
+  unselectableRow?: number,
+): boolean[] {
   const html = renderToStaticMarkup(
     <GtkListBox selectionMode={selectionMode} selectedRows={selectedRows}>
-      <GtkListBoxRow>A</GtkListBoxRow>
-      <GtkListBoxRow>B</GtkListBoxRow>
-      <GtkListBoxRow>C</GtkListBoxRow>
+      {["A", "B", "C"].map((label, i) => (
+        <GtkListBoxRow key={label} selectable={i !== unselectableRow}>
+          {label}
+        </GtkListBoxRow>
+      ))}
     </GtkListBox>,
   );
   return [...html.matchAll(/aria-selected="(true|false)"/g)].map((m) => m[1] === "true");
@@ -28,6 +34,12 @@ describe("GtkListBox selectedRows", () => {
 
   test("none mode selects nothing", () => {
     expect(selection("none", [1])).toEqual([false, false, false]);
+  });
+
+  test("rows with selectable={false} are never selected", () => {
+    expect(selection("multiple", [0, 2], 2)).toEqual([true, false, false]);
+    // The last selectable row wins.
+    expect(selection("single", [0, 2], 2)).toEqual([true, false, false]);
   });
 
   test("uncontrolled lists start unselected", () => {
