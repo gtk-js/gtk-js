@@ -79,9 +79,12 @@ export const GtkLabel = forwardRef<HTMLSpanElement, GtkLabelProps>(function GtkL
     ...style,
   };
 
+  // Pango keeps every space and line break of the text: "pre" / "pre-wrap"
+  // rather than the collapsing "nowrap" / "normal".
   if (!wrap) {
-    cssStyle.whiteSpace = "nowrap";
+    cssStyle.whiteSpace = "pre";
   } else {
+    cssStyle.whiteSpace = "pre-wrap";
     cssStyle.overflowWrap =
       wrapMode === "char" ? "anywhere" : wrapMode === "word-char" ? "break-word" : "normal";
   }
@@ -92,7 +95,7 @@ export const GtkLabel = forwardRef<HTMLSpanElement, GtkLabelProps>(function GtkL
   const ellipsizing = ellipsize !== "none" && lines <= 0;
   if (ellipsize !== "none") {
     cssStyle.overflow = "hidden";
-    cssStyle.whiteSpace = "nowrap";
+    cssStyle.whiteSpace = "pre";
     if (!ellipsizing) cssStyle.textOverflow = "ellipsis";
   }
 
@@ -127,5 +130,5 @@ const ELLIPSIS_STYLE: React.CSSProperties = {
   minWidth: 0,
   overflow: "hidden",
   textOverflow: "ellipsis",
-  whiteSpace: "nowrap",
+  whiteSpace: "pre",
 };
