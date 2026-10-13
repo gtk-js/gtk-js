@@ -59,6 +59,8 @@ pub mod button_valign_center_hbox;
 pub mod button_valign_end_hbox;
 pub mod calendar_default;
 pub mod center_box_default;
+pub mod center_box_toolbar_center_only;
+pub mod center_box_toolbar_start_end;
 pub mod check_button_checked;
 pub mod check_button_checked_disabled;
 pub mod check_button_default;
