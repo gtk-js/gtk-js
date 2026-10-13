@@ -76,6 +76,7 @@ enum Command {
     BoxHorizontalDefault,
     BoxVerticalDefault,
     BoxSpacing,
+    BoxSpacingToolbar,
     BoxHomogeneous,
     CenterBoxDefault,
     ExpanderDefault,
@@ -293,6 +294,7 @@ impl Command {
             Self::BoxHorizontalDefault => Some("box-horizontal-default"),
             Self::BoxVerticalDefault => Some("box-vertical-default"),
             Self::BoxSpacing => Some("box-spacing"),
+            Self::BoxSpacingToolbar => Some("box-spacing-toolbar"),
             Self::BoxHomogeneous => Some("box-homogeneous"),
             Self::CenterBoxDefault => Some("center-box-default"),
             Self::ExpanderDefault => Some("expander-default"),
@@ -537,6 +539,9 @@ fn create_widget_for_case(name: &str) -> Option<(gtk::Widget, bool)> {
             widget_case!(cases::box_vertical_default::BoxVerticalDefault, false)
         }
         "box-spacing" => widget_case!(cases::box_spacing::BoxSpacing, false),
+        "box-spacing-toolbar" => {
+            widget_case!(cases::box_spacing_toolbar::BoxSpacingToolbar, false)
+        }
         "box-homogeneous" => widget_case!(cases::box_homogeneous::BoxHomogeneous, false),
         "center-box-default" => widget_case!(cases::center_box_default::CenterBoxDefault, false),
         "dropdown-default" => widget_case!(cases::dropdown_default::DropdownDefault, true),
@@ -945,6 +950,7 @@ fn is_known_case(name: &str) -> bool {
             | "box-horizontal-default"
             | "box-vertical-default"
             | "box-spacing"
+            | "box-spacing-toolbar"
             | "box-homogeneous"
             | "center-box-default"
             | "dropdown-default"
