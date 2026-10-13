@@ -105,19 +105,20 @@ export function findSvgFiles(dir: string): string[] {
 /**
  * Build icon components from a directory of SVGs.
  *
- * @param iconsDir - directory containing SVG files (can be nested)
+ * @param iconsDir - directory (or directories, earlier ones win on name clashes)
+ *   containing SVG files (can be nested)
  * @param outDir - output directory for generated .ts files
  * @param createGtkIconImport - import path for createGtkIcon
  * @returns sorted array of export statements for index.ts
  */
 export async function buildIconComponents(
-  iconsDir: string,
+  iconsDir: string | string[],
   outDir: string,
   createGtkIconImport: string,
 ): Promise<string[]> {
   mkdirSync(outDir, { recursive: true });
 
-  const svgFiles = findSvgFiles(iconsDir);
+  const svgFiles = (Array.isArray(iconsDir) ? iconsDir : [iconsDir]).flatMap(findSvgFiles);
   const seenNames = new Set<string>();
 
   // Phase 1: filter duplicates and invalid identifiers (no I/O)
@@ -158,10 +159,10 @@ export async function buildIconComponents(
  * Build a complete icon package from a directory of SVGs.
  * Writes generated components to src/icons/ and an index to src/index.ts.
  *
- * @param iconsDir - directory containing SVG files (can be nested)
+ * @param iconsDir - directory (or directories) containing SVG files (can be nested)
  * @param pkgDir - root directory of the icon package (contains src/)
  */
-export async function buildIconPackage(iconsDir: string, pkgDir: string): Promise<void> {
+export async function buildIconPackage(iconsDir: string | string[], pkgDir: string): Promise<void> {
   const outDir = `${pkgDir}/src/icons`;
   const indexPath = `${pkgDir}/src/index.ts`;
 
