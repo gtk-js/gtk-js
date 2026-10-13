@@ -206,7 +206,6 @@
 .gtk-center-layout-start {
   display: flex;
   align-items: center;
-  gap: 6px;
   justify-self: start;
 }
 
@@ -219,8 +218,35 @@
 .gtk-center-layout-end {
   display: flex;
   align-items: center;
-  gap: 6px;
   justify-self: end;
+}
+
+/* Vertically, GtkCenterLayout allocates the start child at the top and the end
+   child at the bottom (gtk_center_layout_allocate()), and gives every child
+   the full width, which it fills unless its halign says otherwise. */
+.gtk-center-layout.vertical
+> :is(.gtk-center-layout-start, .gtk-center-layout-center, .gtk-center-layout-end) {
+  justify-self: stretch;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.gtk-center-layout.vertical > .gtk-center-layout-start {
+  align-self: start;
+}
+
+.gtk-center-layout.vertical > .gtk-center-layout-end {
+  align-self: end;
+}
+
+.gtk-center-layout.vertical > * > [data-halign="start"] {
+  align-self: flex-start;
+}
+.gtk-center-layout.vertical > * > [data-halign="end"] {
+  align-self: flex-end;
+}
+.gtk-center-layout.vertical > * > [data-halign="center"] {
+  align-self: center;
 }
 
 /* === Scale (GtkRange / GtkScale) === */
