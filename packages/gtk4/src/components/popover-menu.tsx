@@ -43,7 +43,9 @@ export function GtkModelButton({
   accel,
   disabled,
   onActivate,
+  onClick,
   className,
+  style,
   ...rest
 }: GtkModelButtonProps) {
   const close = usePopoverClose();
@@ -53,14 +55,17 @@ export function GtkModelButton({
     <button
       type="button"
       role="menuitem"
+      {...rest}
       className={classes.join(" ")}
       disabled={disabled}
-      style={{ alignItems: "center" }}
-      onClick={() => {
+      style={{ alignItems: "center", ...style }}
+      onClick={(e) => {
+        // A caller's onClick runs too; activating still closes the menu and
+        // runs onActivate, as in GTK.
+        onClick?.(e);
         close();
         onActivate?.();
       }}
-      {...rest}
     >
       <span className="gtk-label" style={{ flex: 1, textAlign: "start", whiteSpace: "nowrap" }}>
         {label}
@@ -101,9 +106,10 @@ export const GtkPopoverMenu = forwardRef<HTMLDivElement, GtkPopoverMenuProps>(
         <div className="gtk-box gtk-box-layout vertical">
           {sections.map((section, i) => (
             <SectionFragment key={i} separator={i > 0}>
-              {section.map((item) => (
+              {section.map((item, j) => (
                 <GtkModelButton
-                  key={item.label}
+                  // Positional: a section may repeat a label.
+                  key={j}
                   label={item.label}
                   accel={item.accel}
                   disabled={item.disabled}
