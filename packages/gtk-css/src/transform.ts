@@ -245,7 +245,9 @@ const handleGtkProperties: Plugin = {
 
     // `initial` fonts are GtkSettings:gtk-font-name in GTK (e.g. popovers use
     // `font: initial`), not the browser's initial (serif, 16px) font. The
-    // provider root defines --gtk-font-family / --gtk-font-size.
+    // provider root defines --gtk-font-family / --gtk-font-size. GTK's `font`
+    // shorthand covers family, style, variant-caps, weight, stretch and size
+    // (gtkcssshorthandpropertyimpl.c), not line-height.
     if (/^font(-family|-size)?$/.test(decl.prop) && decl.value.trim() === "initial") {
       if (decl.prop !== "font-size") {
         decl.cloneBefore({
@@ -257,7 +259,7 @@ const handleGtkProperties: Plugin = {
         decl.cloneBefore({ prop: "font-size", value: "var(--gtk-font-size, 11pt)" });
       }
       if (decl.prop === "font") {
-        for (const prop of ["font-style", "font-weight", "font-stretch", "line-height"]) {
+        for (const prop of ["font-style", "font-variant-caps", "font-weight", "font-stretch"]) {
           decl.cloneBefore({ prop, value: "normal" });
         }
       }
