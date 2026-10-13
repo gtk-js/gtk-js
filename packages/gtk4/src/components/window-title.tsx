@@ -9,12 +9,14 @@ export interface GtkWindowTitleProps extends HTMLAttributes<HTMLDivElement>, Gtk
 }
 
 // Block (not the default inline-flex): text-overflow only applies to blocks.
+// The labels stretch to the grid track, padding (12px a side in the theme)
+// included, and center their text, so a shrunk title ellipsizes within it.
 const LABEL_STYLE: CSSProperties = {
   display: "block",
-  maxWidth: "100%",
   overflow: "hidden",
   textOverflow: "ellipsis",
   whiteSpace: "nowrap",
+  textAlign: "center",
 };
 
 /**
@@ -47,7 +49,6 @@ export const GtkWindowTitle = forwardRef<HTMLDivElement, GtkWindowTitleProps>(
         style={{
           display: "grid",
           gridTemplateColumns: `minmax(${minWidth}, max-content)`,
-          justifyItems: "center",
           alignContent: "center",
         }}
         {...rest}
