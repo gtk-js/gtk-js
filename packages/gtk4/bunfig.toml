@@ -1,0 +1,2 @@
+[test]
+# Unit tests — no Playwright/cargo preload needed.
