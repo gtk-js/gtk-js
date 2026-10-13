@@ -35,7 +35,7 @@ export const AdwButtonContent = forwardRef<HTMLDivElement, AdwButtonContentProps
 
     return (
       <div ref={ref} className={classes.join(" ")} {...rest}>
-        <div className="gtk-box gtk-box-layout horizontal" style={{ gap: 6 }}>
+        <div className="gtk-box gtk-box-layout horizontal">
           {Icon && (
             <span className="gtk-image">
               <Icon size={16} />
