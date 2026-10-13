@@ -15,6 +15,8 @@ pub mod adw_navigation_view_default;
 pub mod adw_overlay_split_view_default;
 pub mod adw_password_entry_row_default;
 pub mod adw_preferences_group_default;
+pub mod adw_preferences_group_footer;
+pub mod adw_preferences_group_label_only;
 pub mod adw_preferences_group_with_description;
 pub mod adw_preferences_page_default;
 pub mod adw_preferences_row_default;

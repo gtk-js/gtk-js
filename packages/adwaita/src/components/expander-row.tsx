@@ -1,4 +1,4 @@
-import { useIcon } from "@gtk-js/gtk4";
+import { useIcon, useListBoxRow } from "@gtk-js/gtk4";
 import React, {
   forwardRef,
   type HTMLAttributes,
@@ -65,6 +65,7 @@ export const AdwExpanderRow = forwardRef<HTMLDivElement, AdwExpanderRowProps>(
       onExpandedChanged?.(next);
     }, [expanded, enableExpansion, isControlled, onExpandedChanged]);
 
+    useListBoxRow();
     const classes = ["gtk-row", "expander"];
     if (!children || React.Children.count(children) === 0) classes.push("empty");
     if (className) classes.push(className);

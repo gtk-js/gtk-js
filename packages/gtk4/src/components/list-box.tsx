@@ -6,6 +6,7 @@ import React, {
   useCallback,
   useState,
 } from "react";
+import { useListBoxRow } from "../list-box-row-context.ts";
 import { alignAttrs, type GtkAlignProps, type GtkSelectionMode } from "../types.ts";
 
 export interface GtkListBoxRowProps extends HTMLAttributes<HTMLDivElement>, GtkAlignProps {
@@ -37,6 +38,7 @@ export const GtkListBoxRow = forwardRef<HTMLDivElement, GtkListBoxRowProps>(func
   },
   ref,
 ) {
+  useListBoxRow();
   const classes = ["gtk-row", "gtk-bin-layout"];
   if (activatable) classes.push("activatable");
   if (className) classes.push(className);

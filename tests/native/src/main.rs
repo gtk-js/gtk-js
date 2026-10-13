@@ -55,6 +55,8 @@ enum Command {
     AdwPasswordEntryRowDefault,
     AdwPreferencesGroupDefault,
     AdwPreferencesGroupWithDescription,
+    AdwPreferencesGroupFooter,
+    AdwPreferencesGroupLabelOnly,
     AdwPreferencesPageDefault,
     AdwPreferencesRowDefault,
     AdwSpinRowDefault,
@@ -284,6 +286,8 @@ impl Command {
             Self::AdwPasswordEntryRowDefault => Some("adw-password-entry-row-default"),
             Self::AdwPreferencesGroupDefault => Some("adw-preferences-group-default"),
             Self::AdwPreferencesGroupWithDescription => Some("adw-preferences-group-with-description"),
+            Self::AdwPreferencesGroupFooter => Some("adw-preferences-group-footer"),
+            Self::AdwPreferencesGroupLabelOnly => Some("adw-preferences-group-label-only"),
             Self::AdwPreferencesPageDefault => Some("adw-preferences-page-default"),
             Self::AdwPreferencesRowDefault => Some("adw-preferences-row-default"),
             Self::AdwSpinRowDefault => Some("adw-spin-row-default"),
@@ -517,6 +521,12 @@ fn create_widget_for_case(name: &str) -> Option<(gtk::Widget, bool)> {
         }
         "adw-preferences-group-with-description" => {
             widget_case!(cases::adw_preferences_group_with_description::AdwPreferencesGroupWithDescription, false)
+        }
+        "adw-preferences-group-footer" => {
+            widget_case!(cases::adw_preferences_group_footer::AdwPreferencesGroupFooter, false)
+        }
+        "adw-preferences-group-label-only" => {
+            widget_case!(cases::adw_preferences_group_label_only::AdwPreferencesGroupLabelOnly, false)
         }
         "adw-preferences-page-default" => {
             widget_case!(cases::adw_preferences_page_default::AdwPreferencesPageDefault, false)
@@ -992,6 +1002,8 @@ fn is_known_case(name: &str) -> bool {
             | "adw-password-entry-row-default"
             | "adw-preferences-group-default"
             | "adw-preferences-group-with-description"
+            | "adw-preferences-group-footer"
+            | "adw-preferences-group-label-only"
             | "adw-preferences-page-default"
             | "adw-preferences-row-default"
             | "adw-spin-row-default"
