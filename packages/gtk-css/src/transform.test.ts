@@ -192,6 +192,9 @@ describe("initial fonts", () => {
     expect(out).toContain("font-family: var(--gtk-font-family, Cantarell, sans-serif)");
     expect(out).toContain("font-size: var(--gtk-font-size, 11pt)");
     expect(out).toContain("font-weight: normal");
+    expect(out).toContain("font-variant-caps: normal");
+    // Not part of GTK's font shorthand: an inherited line height is kept.
+    expect(out).not.toContain("line-height");
     expect(out).not.toContain("font: initial");
   });
 });
