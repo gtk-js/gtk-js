@@ -228,6 +228,18 @@ const handleGtkProperties: Plugin = {
       return;
     }
 
+    // border-spacing is how GTK themes set a box's spacing: GtkBoxLayout,
+    // GtkCenterLayout and GtkGridLayout add it to their spacing (x between
+    // columns, y between rows). On the web it only affects tables, so turn it
+    // into custom properties the layout classes read (see layout.css).
+    if (decl.prop === "border-spacing") {
+      const [x = "0", y = x] = postcss.list.space(decl.value);
+      decl.cloneBefore({ prop: "--gtk-border-spacing-x", value: x });
+      decl.cloneBefore({ prop: "--gtk-border-spacing-y", value: y });
+      decl.remove();
+      return;
+    }
+
     if (!decl.prop.startsWith("-gtk-")) return;
 
     switch (decl.prop) {
