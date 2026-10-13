@@ -426,6 +426,24 @@ const cases: Record<string, () => React.ReactElement> = {
     />
   ),
 
+  "center-box-toolbar-center-only": () => (
+    <GtkCenterBox
+      halign="start"
+      className="toolbar"
+      centerWidget={<GtkLabel label="Center" />}
+      data-testid="target"
+    />
+  ),
+  "center-box-toolbar-start-end": () => (
+    <GtkCenterBox
+      halign="start"
+      className="toolbar"
+      startWidget={<GtkLabel label="Side" />}
+      endWidget={<GtkLabel label="Side" />}
+      data-testid="target"
+    />
+  ),
+
   // GtkGrid cases
   "grid-default": () => (
     <GtkGrid columnHomogeneous style={{ gridTemplateColumns: "1fr 1fr" }} data-testid="target">
