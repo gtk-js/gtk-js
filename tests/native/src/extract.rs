@@ -22,6 +22,12 @@ pub struct WidgetSnapshot {
     pub shadows: Vec<ShadowInfo>,
     pub inset_shadows: Vec<InsetShadowInfo>,
     pub opacity: f32,
+    /// Position of a child's border box in its parent's content box (children
+    /// of `extract_widget_tree` only).
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub x: Option<f32>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub y: Option<f32>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub css_name: Option<String>,
     #[serde(skip_serializing_if = "Vec::is_empty")]
@@ -158,6 +164,8 @@ pub fn extract_widget_tree<W: IsA<gtk::Widget>>(widget: &W) -> WidgetSnapshot {
             shadows: Vec::new(),
             inset_shadows: Vec::new(),
             opacity: 1.0,
+            x: None,
+            y: None,
             css_name: None,
             css_classes: Vec::new(),
             children: Vec::new(),
@@ -192,7 +200,13 @@ pub fn extract_widget_tree<W: IsA<gtk::Widget>>(widget: &W) -> WidgetSnapshot {
     let mut child = w.first_child();
     while let Some(c) = child {
         if c.is_visible() {
-            children.push(extract_widget_tree(&c));
+            let mut child_snapshot = extract_widget_tree(&c);
+            // Widget coordinates start at the content box.
+            if let Some(bounds) = c.compute_bounds(w) {
+                child_snapshot.x = Some(bounds.x());
+                child_snapshot.y = Some(bounds.y());
+            }
+            children.push(child_snapshot);
         }
         child = c.next_sibling();
     }
@@ -217,6 +231,8 @@ pub fn extract_snapshot(node: &gsk::RenderNode) -> WidgetSnapshot {
         shadows: Vec::new(),
         inset_shadows: Vec::new(),
         opacity: 1.0,
+        x: None,
+        y: None,
         css_name: None,
         css_classes: Vec::new(),
         children: Vec::new(),

@@ -6,6 +6,15 @@ async function transform(css: string) {
   return result.css;
 }
 
+describe("remapSelectors", () => {
+  test("label links: link → .gtk-link, not the link class of button.link", async () => {
+    const out = await transform("link, button.link { color: blue; } link:hover { color: red; }");
+    expect(out).toContain(".gtk-link,");
+    expect(out).toContain(".gtk-button.link");
+    expect(out).toContain(".gtk-link:hover");
+  });
+});
+
 describe("remapPseudoClasses", () => {
   test(":checked → [data-checked]", async () => {
     const out = await transform(".gtk-button:checked { color: red; }");
@@ -168,5 +177,45 @@ describe("convertGtkColorFunctions", () => {
     test("non-numeric factor throws", async () => {
       expect(transform(".x { color: shade(#fff, abc); }")).rejects.toThrow();
     });
+  });
+});
+
+describe("border-spacing", () => {
+  test("one value → both spacing properties", async () => {
+    const out = await transform("box { border-spacing: 6px; }");
+    expect(out).toContain("--gtk-border-spacing-x: 6px");
+    expect(out).toContain("--gtk-border-spacing-y: 6px");
+    expect(out).not.toContain("border-spacing:");
+  });
+
+  test("two values → horizontal then vertical", async () => {
+    const out = await transform("grid { border-spacing: 4px 12px; }");
+    expect(out).toContain("--gtk-border-spacing-x: 4px");
+    expect(out).toContain("--gtk-border-spacing-y: 12px");
+  });
+});
+
+describe("initial fonts", () => {
+  test("font: initial → the GTK default font", async () => {
+    const out = await transform("popover.background { font: initial; }");
+    expect(out).toContain("font-family: var(--gtk-font-family, Cantarell, sans-serif)");
+    expect(out).toContain("font-size: var(--gtk-font-size, 11pt)");
+    expect(out).toContain("font-weight: normal");
+    expect(out).toContain("font-variant-caps: normal");
+    // Not part of GTK's font shorthand: an inherited line height is kept.
+    expect(out).not.toContain("line-height");
+    expect(out).not.toContain("font: initial");
+  });
+});
+
+describe(":disabled", () => {
+  test("matches native :disabled elements and [data-disabled] ones", async () => {
+    const out = await transform(
+      "button:disabled { opacity: 0.5; } button:not(:disabled):hover { color: red; }",
+    );
+    expect(out).toContain(".gtk-button:is([data-disabled], :disabled)");
+    expect(out).toContain(".gtk-button:not(:is([data-disabled], :disabled)):hover");
+    // Applied once, even though PostCSS revisits changed rules.
+    expect(out).not.toContain(":is([data-disabled], :is(");
   });
 });

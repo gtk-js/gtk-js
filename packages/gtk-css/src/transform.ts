@@ -207,8 +207,11 @@ const remapPseudoClasses: Plugin = {
     // :visited → [data-visited] (browsers restrict :visited styling; use data attribute)
     sel = sel.replace(/:visited/g, "[data-visited]");
 
-    // :disabled → [data-disabled] (<span> doesn't support :disabled natively)
-    sel = sel.replace(/:disabled/g, "[data-disabled]");
+    // :disabled → also [data-disabled]: widgets rendered as <span>/<div> can't
+    // be :disabled, while real <button>/<input> elements are (and carry no
+    // data attribute), so match either.
+    // (Idempotent: PostCSS revisits rules whose selector changed.)
+    sel = sel.replace(/(?<!\[data-disabled\], ):disabled/g, ":is([data-disabled], :disabled)");
 
     if (sel !== rule.selector) {
       rule.selector = sel;
@@ -224,6 +227,42 @@ const handleGtkProperties: Plugin = {
   Declaration(decl) {
     // Strip GTK3-style uppercase widget properties: -GtkWidget-*, -GtkDialog-*, etc.
     if (/^-Gtk[A-Z]/.test(decl.prop)) {
+      decl.remove();
+      return;
+    }
+
+    // border-spacing is how GTK themes set a box's spacing: GtkBoxLayout,
+    // GtkCenterLayout and GtkGridLayout add it to their spacing (x between
+    // columns, y between rows). On the web it only affects tables, so turn it
+    // into custom properties the layout classes read (see layout.css).
+    if (decl.prop === "border-spacing") {
+      const [x = "0", y = x] = postcss.list.space(decl.value);
+      decl.cloneBefore({ prop: "--gtk-border-spacing-x", value: x });
+      decl.cloneBefore({ prop: "--gtk-border-spacing-y", value: y });
+      decl.remove();
+      return;
+    }
+
+    // `initial` fonts are GtkSettings:gtk-font-name in GTK (e.g. popovers use
+    // `font: initial`), not the browser's initial (serif, 16px) font. The
+    // provider root defines --gtk-font-family / --gtk-font-size. GTK's `font`
+    // shorthand covers family, style, variant-caps, weight, stretch and size
+    // (gtkcssshorthandpropertyimpl.c), not line-height.
+    if (/^font(-family|-size)?$/.test(decl.prop) && decl.value.trim() === "initial") {
+      if (decl.prop !== "font-size") {
+        decl.cloneBefore({
+          prop: "font-family",
+          value: "var(--gtk-font-family, Cantarell, sans-serif)",
+        });
+      }
+      if (decl.prop !== "font-family") {
+        decl.cloneBefore({ prop: "font-size", value: "var(--gtk-font-size, 11pt)" });
+      }
+      if (decl.prop === "font") {
+        for (const prop of ["font-style", "font-variant-caps", "font-weight", "font-stretch"]) {
+          decl.cloneBefore({ prop, value: "normal" });
+        }
+      }
       decl.remove();
       return;
     }

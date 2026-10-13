@@ -1,6 +1,6 @@
 import { forwardRef, type HTMLAttributes, type PointerEvent, type ReactNode } from "react";
 import { useIcon } from "../icon-context.tsx";
-import { alignAttrs, type GtkAlignProps } from "../types.ts";
+import { alignAttrs, centerSlotAttrs, type GtkAlignProps } from "../types.ts";
 
 export interface GtkHeaderBarProps extends HTMLAttributes<HTMLDivElement>, GtkAlignProps {
   /** Widget displayed in the title position (center). */
@@ -94,7 +94,7 @@ function WindowControls({
   }
 
   return (
-    <div className={`gtk-windowcontrols gtk-box-layout horizontal ${side}`} style={{ gap: 3 }}>
+    <div className={`gtk-windowcontrols gtk-box-layout horizontal ${side}`}>
       {buttons.map((name) => (
         <WindowControlButton key={name} name={name} onClick={clickHandlers[name]} />
       ))}
@@ -148,7 +148,11 @@ export const GtkHeaderBar = forwardRef<HTMLDivElement, GtkHeaderBarProps>(functi
   return (
     <div ref={ref} className={classes.join(" ")} {...alignAttrs(halign, valign)} {...rest}>
       <div className="gtk-windowhandle gtk-bin-layout" onPointerDown={onWindowHandleDragStart}>
-        <div className="gtk-box gtk-center-layout">
+        {/* The start and end boxes always exist, as in GtkHeaderBar. */}
+        <div
+          className="gtk-box gtk-center-layout"
+          {...centerSlotAttrs(true, titleWidget ?? children, true)}
+        >
           <div className="gtk-box gtk-box-layout horizontal start gtk-center-layout-start">
             {showWindowControls && (
               <WindowControls

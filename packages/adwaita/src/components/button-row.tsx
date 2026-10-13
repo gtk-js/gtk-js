@@ -45,7 +45,7 @@ export const AdwButtonRow = forwardRef<HTMLDivElement, AdwButtonRowProps>(functi
     >
       <div
         className="gtk-box gtk-box-layout horizontal"
-        style={{ gap: 6, alignItems: "center", justifyContent: "center" }}
+        style={{ alignItems: "center", justifyContent: "center" }}
       >
         {StartIcon && (
           <span className="gtk-image icon start">

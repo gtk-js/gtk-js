@@ -1,5 +1,5 @@
 import { forwardRef, type HTMLAttributes, type ReactNode } from "react";
-import { alignAttrs, type GtkAlignProps } from "../types.ts";
+import { alignAttrs, centerSlotAttrs, type GtkAlignProps } from "../types.ts";
 
 export interface GtkActionBarProps extends HTMLAttributes<HTMLDivElement>, GtkAlignProps {
   /** Whether the action bar is visible. Default: true. */
@@ -47,20 +47,13 @@ export const GtkActionBar = forwardRef<HTMLDivElement, GtkActionBarProps>(functi
   return (
     <div ref={ref} className={classes.join(" ")} {...alignAttrs(halign, valign)} {...rest}>
       <div className="gtk-revealer">
-        <div className="gtk-box gtk-center-layout">
-          <div
-            className="gtk-box gtk-box-layout horizontal start gtk-center-layout-start"
-            style={{ gap: 6 }}
-          >
+        {/* The start and end boxes always exist, as in GtkActionBar. */}
+        <div className="gtk-box gtk-center-layout" {...centerSlotAttrs(true, centerWidget, true)}>
+          <div className="gtk-box gtk-box-layout horizontal start gtk-center-layout-start">
             {start}
           </div>
           <div className="gtk-center-layout-center">{centerWidget}</div>
-          <div
-            className="gtk-box gtk-box-layout horizontal end gtk-center-layout-end"
-            style={{ gap: 6 }}
-          >
-            {end}
-          </div>
+          <div className="gtk-box gtk-box-layout horizontal end gtk-center-layout-end">{end}</div>
         </div>
       </div>
     </div>

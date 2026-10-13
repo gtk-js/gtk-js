@@ -38,9 +38,10 @@ body:has(> :first-child:has([data-gtk-provider])) > :first-child {
   border: none;
   background: transparent;
   box-sizing: content-box;
-  font-family: Cantarell, sans-serif;
+  /* Inherited, like in GTK CSS: the root sets them (below). */
+  font-family: inherit;
   font-size: inherit;
-  line-height: normal;
+  line-height: inherit;
   color: inherit;
   text-decoration: none;
   list-style: none;
@@ -49,6 +50,33 @@ body:has(> :first-child:has([data-gtk-provider])) > :first-child {
      @see upstream/gtk/gtk/gtklabel.c — selectable defaults to FALSE */
   -webkit-user-select: none;
   user-select: none;
+}
+
+/* The default GtkSettings:gtk-font-name ("Cantarell 11"). Descendants inherit
+   it; the theme's typography classes (.title-1, .caption, …) are relative to
+   it or absolute, as in GTK. Without this, text used the browser's 16px. */
+:where([data-gtk-provider]) {
+  /* Override these to change the default font, like gtk-font-name. The theme's
+     `font: initial` (e.g. on popovers) resolves to them too. */
+  --gtk-font-family: Cantarell, sans-serif;
+  --gtk-font-size: 11pt;
+  /* The document and monospace fonts, which AdwStyleManager sets at runtime
+     from document-font-name and monospace-font-name (generate_fonts_css()).
+     The theme uses them for .document and .monospace text, e.g. a
+     GtkTextView with monospace set. Defaults are GNOME's, alongside
+     Cantarell. */
+  --document-font-family: Cantarell, sans-serif;
+  --document-font-size: 11pt;
+  --monospace-font-family: "Source Code Pro", monospace;
+  --monospace-font-size: 10pt;
+  /* GTK's `line-height: normal` is Pango's: the font's ascent + descent, 1.2em
+     for Cantarell. Browsers round the ascent and descent separately for
+     `normal` (17px lines instead of 17.6px at 11pt). Set this along with
+     --gtk-font-family. */
+  --gtk-line-height: 1.2;
+  font-family: var(--gtk-font-family);
+  font-size: var(--gtk-font-size);
+  line-height: var(--gtk-line-height);
 }
 
 /* Re-enable text selection for editable widgets */
@@ -117,10 +145,13 @@ body:has(> :first-child:has([data-gtk-provider])) > :first-child {
 }
 
 /* GtkLabel: inline text that vertically centers when stretched by a parent box.
-   In native GTK, GtkLabel defaults to valign=CENTER. */
+   In native GTK, GtkLabel defaults to valign=CENTER. Widget sizes are whole
+   pixels: a line of text is at least one line height rounded up, as in
+   gtk_label_measure(). */
 :where([data-gtk-provider] .gtk-label) {
   display: inline-flex;
   align-items: center;
+  min-height: round(up, 1lh, 1px);
 }
 
 /* GtkEntry / GtkSearchEntry: the entry's custom size_allocate lays out children
