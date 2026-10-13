@@ -178,7 +178,9 @@ export const AdwEntryRow = forwardRef<HTMLDivElement, AdwEntryRowProps>(function
             />
           </div>
           {editableSuffix}
-          {!focused && !hasContent && EditIcon && (
+          {/* Upstream update_empty(): shown unless editing, or while the apply
+              button is offered for changed text. */}
+          {!focused && !(showApplyButton && textChanged) && EditIcon && (
             <span className="gtk-image edit-icon" style={{ display: "flex", alignItems: "center" }}>
               <EditIcon size={16} />
             </span>
