@@ -32,6 +32,9 @@ export interface WidgetSnapshot {
   shadows: ShadowInfo[];
   inset_shadows: InsetShadowInfo[];
   opacity: number;
+  /** Position of a child's border box in its parent's content box (children only). */
+  x?: number;
+  y?: number;
   css_name?: string;
   css_classes?: string[];
   children?: WidgetSnapshot[];
@@ -263,22 +266,35 @@ export async function extractWebStyles(
       font_weight: number;
       box_shadow: string;
       opacity: number;
+      x?: number;
+      y?: number;
       css_classes: string[];
       tag_name: string;
       children: RawElementData[];
     }
 
     const raw: RawElementData = await page.locator(selector).evaluate((el: HTMLElement) => {
-      function extractElement(element: HTMLElement): RawElementData {
+      function extractElement(
+        element: HTMLElement,
+        origin?: { x: number; y: number },
+      ): RawElementData {
         const cs = getComputedStyle(element);
         const rect = element.getBoundingClientRect();
+        // Children are placed relative to this element's content box, like
+        // GTK widget coordinates.
+        const content = {
+          x: rect.left + parseFloat(cs.borderLeftWidth) + parseFloat(cs.paddingLeft),
+          y: rect.top + parseFloat(cs.borderTopWidth) + parseFloat(cs.paddingTop),
+        };
         const children: RawElementData[] = [];
         for (const child of element.children) {
           if (child instanceof HTMLElement) {
-            children.push(extractElement(child));
+            children.push(extractElement(child, content));
           }
         }
         return {
+          x: origin && rect.left - origin.x,
+          y: origin && rect.top - origin.y,
           width: rect.width,
           height: rect.height,
           padding: {
@@ -345,6 +361,8 @@ export async function extractWebStyles(
         shadows: boxShadow.shadows,
         inset_shadows: boxShadow.inset_shadows,
         opacity: r.opacity,
+        x: r.x,
+        y: r.y,
         css_name: cssName,
         css_classes: r.css_classes,
         children: r.children.map(parseRawSnapshot),
