@@ -60,6 +60,15 @@ body:has(> :first-child:has([data-gtk-provider])) > :first-child {
      `font: initial` (e.g. on popovers) resolves to them too. */
   --gtk-font-family: Cantarell, sans-serif;
   --gtk-font-size: 11pt;
+  /* The document and monospace fonts, which AdwStyleManager sets at runtime
+     from document-font-name and monospace-font-name (generate_fonts_css()).
+     The theme uses them for .document and .monospace text, e.g. a
+     GtkTextView with monospace set. Defaults are GNOME's, alongside
+     Cantarell. */
+  --document-font-family: Cantarell, sans-serif;
+  --document-font-size: 11pt;
+  --monospace-font-family: "Source Code Pro", monospace;
+  --monospace-font-size: 10pt;
   font-family: var(--gtk-font-family);
   font-size: var(--gtk-font-size);
   line-height: normal;
