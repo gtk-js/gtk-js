@@ -80,7 +80,7 @@ export const AdwHeaderBar = forwardRef<HTMLDivElement, AdwHeaderBarProps>(functi
     showEndTitleButtons = true,
     showBackButton = true,
     showTitle = true,
-    decorationLayout = "appmenu:minimize,maximize,close",
+    decorationLayout: decorationLayoutProp,
     centeringPolicy = "loose",
     start,
     end,
@@ -92,6 +92,8 @@ export const AdwHeaderBar = forwardRef<HTMLDivElement, AdwHeaderBarProps>(functi
 ) {
   const BackIcon = useIcon("GoPrevious");
   const controls = useWindowControls();
+  const decorationLayout =
+    decorationLayoutProp ?? controls?.decorationLayout ?? "appmenu:minimize,maximize,close";
   const nav = useNavigation();
   const classes = ["gtk-headerbar"];
   if (className) classes.push(className);

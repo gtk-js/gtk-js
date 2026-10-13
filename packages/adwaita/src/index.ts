@@ -96,5 +96,6 @@ export type { AdwWindowProps } from "./components/window.tsx";
 export { AdwWindow } from "./components/window.tsx";
 export type { AdwaitaProviderProps } from "./provider.tsx";
 export { AdwaitaProvider } from "./provider.tsx";
+export { setAnimationSlowdown } from "./spring.ts";
 // Types
 export type * from "./types.ts";
