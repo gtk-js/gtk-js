@@ -86,6 +86,7 @@ enum Command {
     CenterBoxToolbarStartEnd,
     CenterBoxToolbarVerticalStartCenterNarrow,
     CenterBoxToolbarVerticalStartEnd,
+    CenterBoxToolbarVerticalStartEndTall,
     ExpanderDefault,
     ExpanderExpanded,
     FlowBoxDefault,
@@ -315,6 +316,9 @@ impl Command {
                 Some("center-box-toolbar-vertical-start-center-narrow")
             }
             Self::CenterBoxToolbarVerticalStartEnd => Some("center-box-toolbar-vertical-start-end"),
+            Self::CenterBoxToolbarVerticalStartEndTall => {
+                Some("center-box-toolbar-vertical-start-end-tall")
+            }
             Self::ExpanderDefault => Some("expander-default"),
             Self::ExpanderExpanded => Some("expander-expanded"),
             Self::FlowBoxDefault => Some("flow-box-default"),
@@ -588,6 +592,10 @@ fn create_widget_for_case(name: &str) -> Option<(gtk::Widget, bool)> {
         ),
         "center-box-toolbar-vertical-start-end" => widget_case!(
             cases::center_box_toolbar_vertical_start_end::CenterBoxToolbarVerticalStartEnd,
+            false
+        ),
+        "center-box-toolbar-vertical-start-end-tall" => widget_case!(
+            cases::center_box_toolbar_vertical_start_end_tall::CenterBoxToolbarVerticalStartEndTall,
             false
         ),
         "dropdown-default" => widget_case!(cases::dropdown_default::DropdownDefault, true),
@@ -1006,6 +1014,7 @@ fn is_known_case(name: &str) -> bool {
             | "center-box-toolbar-start-end"
             | "center-box-toolbar-vertical-start-center-narrow"
             | "center-box-toolbar-vertical-start-end"
+            | "center-box-toolbar-vertical-start-end-tall"
             | "dropdown-default"
             | "expander-default"
             | "expander-expanded"
