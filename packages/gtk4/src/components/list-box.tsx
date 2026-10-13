@@ -91,7 +91,17 @@ export const GtkListBox = forwardRef<HTMLDivElement, GtkListBoxProps>(function G
   ref,
 ) {
   const [internalSelected, setSelectedIndices] = useState<Set<number>>(new Set());
-  const selectedIndices = selectedRows ? new Set(selectedRows) : internalSelected;
+  // Like gtk_list_box_select_row(): nothing is selected in "none" mode, and
+  // selecting a row in "single"/"browse" mode unselects the others.
+  const controlledSelection =
+    selectedRows === undefined
+      ? undefined
+      : selectionMode === "none"
+        ? []
+        : selectionMode === "multiple"
+          ? selectedRows
+          : selectedRows.slice(-1);
+  const selectedIndices = controlledSelection ? new Set(controlledSelection) : internalSelected;
 
   const classes = ["gtk-list"];
   if (showSeparators) classes.push("separators");
@@ -106,7 +116,7 @@ export const GtkListBox = forwardRef<HTMLDivElement, GtkListBoxProps>(function G
         return;
       }
 
-      const next = new Set(selectedRows ?? internalSelected);
+      const next = new Set(selectedIndices);
       if (selectionMode === "multiple") {
         if (next.has(index)) next.delete(index);
         else next.add(index);
@@ -125,7 +135,7 @@ export const GtkListBox = forwardRef<HTMLDivElement, GtkListBoxProps>(function G
       onRowActivated,
       onSelectedRowsChanged,
       selectedRows,
-      internalSelected,
+      selectedIndices,
     ],
   );
 
