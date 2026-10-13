@@ -1,4 +1,4 @@
-import { GtkImage, useIcon, WindowControlsContext } from "@gtk-js/gtk4";
+import { GtkImage, GtkWindowTitle, useIcon, WindowControlsContext } from "@gtk-js/gtk4";
 import {
   forwardRef,
   type HTMLAttributes,
@@ -9,6 +9,7 @@ import {
   useState,
 } from "react";
 import { AdwActionRow } from "./action-row.tsx";
+import { AdwClamp } from "./clamp.tsx";
 import { FloatingSheet } from "./floating-sheet.tsx";
 import { AdwHeaderBar } from "./header-bar.tsx";
 import { AdwNavigationView } from "./navigation-view.tsx";
@@ -99,60 +100,65 @@ function parseCredit(entry: string): { name: string; link?: string } {
  * Render the AppStream description subset used for release notes. Text is
  * produced through React (never as raw HTML), so markup can't inject anything.
  */
-function ReleaseNotes({ markup }: { markup: string }) {
-  const nodes = useMemo(() => {
-    if (typeof DOMParser === "undefined") return [<p key="0">{markup}</p>];
+/**
+ * The release notes, laid out like update_release_notes() fills the What's
+ * New GtkTextView: paragraphs and list items are lines of text; items start
+ * with "• " (or "1. ") and their "bullet" tag indents the whole paragraph to
+ * 24px (from the view's 12px) with 6px above it; each section (paragraph or
+ * list) has 12px above it; `code` uses the monospace font.
+ */
+function ReleaseNotes({ version, markup }: { version?: string; markup: string }) {
+  const sections = useMemo(() => {
+    if (typeof DOMParser === "undefined") return [<div key="0">{markup}</div>];
     const doc = new DOMParser().parseFromString(`<root>${markup}</root>`, "application/xml");
     if (doc.getElementsByTagName("parsererror").length > 0) {
-      return [<p key="0">{markup.replace(/<[^>]+>/g, "")}</p>];
+      return [<div key="0">{markup.replace(/<[^>]+>/g, "")}</div>];
     }
-    const render = (node: Node, key: number): ReactNode => {
-      if (node.nodeType === 3) return node.textContent;
+    const inline = (node: Node, key: number): ReactNode => {
+      if (node.nodeType === 3) return node.textContent?.replace(/\s+/g, " ");
       if (node.nodeType !== 1) return null;
       const el = node as Element;
-      const children = Array.from(el.childNodes).map(render);
+      const children = Array.from(el.childNodes).map(inline);
       switch (el.tagName.toLowerCase()) {
-        case "p":
-          return (
-            <p key={key} style={{ margin: "0 0 12px" }}>
-              {children}
-            </p>
-          );
-        case "ul":
-          return (
-            <ul key={key} style={{ margin: "0 0 12px", paddingInlineStart: 24, listStyle: "disc" }}>
-              {children}
-            </ul>
-          );
-        case "ol":
-          return (
-            <ol
-              key={key}
-              style={{ margin: "0 0 12px", paddingInlineStart: 24, listStyle: "decimal" }}
-            >
-              {children}
-            </ol>
-          );
-        case "li":
-          return (
-            // listStyle: the reset gives every element `list-style: none`.
-            <li key={key} style={{ display: "list-item", listStyle: "inherit", marginBottom: 6 }}>
-              {children}
-            </li>
-          );
         case "em":
           return <em key={key}>{children}</em>;
         case "code":
-          return <code key={key}>{children}</code>;
+          return (
+            <code key={key} style={{ fontFamily: "monospace" }}>
+              {children}
+            </code>
+          );
         default:
           return <span key={key}>{children}</span>;
       }
     };
-    return Array.from(doc.documentElement.childNodes).map(render);
-  }, [markup]);
+    const elements = Array.from(doc.documentElement.children);
+    return elements.map((el, i) => {
+      const tag = el.tagName.toLowerCase();
+      const sectionTop = i > 0 || version ? 12 : 0;
+      if (tag === "ul" || tag === "ol") {
+        const items = Array.from(el.children).filter((c) => c.tagName.toLowerCase() === "li");
+        return items.map((li, n) => (
+          <div key={`${i}-${n}`} style={{ marginLeft: 12, marginTop: n === 0 ? sectionTop : 6 }}>
+            {tag === "ol" ? `${n + 1}. ` : "• "}
+            {Array.from(li.childNodes).map(inline)}
+          </div>
+        ));
+      }
+      return (
+        <div key={i} style={{ marginTop: sectionTop }}>
+          {Array.from(el.childNodes).map(inline)}
+        </div>
+      );
+    });
+  }, [markup, version]);
   return (
-    <div className="gtk-label body release-notes" style={{ whiteSpace: "normal", lineHeight: 1.5 }}>
-      {nodes}
+    <div
+      className="gtk-textview body"
+      style={{ padding: "18px 12px", whiteSpace: "pre-wrap", overflowWrap: "anywhere" }}
+    >
+      {version && <div style={{ fontWeight: "bold" }}>{`Version ${version}`}</div>}
+      {sections}
     </div>
   );
 }
@@ -161,11 +167,11 @@ function Subpage({ children }: { children: ReactNode }) {
   return (
     <div className="gtk-scrolledwindow subpage" style={{ overflow: "auto", height: "100%" }}>
       <div className="gtk-viewport">
-        <div className="gtk-clamp" style={{ maxWidth: 600, margin: "0 auto" }}>
+        <AdwClamp>
           <div className="gtk-box gtk-box-layout vertical" style={{ gap: 18 }}>
             {children}
           </div>
-        </div>
+        </AdwClamp>
       </div>
     </div>
   );
@@ -285,9 +291,19 @@ export const AdwAboutDialog = forwardRef<HTMLDivElement, AdwAboutDialogProps>(
     const hasLegal = Boolean(copyright || license || licenseType);
     const hasDetails = Boolean(comments);
 
-    const header = <AdwHeaderBar className="flat" titleWidget={<span />} />;
-    const page = (content: ReactNode) => (
-      <AdwToolbarView style={{ height: "100%" }} topBars={header} content={content} />
+    // Like the AdwHeaderBars of the navigation pages: subpages show the page
+    // title; the main page's (main_headerbar) shows none.
+    const page = (content: ReactNode, title?: string) => (
+      <AdwToolbarView
+        style={{ height: "100%" }}
+        topBars={
+          <AdwHeaderBar
+            className="flat"
+            titleWidget={title ? <GtkWindowTitle title={title} /> : <span />}
+          />
+        }
+        content={content}
+      />
     );
 
     const creditSection = (title: string, people?: string[]) =>
@@ -307,7 +323,7 @@ export const AdwAboutDialog = forwardRef<HTMLDivElement, AdwAboutDialogProps>(
     const mainPage = page(
       <div className="gtk-scrolledwindow main-page" style={{ overflow: "auto", height: "100%" }}>
         <div className="gtk-viewport">
-          <div className="gtk-clamp" style={{ maxWidth: 600, margin: "0 auto" }}>
+          <AdwClamp>
             <div
               className="gtk-box gtk-box-layout vertical"
               style={{ alignItems: "stretch", textAlign: "center" }}
@@ -379,7 +395,7 @@ export const AdwAboutDialog = forwardRef<HTMLDivElement, AdwAboutDialogProps>(
                 )}
               </div>
             </div>
-          </div>
+          </AdwClamp>
         </div>
       </div>,
     );
@@ -389,15 +405,14 @@ export const AdwAboutDialog = forwardRef<HTMLDivElement, AdwAboutDialogProps>(
       {
         tag: "whats-new",
         title: "What’s New",
+        // A GtkTextView in an AdwClampScrollable (no viewport).
         children: page(
-          <Subpage>
-            {releaseNotesVersion && (
-              <span className="gtk-label heading" style={{ textAlign: "start" }}>
-                {`Version ${releaseNotesVersion}`}
-              </span>
-            )}
-            <ReleaseNotes markup={releaseNotes ?? ""} />
-          </Subpage>,
+          <div className="gtk-scrolledwindow subpage" style={{ overflow: "auto", height: "100%" }}>
+            <AdwClamp>
+              <ReleaseNotes version={releaseNotesVersion} markup={releaseNotes ?? ""} />
+            </AdwClamp>
+          </div>,
+          "What’s New",
         ),
       },
       {
@@ -419,6 +434,7 @@ export const AdwAboutDialog = forwardRef<HTMLDivElement, AdwAboutDialogProps>(
               </AdwPreferencesGroup>
             )}
           </Subpage>,
+          "Details",
         ),
       },
       {
@@ -464,6 +480,7 @@ export const AdwAboutDialog = forwardRef<HTMLDivElement, AdwAboutDialogProps>(
               </button>
             </div>
           </Subpage>,
+          "Troubleshooting",
         ),
       },
       {
@@ -481,6 +498,7 @@ export const AdwAboutDialog = forwardRef<HTMLDivElement, AdwAboutDialogProps>(
                 translatorCredits.split("\n").filter((l) => l.trim() !== ""),
               )}
           </Subpage>,
+          "Credits",
         ),
       },
       {
@@ -513,6 +531,7 @@ export const AdwAboutDialog = forwardRef<HTMLDivElement, AdwAboutDialogProps>(
               )}
             </div>
           </Subpage>,
+          "Legal",
         ),
       },
     ];
@@ -523,10 +542,9 @@ export const AdwAboutDialog = forwardRef<HTMLDivElement, AdwAboutDialogProps>(
         open={visible}
         dialogClasses={["about", "background", "floating"]}
         className={className}
+        // Upstream: content-width 360; the height is the main page's natural height.
         sheetStyle={{
           width: 360,
-          height: 620,
-          maxHeight: "calc(100% - 24px)",
           display: "flex",
           flexDirection: "column",
         }}
@@ -540,7 +558,7 @@ export const AdwAboutDialog = forwardRef<HTMLDivElement, AdwAboutDialogProps>(
             pages={pages}
             stack={stack}
             onStackChange={setStack}
-            style={{ height: "100%" }}
+            style={{ flex: "1 1 auto", minHeight: 0 }}
           />
         </WindowControlsContext.Provider>
       </FloatingSheet>
