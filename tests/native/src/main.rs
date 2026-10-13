@@ -84,6 +84,8 @@ enum Command {
     CenterBoxToolbarStartCenterNarrow,
     CenterBoxToolbarStartCenterWide,
     CenterBoxToolbarStartEnd,
+    CenterBoxToolbarVerticalStartCenterNarrow,
+    CenterBoxToolbarVerticalStartEnd,
     ExpanderDefault,
     ExpanderExpanded,
     FlowBoxDefault,
@@ -309,6 +311,10 @@ impl Command {
             }
             Self::CenterBoxToolbarStartCenterWide => Some("center-box-toolbar-start-center-wide"),
             Self::CenterBoxToolbarStartEnd => Some("center-box-toolbar-start-end"),
+            Self::CenterBoxToolbarVerticalStartCenterNarrow => {
+                Some("center-box-toolbar-vertical-start-center-narrow")
+            }
+            Self::CenterBoxToolbarVerticalStartEnd => Some("center-box-toolbar-vertical-start-end"),
             Self::ExpanderDefault => Some("expander-default"),
             Self::ExpanderExpanded => Some("expander-expanded"),
             Self::FlowBoxDefault => Some("flow-box-default"),
@@ -574,6 +580,14 @@ fn create_widget_for_case(name: &str) -> Option<(gtk::Widget, bool)> {
         ),
         "center-box-toolbar-start-end" => widget_case!(
             cases::center_box_toolbar_start_end::CenterBoxToolbarStartEnd,
+            false
+        ),
+        "center-box-toolbar-vertical-start-center-narrow" => widget_case!(
+            cases::center_box_toolbar_vertical_start_center_narrow::CenterBoxToolbarVerticalStartCenterNarrow,
+            false
+        ),
+        "center-box-toolbar-vertical-start-end" => widget_case!(
+            cases::center_box_toolbar_vertical_start_end::CenterBoxToolbarVerticalStartEnd,
             false
         ),
         "dropdown-default" => widget_case!(cases::dropdown_default::DropdownDefault, true),
@@ -990,6 +1004,8 @@ fn is_known_case(name: &str) -> bool {
             | "center-box-toolbar-start-center-narrow"
             | "center-box-toolbar-start-center-wide"
             | "center-box-toolbar-start-end"
+            | "center-box-toolbar-vertical-start-center-narrow"
+            | "center-box-toolbar-vertical-start-end"
             | "dropdown-default"
             | "expander-default"
             | "expander-expanded"

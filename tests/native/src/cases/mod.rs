@@ -64,6 +64,8 @@ pub mod center_box_toolbar_center_only;
 pub mod center_box_toolbar_start_center_narrow;
 pub mod center_box_toolbar_start_center_wide;
 pub mod center_box_toolbar_start_end;
+pub mod center_box_toolbar_vertical_start_center_narrow;
+pub mod center_box_toolbar_vertical_start_end;
 pub mod check_button_checked;
 pub mod check_button_checked_disabled;
 pub mod check_button_default;
