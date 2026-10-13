@@ -86,10 +86,14 @@ export const GtkLabel = forwardRef<HTMLSpanElement, GtkLabelProps>(function GtkL
       wrapMode === "char" ? "anywhere" : wrapMode === "word-char" ? "break-word" : "normal";
   }
 
+  // The label is a flex container (so it can center its text vertically) and
+  // text-overflow doesn't apply to flex containers: an ellipsizing label puts
+  // its text in a block that can shrink and draw the ellipsis.
+  const ellipsizing = ellipsize !== "none" && lines <= 0;
   if (ellipsize !== "none") {
     cssStyle.overflow = "hidden";
-    cssStyle.textOverflow = "ellipsis";
     cssStyle.whiteSpace = "nowrap";
+    if (!ellipsizing) cssStyle.textOverflow = "ellipsis";
   }
 
   if (widthChars > 0) {
@@ -113,7 +117,15 @@ export const GtkLabel = forwardRef<HTMLSpanElement, GtkLabelProps>(function GtkL
       style={cssStyle}
       {...rest}
     >
-      {text}
+      {ellipsizing ? <span style={ELLIPSIS_STYLE}>{text}</span> : text}
     </span>
   );
 });
+
+const ELLIPSIS_STYLE: React.CSSProperties = {
+  display: "block",
+  minWidth: 0,
+  overflow: "hidden",
+  textOverflow: "ellipsis",
+  whiteSpace: "nowrap",
+};
