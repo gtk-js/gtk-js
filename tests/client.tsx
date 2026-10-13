@@ -524,6 +524,19 @@ const cases: Record<string, () => React.ReactElement> = {
       </GtkStackPage>
     </GtkStack>
   ),
+  "stack-homogeneous": () => (
+    <GtkBox orientation="vertical" halign="start" data-testid="target">
+      <GtkStack visibleChildName="short" halign="start">
+        <GtkStackPage name="short">
+          <GtkLabel label="A" />
+        </GtkStackPage>
+        <GtkStackPage name="long">
+          <GtkLabel label="A much longer page" />
+        </GtkStackPage>
+      </GtkStack>
+      <GtkLabel label="A much longer page" />
+    </GtkBox>
+  ),
 
   // GtkNotebook cases
   "notebook-default": () => (

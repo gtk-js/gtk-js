@@ -171,6 +171,17 @@
   width: 100%;
 }
 
+/* === GtkStack === */
+/* All pages share one cell, like gtk_stack_size_allocate(): the visible page,
+   and the hidden ones a homogeneous stack is sized by. */
+.gtk-stack {
+  display: grid;
+}
+
+.gtk-stack > * {
+  grid-area: 1 / 1;
+}
+
 /* === CenterLayout === */
 /* True centering: center child is always centered relative to the full width,
    regardless of start/end sizes. Uses CSS grid with 1fr/auto/1fr columns. */

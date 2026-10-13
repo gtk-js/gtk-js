@@ -180,6 +180,7 @@ enum Command {
     ScrolledWindowDefault,
     ScrolledWindowFrame,
     StackDefault,
+    StackHomogeneous,
     SearchEntryDefault,
     SearchEntryDisabled,
     SearchbarDefault,
@@ -392,6 +393,7 @@ impl Command {
             Self::ScrolledWindowDefault => Some("scrolled-window-default"),
             Self::ScrolledWindowFrame => Some("scrolled-window-frame"),
             Self::StackDefault => Some("stack-default"),
+            Self::StackHomogeneous => Some("stack-homogeneous"),
             Self::SearchEntryDefault => Some("search-entry-default"),
             Self::SearchEntryDisabled => Some("search-entry-disabled"),
             Self::SearchbarDefault => Some("searchbar-default"),
@@ -791,6 +793,7 @@ fn create_widget_for_case(name: &str) -> Option<(gtk::Widget, bool)> {
             widget_case!(cases::scrolled_window_frame::ScrolledWindowFrame, false)
         }
         "stack-default" => widget_case!(cases::stack_default::StackDefault, false),
+        "stack-homogeneous" => widget_case!(cases::stack_homogeneous::StackHomogeneous, false),
         "search-entry-default" => {
             widget_case!(cases::search_entry_default::SearchEntryDefault, false)
         }
@@ -1046,6 +1049,7 @@ fn is_known_case(name: &str) -> bool {
             | "scrolled-window-default"
             | "scrolled-window-frame"
             | "stack-default"
+            | "stack-homogeneous"
             | "search-entry-default"
             | "search-entry-disabled"
             | "searchbar-default"

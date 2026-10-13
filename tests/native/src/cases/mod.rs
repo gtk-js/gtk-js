@@ -153,6 +153,7 @@ pub mod split_button_flat;
 pub mod split_button_icon;
 pub mod split_button_text_default;
 pub mod stack_default;
+pub mod stack_homogeneous;
 pub mod switch_off_default;
 pub mod switch_off_disabled;
 pub mod switch_on_default;

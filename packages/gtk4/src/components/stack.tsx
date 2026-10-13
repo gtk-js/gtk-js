@@ -1,5 +1,6 @@
 import React, {
   Children,
+  Fragment,
   forwardRef,
   type HTMLAttributes,
   type ReactElement,
@@ -85,8 +86,6 @@ export const GtkStack = forwardRef<HTMLDivElement, GtkStackProps>(function GtkSt
   const [internalVisible, _setInternalVisible] = useState(firstName);
   const visibleName = isControlled ? controlledVisible : internalVisible;
 
-  const activePage = pages.find((p) => p.name === visibleName);
-
   const classes = ["gtk-stack"];
   if (className) classes.push(className);
 
@@ -101,7 +100,26 @@ export const GtkStack = forwardRef<HTMLDivElement, GtkStackProps>(function GtkSt
       style={{ position: "relative", ...transitionStyle, ...style }}
       {...rest}
     >
-      {activePage?.element}
+      {pages.map((page) => {
+        if (page.name === visibleName) return <Fragment key={page.name}>{page.element}</Fragment>;
+        if (!hhomogeneous && !vhomogeneous) return null;
+        // A homogeneous stack is as large as its largest page: hidden pages
+        // stay laid out in the same cell, invisibly, along homogeneous axes.
+        return (
+          <div
+            key={page.name}
+            aria-hidden
+            style={{
+              visibility: "hidden",
+              ...(hhomogeneous ? null : { width: 0 }),
+              ...(vhomogeneous ? null : { height: 0 }),
+              overflow: hhomogeneous && vhomogeneous ? undefined : "hidden",
+            }}
+          >
+            {page.element}
+          </div>
+        );
+      })}
     </div>
   );
 });
