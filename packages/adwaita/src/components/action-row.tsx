@@ -62,6 +62,7 @@ export const AdwActionRow = forwardRef<HTMLDivElement, AdwActionRowProps>(functi
   if (activatable) classes.push("activatable");
   if (className) classes.push(className);
 
+  // The labels wrap, and keep their spaces and line breaks like Pango does.
   const titleStyle: React.CSSProperties =
     titleLines > 0
       ? {
@@ -69,8 +70,9 @@ export const AdwActionRow = forwardRef<HTMLDivElement, AdwActionRowProps>(functi
           WebkitLineClamp: titleLines,
           WebkitBoxOrient: "vertical",
           overflow: "hidden",
+          whiteSpace: "pre-wrap",
         }
-      : {};
+      : { whiteSpace: "pre-wrap" };
 
   const subtitleStyle: React.CSSProperties =
     subtitleLines > 0
@@ -79,8 +81,9 @@ export const AdwActionRow = forwardRef<HTMLDivElement, AdwActionRowProps>(functi
           WebkitLineClamp: subtitleLines,
           WebkitBoxOrient: "vertical",
           overflow: "hidden",
+          whiteSpace: "pre-wrap",
         }
-      : {};
+      : { whiteSpace: "pre-wrap" };
 
   return (
     <div
