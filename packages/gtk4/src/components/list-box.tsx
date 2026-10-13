@@ -58,6 +58,11 @@ export interface GtkListBoxProps extends HTMLAttributes<HTMLDivElement>, GtkAlig
   onRowActivated?: (index: number) => void;
   /** Callback when selection changes. */
   onSelectedRowsChanged?: (indices: number[]) => void;
+  /**
+   * Controlled selection: indices of the selected rows. When set, the list
+   * shows exactly these rows as selected and only reports changes.
+   */
+  selectedRows?: number[];
   children?: ReactNode;
 }
 
@@ -76,6 +81,7 @@ export const GtkListBox = forwardRef<HTMLDivElement, GtkListBoxProps>(function G
     placeholder,
     onRowActivated,
     onSelectedRowsChanged,
+    selectedRows,
     children,
     halign,
     valign,
@@ -84,7 +90,8 @@ export const GtkListBox = forwardRef<HTMLDivElement, GtkListBoxProps>(function G
   },
   ref,
 ) {
-  const [selectedIndices, setSelectedIndices] = useState<Set<number>>(new Set());
+  const [internalSelected, setSelectedIndices] = useState<Set<number>>(new Set());
+  const selectedIndices = selectedRows ? new Set(selectedRows) : internalSelected;
 
   const classes = ["gtk-list"];
   if (showSeparators) classes.push("separators");
@@ -99,22 +106,27 @@ export const GtkListBox = forwardRef<HTMLDivElement, GtkListBoxProps>(function G
         return;
       }
 
-      setSelectedIndices((prev) => {
-        const next = new Set(prev);
-        if (selectionMode === "multiple") {
-          if (next.has(index)) next.delete(index);
-          else next.add(index);
-        } else {
-          next.clear();
-          next.add(index);
-        }
-        onSelectedRowsChanged?.([...next]);
-        return next;
-      });
+      const next = new Set(selectedRows ?? internalSelected);
+      if (selectionMode === "multiple") {
+        if (next.has(index)) next.delete(index);
+        else next.add(index);
+      } else {
+        next.clear();
+        next.add(index);
+      }
+      if (!selectedRows) setSelectedIndices(next);
+      onSelectedRowsChanged?.([...next]);
 
       if (activateOnSingleClick) onRowActivated?.(index);
     },
-    [selectionMode, activateOnSingleClick, onRowActivated, onSelectedRowsChanged],
+    [
+      selectionMode,
+      activateOnSingleClick,
+      onRowActivated,
+      onSelectedRowsChanged,
+      selectedRows,
+      internalSelected,
+    ],
   );
 
   const handleRowDoubleClick = useCallback(
