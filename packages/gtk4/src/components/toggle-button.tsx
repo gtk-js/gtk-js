@@ -18,6 +18,8 @@ export interface GtkToggleButtonProps
   iconName?: string;
   /** Whether the button has a visible frame. Default: true. */
   hasFrame?: boolean;
+  /** Tooltip shown when hovering the button (GtkWidget:tooltip-text). */
+  tooltipText?: string;
   /** Callback when toggle state changes. */
   onToggled?: (active: boolean) => void;
   /** Group reference — another GtkToggleButton ref for radio behavior. */
@@ -40,6 +42,7 @@ export const GtkToggleButton = forwardRef<HTMLButtonElement, GtkToggleButtonProp
       label,
       iconName,
       hasFrame = true,
+      tooltipText,
       onToggled,
       group,
       children,
@@ -100,6 +103,7 @@ export const GtkToggleButton = forwardRef<HTMLButtonElement, GtkToggleButtonProp
       <button
         ref={ref}
         className={classes.join(" ")}
+        title={tooltipText}
         aria-pressed={active}
         {...alignAttrs(halign, valign)}
         data-checked={active || undefined}
