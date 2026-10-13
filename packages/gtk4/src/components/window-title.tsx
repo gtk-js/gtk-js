@@ -1,4 +1,4 @@
-import { forwardRef, type HTMLAttributes } from "react";
+import { type CSSProperties, forwardRef, type HTMLAttributes } from "react";
 import { alignAttrs, type GtkAlignProps } from "../types.ts";
 
 export interface GtkWindowTitleProps extends HTMLAttributes<HTMLDivElement>, GtkAlignProps {
@@ -7,6 +7,15 @@ export interface GtkWindowTitleProps extends HTMLAttributes<HTMLDivElement>, Gtk
   /** Optional subtitle text displayed below the title. */
   subtitle?: string;
 }
+
+// Block (not the default inline-flex): text-overflow only applies to blocks.
+const LABEL_STYLE: CSSProperties = {
+  display: "block",
+  maxWidth: "100%",
+  overflow: "hidden",
+  textOverflow: "ellipsis",
+  whiteSpace: "nowrap",
+};
 
 /**
  * GtkWindowTitle — A title/subtitle widget for headerbars.
@@ -23,16 +32,36 @@ export const GtkWindowTitle = forwardRef<HTMLDivElement, GtkWindowTitleProps>(
     const classes = ["gtk-windowtitle"];
     if (className) classes.push(className);
 
+    // AdwWindowTitle's labels are single-line and ellipsize, and the title has
+    // width-chars=5: the widget's minimum width is five characters (plus the
+    // labels' padding) while its natural width is the full text. A grid track
+    // with a fixed minimum reproduces that min/natural split, so a long title
+    // ellipsizes instead of forcing the header bar wider than the window.
+    const minWidth = title ? "calc(5ch + 24px)" : "0px";
+
     return (
       <div
         ref={ref}
-        className={classes.join(" ") + " gtk-box-layout vertical"}
+        className={classes.join(" ")}
         {...alignAttrs(halign, valign)}
-        style={{ alignItems: "center" }}
+        style={{
+          display: "grid",
+          gridTemplateColumns: `minmax(${minWidth}, max-content)`,
+          justifyItems: "center",
+          alignContent: "center",
+        }}
         {...rest}
       >
-        <span className="gtk-label title">{title}</span>
-        {subtitle && <span className="gtk-label subtitle">{subtitle}</span>}
+        {title && (
+          <span className="gtk-label title" style={LABEL_STYLE}>
+            {title}
+          </span>
+        )}
+        {subtitle && (
+          <span className="gtk-label subtitle" style={LABEL_STYLE}>
+            {subtitle}
+          </span>
+        )}
       </div>
     );
   },
