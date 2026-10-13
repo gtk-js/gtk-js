@@ -1,3 +1,4 @@
+import { useListBoxRow } from "@gtk-js/gtk4";
 import { forwardRef, type HTMLAttributes, type ReactNode } from "react";
 
 export interface AdwActionRowProps extends HTMLAttributes<HTMLDivElement> {
@@ -58,6 +59,7 @@ export const AdwActionRow = forwardRef<HTMLDivElement, AdwActionRowProps>(functi
   },
   ref,
 ) {
+  useListBoxRow();
   const classes = ["gtk-row"];
   if (activatable) classes.push("activatable");
   if (className) classes.push(className);

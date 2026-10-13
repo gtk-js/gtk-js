@@ -1,4 +1,4 @@
-import { useIcon } from "@gtk-js/gtk4";
+import { useIcon, useListBoxRow } from "@gtk-js/gtk4";
 import { forwardRef, type HTMLAttributes, useCallback, useState } from "react";
 
 export interface AdwSpinRowProps extends HTMLAttributes<HTMLDivElement> {
@@ -65,6 +65,7 @@ export const AdwSpinRow = forwardRef<HTMLDivElement, AdwSpinRowProps>(function A
     [clamp, isControlled, onValueChanged],
   );
 
+  useListBoxRow();
   const classes = ["gtk-row", "spin"];
   if (className) classes.push(className);
 

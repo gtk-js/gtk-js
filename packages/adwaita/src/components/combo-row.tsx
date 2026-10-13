@@ -1,4 +1,4 @@
-import { useIcon } from "@gtk-js/gtk4";
+import { useIcon, useListBoxRow } from "@gtk-js/gtk4";
 import {
   forwardRef,
   type HTMLAttributes,
@@ -87,6 +87,7 @@ export const AdwComboRow = forwardRef<HTMLDivElement, AdwComboRowProps>(function
 
   const displaySubtitle = useSubtitle ? items[selected] : subtitle;
 
+  useListBoxRow();
   const classes = ["gtk-row", "combo", "activatable"];
   if (open) classes.push("has-open-popup");
   if (className) classes.push(className);

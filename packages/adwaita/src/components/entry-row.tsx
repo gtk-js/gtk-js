@@ -1,4 +1,4 @@
-import { type GtkInputPurpose, useIcon } from "@gtk-js/gtk4";
+import { type GtkInputPurpose, useIcon, useListBoxRow } from "@gtk-js/gtk4";
 import React, {
   forwardRef,
   type HTMLAttributes,
@@ -84,6 +84,7 @@ export const AdwEntryRow = forwardRef<HTMLDivElement, AdwEntryRowProps>(function
   const ApplyIcon = useIcon("AdwEntryApply");
   const EditIcon = useIcon("DocumentEdit");
 
+  useListBoxRow();
   const classes = ["gtk-row", "entry"];
   if (focused) classes.push("focused");
   if (className) classes.push(className);
