@@ -152,34 +152,31 @@
 }
 
 /* Spacing (the theme's border-spacing) only goes between children that exist,
-   as in GtkCenterLayout, whose natural size is center + 2 × max(start, end) +
-   (visible children - 1) × spacing. Renderers mark the present slots with
-   data-start / data-center / data-end, and the spacing is the center slot's
-   margin: next to each present side child (at its natural size GTK pushes the
-   center away from a lone side child by that much), or split around the empty
-   center slot between start and end. */
-.gtk-center-layout[data-start][data-center] > .gtk-center-layout-center {
-  margin-inline-start: var(--gtk-center-spacing-x);
-}
-
-.gtk-center-layout[data-end][data-center] > .gtk-center-layout-center {
+   as in GtkCenterLayout ((visible children - 1) × spacing). Renderers mark the
+   present slots with data-start / data-center / data-end. Next to a center
+   child the spacing is the side child's margin: the equal 1fr tracks keep the
+   center geometrically centered, and the margin only keeps the two apart when
+   space runs out, like GTK pushing the center away from a side child. Between
+   start and end alone it is split around the empty center slot. */
+.gtk-center-layout:not(.vertical)[data-start][data-center] > .gtk-center-layout-start {
   margin-inline-end: var(--gtk-center-spacing-x);
 }
 
-.gtk-center-layout[data-start][data-end]:not([data-center]) > .gtk-center-layout-center {
+.gtk-center-layout:not(.vertical)[data-end][data-center] > .gtk-center-layout-end {
+  margin-inline-start: var(--gtk-center-spacing-x);
+}
+
+.gtk-center-layout:not(.vertical)[data-start][data-end]:not([data-center])
+  > .gtk-center-layout-center {
   margin-inline: calc(var(--gtk-center-spacing-x) / 2);
 }
 
-.gtk-center-layout.vertical > .gtk-center-layout-center {
-  margin-inline: 0;
-}
-
-.gtk-center-layout.vertical[data-start][data-center] > .gtk-center-layout-center {
-  margin-block-start: var(--gtk-center-spacing-y);
-}
-
-.gtk-center-layout.vertical[data-end][data-center] > .gtk-center-layout-center {
+.gtk-center-layout.vertical[data-start][data-center] > .gtk-center-layout-start {
   margin-block-end: var(--gtk-center-spacing-y);
+}
+
+.gtk-center-layout.vertical[data-end][data-center] > .gtk-center-layout-end {
+  margin-block-start: var(--gtk-center-spacing-y);
 }
 
 .gtk-center-layout.vertical[data-start][data-end]:not([data-center]) > .gtk-center-layout-center {
