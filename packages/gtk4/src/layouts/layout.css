@@ -140,14 +140,50 @@
   display: grid;
   grid-template-columns: 1fr auto 1fr;
   align-items: center;
-  column-gap: var(--gtk-border-spacing-x);
+  /* The layout's border-spacing, for its slots (below): the registered
+     --gtk-border-spacing-* properties aren't inherited. */
+  --gtk-center-spacing-x: var(--gtk-border-spacing-x);
+  --gtk-center-spacing-y: var(--gtk-border-spacing-y);
 }
 
 .gtk-center-layout.vertical {
   grid-template-columns: 1fr;
   grid-template-rows: 1fr auto 1fr;
-  column-gap: 0;
-  row-gap: var(--gtk-border-spacing-y);
+}
+
+/* Spacing (the theme's border-spacing) only goes between children that exist,
+   as in GtkCenterLayout, whose natural size is center + 2 × max(start, end) +
+   (visible children - 1) × spacing. Renderers mark the present slots with
+   data-start / data-center / data-end, and the spacing is the center slot's
+   margin: next to each present side child (at its natural size GTK pushes the
+   center away from a lone side child by that much), or split around the empty
+   center slot between start and end. */
+.gtk-center-layout[data-start][data-center] > .gtk-center-layout-center {
+  margin-inline-start: var(--gtk-center-spacing-x);
+}
+
+.gtk-center-layout[data-end][data-center] > .gtk-center-layout-center {
+  margin-inline-end: var(--gtk-center-spacing-x);
+}
+
+.gtk-center-layout[data-start][data-end]:not([data-center]) > .gtk-center-layout-center {
+  margin-inline: calc(var(--gtk-center-spacing-x) / 2);
+}
+
+.gtk-center-layout.vertical > .gtk-center-layout-center {
+  margin-inline: 0;
+}
+
+.gtk-center-layout.vertical[data-start][data-center] > .gtk-center-layout-center {
+  margin-block-start: var(--gtk-center-spacing-y);
+}
+
+.gtk-center-layout.vertical[data-end][data-center] > .gtk-center-layout-center {
+  margin-block-end: var(--gtk-center-spacing-y);
+}
+
+.gtk-center-layout.vertical[data-start][data-end]:not([data-center]) > .gtk-center-layout-center {
+  margin-block: calc(var(--gtk-center-spacing-y) / 2);
 }
 
 /* -- Widget alignment in CenterLayout (grid): both axes independent -- */
