@@ -475,6 +475,29 @@ const cases: Record<string, () => React.ReactElement> = {
       data-testid="target"
     />
   ),
+  "center-box-toolbar-vertical-start-center-narrow": () => (
+    <GtkCenterBox
+      orientation="vertical"
+      halign="start"
+      valign="start"
+      className="toolbar"
+      style={{ height: 60 }}
+      startWidget={<GtkLabel label="Side" />}
+      centerWidget={<GtkLabel label="Center" />}
+      data-testid="target"
+    />
+  ),
+  "center-box-toolbar-vertical-start-end": () => (
+    <GtkCenterBox
+      orientation="vertical"
+      halign="start"
+      valign="start"
+      className="toolbar"
+      startWidget={<GtkLabel label="Side" />}
+      endWidget={<GtkLabel label="Side" />}
+      data-testid="target"
+    />
+  ),
 
   // GtkGrid cases
   "grid-default": () => (

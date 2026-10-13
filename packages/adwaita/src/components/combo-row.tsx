@@ -104,20 +104,20 @@ export const AdwComboRow = forwardRef<HTMLDivElement, AdwComboRowProps>(function
     >
       <div
         className="gtk-box gtk-box-layout horizontal header"
-        style={{ gap: 6, alignItems: "center", cursor: "pointer" }}
+        style={{ alignItems: "center", cursor: "pointer" }}
         onClick={() => {
           setOpen(!open);
           setSearch("");
         }}
       >
         {PrefixIcon && (
-          <div className="gtk-box prefixes" style={{ gap: 6 }}>
+          <div className="gtk-box gtk-box-layout horizontal prefixes">
             <span className="gtk-image">
               <PrefixIcon size={16} />
             </span>
           </div>
         )}
-        <div className="gtk-box gtk-box-layout vertical title" style={{ flex: 1, gap: 3 }}>
+        <div className="gtk-box gtk-box-layout vertical title" style={{ flex: 1 }}>
           <span className="gtk-label title">{title}</span>
           {displaySubtitle && <span className="gtk-label subtitle">{displaySubtitle}</span>}
         </div>
