@@ -1,3 +1,5 @@
+import type { CSSProperties } from "react";
+
 /** Layout direction for containers. */
 export type GtkOrientation = "horizontal" | "vertical";
 
@@ -30,6 +32,14 @@ export function alignAttrs(halign?: GtkAlign, valign?: GtkAlign) {
     "data-halign": halign && halign !== "fill" ? halign : undefined,
     "data-valign": valign && valign !== "fill" ? valign : undefined,
   };
+}
+
+/**
+ * A box's spacing property as `--gtk-spacing`, which layout.css adds to the
+ * theme's border-spacing like gtk_box_layout's get_spacing().
+ */
+export function spacingStyle(spacing: number): CSSProperties {
+  return spacing > 0 ? ({ "--gtk-spacing": `${spacing}px` } as CSSProperties) : {};
 }
 
 /** List selection behavior. */

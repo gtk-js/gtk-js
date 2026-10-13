@@ -37,6 +37,7 @@ pub mod toast_overlay_default;
 pub mod box_homogeneous;
 pub mod box_horizontal_default;
 pub mod box_spacing;
+pub mod box_spacing_toolbar;
 pub mod box_vertical_default;
 pub mod button_circular;
 pub mod button_content_icon_label;
