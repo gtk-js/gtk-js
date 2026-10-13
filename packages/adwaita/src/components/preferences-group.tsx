@@ -35,13 +35,15 @@ export const AdwPreferencesGroup = forwardRef<HTMLDivElement, AdwPreferencesGrou
 
     return (
       <div ref={ref} className={classes.join(" ")} {...rest}>
-        <div className="gtk-box gtk-box-layout vertical" style={{ gap: 6 }}>
+        {/* Spacing comes from the theme's border-spacing: 6px in this box and
+            the labels box, none between the labels and the header suffix. */}
+        <div className="gtk-box gtk-box-layout vertical">
           {hasHeader && (
             <div
               className={`gtk-box gtk-box-layout horizontal header ${singleLine ? "single-line" : ""}`}
-              style={{ alignItems: "center", gap: 6 }}
+              style={{ alignItems: "center" }}
             >
-              <div className="gtk-box gtk-box-layout vertical labels" style={{ flex: 1, gap: 6 }}>
+              <div className="gtk-box gtk-box-layout vertical labels" style={{ flex: 1 }}>
                 {hasTitle && <span className="gtk-label heading h4">{title}</span>}
                 {hasDescription && (
                   <span className="gtk-label body dimmed description">{description}</span>
