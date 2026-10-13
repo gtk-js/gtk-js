@@ -48,6 +48,8 @@ export const GtkToggleButton = forwardRef<HTMLButtonElement, GtkToggleButtonProp
       children,
       halign,
       valign,
+      hexpand,
+      vexpand,
       className,
       onKeyDown,
       onKeyUp,
@@ -105,7 +107,7 @@ export const GtkToggleButton = forwardRef<HTMLButtonElement, GtkToggleButtonProp
         className={classes.join(" ")}
         title={tooltipText}
         aria-pressed={active}
-        {...alignAttrs(halign, valign)}
+        {...alignAttrs(halign, valign, hexpand, vexpand)}
         data-checked={active || undefined}
         onClick={handleClick}
         onKeyDown={handleKeyDown}

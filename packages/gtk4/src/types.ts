@@ -16,19 +16,34 @@ export type GtkWrapMode = "word" | "char" | "word-char";
 /** Widget alignment within allocated space. */
 export type GtkAlign = "fill" | "start" | "end" | "center" | "baseline-fill" | "baseline-center";
 
-/** Alignment props available on all GtkWidget subclasses. */
+/** Alignment and expansion props available on all GtkWidget subclasses. */
 export interface GtkAlignProps {
   /** Horizontal alignment within the parent's allocated space. Default: "fill". */
   halign?: GtkAlign;
   /** Vertical alignment within the parent's allocated space. Default: "fill". */
   valign?: GtkAlign;
+  /**
+   * Whether the widget takes extra horizontal space its parent box has
+   * (GtkWidget:hexpand). A parent also expands when something in it does,
+   * unless it sets `hexpand={false}`. Default: unset.
+   */
+  hexpand?: boolean;
+  /** Whether the widget takes extra vertical space (GtkWidget:vexpand). Default: unset. */
+  vexpand?: boolean;
 }
 
-/** Convert halign/valign props to data attributes for layout CSS. */
-export function alignAttrs(halign?: GtkAlign, valign?: GtkAlign) {
+/** Convert alignment and expansion props to data attributes for layout CSS. */
+export function alignAttrs(
+  halign?: GtkAlign,
+  valign?: GtkAlign,
+  hexpand?: boolean,
+  vexpand?: boolean,
+) {
   return {
     "data-halign": halign && halign !== "fill" ? halign : undefined,
     "data-valign": valign && valign !== "fill" ? valign : undefined,
+    "data-hexpand": hexpand === undefined ? undefined : String(hexpand),
+    "data-vexpand": vexpand === undefined ? undefined : String(vexpand),
   };
 }
 

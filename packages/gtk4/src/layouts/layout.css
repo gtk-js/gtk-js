@@ -25,14 +25,79 @@
   flex: 1;
 }
 
-/* hexpand + halign=start: widget stays natural size, margin fills remaining space.
- * Equivalent to GTK hexpand=TRUE, halign=GTK_ALIGN_START — the allocation grows
- * but the widget renders at its natural size, pushing siblings to the end. */
-.gtk-box-layout.horizontal > [data-hexpand="true"] {
-  margin-right: auto;
+/* GtkWidget:hexpand / vexpand: the children that expand share the box's extra
+ * space equally (gtk_box_layout_allocate()). A child expands when something in
+ * it does too (gtk_widget_compute_expand()), unless it sets expand to false.
+ * With halign/valign start, end or center, an expanding child keeps its
+ * natural size, followed (or preceded) by the extra space. Flexbox only gives
+ * auto margins what growing children leave, so in a box that also has a
+ * filling child that expands, such a child gets no share; GTK splits it. */
+.gtk-box-layout.horizontal
+> :is([data-hexpand="true"], :not([data-hexpand="false"]):has([data-hexpand="true"])) {
+  flex-grow: 1;
 }
-.gtk-box-layout.vertical > [data-hexpand="true"] {
-  margin-bottom: auto;
+.gtk-box-layout.horizontal
+  > :is([data-hexpand="true"], :not([data-hexpand="false"]):has([data-hexpand="true"])):is(
+    [data-halign="start"],
+    [data-halign="end"],
+    [data-halign="center"]
+  ) {
+  flex-grow: 0;
+}
+.gtk-box-layout.horizontal
+  > :is(
+    [data-hexpand="true"],
+    :not([data-hexpand="false"]):has([data-hexpand="true"])
+  )[data-halign="start"] {
+  margin-inline-end: auto;
+}
+.gtk-box-layout.horizontal
+  > :is(
+    [data-hexpand="true"],
+    :not([data-hexpand="false"]):has([data-hexpand="true"])
+  )[data-halign="end"] {
+  margin-inline-start: auto;
+}
+.gtk-box-layout.horizontal
+  > :is(
+    [data-hexpand="true"],
+    :not([data-hexpand="false"]):has([data-hexpand="true"])
+  )[data-halign="center"] {
+  margin-inline: auto;
+}
+
+.gtk-box-layout.vertical
+  > :is([data-vexpand="true"], :not([data-vexpand="false"]):has([data-vexpand="true"])) {
+  flex-grow: 1;
+}
+.gtk-box-layout.vertical
+  > :is([data-vexpand="true"], :not([data-vexpand="false"]):has([data-vexpand="true"])):is(
+    [data-valign="start"],
+    [data-valign="end"],
+    [data-valign="center"]
+  ) {
+  flex-grow: 0;
+}
+.gtk-box-layout.vertical
+  > :is(
+    [data-vexpand="true"],
+    :not([data-vexpand="false"]):has([data-vexpand="true"])
+  )[data-valign="start"] {
+  margin-block-end: auto;
+}
+.gtk-box-layout.vertical
+  > :is(
+    [data-vexpand="true"],
+    :not([data-vexpand="false"]):has([data-vexpand="true"])
+  )[data-valign="end"] {
+  margin-block-start: auto;
+}
+.gtk-box-layout.vertical
+  > :is(
+    [data-vexpand="true"],
+    :not([data-vexpand="false"]):has([data-vexpand="true"])
+  )[data-valign="center"] {
+  margin-block: auto;
 }
 
 /* -- Widget alignment in horizontal BoxLayout: valign = cross-axis -- */

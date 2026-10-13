@@ -43,6 +43,8 @@ export const GtkExpander = forwardRef<HTMLDivElement, GtkExpanderProps>(function
     onExpandedChanged,
     halign,
     valign,
+    hexpand,
+    vexpand,
     className,
     ...rest
   },
@@ -66,7 +68,12 @@ export const GtkExpander = forwardRef<HTMLDivElement, GtkExpanderProps>(function
   if (className) classes.push(className);
 
   return (
-    <div ref={ref} className={classes.join(" ")} {...alignAttrs(halign, valign)} {...rest}>
+    <div
+      ref={ref}
+      className={classes.join(" ")}
+      {...alignAttrs(halign, valign, hexpand, vexpand)}
+      {...rest}
+    >
       <div className="gtk-box gtk-box-layout vertical">
         <div
           className="title"

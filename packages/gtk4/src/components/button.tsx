@@ -64,6 +64,8 @@ export const GtkButton = forwardRef<HTMLButtonElement, GtkButtonProps>(function 
     children,
     halign,
     valign,
+    hexpand,
+    vexpand,
     className,
     onKeyDown,
     onKeyUp,
@@ -119,7 +121,7 @@ export const GtkButton = forwardRef<HTMLButtonElement, GtkButtonProps>(function 
       ref={ref}
       className={classes.join(" ")}
       title={tooltipText}
-      {...alignAttrs(halign, valign)}
+      {...alignAttrs(halign, valign, hexpand, vexpand)}
       onClick={handleClick}
       onKeyDown={handleKeyDown}
       onKeyUp={handleKeyUp}

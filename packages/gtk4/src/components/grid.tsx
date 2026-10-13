@@ -45,6 +45,8 @@ export const GtkGrid = forwardRef<HTMLDivElement, GtkGridProps>(function GtkGrid
     children,
     halign,
     valign,
+    hexpand,
+    vexpand,
     className,
     style,
     ...rest
@@ -79,7 +81,7 @@ export const GtkGrid = forwardRef<HTMLDivElement, GtkGridProps>(function GtkGrid
     <div
       ref={ref}
       className={classes.join(" ")}
-      {...alignAttrs(halign, valign)}
+      {...alignAttrs(halign, valign, hexpand, vexpand)}
       style={gridStyle}
       {...rest}
     >

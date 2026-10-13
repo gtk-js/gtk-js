@@ -37,6 +37,8 @@ export const GtkPasswordEntry = forwardRef<HTMLInputElement, GtkPasswordEntryPro
       onActivate,
       halign,
       valign,
+      hexpand,
+      vexpand,
       className,
       onChange,
       onKeyDown,
@@ -82,7 +84,7 @@ export const GtkPasswordEntry = forwardRef<HTMLInputElement, GtkPasswordEntryPro
     }, []);
 
     return (
-      <div className={classes.join(" ")} {...alignAttrs(halign, valign)}>
+      <div className={classes.join(" ")} {...alignAttrs(halign, valign, hexpand, vexpand)}>
         <input
           ref={ref}
           className="gtk-text"

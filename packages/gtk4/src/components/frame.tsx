@@ -26,7 +26,19 @@ export interface GtkFrameProps extends HTMLAttributes<HTMLDivElement>, GtkAlignP
  * @see https://docs.gtk.org/gtk4/class.Frame.html
  */
 export const GtkFrame = forwardRef<HTMLDivElement, GtkFrameProps>(function GtkFrame(
-  { label, labelWidget, labelXalign = 0, children, halign, valign, className, style, ...rest },
+  {
+    label,
+    labelWidget,
+    labelXalign = 0,
+    children,
+    halign,
+    valign,
+    hexpand,
+    vexpand,
+    className,
+    style,
+    ...rest
+  },
   ref,
 ) {
   const classes = ["gtk-frame"];
@@ -38,7 +50,7 @@ export const GtkFrame = forwardRef<HTMLDivElement, GtkFrameProps>(function GtkFr
     <div
       ref={ref}
       className={classes.join(" ")}
-      {...alignAttrs(halign, valign)}
+      {...alignAttrs(halign, valign, hexpand, vexpand)}
       style={{ overflow: "clip", ...style }}
       {...rest}
     >

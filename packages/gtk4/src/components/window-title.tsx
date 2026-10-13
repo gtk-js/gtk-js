@@ -19,7 +19,10 @@ export interface GtkWindowTitleProps extends HTMLAttributes<HTMLDivElement>, Gtk
  * @see https://docs.gtk.org/gtk4/class.WindowTitle.html
  */
 export const GtkWindowTitle = forwardRef<HTMLDivElement, GtkWindowTitleProps>(
-  function GtkWindowTitle({ title, subtitle, halign, valign, className, ...rest }, ref) {
+  function GtkWindowTitle(
+    { title, subtitle, halign, valign, hexpand, vexpand, className, ...rest },
+    ref,
+  ) {
     const classes = ["gtk-windowtitle"];
     if (className) classes.push(className);
 
@@ -27,7 +30,7 @@ export const GtkWindowTitle = forwardRef<HTMLDivElement, GtkWindowTitleProps>(
       <div
         ref={ref}
         className={classes.join(" ") + " gtk-box-layout vertical"}
-        {...alignAttrs(halign, valign)}
+        {...alignAttrs(halign, valign, hexpand, vexpand)}
         style={{ alignItems: "center" }}
         {...rest}
       >

@@ -63,6 +63,8 @@ export const GtkStack = forwardRef<HTMLDivElement, GtkStackProps>(function GtkSt
     children,
     halign,
     valign,
+    hexpand,
+    vexpand,
     className,
     style,
     ...rest
@@ -95,7 +97,7 @@ export const GtkStack = forwardRef<HTMLDivElement, GtkStackProps>(function GtkSt
     <div
       ref={ref}
       className={classes.join(" ")}
-      {...alignAttrs(halign, valign)}
+      {...alignAttrs(halign, valign, hexpand, vexpand)}
       style={{ position: "relative", ...transitionStyle, ...style }}
       {...rest}
     >
@@ -122,7 +124,7 @@ export interface GtkStackSwitcherProps extends HTMLAttributes<HTMLDivElement>, G
  */
 export const GtkStackSwitcher = forwardRef<HTMLDivElement, GtkStackSwitcherProps>(
   function GtkStackSwitcher(
-    { pages, activePageName, onPageChanged, halign, valign, className, ...rest },
+    { pages, activePageName, onPageChanged, halign, valign, hexpand, vexpand, className, ...rest },
     ref,
   ) {
     const classes = ["gtk-stackswitcher", "gtk-box-layout", "horizontal", "linked"];
@@ -133,7 +135,7 @@ export const GtkStackSwitcher = forwardRef<HTMLDivElement, GtkStackSwitcherProps
         ref={ref}
         role="tablist"
         className={classes.join(" ")}
-        {...alignAttrs(halign, valign)}
+        {...alignAttrs(halign, valign, hexpand, vexpand)}
         {...rest}
       >
         {pages.map((page) => {

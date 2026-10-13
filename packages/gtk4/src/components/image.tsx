@@ -19,7 +19,17 @@ export interface GtkImageProps extends HTMLAttributes<HTMLSpanElement>, GtkAlign
  * @see https://docs.gtk.org/gtk4/class.Image.html
  */
 export const GtkImage = forwardRef<HTMLSpanElement, GtkImageProps>(function GtkImage(
-  { iconName, pixelSize = -1, iconSize = "inherit", halign, valign, className, ...rest },
+  {
+    iconName,
+    pixelSize = -1,
+    iconSize = "inherit",
+    halign,
+    valign,
+    hexpand,
+    vexpand,
+    className,
+    ...rest
+  },
   ref,
 ) {
   const icons = useIcons();
@@ -34,7 +44,12 @@ export const GtkImage = forwardRef<HTMLSpanElement, GtkImageProps>(function GtkI
   const size = pixelSize >= 0 ? pixelSize : iconSize === "large" ? 32 : 16;
 
   return (
-    <span ref={ref} className={classes.join(" ")} {...alignAttrs(halign, valign)} {...rest}>
+    <span
+      ref={ref}
+      className={classes.join(" ")}
+      {...alignAttrs(halign, valign, hexpand, vexpand)}
+      {...rest}
+    >
       {Icon && <Icon size={size} />}
     </span>
   );
