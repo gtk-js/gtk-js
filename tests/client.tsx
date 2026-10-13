@@ -426,10 +426,42 @@ const cases: Record<string, () => React.ReactElement> = {
     />
   ),
 
+  // GTK's width request includes the toolbar's 6px padding; CSS widths here are
+  // content widths.
+  "center-box-toolbar-center-end-narrow": () => (
+    <GtkCenterBox
+      halign="start"
+      className="toolbar"
+      style={{ width: 108 }}
+      centerWidget={<GtkLabel label="Center" />}
+      endWidget={<GtkLabel label="Side" />}
+      data-testid="target"
+    />
+  ),
   "center-box-toolbar-center-only": () => (
     <GtkCenterBox
       halign="start"
       className="toolbar"
+      centerWidget={<GtkLabel label="Center" />}
+      data-testid="target"
+    />
+  ),
+  "center-box-toolbar-start-center-wide": () => (
+    <GtkCenterBox
+      halign="start"
+      className="toolbar"
+      style={{ width: 288 }}
+      startWidget={<GtkLabel label="Side" />}
+      centerWidget={<GtkLabel label="Center" />}
+      data-testid="target"
+    />
+  ),
+  "center-box-toolbar-start-center-narrow": () => (
+    <GtkCenterBox
+      halign="start"
+      className="toolbar"
+      style={{ width: 108 }}
+      startWidget={<GtkLabel label="Side" />}
       centerWidget={<GtkLabel label="Center" />}
       data-testid="target"
     />

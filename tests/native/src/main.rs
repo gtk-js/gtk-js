@@ -79,7 +79,10 @@ enum Command {
     BoxSpacingToolbar,
     BoxHomogeneous,
     CenterBoxDefault,
+    CenterBoxToolbarCenterEndNarrow,
     CenterBoxToolbarCenterOnly,
+    CenterBoxToolbarStartCenterNarrow,
+    CenterBoxToolbarStartCenterWide,
     CenterBoxToolbarStartEnd,
     ExpanderDefault,
     ExpanderExpanded,
@@ -299,7 +302,12 @@ impl Command {
             Self::BoxSpacingToolbar => Some("box-spacing-toolbar"),
             Self::BoxHomogeneous => Some("box-homogeneous"),
             Self::CenterBoxDefault => Some("center-box-default"),
+            Self::CenterBoxToolbarCenterEndNarrow => Some("center-box-toolbar-center-end-narrow"),
             Self::CenterBoxToolbarCenterOnly => Some("center-box-toolbar-center-only"),
+            Self::CenterBoxToolbarStartCenterNarrow => {
+                Some("center-box-toolbar-start-center-narrow")
+            }
+            Self::CenterBoxToolbarStartCenterWide => Some("center-box-toolbar-start-center-wide"),
             Self::CenterBoxToolbarStartEnd => Some("center-box-toolbar-start-end"),
             Self::ExpanderDefault => Some("expander-default"),
             Self::ExpanderExpanded => Some("expander-expanded"),
@@ -548,8 +556,20 @@ fn create_widget_for_case(name: &str) -> Option<(gtk::Widget, bool)> {
         }
         "box-homogeneous" => widget_case!(cases::box_homogeneous::BoxHomogeneous, false),
         "center-box-default" => widget_case!(cases::center_box_default::CenterBoxDefault, false),
+        "center-box-toolbar-center-end-narrow" => widget_case!(
+            cases::center_box_toolbar_center_end_narrow::CenterBoxToolbarCenterEndNarrow,
+            false
+        ),
         "center-box-toolbar-center-only" => widget_case!(
             cases::center_box_toolbar_center_only::CenterBoxToolbarCenterOnly,
+            false
+        ),
+        "center-box-toolbar-start-center-narrow" => widget_case!(
+            cases::center_box_toolbar_start_center_narrow::CenterBoxToolbarStartCenterNarrow,
+            false
+        ),
+        "center-box-toolbar-start-center-wide" => widget_case!(
+            cases::center_box_toolbar_start_center_wide::CenterBoxToolbarStartCenterWide,
             false
         ),
         "center-box-toolbar-start-end" => widget_case!(
@@ -965,7 +985,10 @@ fn is_known_case(name: &str) -> bool {
             | "box-spacing-toolbar"
             | "box-homogeneous"
             | "center-box-default"
+            | "center-box-toolbar-center-end-narrow"
             | "center-box-toolbar-center-only"
+            | "center-box-toolbar-start-center-narrow"
+            | "center-box-toolbar-start-center-wide"
             | "center-box-toolbar-start-end"
             | "dropdown-default"
             | "expander-default"
