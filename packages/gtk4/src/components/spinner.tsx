@@ -23,7 +23,7 @@ export interface GtkSpinnerProps extends HTMLAttributes<HTMLSpanElement>, GtkAli
  * @see upstream/libadwaita/src/stylesheet/widgets/_spinner.scss
  */
 export const GtkSpinner = forwardRef<HTMLSpanElement, GtkSpinnerProps>(function GtkSpinner(
-  { spinning = false, disabled = false, halign, valign, className, ...rest },
+  { spinning = false, disabled = false, halign, valign, hexpand, vexpand, className, ...rest },
   ref,
 ) {
   const classes = ["gtk-spinner"];
@@ -36,7 +36,7 @@ export const GtkSpinner = forwardRef<HTMLSpanElement, GtkSpinnerProps>(function 
       aria-busy={spinning}
       aria-disabled={disabled || undefined}
       className={classes.join(" ")}
-      {...alignAttrs(halign, valign)}
+      {...alignAttrs(halign, valign, hexpand, vexpand)}
       data-checked={spinning || undefined}
       data-disabled={disabled || undefined}
       {...rest}

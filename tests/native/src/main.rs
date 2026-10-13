@@ -77,6 +77,7 @@ enum Command {
     BoxVerticalDefault,
     BoxSpacing,
     BoxSpacingToolbar,
+    BoxHexpand,
     BoxHomogeneous,
     CenterBoxDefault,
     CenterBoxToolbarCenterEndNarrow,
@@ -86,6 +87,7 @@ enum Command {
     CenterBoxToolbarStartEnd,
     CenterBoxToolbarVerticalStartCenterNarrow,
     CenterBoxToolbarVerticalStartEnd,
+    CenterBoxToolbarVerticalStartEndTall,
     ExpanderDefault,
     ExpanderExpanded,
     FlowBoxDefault,
@@ -143,6 +145,7 @@ enum Command {
     LabelWrapWord,
     LabelWrapChar,
     LabelEllipsize,
+    LabelHeights,
     LabelJustifyCenter,
     LabelWidthChars,
     LabelXalign,
@@ -187,6 +190,7 @@ enum Command {
     ScrolledWindowDefault,
     ScrolledWindowFrame,
     StackDefault,
+    StackHomogeneous,
     SearchEntryDefault,
     SearchEntryDisabled,
     SearchbarDefault,
@@ -303,6 +307,7 @@ impl Command {
             Self::BoxSpacing => Some("box-spacing"),
             Self::BoxSpacingToolbar => Some("box-spacing-toolbar"),
             Self::BoxHomogeneous => Some("box-homogeneous"),
+            Self::BoxHexpand => Some("box-hexpand"),
             Self::CenterBoxDefault => Some("center-box-default"),
             Self::CenterBoxToolbarCenterEndNarrow => Some("center-box-toolbar-center-end-narrow"),
             Self::CenterBoxToolbarCenterOnly => Some("center-box-toolbar-center-only"),
@@ -315,6 +320,9 @@ impl Command {
                 Some("center-box-toolbar-vertical-start-center-narrow")
             }
             Self::CenterBoxToolbarVerticalStartEnd => Some("center-box-toolbar-vertical-start-end"),
+            Self::CenterBoxToolbarVerticalStartEndTall => {
+                Some("center-box-toolbar-vertical-start-end-tall")
+            }
             Self::ExpanderDefault => Some("expander-default"),
             Self::ExpanderExpanded => Some("expander-expanded"),
             Self::FlowBoxDefault => Some("flow-box-default"),
@@ -371,6 +379,7 @@ impl Command {
             Self::LabelWrapWord => Some("label-wrap-word"),
             Self::LabelWrapChar => Some("label-wrap-char"),
             Self::LabelEllipsize => Some("label-ellipsize"),
+            Self::LabelHeights => Some("label-heights"),
             Self::LabelJustifyCenter => Some("label-justify-center"),
             Self::LabelWidthChars => Some("label-width-chars"),
             Self::LabelXalign => Some("label-xalign"),
@@ -410,6 +419,7 @@ impl Command {
             Self::ScrolledWindowDefault => Some("scrolled-window-default"),
             Self::ScrolledWindowFrame => Some("scrolled-window-frame"),
             Self::StackDefault => Some("stack-default"),
+            Self::StackHomogeneous => Some("stack-homogeneous"),
             Self::SearchEntryDefault => Some("search-entry-default"),
             Self::SearchEntryDisabled => Some("search-entry-disabled"),
             Self::SearchbarDefault => Some("searchbar-default"),
@@ -561,6 +571,7 @@ fn create_widget_for_case(name: &str) -> Option<(gtk::Widget, bool)> {
             widget_case!(cases::box_spacing_toolbar::BoxSpacingToolbar, false)
         }
         "box-homogeneous" => widget_case!(cases::box_homogeneous::BoxHomogeneous, false),
+        "box-hexpand" => widget_case!(cases::box_hexpand::BoxHexpand, false),
         "center-box-default" => widget_case!(cases::center_box_default::CenterBoxDefault, false),
         "center-box-toolbar-center-end-narrow" => widget_case!(
             cases::center_box_toolbar_center_end_narrow::CenterBoxToolbarCenterEndNarrow,
@@ -588,6 +599,10 @@ fn create_widget_for_case(name: &str) -> Option<(gtk::Widget, bool)> {
         ),
         "center-box-toolbar-vertical-start-end" => widget_case!(
             cases::center_box_toolbar_vertical_start_end::CenterBoxToolbarVerticalStartEnd,
+            false
+        ),
+        "center-box-toolbar-vertical-start-end-tall" => widget_case!(
+            cases::center_box_toolbar_vertical_start_end_tall::CenterBoxToolbarVerticalStartEndTall,
             false
         ),
         "dropdown-default" => widget_case!(cases::dropdown_default::DropdownDefault, true),
@@ -721,6 +736,7 @@ fn create_widget_for_case(name: &str) -> Option<(gtk::Widget, bool)> {
         "label-wrap-word" => widget_case!(cases::label_wrap_word::LabelWrapWord, false),
         "label-wrap-char" => widget_case!(cases::label_wrap_char::LabelWrapChar, false),
         "label-ellipsize" => widget_case!(cases::label_ellipsize::LabelEllipsize, false),
+        "label-heights" => widget_case!(cases::label_heights::LabelHeights, false),
         "label-justify-center" => {
             widget_case!(cases::label_justify_center::LabelJustifyCenter, false)
         }
@@ -839,6 +855,7 @@ fn create_widget_for_case(name: &str) -> Option<(gtk::Widget, bool)> {
             widget_case!(cases::scrolled_window_frame::ScrolledWindowFrame, false)
         }
         "stack-default" => widget_case!(cases::stack_default::StackDefault, false),
+        "stack-homogeneous" => widget_case!(cases::stack_homogeneous::StackHomogeneous, false),
         "search-entry-default" => {
             widget_case!(cases::search_entry_default::SearchEntryDefault, false)
         }
@@ -998,6 +1015,7 @@ fn is_known_case(name: &str) -> bool {
             | "box-spacing"
             | "box-spacing-toolbar"
             | "box-homogeneous"
+            | "box-hexpand"
             | "center-box-default"
             | "center-box-toolbar-center-end-narrow"
             | "center-box-toolbar-center-only"
@@ -1006,6 +1024,7 @@ fn is_known_case(name: &str) -> bool {
             | "center-box-toolbar-start-end"
             | "center-box-toolbar-vertical-start-center-narrow"
             | "center-box-toolbar-vertical-start-end"
+            | "center-box-toolbar-vertical-start-end-tall"
             | "dropdown-default"
             | "expander-default"
             | "expander-expanded"
@@ -1066,6 +1085,7 @@ fn is_known_case(name: &str) -> bool {
             | "label-wrap-word"
             | "label-wrap-char"
             | "label-ellipsize"
+            | "label-heights"
             | "label-justify-center"
             | "label-width-chars"
             | "label-xalign"
@@ -1101,6 +1121,7 @@ fn is_known_case(name: &str) -> bool {
             | "scrolled-window-default"
             | "scrolled-window-frame"
             | "stack-default"
+            | "stack-homogeneous"
             | "search-entry-default"
             | "search-entry-disabled"
             | "searchbar-default"

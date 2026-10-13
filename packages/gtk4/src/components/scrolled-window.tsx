@@ -48,6 +48,8 @@ export const GtkScrolledWindow = forwardRef<HTMLDivElement, GtkScrolledWindowPro
       children,
       halign,
       valign,
+      hexpand,
+      vexpand,
       className,
       style,
       ...rest
@@ -72,7 +74,7 @@ export const GtkScrolledWindow = forwardRef<HTMLDivElement, GtkScrolledWindowPro
       <div
         ref={ref}
         className={classes.join(" ")}
-        {...alignAttrs(halign, valign)}
+        {...alignAttrs(halign, valign, hexpand, vexpand)}
         style={cssStyle}
         {...rest}
       >

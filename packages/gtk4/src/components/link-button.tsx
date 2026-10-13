@@ -30,6 +30,8 @@ export const GtkLinkButton = forwardRef<HTMLAnchorElement, GtkLinkButtonProps>(
       onActivateLink,
       halign,
       valign,
+      hexpand,
+      vexpand,
       className,
       onClick,
       ...rest
@@ -62,7 +64,7 @@ export const GtkLinkButton = forwardRef<HTMLAnchorElement, GtkLinkButtonProps>(
         target="_blank"
         rel="noopener noreferrer"
         className={classes.join(" ")}
-        {...alignAttrs(halign, valign)}
+        {...alignAttrs(halign, valign, hexpand, vexpand)}
         data-visited={visited || undefined}
         role="link"
         onClick={handleClick}

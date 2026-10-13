@@ -6,6 +6,15 @@ async function transform(css: string) {
   return result.css;
 }
 
+describe("remapSelectors", () => {
+  test("label links: link → .gtk-link, not the link class of button.link", async () => {
+    const out = await transform("link, button.link { color: blue; } link:hover { color: red; }");
+    expect(out).toContain(".gtk-link,");
+    expect(out).toContain(".gtk-button.link");
+    expect(out).toContain(".gtk-link:hover");
+  });
+});
+
 describe("remapPseudoClasses", () => {
   test(":checked → [data-checked]", async () => {
     const out = await transform(".gtk-button:checked { color: red; }");

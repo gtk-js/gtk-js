@@ -52,14 +52,79 @@
   flex: 1;
 }
 
-/* hexpand + halign=start: widget stays natural size, margin fills remaining space.
- * Equivalent to GTK hexpand=TRUE, halign=GTK_ALIGN_START — the allocation grows
- * but the widget renders at its natural size, pushing siblings to the end. */
-.gtk-box-layout.horizontal > [data-hexpand="true"] {
-  margin-right: auto;
+/* GtkWidget:hexpand / vexpand: the children that expand share the box's extra
+ * space equally (gtk_box_layout_allocate()). A child expands when something in
+ * it does too (gtk_widget_compute_expand()), unless it sets expand to false.
+ * With halign/valign start, end or center, an expanding child keeps its
+ * natural size, followed (or preceded) by the extra space. Flexbox only gives
+ * auto margins what growing children leave, so in a box that also has a
+ * filling child that expands, such a child gets no share; GTK splits it. */
+.gtk-box-layout.horizontal
+> :is([data-hexpand="true"], :not([data-hexpand="false"]):has([data-hexpand="true"])) {
+  flex-grow: 1;
 }
-.gtk-box-layout.vertical > [data-hexpand="true"] {
-  margin-bottom: auto;
+.gtk-box-layout.horizontal
+  > :is([data-hexpand="true"], :not([data-hexpand="false"]):has([data-hexpand="true"])):is(
+    [data-halign="start"],
+    [data-halign="end"],
+    [data-halign="center"]
+  ) {
+  flex-grow: 0;
+}
+.gtk-box-layout.horizontal
+  > :is(
+    [data-hexpand="true"],
+    :not([data-hexpand="false"]):has([data-hexpand="true"])
+  )[data-halign="start"] {
+  margin-inline-end: auto;
+}
+.gtk-box-layout.horizontal
+  > :is(
+    [data-hexpand="true"],
+    :not([data-hexpand="false"]):has([data-hexpand="true"])
+  )[data-halign="end"] {
+  margin-inline-start: auto;
+}
+.gtk-box-layout.horizontal
+  > :is(
+    [data-hexpand="true"],
+    :not([data-hexpand="false"]):has([data-hexpand="true"])
+  )[data-halign="center"] {
+  margin-inline: auto;
+}
+
+.gtk-box-layout.vertical
+  > :is([data-vexpand="true"], :not([data-vexpand="false"]):has([data-vexpand="true"])) {
+  flex-grow: 1;
+}
+.gtk-box-layout.vertical
+  > :is([data-vexpand="true"], :not([data-vexpand="false"]):has([data-vexpand="true"])):is(
+    [data-valign="start"],
+    [data-valign="end"],
+    [data-valign="center"]
+  ) {
+  flex-grow: 0;
+}
+.gtk-box-layout.vertical
+  > :is(
+    [data-vexpand="true"],
+    :not([data-vexpand="false"]):has([data-vexpand="true"])
+  )[data-valign="start"] {
+  margin-block-end: auto;
+}
+.gtk-box-layout.vertical
+  > :is(
+    [data-vexpand="true"],
+    :not([data-vexpand="false"]):has([data-vexpand="true"])
+  )[data-valign="end"] {
+  margin-block-start: auto;
+}
+.gtk-box-layout.vertical
+  > :is(
+    [data-vexpand="true"],
+    :not([data-vexpand="false"]):has([data-vexpand="true"])
+  )[data-valign="center"] {
+  margin-block: auto;
 }
 
 /* -- Widget alignment in horizontal BoxLayout: valign = cross-axis -- */
@@ -131,6 +196,17 @@
  * is represented here by the absence of data-halign. */
 .gtk-actionbar:not([data-halign]) {
   width: 100%;
+}
+
+/* === GtkStack === */
+/* All pages share one cell, like gtk_stack_size_allocate(): the visible page,
+   and the hidden ones a homogeneous stack is sized by. */
+.gtk-stack {
+  display: grid;
+}
+
+.gtk-stack > * {
+  grid-area: 1 / 1;
 }
 
 /* === CenterLayout === */
@@ -206,7 +282,6 @@
 .gtk-center-layout-start {
   display: flex;
   align-items: center;
-  gap: 6px;
   justify-self: start;
 }
 
@@ -219,8 +294,35 @@
 .gtk-center-layout-end {
   display: flex;
   align-items: center;
-  gap: 6px;
   justify-self: end;
+}
+
+/* Vertically, GtkCenterLayout allocates the start child at the top and the end
+   child at the bottom (gtk_center_layout_allocate()), and gives every child
+   the full width, which it fills unless its halign says otherwise. */
+.gtk-center-layout.vertical
+> :is(.gtk-center-layout-start, .gtk-center-layout-center, .gtk-center-layout-end) {
+  justify-self: stretch;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.gtk-center-layout.vertical > .gtk-center-layout-start {
+  align-self: start;
+}
+
+.gtk-center-layout.vertical > .gtk-center-layout-end {
+  align-self: end;
+}
+
+.gtk-center-layout.vertical > * > [data-halign="start"] {
+  align-self: flex-start;
+}
+.gtk-center-layout.vertical > * > [data-halign="end"] {
+  align-self: flex-end;
+}
+.gtk-center-layout.vertical > * > [data-halign="center"] {
+  align-self: center;
 }
 
 /* === Scale (GtkRange / GtkScale) === */

@@ -71,6 +71,8 @@ export const GtkSpinButton = forwardRef<HTMLDivElement, GtkSpinButtonProps>(func
     onValueChanged,
     halign,
     valign,
+    hexpand,
+    vexpand,
     className,
     ...rest
   },
@@ -192,7 +194,7 @@ export const GtkSpinButton = forwardRef<HTMLDivElement, GtkSpinButtonProps>(func
       aria-valuemin={min}
       aria-valuemax={max}
       className={classes.join(" ")}
-      {...alignAttrs(halign, valign)}
+      {...alignAttrs(halign, valign, hexpand, vexpand)}
       {...rest}
     >
       <input

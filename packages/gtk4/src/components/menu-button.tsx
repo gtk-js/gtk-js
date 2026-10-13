@@ -88,6 +88,8 @@ export const GtkMenuButton = forwardRef<HTMLDivElement, GtkMenuButtonProps>(func
     disabled,
     halign,
     valign,
+    hexpand,
+    vexpand,
     className,
     ...rest
   },
@@ -149,7 +151,7 @@ export const GtkMenuButton = forwardRef<HTMLDivElement, GtkMenuButtonProps>(func
     <div
       ref={rootRef}
       className={rootClasses.join(" ")}
-      {...alignAttrs(halign, valign)}
+      {...alignAttrs(halign, valign, hexpand, vexpand)}
       aria-disabled={disabled || undefined}
       {...rest}
     >

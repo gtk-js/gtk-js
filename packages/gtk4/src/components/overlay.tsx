@@ -30,7 +30,7 @@ export interface GtkOverlayProps extends HTMLAttributes<HTMLDivElement>, GtkAlig
  * @see https://docs.gtk.org/gtk4/class.Overlay.html
  */
 export const GtkOverlay = forwardRef<HTMLDivElement, GtkOverlayProps>(function GtkOverlay(
-  { child, overlays, children, halign, valign, className, style, ...rest },
+  { child, overlays, children, halign, valign, hexpand, vexpand, className, style, ...rest },
   ref,
 ) {
   const classes = ["gtk-overlay"];
@@ -40,7 +40,7 @@ export const GtkOverlay = forwardRef<HTMLDivElement, GtkOverlayProps>(function G
     <div
       ref={ref}
       className={classes.join(" ")}
-      {...alignAttrs(halign, valign)}
+      {...alignAttrs(halign, valign, hexpand, vexpand)}
       style={{
         display: "grid",
         gridTemplate: "1fr / 1fr",

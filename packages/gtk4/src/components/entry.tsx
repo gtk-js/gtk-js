@@ -75,6 +75,8 @@ export const GtkEntry = forwardRef<HTMLInputElement, GtkEntryProps>(function Gtk
     onIconPress,
     halign,
     valign,
+    hexpand,
+    vexpand,
     className,
     onChange,
     onKeyDown,
@@ -110,7 +112,7 @@ export const GtkEntry = forwardRef<HTMLInputElement, GtkEntryProps>(function Gtk
   const inputType = !visibility ? "password" : purposeToInputType[inputPurpose];
 
   return (
-    <div className={classes.join(" ")} {...alignAttrs(halign, valign)}>
+    <div className={classes.join(" ")} {...alignAttrs(halign, valign, hexpand, vexpand)}>
       {PrimaryIcon && (
         <span className="gtk-image left" onClick={() => onIconPress?.("primary")}>
           <PrimaryIcon size={16} />

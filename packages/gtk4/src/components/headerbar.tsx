@@ -132,6 +132,8 @@ export const GtkHeaderBar = forwardRef<HTMLDivElement, GtkHeaderBarProps>(functi
     end,
     halign,
     valign,
+    hexpand,
+    vexpand,
     className,
     children,
     onWindowClose,
@@ -146,7 +148,12 @@ export const GtkHeaderBar = forwardRef<HTMLDivElement, GtkHeaderBarProps>(functi
   if (className) classes.push(className);
 
   return (
-    <div ref={ref} className={classes.join(" ")} {...alignAttrs(halign, valign)} {...rest}>
+    <div
+      ref={ref}
+      className={classes.join(" ")}
+      {...alignAttrs(halign, valign, hexpand, vexpand)}
+      {...rest}
+    >
       <div className="gtk-windowhandle gtk-bin-layout" onPointerDown={onWindowHandleDragStart}>
         {/* The start and end boxes always exist, as in GtkHeaderBar. */}
         <div
