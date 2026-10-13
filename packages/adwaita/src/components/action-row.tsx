@@ -19,6 +19,8 @@ export interface AdwActionRowProps extends HTMLAttributes<HTMLDivElement> {
   activatable?: boolean;
   /** Callback when row is activated. */
   onActivated?: () => void;
+  /** Tooltip shown when hovering the row (GtkWidget:tooltip-text). */
+  tooltipText?: string;
   children?: ReactNode;
 }
 
@@ -47,9 +49,11 @@ export const AdwActionRow = forwardRef<HTMLDivElement, AdwActionRowProps>(functi
     suffixWidget,
     activatable = false,
     onActivated,
+    tooltipText,
     children,
     className,
     onClick,
+    onKeyDown,
     ...rest
   },
   ref,
@@ -86,9 +90,19 @@ export const AdwActionRow = forwardRef<HTMLDivElement, AdwActionRowProps>(functi
       ref={ref}
       role="listitem"
       className={classes.join(" ")}
+      title={tooltipText}
+      // Activatable rows are focusable and activate with Enter/Space, like GtkListBoxRow.
+      tabIndex={activatable ? 0 : undefined}
       onClick={(e) => {
         if (activatable) onActivated?.();
         onClick?.(e);
+      }}
+      onKeyDown={(e) => {
+        if (activatable && e.target === e.currentTarget && (e.key === "Enter" || e.key === " ")) {
+          e.preventDefault();
+          onActivated?.();
+        }
+        onKeyDown?.(e);
       }}
       {...rest}
     >

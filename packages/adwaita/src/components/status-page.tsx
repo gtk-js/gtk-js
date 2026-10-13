@@ -1,5 +1,6 @@
 import { useIcon } from "@gtk-js/gtk4";
 import { forwardRef, type HTMLAttributes, type ReactNode } from "react";
+import { AdwClamp } from "./clamp.tsx";
 
 export interface AdwStatusPageProps extends HTMLAttributes<HTMLDivElement> {
   /** Icon name displayed at top. */
@@ -33,29 +34,44 @@ export const AdwStatusPage = forwardRef<HTMLDivElement, AdwStatusPageProps>(func
 
   const classes = ["gtk-statuspage"];
   if (className) classes.push(className);
+  // Upstream `statuspage.compact` uses 96px icons (see _misc.scss).
+  const compact = classes.some((c) => c.split(" ").includes("compact"));
 
   return (
     <div ref={ref} className={classes.join(" ")} {...rest}>
-      <div className="gtk-scrolledwindow" style={{ overflow: "auto" }}>
+      <div className="gtk-scrolledwindow" style={{ overflow: "auto", height: "100%" }}>
         <div
-          className="gtk-box gtk-box-layout vertical"
-          style={{ alignItems: "center", justifyContent: "center", minHeight: "100%" }}
+          className="gtk-viewport"
+          style={{ minHeight: "100%", display: "flex", flexDirection: "column" }}
         >
-          <div className="gtk-clamp">
-            <div
-              className="gtk-box gtk-box-layout vertical"
-              style={{ alignItems: "center", gap: 12 }}
-            >
-              {Icon && (
-                <span className="gtk-image icon" style={{ marginBottom: 24 }}>
-                  <Icon size={128} />
-                </span>
-              )}
-              {title && <span className="gtk-label title title-1">{title}</span>}
-              {description && <span className="gtk-label body description">{description}</span>}
-            </div>
+          <div
+            className="gtk-box gtk-box-layout vertical"
+            style={{ alignItems: "center", justifyContent: "center", flex: 1 }}
+          >
+            <AdwClamp style={{ alignSelf: "stretch" }}>
+              <div
+                className="gtk-box gtk-box-layout vertical"
+                style={{ alignItems: "center", textAlign: "center" }}
+              >
+                {Icon && (
+                  <span className="gtk-image icon">
+                    <Icon size={compact ? 96 : 128} />
+                  </span>
+                )}
+                {title && (
+                  <span className="gtk-label title" style={{ whiteSpace: "normal" }}>
+                    {title}
+                  </span>
+                )}
+                {description && (
+                  <span className="gtk-label body description" style={{ whiteSpace: "normal" }}>
+                    {description}
+                  </span>
+                )}
+              </div>
+            </AdwClamp>
+            {children}
           </div>
-          {children}
         </div>
       </div>
     </div>
