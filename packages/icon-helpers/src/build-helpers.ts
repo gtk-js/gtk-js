@@ -85,12 +85,13 @@ export function parseSvgChildren(svg: string): SvgChild[] {
 }
 
 /**
- * Recursively find all .svg files in a directory.
+ * Recursively find all .svg files in a directory, in name order so that name
+ * clashes resolve the same way on every file system.
  */
 export function findSvgFiles(dir: string): string[] {
   const results: string[] = [];
 
-  for (const entry of readdirSync(dir)) {
+  for (const entry of readdirSync(dir).sort()) {
     const full = `${dir}/${entry}`;
     if (statSync(full).isDirectory()) {
       results.push(...findSvgFiles(full));
