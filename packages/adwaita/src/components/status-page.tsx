@@ -1,5 +1,6 @@
 import { useIcon } from "@gtk-js/gtk4";
 import { forwardRef, type HTMLAttributes, type ReactNode } from "react";
+import { AdwClamp } from "./clamp.tsx";
 
 export interface AdwStatusPageProps extends HTMLAttributes<HTMLDivElement> {
   /** Icon name displayed at top. */
@@ -47,7 +48,7 @@ export const AdwStatusPage = forwardRef<HTMLDivElement, AdwStatusPageProps>(func
             className="gtk-box gtk-box-layout vertical"
             style={{ alignItems: "center", justifyContent: "center", flex: 1 }}
           >
-            <div className="gtk-clamp" style={{ maxWidth: 600, width: "100%" }}>
+            <AdwClamp style={{ alignSelf: "stretch" }}>
               <div
                 className="gtk-box gtk-box-layout vertical"
                 style={{ alignItems: "center", textAlign: "center" }}
@@ -68,7 +69,7 @@ export const AdwStatusPage = forwardRef<HTMLDivElement, AdwStatusPageProps>(func
                   </span>
                 )}
               </div>
-            </div>
+            </AdwClamp>
             {children}
           </div>
         </div>

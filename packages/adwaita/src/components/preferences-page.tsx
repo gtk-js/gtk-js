@@ -1,4 +1,5 @@
 import { forwardRef, type HTMLAttributes, type ReactNode } from "react";
+import { AdwClamp } from "./clamp.tsx";
 
 export interface AdwPreferencesPageProps extends HTMLAttributes<HTMLDivElement> {
   title?: string;
@@ -43,21 +44,23 @@ export const AdwPreferencesPage = forwardRef<HTMLDivElement, AdwPreferencesPageP
         {...rest}
       >
         <div className="gtk-scrolledwindow" style={{ overflow: "auto", flex: 1, minHeight: 0 }}>
-          <div className="gtk-clamp" style={{ maxWidth: 600, margin: "0 auto" }}>
-            <div
-              className="gtk-box gtk-box-layout vertical"
-              style={{ margin: "24px 12px", gap: 24 }}
-            >
-              {description && (
-                <span
-                  className="gtk-label body dimmed description"
-                  style={{ textAlign: descriptionCentered ? "center" : "start" }}
-                >
-                  {description}
-                </span>
-              )}
-              {children}
-            </div>
+          <div className="gtk-viewport">
+            <AdwClamp>
+              <div
+                className="gtk-box gtk-box-layout vertical"
+                style={{ margin: "24px 12px", gap: 24 }}
+              >
+                {description && (
+                  <span
+                    className="gtk-label body dimmed description"
+                    style={{ textAlign: descriptionCentered ? "center" : "start" }}
+                  >
+                    {description}
+                  </span>
+                )}
+                {children}
+              </div>
+            </AdwClamp>
           </div>
         </div>
       </div>
