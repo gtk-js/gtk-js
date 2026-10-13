@@ -395,6 +395,18 @@ const cases: Record<string, () => React.ReactElement> = {
       <GtkLabel label="C" />
     </GtkBox>
   ),
+  "box-spacing-toolbar": () => (
+    <GtkBox
+      orientation="horizontal"
+      spacing={6}
+      halign="start"
+      className="toolbar"
+      data-testid="target"
+    >
+      <GtkLabel label="One" />
+      <GtkLabel label="Two" />
+    </GtkBox>
+  ),
   "box-homogeneous": () => (
     <GtkBox orientation="horizontal" homogeneous style={{ width: "200px" }} data-testid="target">
       <GtkLabel label="A" />

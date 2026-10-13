@@ -5,12 +5,19 @@
  * This file provides the CSS equivalent for each layout manager type.
  */
 
-/* === Theme spacing (border-spacing) === */
+/* === Spacing === */
 /* GTK layout managers add the CSS border-spacing of their widget to its
- * spacing (gtk_box_layout get_spacing(): x when horizontal, y when vertical).
- * @gtk-js/gtk-css turns border-spacing into these properties. Like
- * border-spacing in GTK they aren't inherited, so nested boxes start at 0.
- * An inline `gap` (the widget's spacing property) still takes precedence. */
+ * spacing property (gtk_box_layout get_spacing(): x when horizontal, y when
+ * vertical). @gtk-js/gtk-css turns border-spacing into --gtk-border-spacing-*,
+ * and GtkBox / GtkBoxLayout set their spacing as --gtk-spacing; the gap is the
+ * sum. Like border-spacing in GTK, none of them are inherited, so nested boxes
+ * start at 0. An inline `gap` still replaces the sum. */
+@property --gtk-spacing {
+  syntax: "<length>";
+  inherits: false;
+  initial-value: 0px;
+}
+
 @property --gtk-border-spacing-x {
   syntax: "<length>";
   inherits: false;
@@ -33,12 +40,12 @@
 
 .gtk-box-layout.vertical {
   flex-direction: column;
-  row-gap: var(--gtk-border-spacing-y);
+  row-gap: calc(var(--gtk-spacing) + var(--gtk-border-spacing-y));
 }
 
 .gtk-box-layout.horizontal {
   flex-direction: row;
-  column-gap: var(--gtk-border-spacing-x);
+  column-gap: calc(var(--gtk-spacing) + var(--gtk-border-spacing-x));
 }
 
 .gtk-box-layout.homogeneous > * {
