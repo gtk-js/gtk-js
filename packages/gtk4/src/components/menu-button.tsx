@@ -1,6 +1,7 @@
 import {
   forwardRef,
   type HTMLAttributes,
+  isValidElement,
   type ReactNode,
   useCallback,
   useImperativeHandle,
@@ -140,6 +141,9 @@ export const GtkMenuButton = forwardRef<HTMLDivElement, GtkMenuButtonProps>(func
           ? "right"
           : "bottom";
   const hasPopover = popover != null || menuModel != null;
+  // popover.menu, which the theme's menu rules need, for a menu model or a
+  // GtkPopoverMenu passed as the popover.
+  const isMenu = menuModel != null || (isValidElement(popover) && popover.type === GtkPopoverMenu);
 
   return (
     <div
@@ -192,7 +196,7 @@ export const GtkMenuButton = forwardRef<HTMLDivElement, GtkMenuButtonProps>(func
           anchorRef={rootRef}
           pointingTo={buttonRef}
           onClosed={close}
-          className={menuModel ? "menu" : undefined}
+          className={isMenu ? "menu" : undefined}
         >
           <PopoverMenuCloseProvider value={close}>
             {menuModel ? <GtkPopoverMenu model={menuModel}>{popover}</GtkPopoverMenu> : popover}
