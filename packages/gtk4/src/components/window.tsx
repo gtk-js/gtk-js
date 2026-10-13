@@ -4,6 +4,7 @@ import {
   type HTMLAttributes,
   type ReactNode,
   useCallback,
+  useEffect,
   useLayoutEffect,
   useMemo,
   useRef,
@@ -50,6 +51,23 @@ export interface GtkWindowProps extends HTMLAttributes<HTMLDivElement>, GtkAlign
   onMaximize?: () => void;
   /** Called when the titlebar is dragged (for window move). */
   onDrag?: () => void;
+  /**
+   * Make window handles (header bars) draggable regions, for hosts that move
+   * frameless windows through CSS `app-region` (Electron, installed web apps
+   * with window controls overlay) rather than `onDrag`. Like
+   * GtkWindowHandle, a press on a widget inside it (a button, an entry)
+   * still goes to that widget.
+   * @default false
+   */
+  draggableRegions?: boolean;
+  /**
+   * Called with the width of the shadow around the window (0 when there is
+   * none, e.g. maximized), as GTK tells the compositor with
+   * gdk_toplevel_set_shadow_width(), so the host can tell where the visible
+   * window is (input region, tiling, snapping). Only measured when
+   * `allocateShadow` is true.
+   */
+  onShadowWidthChanged?: (width: number) => void;
   /**
    * Called when a resize handle edge is dragged. The direction string
    * matches Tauri's `startResizeDragging()` direction parameter.
@@ -211,6 +229,8 @@ export const GtkWindow = forwardRef<HTMLDivElement, GtkWindowProps>(function Gtk
     onMinimize,
     onMaximize,
     onDrag,
+    draggableRegions = false,
+    onShadowWidthChanged,
     onResize,
     ...rest
   },
@@ -228,6 +248,13 @@ export const GtkWindow = forwardRef<HTMLDivElement, GtkWindowProps>(function Gtk
   const windowRef = useRef<HTMLDivElement>(null);
   const [shadowPadding, setShadowPadding] = useState(0);
   const [windowElement, setWindowElement] = useState<HTMLDivElement | null>(null);
+
+  // Report changes of the shadow width only, whatever the callback's identity.
+  const shadowWidthChanged = useRef(onShadowWidthChanged);
+  shadowWidthChanged.current = onShadowWidthChanged;
+  useEffect(() => {
+    shadowWidthChanged.current?.(shadowPadding);
+  }, [shadowPadding]);
 
   const mergedRef = useCallback(
     (node: HTMLDivElement | null) => {
@@ -323,6 +350,7 @@ export const GtkWindow = forwardRef<HTMLDivElement, GtkWindowProps>(function Gtk
     <div
       ref={mergedRef}
       className={classes.join(" ")}
+      data-draggable-regions={draggableRegions ? "" : undefined}
       {...(!allocateShadow ? alignAttrs(halign, valign) : {})}
       style={
         allocateShadow ? { width: "100%", height: "100%", position: "relative", ...style } : style

@@ -117,6 +117,34 @@ body:has(> :first-child:has([data-gtk-provider])) > :first-child {
   overflow: clip;
 }
 
+/* GtkWindow draggableRegions: GtkWindowHandle moves the window. Hosts that move
+   frameless windows through CSS (Electron, web apps with window controls
+   overlay) need it marked as an app region, minus the widgets in it that take
+   presses themselves. */
+:where([data-draggable-regions] .gtk-windowhandle) {
+  -webkit-app-region: drag;
+  app-region: drag;
+}
+
+:where(
+    [data-draggable-regions]
+      .gtk-windowhandle
+      :is(
+        button,
+        input,
+        textarea,
+        select,
+        a[href],
+        [role="button"],
+        .gtk-menubutton,
+        .gtk-popover,
+        .gtk-entry
+      )
+  ) {
+  -webkit-app-region: no-drag;
+  app-region: no-drag;
+}
+
 /* GtkWindow allocates the titlebar its natural height only, then gives the
    remainder to the child. Replicate this by preventing the titlebar wrapper
    from flex-growing or stretching inside the window's flex column.
