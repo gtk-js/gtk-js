@@ -254,6 +254,15 @@ const cases: Record<string, () => React.ReactElement> = {
       data-testid="target"
     />
   ),
+  "label-heights": () => (
+    <GtkBox orientation="vertical" halign="start" valign="start" data-testid="target">
+      <GtkLabel label="Label" />
+      <GtkLabel label="Body" className="body" />
+      <GtkLabel label="Caption" className="caption" />
+      <GtkLabel label="Heading" className="heading" />
+      <GtkLabel label="Title" className="title-1" />
+    </GtkBox>
+  ),
   "label-justify-center": () => <GtkLabel label="Centered" justify="center" data-testid="target" />,
   "label-width-chars": () => <GtkLabel label="Hi" widthChars={20} data-testid="target" />,
   "label-xalign": () => <GtkLabel label="Aligned" xalign={0} data-testid="target" />,
@@ -495,6 +504,18 @@ const cases: Record<string, () => React.ReactElement> = {
       className="toolbar"
       startWidget={<GtkLabel label="Side" />}
       endWidget={<GtkLabel label="Side" />}
+      data-testid="target"
+    />
+  ),
+  "center-box-toolbar-vertical-start-end-tall": () => (
+    <GtkCenterBox
+      orientation="vertical"
+      halign="start"
+      valign="start"
+      className="toolbar"
+      style={{ height: 100 }}
+      startWidget={<GtkLabel label="Side" />}
+      endWidget={<GtkLabel label="Wider side" />}
       data-testid="target"
     />
   ),

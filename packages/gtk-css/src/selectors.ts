@@ -180,6 +180,8 @@ export const INTERNAL_SELECTORS: Record<string, string> = {
   selection: ".gtk-selection",
   block: ".gtk-block",
   title: ".gtk-title",
+  // A link in a label's markup (GtkLabel's `link` subnode).
+  link: ".gtk-link",
   item: ".gtk-item",
   color: ".gtk-color",
   widget: ".gtk-widget",
