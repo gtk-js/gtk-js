@@ -1,3 +1,4 @@
+import { useListBoxRow } from "@gtk-js/gtk4";
 import { forwardRef, type HTMLAttributes, useCallback, useState } from "react";
 
 export interface AdwSwitchRowProps extends HTMLAttributes<HTMLDivElement> {
@@ -32,6 +33,7 @@ export const AdwSwitchRow = forwardRef<HTMLDivElement, AdwSwitchRowProps>(functi
     onActiveChanged?.(next);
   }, [active, isControlled, onActiveChanged]);
 
+  useListBoxRow();
   const classes = ["gtk-row", "activatable"];
   if (className) classes.push(className);
 
