@@ -221,6 +221,8 @@ export const GtkWindow = forwardRef<HTMLDivElement, GtkWindowProps>(function Gtk
     children,
     halign,
     valign,
+    hexpand,
+    vexpand,
     className,
     style,
     maximized,
@@ -351,7 +353,7 @@ export const GtkWindow = forwardRef<HTMLDivElement, GtkWindowProps>(function Gtk
       ref={mergedRef}
       className={classes.join(" ")}
       data-draggable-regions={draggableRegions ? "" : undefined}
-      {...(!allocateShadow ? alignAttrs(halign, valign) : {})}
+      {...(!allocateShadow ? alignAttrs(halign, valign, hexpand, vexpand) : {})}
       style={
         allocateShadow ? { width: "100%", height: "100%", position: "relative", ...style } : style
       }
@@ -390,7 +392,7 @@ export const GtkWindow = forwardRef<HTMLDivElement, GtkWindowProps>(function Gtk
     <WindowControlsContext.Provider value={windowControls}>
       <div
         className="gtk-window-shadow-alloc"
-        {...alignAttrs(halign, valign)}
+        {...alignAttrs(halign, valign, hexpand, vexpand)}
         style={{
           padding: shadowPadding,
           width: "100%",

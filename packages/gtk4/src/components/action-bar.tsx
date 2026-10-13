@@ -26,7 +26,18 @@ export interface GtkActionBarProps extends HTMLAttributes<HTMLDivElement>, GtkAl
  * @see https://docs.gtk.org/gtk4/class.ActionBar.html
  */
 export const GtkActionBar = forwardRef<HTMLDivElement, GtkActionBarProps>(function GtkActionBar(
-  { revealed = true, start, end, centerWidget, halign, valign, className, ...rest },
+  {
+    revealed = true,
+    start,
+    end,
+    centerWidget,
+    halign,
+    valign,
+    hexpand,
+    vexpand,
+    className,
+    ...rest
+  },
   ref,
 ) {
   const classes = ["gtk-actionbar"];
@@ -37,7 +48,7 @@ export const GtkActionBar = forwardRef<HTMLDivElement, GtkActionBarProps>(functi
       <div
         ref={ref}
         className={classes.join(" ")}
-        {...alignAttrs(halign, valign)}
+        {...alignAttrs(halign, valign, hexpand, vexpand)}
         style={{ display: "none" }}
         {...rest}
       />
@@ -45,7 +56,12 @@ export const GtkActionBar = forwardRef<HTMLDivElement, GtkActionBarProps>(functi
   }
 
   return (
-    <div ref={ref} className={classes.join(" ")} {...alignAttrs(halign, valign)} {...rest}>
+    <div
+      ref={ref}
+      className={classes.join(" ")}
+      {...alignAttrs(halign, valign, hexpand, vexpand)}
+      {...rest}
+    >
       <div className="gtk-revealer">
         {/* The start and end boxes always exist, as in GtkActionBar. */}
         <div className="gtk-box gtk-center-layout" {...centerSlotAttrs(true, centerWidget, true)}>

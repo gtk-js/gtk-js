@@ -45,6 +45,8 @@ export const GtkCheckButton = forwardRef<HTMLDivElement, GtkCheckButtonProps>(
       onToggled,
       halign,
       valign,
+      hexpand,
+      vexpand,
       className,
       onClick,
       ...rest
@@ -97,7 +99,7 @@ export const GtkCheckButton = forwardRef<HTMLDivElement, GtkCheckButtonProps>(
         aria-checked={inconsistent ? "mixed" : active}
         tabIndex={0}
         className={classes.join(" ")}
-        {...alignAttrs(halign, valign)}
+        {...alignAttrs(halign, valign, hexpand, vexpand)}
         data-checked={active || undefined}
         data-indeterminate={inconsistent || undefined}
         onClick={handleClick}

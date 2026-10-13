@@ -30,7 +30,10 @@ const LABEL_STYLE: CSSProperties = {
  * @see https://docs.gtk.org/gtk4/class.WindowTitle.html
  */
 export const GtkWindowTitle = forwardRef<HTMLDivElement, GtkWindowTitleProps>(
-  function GtkWindowTitle({ title, subtitle, halign, valign, className, style, ...rest }, ref) {
+  function GtkWindowTitle(
+    { title, subtitle, halign, valign, hexpand, vexpand, className, style, ...rest },
+    ref,
+  ) {
     const classes = ["gtk-windowtitle"];
     if (className) classes.push(className);
 
@@ -45,7 +48,7 @@ export const GtkWindowTitle = forwardRef<HTMLDivElement, GtkWindowTitleProps>(
       <div
         ref={ref}
         className={classes.join(" ")}
-        {...alignAttrs(halign, valign)}
+        {...alignAttrs(halign, valign, hexpand, vexpand)}
         {...rest}
         style={{
           display: "grid",

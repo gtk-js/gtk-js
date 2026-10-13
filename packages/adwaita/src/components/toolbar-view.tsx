@@ -65,7 +65,19 @@ export const AdwToolbarView = forwardRef<HTMLDivElement, AdwToolbarViewProps>(
             </div>
           </div>
         )}
-        <div style={{ flex: 1, overflow: "hidden" }}>{content}</div>
+        {/* The content gets the rest of the view, and aligns in it with its
+            halign/valign (adw_toolbar_view_size_allocate()). */}
+        <div
+          className="gtk-bin-layout"
+          style={{
+            flex: 1,
+            overflow: "hidden",
+            minHeight: 0,
+            gridTemplate: "minmax(0, 1fr) / minmax(0, 1fr)",
+          }}
+        >
+          {content}
+        </div>
         {revealBottomBars && bottomBars && (
           <div className={`gtk-revealer bottom-bar ${barStyleClasses(bottomBarStyle)}`}>
             <div className="gtk-windowhandle">

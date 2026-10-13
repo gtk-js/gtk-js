@@ -64,6 +64,8 @@ export const GtkTextView = forwardRef<HTMLTextAreaElement, GtkTextViewProps>(fun
     onChanged,
     halign,
     valign,
+    hexpand,
+    vexpand,
     className,
     style,
     onChange,
@@ -134,7 +136,7 @@ export const GtkTextView = forwardRef<HTMLTextAreaElement, GtkTextViewProps>(fun
       wrap={cssWrap}
       style={cssStyle}
       disabled={disabled}
-      {...alignAttrs(halign, valign)}
+      {...alignAttrs(halign, valign, hexpand, vexpand)}
       data-disabled={disabled || undefined}
       onChange={handleChange}
       onKeyDown={handleKeyDown}

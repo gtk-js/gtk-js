@@ -50,3 +50,35 @@ export function createGtkIcon(
   Component.displayName = displayName;
   return Component;
 }
+
+/**
+ * Create an icon component from an image URL, for full-color icons such as an
+ * application's own icon (an icon theme's `apps` icons): `createGtkIcon`'s
+ * symbolic paths can't hold their gradients and layers. The image is scaled
+ * to the icon size, like a scalable icon.
+ */
+export function createGtkIconFromUrl(displayName: string, url: string): GtkIcon {
+  const Component = forwardRef<SVGSVGElement, GtkIconProps>(
+    ({ size = 16, className, ...props }, ref) => {
+      return createElement(
+        "svg",
+        {
+          ref,
+          xmlns: "http://www.w3.org/2000/svg",
+          width: size,
+          height: size,
+          viewBox: "0 0 16 16",
+          className: className
+            ? `gtk-icon gtk-icon-${displayName} ${className}`
+            : `gtk-icon gtk-icon-${displayName}`,
+          "aria-hidden": true,
+          ...props,
+        },
+        createElement("image", { href: url, width: 16, height: 16 }),
+      );
+    },
+  );
+
+  Component.displayName = displayName;
+  return Component;
+}

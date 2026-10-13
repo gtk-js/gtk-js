@@ -34,6 +34,8 @@ export const GtkDropDown = forwardRef<HTMLDivElement, GtkDropDownProps>(function
     onSelected,
     halign,
     valign,
+    hexpand,
+    vexpand,
     className,
     ...rest
   },
@@ -73,7 +75,12 @@ export const GtkDropDown = forwardRef<HTMLDivElement, GtkDropDownProps>(function
   const selectedText = items[selected] ?? "(None)";
 
   return (
-    <div ref={ref} className={classes.join(" ")} {...alignAttrs(halign, valign)} {...rest}>
+    <div
+      ref={ref}
+      className={classes.join(" ")}
+      {...alignAttrs(halign, valign, hexpand, vexpand)}
+      {...rest}
+    >
       <button
         type="button"
         className={`gtk-button toggle ${open ? "has-open-popup" : ""}`}

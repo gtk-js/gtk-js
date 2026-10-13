@@ -65,6 +65,8 @@ export const GtkNotebook = forwardRef<HTMLDivElement, GtkNotebookProps>(function
     children,
     halign,
     valign,
+    hexpand,
+    vexpand,
     className,
     ...rest
   },
@@ -125,7 +127,12 @@ export const GtkNotebook = forwardRef<HTMLDivElement, GtkNotebookProps>(function
   const content = <div className="gtk-stack">{pages[currentPage]?.element}</div>;
 
   return (
-    <div ref={ref} className={classes.join(" ")} {...alignAttrs(halign, valign)} {...rest}>
+    <div
+      ref={ref}
+      className={classes.join(" ")}
+      {...alignAttrs(halign, valign, hexpand, vexpand)}
+      {...rest}
+    >
       {(isTop || tabPos === "left") && header}
       {content}
       {(isBottom || tabPos === "right") && header}

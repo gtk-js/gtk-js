@@ -36,6 +36,8 @@ export interface GtkButtonProps
   canShrink?: boolean;
   /** Whether underlines in the label indicate mnemonics. */
   useUnderline?: boolean;
+  /** Tooltip shown when hovering the button (GtkWidget:tooltip-text). */
+  tooltipText?: string;
   /** Callback when the button is clicked. */
   onClicked?: () => void;
   /** Custom child widget. Overrides label/iconName if provided. */
@@ -58,10 +60,13 @@ export const GtkButton = forwardRef<HTMLButtonElement, GtkButtonProps>(function 
     hasFrame = true,
     canShrink = false,
     useUnderline = false,
+    tooltipText,
     onClicked,
     children,
     halign,
     valign,
+    hexpand,
+    vexpand,
     className,
     onKeyDown,
     onKeyUp,
@@ -117,7 +122,8 @@ export const GtkButton = forwardRef<HTMLButtonElement, GtkButtonProps>(function 
     <button
       ref={ref}
       className={classes.join(" ")}
-      {...alignAttrs(halign, valign)}
+      title={tooltipText}
+      {...alignAttrs(halign, valign, hexpand, vexpand)}
       onClick={handleClick}
       onKeyDown={handleKeyDown}
       onKeyUp={handleKeyUp}

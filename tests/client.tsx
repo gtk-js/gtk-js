@@ -416,6 +416,15 @@ const cases: Record<string, () => React.ReactElement> = {
       <GtkLabel label="Two" />
     </GtkBox>
   ),
+  "box-hexpand": () => (
+    <GtkBox halign="start" style={{ width: 300 }} data-testid="target">
+      <GtkBox orientation="vertical">
+        <GtkLabel label="Same" hexpand />
+      </GtkBox>
+      <GtkLabel label="Same" hexpand />
+      <GtkLabel label="End" />
+    </GtkBox>
+  ),
   "box-homogeneous": () => (
     <GtkBox orientation="horizontal" homogeneous style={{ width: "200px" }} data-testid="target">
       <GtkLabel label="A" />
@@ -620,6 +629,19 @@ const cases: Record<string, () => React.ReactElement> = {
         <GtkLabel label="Second" />
       </GtkStackPage>
     </GtkStack>
+  ),
+  "stack-homogeneous": () => (
+    <GtkBox orientation="vertical" halign="start" data-testid="target">
+      <GtkStack visibleChildName="short" halign="start">
+        <GtkStackPage name="short">
+          <GtkLabel label="A" />
+        </GtkStackPage>
+        <GtkStackPage name="long">
+          <GtkLabel label="A much longer page" />
+        </GtkStackPage>
+      </GtkStack>
+      <GtkLabel label="A much longer page" />
+    </GtkBox>
   ),
 
   // GtkNotebook cases

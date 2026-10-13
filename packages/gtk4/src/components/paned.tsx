@@ -56,6 +56,8 @@ export const GtkPaned = forwardRef<HTMLDivElement, GtkPanedProps>(function GtkPa
     onPositionChanged,
     halign,
     valign,
+    hexpand,
+    vexpand,
     className,
     style,
     ...rest
@@ -130,7 +132,7 @@ export const GtkPaned = forwardRef<HTMLDivElement, GtkPanedProps>(function GtkPa
     <div
       ref={ref ?? containerRef}
       className={classes.join(" ")}
-      {...alignAttrs(halign, valign)}
+      {...alignAttrs(halign, valign, hexpand, vexpand)}
       style={containerStyle}
       {...rest}
     >

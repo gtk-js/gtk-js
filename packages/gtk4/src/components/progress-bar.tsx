@@ -52,6 +52,8 @@ export const GtkProgressBar = forwardRef<HTMLDivElement, GtkProgressBarProps>(
       pulseRef,
       halign,
       valign,
+      hexpand,
+      vexpand,
       className,
       ...rest
     },
@@ -146,7 +148,7 @@ export const GtkProgressBar = forwardRef<HTMLDivElement, GtkProgressBarProps>(
         aria-valuemax={1}
         aria-busy={pulsing}
         className={classes.join(" ")}
-        {...alignAttrs(halign, valign)}
+        {...alignAttrs(halign, valign, hexpand, vexpand)}
         {...rest}
       >
         {showText && displayText && <span className="gtk-label text">{displayText}</span>}
