@@ -207,8 +207,11 @@ const remapPseudoClasses: Plugin = {
     // :visited → [data-visited] (browsers restrict :visited styling; use data attribute)
     sel = sel.replace(/:visited/g, "[data-visited]");
 
-    // :disabled → [data-disabled] (<span> doesn't support :disabled natively)
-    sel = sel.replace(/:disabled/g, "[data-disabled]");
+    // :disabled → also [data-disabled]: widgets rendered as <span>/<div> can't
+    // be :disabled, while real <button>/<input> elements are (and carry no
+    // data attribute), so match either.
+    // (Idempotent: PostCSS revisits rules whose selector changed.)
+    sel = sel.replace(/(?<!\[data-disabled\], ):disabled/g, ":is([data-disabled], :disabled)");
 
     if (sel !== rule.selector) {
       rule.selector = sel;
