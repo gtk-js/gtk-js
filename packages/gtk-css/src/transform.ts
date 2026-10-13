@@ -240,6 +240,28 @@ const handleGtkProperties: Plugin = {
       return;
     }
 
+    // `initial` fonts are GtkSettings:gtk-font-name in GTK (e.g. popovers use
+    // `font: initial`), not the browser's initial (serif, 16px) font. The
+    // provider root defines --gtk-font-family / --gtk-font-size.
+    if (/^font(-family|-size)?$/.test(decl.prop) && decl.value.trim() === "initial") {
+      if (decl.prop !== "font-size") {
+        decl.cloneBefore({
+          prop: "font-family",
+          value: "var(--gtk-font-family, Cantarell, sans-serif)",
+        });
+      }
+      if (decl.prop !== "font-family") {
+        decl.cloneBefore({ prop: "font-size", value: "var(--gtk-font-size, 11pt)" });
+      }
+      if (decl.prop === "font") {
+        for (const prop of ["font-style", "font-weight", "font-stretch", "line-height"]) {
+          decl.cloneBefore({ prop, value: "normal" });
+        }
+      }
+      decl.remove();
+      return;
+    }
+
     if (!decl.prop.startsWith("-gtk-")) return;
 
     switch (decl.prop) {
