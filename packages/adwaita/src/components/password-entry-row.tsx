@@ -1,40 +1,24 @@
 import { useIcon } from "@gtk-js/gtk4";
-import { forwardRef, type HTMLAttributes, type ReactNode, useState } from "react";
+import { forwardRef, useState } from "react";
+import { AdwEntryRow, type AdwEntryRowProps } from "./entry-row.tsx";
 
-export interface AdwPasswordEntryRowProps extends HTMLAttributes<HTMLDivElement> {
-  title: string;
-  text?: string;
-  showApplyButton?: boolean;
-  maxLength?: number;
-  prefixWidget?: ReactNode;
-  suffixWidget?: ReactNode;
-  onChanged?: (text: string) => void;
-  onApply?: () => void;
-}
+export interface AdwPasswordEntryRowProps
+  extends Omit<AdwEntryRowProps, "inputPurpose" | "visibility" | "editableSuffix"> {}
 
 /**
- * AdwPasswordEntryRow — An EntryRow for passwords with peek toggle.
+ * AdwPasswordEntryRow — An AdwEntryRow tailored for entering secrets.
+ *
+ * Like upstream it is an AdwEntryRow subclass: same title animation and
+ * activation behavior, with hidden text, a peek button and a caps lock
+ * indicator.
  *
  * CSS node: row.entry.password
  *
  * @see https://gnome.pages.gitlab.gnome.org/libadwaita/doc/1-latest/class.PasswordEntryRow.html
+ * @see upstream/libadwaita/src/adw-password-entry-row.c
  */
 export const AdwPasswordEntryRow = forwardRef<HTMLDivElement, AdwPasswordEntryRowProps>(
-  function AdwPasswordEntryRow(
-    {
-      title,
-      text,
-      showApplyButton,
-      maxLength,
-      prefixWidget,
-      suffixWidget,
-      onChanged,
-      onApply,
-      className,
-      ...rest
-    },
-    ref,
-  ) {
+  function AdwPasswordEntryRow({ suffixWidget, className, onEntryKeyDown, ...rest }, ref) {
     const [visible, setVisible] = useState(false);
     const [capsLock, setCapsLock] = useState(false);
     const RevealIcon = useIcon("ViewReveal");
@@ -42,44 +26,37 @@ export const AdwPasswordEntryRow = forwardRef<HTMLDivElement, AdwPasswordEntryRo
     const CapsLockIcon = useIcon("CapsLock");
     const PeekIcon = visible ? ConcealIcon : RevealIcon;
 
-    const classes = ["gtk-row", "entry", "password"];
+    const classes = ["password"];
     if (className) classes.push(className);
 
     return (
-      <div ref={ref} className={classes.join(" ")} {...rest}>
-        <div
-          className="gtk-box gtk-box-layout horizontal header"
-          style={{ gap: 0, alignItems: "center" }}
-        >
-          {prefixWidget && <div className="gtk-box prefixes">{prefixWidget}</div>}
-          <div className="editable-area" style={{ flex: 1, padding: "0 6px" }}>
-            <span className="gtk-label title subtitle" style={{ fontSize: "smaller" }}>
-              {title}
+      <AdwEntryRow
+        ref={ref}
+        className={classes.join(" ")}
+        inputPurpose="password"
+        visibility={visible}
+        onEntryKeyDown={(e) => {
+          setCapsLock(e.getModifierState("CapsLock"));
+          onEntryKeyDown?.(e);
+        }}
+        editableSuffix={
+          capsLock && !visible && CapsLockIcon ? (
+            <span className="gtk-image caps-lock-indicator">
+              <CapsLockIcon size={16} />
             </span>
-            <input
-              className="gtk-text"
-              type={visible ? "text" : "password"}
-              value={text}
-              maxLength={maxLength && maxLength > 0 ? maxLength : undefined}
-              onChange={(e) => onChanged?.(e.target.value)}
-              onKeyDown={(e) => {
-                setCapsLock(e.getModifierState("CapsLock"));
-                if (e.key === "Enter" && showApplyButton) onApply?.();
-              }}
-            />
-            {capsLock && !visible && CapsLockIcon && (
-              <span className="gtk-image caps-lock-indicator">
-                <CapsLockIcon size={16} />
-              </span>
-            )}
-          </div>
-          <div className="gtk-box suffixes" style={{ gap: 6 }}>
+          ) : undefined
+        }
+        suffixWidget={
+          <>
             {PeekIcon && (
               <button
                 type="button"
                 className="gtk-button flat"
                 title={visible ? "Hide Text" : "Show Text"}
-                onClick={() => setVisible(!visible)}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setVisible(!visible);
+                }}
               >
                 <span className="gtk-image">
                   <PeekIcon size={16} />
@@ -87,9 +64,10 @@ export const AdwPasswordEntryRow = forwardRef<HTMLDivElement, AdwPasswordEntryRo
               </button>
             )}
             {suffixWidget}
-          </div>
-        </div>
-      </div>
+          </>
+        }
+        {...rest}
+      />
     );
   },
 );
