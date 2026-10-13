@@ -1,4 +1,4 @@
-import { useIcon } from "@gtk-js/gtk4";
+import { useIcon, useListBoxRow } from "@gtk-js/gtk4";
 import { forwardRef, type HTMLAttributes } from "react";
 
 export interface AdwButtonRowProps extends HTMLAttributes<HTMLDivElement> {
@@ -22,6 +22,7 @@ export const AdwButtonRow = forwardRef<HTMLDivElement, AdwButtonRowProps>(functi
   const StartIcon = useIcon(startIconName ?? "");
   const EndIcon = useIcon(endIconName ?? "");
 
+  useListBoxRow();
   const classes = ["gtk-row", "button", "activatable"];
   if (className) classes.push(className);
 

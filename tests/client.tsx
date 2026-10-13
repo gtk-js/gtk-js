@@ -947,6 +947,18 @@ const cases: Record<string, () => React.ReactElement> = {
     </AdwPreferencesGroup>
   ),
 
+  "adw-preferences-group-footer": () => (
+    <AdwPreferencesGroup title="Group Title" data-testid="target">
+      <AdwActionRow title="Row" />
+      <GtkLabel label="Footer" xalign={0} className="caption" />
+    </AdwPreferencesGroup>
+  ),
+  "adw-preferences-group-label-only": () => (
+    <AdwPreferencesGroup data-testid="target">
+      <GtkLabel label="Footer" xalign={0} className="caption" />
+    </AdwPreferencesGroup>
+  ),
+
   // AdwPreferencesPage cases
   "adw-preferences-page-default": () => (
     <AdwPreferencesPage data-testid="target">

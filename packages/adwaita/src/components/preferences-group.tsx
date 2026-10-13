@@ -1,4 +1,14 @@
-import { Children, forwardRef, type HTMLAttributes, type ReactNode } from "react";
+import { GtkListBoxRowContext } from "@gtk-js/gtk4";
+import {
+  Children,
+  forwardRef,
+  type HTMLAttributes,
+  isValidElement,
+  type ReactNode,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from "react";
 
 export interface AdwPreferencesGroupProps extends HTMLAttributes<HTMLDivElement> {
   title?: string;
@@ -15,7 +25,9 @@ export interface AdwPreferencesGroupProps extends HTMLAttributes<HTMLDivElement>
  *   preferencesgroup > box
  *     ├── box.header[.single-line]
  *     │   └── box.labels > label#title + label#description
- *     └── listbox.boxed-list
+ *     └── box
+ *         ├── listbox.boxed-list   (the rows; only shown when there are some)
+ *         └── …                    (other children, like a footer label)
  *
  * @see https://gnome.pages.gitlab.gnome.org/libadwaita/doc/1-latest/class.PreferencesGroup.html
  */
@@ -28,7 +40,50 @@ export const AdwPreferencesGroup = forwardRef<HTMLDivElement, AdwPreferencesGrou
     const hasDescription = !!description;
     const hasHeader = hasTitle || hasDescription || headerSuffix;
     const singleLine = hasTitle && !hasDescription;
-    const childCount = Children.count(children);
+
+    // Like adw_preferences_group_add(): rows go in the list and other widgets
+    // below it. Rows register through GtkListBoxRowContext (useListBoxRow), so
+    // a child renders in the list until it has mounted without registering.
+    const items = Children.toArray(children).map((child, index) => ({
+      child,
+      key: isValidElement(child) && child.key != null ? child.key : `#${index}`,
+    }));
+    const rowCounts = useRef(new Map<string, number>());
+    const registrations = useRef(new Map<string, () => () => void>());
+    const [others, setOthers] = useState<ReadonlySet<string>>(() => new Set());
+
+    const registration = (key: string) => {
+      let register = registrations.current.get(key);
+      if (!register) {
+        register = () => {
+          rowCounts.current.set(key, (rowCounts.current.get(key) ?? 0) + 1);
+          return () => rowCounts.current.set(key, (rowCounts.current.get(key) ?? 1) - 1);
+        };
+        registrations.current.set(key, register);
+      }
+      return register;
+    };
+
+    useLayoutEffect(() => {
+      const present = new Set(items.map(({ key }) => key));
+      for (const key of registrations.current.keys()) {
+        if (!present.has(key)) {
+          registrations.current.delete(key);
+          rowCounts.current.delete(key);
+        }
+      }
+      const next = new Set([...present].filter((key) => !rowCounts.current.get(key)));
+      if (next.size !== others.size || [...next].some((key) => !others.has(key))) {
+        setOthers(next);
+      }
+    });
+
+    const slot = ({ child, key }: (typeof items)[number]) => (
+      <GtkListBoxRowContext.Provider key={key} value={registration(key)}>
+        {child}
+      </GtkListBoxRowContext.Provider>
+    );
+    const rows = items.filter(({ key }) => !others.has(key));
 
     const classes = ["gtk-preferencesgroup"];
     if (className) classes.push(className);
@@ -52,15 +107,18 @@ export const AdwPreferencesGroup = forwardRef<HTMLDivElement, AdwPreferencesGrou
               {headerSuffix}
             </div>
           )}
-          {childCount > 0 && (
-            <div
-              className={`gtk-list ${separateRows ? "boxed-list-separate" : "boxed-list"}`}
-              role="list"
-              style={{ display: "flex", flexDirection: "column" }}
-            >
-              {children}
-            </div>
-          )}
+          <div className="gtk-box gtk-box-layout vertical">
+            {rows.length > 0 && (
+              <div
+                className={`gtk-list ${separateRows ? "boxed-list-separate" : "boxed-list"}`}
+                role="list"
+                style={{ display: "flex", flexDirection: "column" }}
+              >
+                {rows.map(slot)}
+              </div>
+            )}
+            {items.filter(({ key }) => others.has(key)).map(slot)}
+          </div>
         </div>
       </div>
     );
