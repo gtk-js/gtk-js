@@ -112,4 +112,9 @@ export type * from "./types.ts";
 export { DecorationLayout } from "./types.ts";
 // Window controls
 export type { WindowControlsAPI } from "./window-controls-context.tsx";
-export { useWindowControls } from "./window-controls-context.tsx";
+export {
+  useWindowControls,
+  useWindowElement,
+  WindowControlsContext,
+  WindowElementContext,
+} from "./window-controls-context.tsx";
