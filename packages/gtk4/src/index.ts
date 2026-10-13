@@ -53,6 +53,13 @@ export type { GtkPasswordEntryProps } from "./components/password-entry.tsx";
 export { GtkPasswordEntry } from "./components/password-entry.tsx";
 export type { GtkPopoverProps } from "./components/popover.tsx";
 export { GtkPopover } from "./components/popover.tsx";
+export type {
+  GtkMenuItem,
+  GtkMenuModel,
+  GtkModelButtonProps,
+  GtkPopoverMenuProps,
+} from "./components/popover-menu.tsx";
+export { GtkModelButton, GtkPopoverMenu, usePopoverClose } from "./components/popover-menu.tsx";
 export type { GtkProgressBarProps } from "./components/progress-bar.tsx";
 export { GtkProgressBar } from "./components/progress-bar.tsx";
 export type { GtkScaleMark, GtkScaleProps } from "./components/scale.tsx";
