@@ -121,14 +121,9 @@ export const AdwEntryRow = forwardRef<HTMLDivElement, AdwEntryRowProps>(function
       onClick={() => inputRef.current?.focus()}
       {...rest}
     >
-      <div
-        className="gtk-box gtk-box-layout horizontal header"
-        style={{ gap: 0, alignItems: "center" }}
-      >
+      <div className="gtk-box gtk-box-layout horizontal header" style={{ alignItems: "center" }}>
         {prefixWidget && (
-          <div className="gtk-box prefixes" style={{ gap: 6 }}>
-            {prefixWidget}
-          </div>
+          <div className="gtk-box gtk-box-layout horizontal prefixes">{prefixWidget}</div>
         )}
         <div
           className="editable-area"
@@ -202,9 +197,7 @@ export const AdwEntryRow = forwardRef<HTMLDivElement, AdwEntryRowProps>(function
           )}
         </div>
         {suffixWidget && (
-          <div className="gtk-box suffixes" style={{ gap: 6 }}>
-            {suffixWidget}
-          </div>
+          <div className="gtk-box gtk-box-layout horizontal suffixes">{suffixWidget}</div>
         )}
       </div>
     </div>
