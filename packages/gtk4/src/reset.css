@@ -69,9 +69,14 @@ body:has(> :first-child:has([data-gtk-provider])) > :first-child {
   --document-font-size: 11pt;
   --monospace-font-family: "Source Code Pro", monospace;
   --monospace-font-size: 10pt;
+  /* GTK's `line-height: normal` is Pango's: the font's ascent + descent, 1.2em
+     for Cantarell. Browsers round the ascent and descent separately for
+     `normal` (17px lines instead of 17.6px at 11pt). Set this along with
+     --gtk-font-family. */
+  --gtk-line-height: 1.2;
   font-family: var(--gtk-font-family);
   font-size: var(--gtk-font-size);
-  line-height: normal;
+  line-height: var(--gtk-line-height);
 }
 
 /* Re-enable text selection for editable widgets */
@@ -140,10 +145,13 @@ body:has(> :first-child:has([data-gtk-provider])) > :first-child {
 }
 
 /* GtkLabel: inline text that vertically centers when stretched by a parent box.
-   In native GTK, GtkLabel defaults to valign=CENTER. */
+   In native GTK, GtkLabel defaults to valign=CENTER. Widget sizes are whole
+   pixels: a line of text is at least one line height rounded up, as in
+   gtk_label_measure(). */
 :where([data-gtk-provider] .gtk-label) {
   display: inline-flex;
   align-items: center;
+  min-height: round(up, 1lh, 1px);
 }
 
 /* GtkEntry / GtkSearchEntry: the entry's custom size_allocate lays out children

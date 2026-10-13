@@ -254,6 +254,15 @@ const cases: Record<string, () => React.ReactElement> = {
       data-testid="target"
     />
   ),
+  "label-heights": () => (
+    <GtkBox orientation="vertical" halign="start" valign="start" data-testid="target">
+      <GtkLabel label="Label" />
+      <GtkLabel label="Body" className="body" />
+      <GtkLabel label="Caption" className="caption" />
+      <GtkLabel label="Heading" className="heading" />
+      <GtkLabel label="Title" className="title-1" />
+    </GtkBox>
+  ),
   "label-justify-center": () => <GtkLabel label="Centered" justify="center" data-testid="target" />,
   "label-width-chars": () => <GtkLabel label="Hi" widthChars={20} data-testid="target" />,
   "label-xalign": () => <GtkLabel label="Aligned" xalign={0} data-testid="target" />,
