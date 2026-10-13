@@ -20,3 +20,13 @@ describe("border-spacing", () => {
     expect(out).toContain("--gtk-border-spacing-y: 12px");
   });
 });
+
+describe("initial fonts", () => {
+  test("font: initial → the GTK default font", async () => {
+    const out = await transform("popover.background { font: initial; }");
+    expect(out).toContain("font-family: var(--gtk-font-family, Cantarell, sans-serif)");
+    expect(out).toContain("font-size: var(--gtk-font-size, 11pt)");
+    expect(out).toContain("font-weight: normal");
+    expect(out).not.toContain("font: initial");
+  });
+});
