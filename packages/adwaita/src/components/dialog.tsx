@@ -9,6 +9,7 @@ import React, {
 } from "react";
 import type { AdwDialogPresentationMode } from "../types.ts";
 import { FloatingSheet } from "./floating-sheet.tsx";
+import { HeaderBarTitleContext } from "./header-bar-title.ts";
 
 export interface AdwDialogProps extends HTMLAttributes<HTMLDivElement> {
   title?: string;
@@ -115,7 +116,9 @@ export const AdwDialog = forwardRef<HTMLDivElement, AdwDialogProps>(function Adw
       {...rest}
     >
       <WindowControlsContext.Provider value={controls}>
-        {child ?? children}
+        <HeaderBarTitleContext.Provider value={title ?? ""}>
+          {child ?? children}
+        </HeaderBarTitleContext.Provider>
       </WindowControlsContext.Provider>
     </FloatingSheet>
   );

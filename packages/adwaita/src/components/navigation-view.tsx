@@ -12,6 +12,7 @@ import React, {
   useState,
 } from "react";
 import { animateSpring, NAVIGATION_SPRING, type SpringAnimationHandle } from "../spring.ts";
+import { HeaderBarTitleContext } from "./header-bar-title.ts";
 
 export interface AdwNavigationPageProps {
   tag: string;
@@ -412,7 +413,11 @@ export const AdwNavigationView = forwardRef<HTMLDivElement, AdwNavigationViewPro
                   willChange: isMoving ? "transform" : undefined,
                 }}
               >
-                <NavContext.Provider value={contextFor(tag)}>{page.children}</NavContext.Provider>
+                <NavContext.Provider value={contextFor(tag)}>
+                  <HeaderBarTitleContext.Provider value={page.title ?? ""}>
+                    {page.children}
+                  </HeaderBarTitleContext.Provider>
+                </NavContext.Provider>
               </div>
             );
           })}

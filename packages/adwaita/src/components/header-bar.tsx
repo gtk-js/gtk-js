@@ -1,6 +1,7 @@
-import { useIcon, useWindowControls } from "@gtk-js/gtk4";
+import { GtkLabel, useIcon, useWindowControls } from "@gtk-js/gtk4";
 import { forwardRef, type HTMLAttributes, type ReactNode, useCallback } from "react";
 import type { AdwCenteringPolicy } from "../types.ts";
+import { useHeaderBarTitle } from "./header-bar-title.ts";
 import { useNavigation } from "./navigation-view.tsx";
 
 export interface AdwHeaderBarProps extends HTMLAttributes<HTMLDivElement> {
@@ -98,6 +99,22 @@ export const AdwHeaderBar = forwardRef<HTMLDivElement, AdwHeaderBarProps>(functi
   const classes = ["gtk-headerbar"];
   if (className) classes.push(className);
 
+  // Without a title widget, the title of the page or dialog it's in, like
+  // construct_title_label() and update_title().
+  const contextTitle = useHeaderBarTitle();
+  const title =
+    titleWidget ??
+    children ??
+    (contextTitle !== undefined ? (
+      <GtkLabel
+        label={contextTitle}
+        className="title"
+        valign="center"
+        ellipsize="end"
+        widthChars={5}
+      />
+    ) : undefined);
+
   const handleDrag = useCallback(
     (e: React.PointerEvent) => {
       if (!controls?.drag) return;
@@ -118,7 +135,7 @@ export const AdwHeaderBar = forwardRef<HTMLDivElement, AdwHeaderBarProps>(functi
         <div
           className="gtk-box gtk-center-layout"
           data-start=""
-          data-center={showTitle && (titleWidget ?? children) ? "" : undefined}
+          data-center={showTitle && title ? "" : undefined}
           data-end=""
         >
           <div className="gtk-box gtk-box-layout horizontal start gtk-center-layout-start">
@@ -137,7 +154,7 @@ export const AdwHeaderBar = forwardRef<HTMLDivElement, AdwHeaderBarProps>(functi
             )}
             {start}
           </div>
-          <div className="gtk-center-layout-center">{showTitle && (titleWidget ?? children)}</div>
+          <div className="gtk-center-layout-center">{showTitle && title}</div>
           <div className="gtk-box gtk-box-layout horizontal end gtk-center-layout-end">
             {end}
             {showEndTitleButtons && <WindowControls side="end" layout={decorationLayout} />}
