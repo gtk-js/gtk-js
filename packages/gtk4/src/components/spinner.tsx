@@ -1,4 +1,5 @@
 import { forwardRef, type HTMLAttributes } from "react";
+import { useIcon } from "../icon-context.tsx";
 import { alignAttrs, type GtkAlignProps } from "../types.ts";
 
 export interface GtkSpinnerProps extends HTMLAttributes<HTMLSpanElement>, GtkAlignProps {
@@ -16,8 +17,9 @@ export interface GtkSpinnerProps extends HTMLAttributes<HTMLSpanElement>, GtkAli
  * Uses :disabled pseudo-class when insensitive (remapped to [data-disabled] attribute
  * by the CSS transform pipeline, since <span> does not support :disabled natively).
  * Animation: 1s linear infinite rotation (defined in Adwaita CSS via spin keyframe).
- * Visual: CSS border spinner (GTK uses -gtk-icon-source: process-working-symbolic,
- * which has no direct web equivalent; we replicate with a border-based circle).
+ * Visual: the theme's -gtk-icon-source, process-working-symbolic, at the icon
+ * size (16px, gtk_spinner_measure()) and centered in the space the spinner
+ * gets, like gtk_spinner_snapshot().
  *
  * @see https://docs.gtk.org/gtk4/class.Spinner.html
  * @see upstream/libadwaita/src/stylesheet/widgets/_spinner.scss
@@ -26,6 +28,7 @@ export const GtkSpinner = forwardRef<HTMLSpanElement, GtkSpinnerProps>(function 
   { spinning = false, disabled = false, halign, valign, hexpand, vexpand, className, ...rest },
   ref,
 ) {
+  const Icon = useIcon("ProcessWorking");
   const classes = ["gtk-spinner"];
   if (className) classes.push(className);
 
@@ -40,6 +43,8 @@ export const GtkSpinner = forwardRef<HTMLSpanElement, GtkSpinnerProps>(function 
       data-checked={spinning || undefined}
       data-disabled={disabled || undefined}
       {...rest}
-    />
+    >
+      {Icon && <Icon size={16} />}
+    </span>
   );
 });

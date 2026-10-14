@@ -99,16 +99,13 @@ body:has(> :first-child:has([data-gtk-provider])) > :first-child {
   align-self: auto;
 }
 
-/* GtkSpinner — GTK draws this via -gtk-icon-source (process-working-symbolic).
-   On the web we replicate it with a CSS border spinner.
-   The spin keyframe and opacity/animation are provided by Adwaita CSS. */
+/* GtkSpinner — its icon (process-working-symbolic) centered in the space it
+   gets, like gtk_spinner_snapshot(). The spin keyframe and opacity/animation
+   are provided by Adwaita CSS. */
 :where([data-gtk-provider] .gtk-spinner) {
-  display: inline-block;
-  width: 16px;
-  height: 16px;
-  border-radius: 50%;
-  border: 2px solid currentColor;
-  border-top-color: transparent;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 /* GtkImage is a widget with intrinsic sizing — needs a proper box model */
