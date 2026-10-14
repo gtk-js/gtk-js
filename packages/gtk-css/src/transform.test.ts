@@ -96,8 +96,12 @@ describe("convertGtkColorFunctions", () => {
         ".x { box-shadow: inset 0 0 0 1px alpha(currentColor, 0.04), inset 0 1px alpha(currentColor, 0.05); }",
       );
       expect(out).not.toContain("alpha(");
-      expect(out).toContain("color-mix(in oklab, currentColor 4%, transparent)");
-      expect(out).toContain("color-mix(in oklab, currentColor 5%, transparent)");
+      expect(out).toContain(
+        "color-mix(in oklab, var(--gtk-current-color, currentColor) 4%, transparent)",
+      );
+      expect(out).toContain(
+        "color-mix(in oklab, var(--gtk-current-color, currentColor) 5%, transparent)",
+      );
     });
 
     test("rgba() arg → color-mix()", async () => {
@@ -217,5 +221,30 @@ describe(":disabled", () => {
     expect(out).toContain(".gtk-button:not(:is([data-disabled], :disabled)):hover");
     // Applied once, even though PostCSS revisits changed rules.
     expect(out).not.toContain(":is([data-disabled], :is(");
+  });
+});
+
+describe("currentColor", () => {
+  test("other properties read the color through --gtk-current-color", async () => {
+    const out = await transform(
+      "switch { background-color: alpha(currentColor, 0.15); transition: background 200ms; } switch:checked { color: var(--accent-fg-color); background-color: var(--accent-bg-color); }",
+    );
+    expect(out).toContain(
+      "background-color: color-mix(in oklab, var(--gtk-current-color, currentColor) 15%, transparent)",
+    );
+    expect(out).toMatch(
+      /color: var\(--accent-fg-color\);\s*--gtk-current-color: var\(--accent-fg-color\)/,
+    );
+    // Applied once, even though PostCSS revisits changed declarations.
+    expect(out.match(/--gtk-current-color/g)).toHaveLength(2);
+  });
+
+  test("a color that depends on currentColor leaves the property to fall back", async () => {
+    const out = await transform(
+      ".dim { color: alpha(currentColor, 0.55); } .plain { color: inherit !important; }",
+    );
+    expect(out).toContain("color: color-mix(in oklab, currentColor 55%, transparent)");
+    expect(out).toContain("--gtk-current-color: initial");
+    expect(out).toContain("--gtk-current-color: inherit !important");
   });
 });
