@@ -174,7 +174,7 @@ export const FloatingSheet = forwardRef<HTMLDivElement, FloatingSheetProps>(func
   );
 
   if (portal === true) return createPortal(content, document.body);
-  if (portal instanceof HTMLElement) return createPortal(content, portal);
+  if (portal) return createPortal(content, portal);
   if (hostInWindow) return createPortal(content, windowElement);
   return content;
 });
