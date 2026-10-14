@@ -9,9 +9,19 @@ async function transform(css: string) {
 describe("remapSelectors", () => {
   test("label links: link → .gtk-link, not the link class of button.link", async () => {
     const out = await transform("link, button.link { color: blue; } link:hover { color: red; }");
-    expect(out).toContain(".gtk-link,");
-    expect(out).toContain(".gtk-button.link");
-    expect(out).toContain(".gtk-link:hover");
+    expect(out).toContain(":where(.gtk-link):not(_),");
+    expect(out).toContain(":where(.gtk-button):not(_).link");
+    expect(out).toContain(":where(.gtk-link):not(_):hover");
+  });
+
+  test("node names keep the specificity of type selectors", async () => {
+    const out = await transform(
+      "list.boxed-list > row { outline-color: transparent; } row.entry.focused { outline-color: blue; } window:not(.solid-csd) row { color: red; }",
+    );
+    // GTK: (0,1,2) < (0,2,1), so the focus ring wins although it comes first.
+    expect(out).toContain(":where(.gtk-list):not(_).boxed-list > :where(.gtk-row):not(_)");
+    expect(out).toContain(":where(.gtk-row):not(_).entry.focused");
+    expect(out).toContain(":where(.gtk-window):not(_):not(.solid-csd) :where(.gtk-row):not(_)");
   });
 });
 
@@ -217,8 +227,8 @@ describe(":disabled", () => {
     const out = await transform(
       "button:disabled { opacity: 0.5; } button:not(:disabled):hover { color: red; }",
     );
-    expect(out).toContain(".gtk-button:is([data-disabled], :disabled)");
-    expect(out).toContain(".gtk-button:not(:is([data-disabled], :disabled)):hover");
+    expect(out).toContain(":where(.gtk-button):not(_):is([data-disabled], :disabled)");
+    expect(out).toContain(":where(.gtk-button):not(_):not(:is([data-disabled], :disabled)):hover");
     // Applied once, even though PostCSS revisits changed rules.
     expect(out).not.toContain(":is([data-disabled], :is(");
   });
@@ -246,5 +256,29 @@ describe("currentColor", () => {
     expect(out).toContain("color: color-mix(in oklab, currentColor 55%, transparent)");
     expect(out).toContain("--gtk-current-color: initial");
     expect(out).toContain("--gtk-current-color: inherit !important");
+  });
+});
+
+describe("background-image overlays", () => {
+  test("image(color) overlays fade with the background transition", async () => {
+    const out = await transform(
+      "button { transition: background 200ms ease-out, box-shadow 200ms ease-out; } button:hover { background-image: image(alpha(currentColor, 0.1)); } button.two { background-image: image(red), image(blue); }",
+    );
+    expect(out).toContain(
+      "--gtk-background-overlay: color-mix(in oklab, var(--gtk-current-color, currentColor) 10%, transparent)",
+    );
+    expect(out).toContain(
+      "background-image: linear-gradient(var(--gtk-background-overlay), var(--gtk-background-overlay))",
+    );
+    expect(out).toContain(
+      "transition: background 200ms ease-out, box-shadow 200ms ease-out, --gtk-background-overlay 200ms ease-out",
+    );
+    expect(out).toMatch(/^@property --gtk-background-overlay \{/);
+    // Kept, transparent, outside the hover state so the overlay fades out too.
+    expect(out).toContain(":where(:where(.gtk-button):not(_)) {");
+    // Layered images stay images.
+    expect(out).toContain(
+      "background-image: linear-gradient(red, red), linear-gradient(blue, blue)",
+    );
   });
 });
