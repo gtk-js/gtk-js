@@ -471,11 +471,6 @@ export const AdwAboutDialog = forwardRef<HTMLDivElement, AdwAboutDialogProps>(
     );
     const push = (tag: string) => setStack((s) => [...s, tag]);
 
-    // Return to the main page whenever the dialog is presented again.
-    useEffect(() => {
-      if (visible) setStack(["main"]);
-    }, [visible]);
-
     useEffect(() => {
       if (!visible) return;
       const handleKey = (e: KeyboardEvent) => {
@@ -818,6 +813,10 @@ export const AdwAboutDialog = forwardRef<HTMLDivElement, AdwAboutDialogProps>(
           flexDirection: "column",
         }}
         onDimmingClick={close}
+        // Like a new dialog each time, it opens on its main page: the stack
+        // resets once the dialog has animated out, so it doesn't navigate
+        // while closing or opening.
+        onCloseAnimationDone={() => setStack(["main"])}
         portal={portal}
         aria-label={`About ${applicationName}`}
         {...rest}

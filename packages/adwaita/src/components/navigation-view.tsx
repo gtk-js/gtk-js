@@ -242,7 +242,9 @@ export const AdwNavigationView = forwardRef<HTMLDivElement, AdwNavigationViewPro
         onValue: apply,
         onDone: () => {
           animationRef.current = null;
-          if (staticPage) staticPage.style.clipPath = "";
+          // The clip comes off in the cleanup below, in the same commit that
+          // hides the page: pages have no background, so clearing it here
+          // would show the page underneath through the new one for a frame.
           setTransition((t) => (t?.key === key ? null : t));
           if (document.activeElement === root) {
             pageRefs.current.get(transition.showing)?.focus({ preventScroll: true });
@@ -296,6 +298,33 @@ export const AdwNavigationView = forwardRef<HTMLDivElement, AdwNavigationViewPro
 
     // --- render ------------------------------------------------------------
 
+    // Like AdwBackButton, a page's back button depends on whether that page
+    // has one below it in this view (or else on the enclosing view), not on
+    // the top of the stack, so the root page doesn't grow a back button while
+    // a page slides over it. A page leaving the stack keeps what it had.
+    const hadPrevious = useRef(new Map<string, boolean>());
+    const pageContexts = useRef(new Map<string, NavigationContextValue>());
+    const contextFor = (tag: string): NavigationContextValue => {
+      const index = stack.indexOf(tag);
+      const hasPrevious = index >= 0 ? index > 0 : (hadPrevious.current.get(tag) ?? false);
+      const value: NavigationContextValue = {
+        push,
+        pop: hasPrevious ? pop : parentNav.pop,
+        canPop: pageFor(tag)?.canPop !== false && (hasPrevious || parentNav.canPop),
+      };
+      const cached = pageContexts.current.get(tag);
+      if (
+        cached &&
+        cached.push === value.push &&
+        cached.pop === value.pop &&
+        cached.canPop === value.canPop
+      ) {
+        return cached;
+      }
+      pageContexts.current.set(tag, value);
+      return value;
+    };
+
     const mounted = [...stack];
     if (transition && !mounted.includes(transition.hiding)) mounted.push(transition.hiding);
 
@@ -310,6 +339,15 @@ export const AdwNavigationView = forwardRef<HTMLDivElement, AdwNavigationViewPro
         if (page) retained.set(tag, page);
       }
       lastPages.current = retained;
+      const previous = new Map<string, boolean>();
+      for (const tag of mounted) {
+        const index = stack.indexOf(tag);
+        previous.set(tag, index >= 0 ? index > 0 : (hadPrevious.current.get(tag) ?? false));
+      }
+      hadPrevious.current = previous;
+      for (const tag of pageContexts.current.keys()) {
+        if (!previous.has(tag)) pageContexts.current.delete(tag);
+      }
     });
 
     const classes = ["gtk-navigation-view", "gtk-bin-layout"];
@@ -374,7 +412,7 @@ export const AdwNavigationView = forwardRef<HTMLDivElement, AdwNavigationViewPro
                   willChange: isMoving ? "transform" : undefined,
                 }}
               >
-                {page.children}
+                <NavContext.Provider value={contextFor(tag)}>{page.children}</NavContext.Provider>
               </div>
             );
           })}
