@@ -160,6 +160,11 @@ export function setAnimationSlowdown(factor: number): void {
   slowdown = factor > 0 ? factor : 1;
 }
 
+/** The factor set by {@link setAnimationSlowdown}. */
+export function animationSlowdown(): number {
+  return slowdown;
+}
+
 /** Whether the user asked for reduced motion (GTK's `gtk-enable-animations`). */
 export function prefersReducedMotion(): boolean {
   return (
