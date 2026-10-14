@@ -242,7 +242,9 @@ export const AdwNavigationView = forwardRef<HTMLDivElement, AdwNavigationViewPro
         onValue: apply,
         onDone: () => {
           animationRef.current = null;
-          if (staticPage) staticPage.style.clipPath = "";
+          // The clip comes off in the cleanup below, in the same commit that
+          // hides the page: pages have no background, so clearing it here
+          // would show the page underneath through the new one for a frame.
           setTransition((t) => (t?.key === key ? null : t));
           if (document.activeElement === root) {
             pageRefs.current.get(transition.showing)?.focus({ preventScroll: true });
