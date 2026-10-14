@@ -22,6 +22,13 @@ export interface AdwDialogProps extends HTMLAttributes<HTMLDivElement> {
   portal?: boolean | HTMLElement;
   onClosed?: () => void;
   onCloseAttempt?: () => void;
+  /**
+   * Called once the close animation finished and the dialog is gone, like
+   * when upstream removes the dialog after "closed". A dialog that's kept
+   * around to be shown again resets its content here, not on close, so it
+   * doesn't change while it animates out.
+   */
+  onHidden?: () => void;
 }
 
 /**
@@ -49,6 +56,7 @@ export const AdwDialog = forwardRef<HTMLDivElement, AdwDialogProps>(function Adw
     portal = false,
     onClosed,
     onCloseAttempt,
+    onHidden,
     className,
     style,
     children,
@@ -102,6 +110,7 @@ export const AdwDialog = forwardRef<HTMLDivElement, AdwDialogProps>(function Adw
       className={className}
       sheetStyle={sheetStyle}
       onDimmingClick={close}
+      onCloseAnimationDone={onHidden}
       portal={portal}
       aria-label={title}
       {...rest}
