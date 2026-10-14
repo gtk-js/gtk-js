@@ -632,6 +632,46 @@ const fixColorMixGamut: Plugin = {
 };
 
 /**
+ * PostCSS plugin: Resolve currentColor like GTK, so transitions start from the
+ * color the widget had.
+ *
+ * GTK resolves currentcolor to the widget's color before it transitions a
+ * value (gtk_css_value_resolve(), gtkcssstyle.c), so a switch going from
+ * `color-mix(currentColor 15%)` to the accent color starts from the gray track
+ * it showed. Browsers keep currentColor unresolved in the computed value and
+ * resolve it against the element's *new* color. When the same state change
+ * also sets `color` (switch:checked, check:checked, button.osd:hover, …), the
+ * transition jumps to the new color's mix first: a checked switch's track
+ * blinks white for a frame.
+ *
+ * Every `color` declaration also sets `--gtk-current-color` to the same value,
+ * and other properties read currentColor through it. A custom property holding
+ * a concrete color is substituted at computed-value time, so the transition
+ * starts from the old value. Where the theme's color itself depends on
+ * currentColor, the property is left invalid and the fallback, currentColor,
+ * applies as before.
+ */
+const CURRENT_COLOR_RE = /\bcurrentcolor\b/i;
+const CURRENT_COLOR_ALL_RE = /\bcurrentcolor\b/gi;
+const CURRENT_COLOR_VAR = "var(--gtk-current-color, currentColor)";
+const resolveCurrentColor: Plugin = {
+  postcssPlugin: "gtk-resolve-current-color",
+  Declaration(decl) {
+    if (decl.prop.startsWith("--") || decl.value.includes("--gtk-current-color")) return;
+    if (decl.prop === "color") {
+      const next = decl.next();
+      if (next?.type === "decl" && next.prop === "--gtk-current-color") return;
+      decl.cloneAfter({
+        prop: "--gtk-current-color",
+        value: CURRENT_COLOR_RE.test(decl.value) ? "initial" : decl.value,
+      });
+    } else if (CURRENT_COLOR_RE.test(decl.value)) {
+      decl.value = decl.value.replace(CURRENT_COLOR_ALL_RE, CURRENT_COLOR_VAR);
+    }
+  },
+};
+
+/**
  * PostCSS plugin: Convert .gtk-switch padding to transparent border.
  *
  * In native GTK, padding on the switch reduces the child allocation — the slider
@@ -671,6 +711,7 @@ export function buildGtkToWeb(assetPlugin?: Plugin) {
     convertGtkColorFunctions,
     replaceImageFunction,
     fixColorMixGamut,
+    resolveCurrentColor,
     removeGtkRecolor,
     assetPlugin ?? removeGtkAssetFunctions,
     fixSwitchPadding,
