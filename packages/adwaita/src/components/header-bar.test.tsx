@@ -9,7 +9,7 @@ import { AdwNavigationView } from "./navigation-view.tsx";
 const render = (node: React.ReactNode) =>
   renderToStaticMarkup(<IconProvider value={{} as never}>{node}</IconProvider>);
 const titles = (html: string) =>
-  [...html.matchAll(/class="gtk-label title"[^>]*><span[^>]*>([^<]*)</g)].map((m) => m[1]);
+  [...html.matchAll(/class="gtk-label title"[^>]*>(?:<span[^>]*>)?([^<]*)</g)].map((m) => m[1]);
 
 test("without a title widget, a header bar shows its page's title, like update_title()", () => {
   const html = render(
