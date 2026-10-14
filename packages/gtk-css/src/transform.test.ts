@@ -258,3 +258,27 @@ describe("currentColor", () => {
     expect(out).toContain("--gtk-current-color: inherit !important");
   });
 });
+
+describe("background-image overlays", () => {
+  test("image(color) overlays fade with the background transition", async () => {
+    const out = await transform(
+      "button { transition: background 200ms ease-out, box-shadow 200ms ease-out; } button:hover { background-image: image(alpha(currentColor, 0.1)); } button.two { background-image: image(red), image(blue); }",
+    );
+    expect(out).toContain(
+      "--gtk-background-overlay: color-mix(in oklab, var(--gtk-current-color, currentColor) 10%, transparent)",
+    );
+    expect(out).toContain(
+      "background-image: linear-gradient(var(--gtk-background-overlay), var(--gtk-background-overlay))",
+    );
+    expect(out).toContain(
+      "transition: background 200ms ease-out, box-shadow 200ms ease-out, --gtk-background-overlay 200ms ease-out",
+    );
+    expect(out).toMatch(/^@property --gtk-background-overlay \{/);
+    // Kept, transparent, outside the hover state so the overlay fades out too.
+    expect(out).toContain(":where(:where(.gtk-button):not(_)) {");
+    // Layered images stay images.
+    expect(out).toContain(
+      "background-image: linear-gradient(red, red), linear-gradient(blue, blue)",
+    );
+  });
+});

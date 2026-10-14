@@ -566,10 +566,39 @@ const convertGtkColorFunctions: Plugin = {
   },
 };
 
+/**
+ * A solid-color background-image overlay, as one color that can transition.
+ *
+ * GTK cross-fades `background-image: image(color)` overlays (a button's hover
+ * and pressed tints) over the widget's `background` transition. Browsers
+ * can't interpolate images, so the overlay would snap. Drawn as a gradient of
+ * a registered <color> property, only the color changes between states, and
+ * transitioning the property fades the overlay in and out.
+ */
+const OVERLAY = "--gtk-background-overlay";
+const OVERLAY_IMAGE = `linear-gradient(var(${OVERLAY}), var(${OVERLAY}))`;
+
+/** The color of a `background-image` that is exactly one `image(color)`. */
+function singleImageColor(value: string): string | null {
+  const v = value.trim();
+  if (!v.startsWith("image(")) return null;
+  const parens = extractBalancedParens(v, "image".length);
+  if (!parens || parens.end !== v.length) return null;
+  const args = splitArgs(parens.content);
+  return args.length === 1 && args[0] ? args[0] : null;
+}
+
 const replaceImageFunction: Plugin = {
   postcssPlugin: "gtk-replace-image-function",
   Declaration(decl) {
     if (!decl.value.includes("image(")) return;
+
+    const overlay = decl.prop === "background-image" ? singleImageColor(decl.value) : null;
+    if (overlay) {
+      decl.cloneBefore({ prop: OVERLAY, value: overlay });
+      decl.value = OVERLAY_IMAGE;
+      return;
+    }
 
     // GTK's image(color) creates a solid-color image layer.
     // Convert to linear-gradient(color, color) which is the web equivalent.
@@ -583,6 +612,60 @@ const replaceImageFunction: Plugin = {
     if (result !== decl.value) {
       decl.value = result;
     }
+  },
+};
+
+/**
+ * PostCSS plugin: Fade background-image overlays like GTK (see OVERLAY).
+ *
+ * Wherever `background` (or all) transitions, the overlay color transitions
+ * the same way. Those widgets also keep the overlay gradient, transparent,
+ * as a zero-specificity default, so it fades out again instead of vanishing
+ * when the state that set it ends; any rule setting a background-image wins.
+ */
+const TRANSITIONED_OVERLAY_RE = /^(background|background-image|all)$/;
+const transitionBackgroundOverlay: Plugin = {
+  postcssPlugin: "gtk-transition-background-overlay",
+  prepare() {
+    const selectors = new Set<string>();
+    return {
+      Declaration(decl) {
+        if (!decl.prop.startsWith("transition") || decl.value.includes(OVERLAY)) return;
+        const entries = splitArgs(decl.value);
+        if (decl.prop === "transition") {
+          const entry = entries.find((e) => TRANSITIONED_OVERLAY_RE.test(e.split(/\s+/)[0] ?? ""));
+          if (!entry) return;
+          decl.value = `${decl.value}, ${entry.replace(/^\S+/, OVERLAY)}`;
+        } else if (decl.prop === "transition-property") {
+          if (!entries.some((e) => TRANSITIONED_OVERLAY_RE.test(e))) return;
+          decl.value = `${decl.value}, ${OVERLAY}`;
+        } else {
+          return;
+        }
+        if (decl.parent?.type !== "rule") return;
+        for (const selector of (decl.parent as postcss.Rule).selectors) {
+          if (!selector.includes("::")) selectors.add(selector);
+        }
+      },
+      OnceExit(root) {
+        if (!selectors.size) return;
+        root.prepend(
+          postcss.atRule({
+            name: "property",
+            params: OVERLAY,
+            nodes: [
+              postcss.decl({ prop: "syntax", value: '"<color>"' }),
+              postcss.decl({ prop: "inherits", value: "false" }),
+              postcss.decl({ prop: "initial-value", value: "transparent" }),
+            ],
+          }),
+          postcss.rule({
+            selector: `:where(${[...selectors].join(", ")})`,
+            nodes: [postcss.decl({ prop: "background-image", value: OVERLAY_IMAGE })],
+          }),
+        );
+      },
+    };
   },
 };
 
@@ -674,7 +757,8 @@ const CURRENT_COLOR_VAR = "var(--gtk-current-color, currentColor)";
 const resolveCurrentColor: Plugin = {
   postcssPlugin: "gtk-resolve-current-color",
   Declaration(decl) {
-    if (decl.prop.startsWith("--") || decl.value.includes("--gtk-current-color")) return;
+    if (decl.value.includes("--gtk-current-color")) return;
+    if (decl.prop.startsWith("--") && decl.prop !== OVERLAY) return;
     if (decl.prop === "color") {
       const next = decl.next();
       if (next?.type === "decl" && next.prop === "--gtk-current-color") return;
@@ -727,6 +811,7 @@ export function buildGtkToWeb(assetPlugin?: Plugin) {
     fixGtkTransitionRefs,
     convertGtkColorFunctions,
     replaceImageFunction,
+    transitionBackgroundOverlay,
     fixColorMixGamut,
     resolveCurrentColor,
     removeGtkRecolor,
