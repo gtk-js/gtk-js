@@ -166,14 +166,31 @@ function buildSelectorRegex(): RegExp {
 const selectorRegex = buildSelectorRegex();
 
 /**
- * PostCSS plugin: Remap bare GTK widget selectors to .gtk-* class selectors.
+ * A GTK node name as a selector with the specificity of a type selector:
+ * `row` → `:where(.gtk-row):not(_)`.
+ *
+ * GTK counts node names like CSS type selectors (gtk_css_selector_compare()),
+ * so `row.entry.focused` (two classes) beats `list.boxed-list > row` (one).
+ * As plain classes both would weigh three classes and the later rule would win,
+ * hiding an entry row's focus ring inside a boxed list. `:where()` drops the
+ * class's weight and `:not(_)`, which every element matches, adds a type
+ * selector's. Browsers still index the rule by the class.
+ */
+export function gtkNodeSelector(cls: string): string {
+  return `:where(${cls}):not(_)`;
+}
+
+/**
+ * PostCSS plugin: Remap bare GTK widget selectors to .gtk-* class selectors,
+ * weighted like the type selectors they are in GTK (see gtkNodeSelector()).
  */
 const remapSelectors: Plugin = {
   postcssPlugin: "gtk-remap-selectors",
   Rule(rule) {
     const original = rule.selector;
     const remapped = original.replace(selectorRegex, (match) => {
-      return ALL_SELECTORS[match] ?? match;
+      const cls = ALL_SELECTORS[match];
+      return cls ? gtkNodeSelector(cls) : match;
     });
     if (remapped !== original) {
       rule.selector = remapped;

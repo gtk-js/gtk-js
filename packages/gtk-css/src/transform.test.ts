@@ -9,9 +9,19 @@ async function transform(css: string) {
 describe("remapSelectors", () => {
   test("label links: link → .gtk-link, not the link class of button.link", async () => {
     const out = await transform("link, button.link { color: blue; } link:hover { color: red; }");
-    expect(out).toContain(".gtk-link,");
-    expect(out).toContain(".gtk-button.link");
-    expect(out).toContain(".gtk-link:hover");
+    expect(out).toContain(":where(.gtk-link):not(_),");
+    expect(out).toContain(":where(.gtk-button):not(_).link");
+    expect(out).toContain(":where(.gtk-link):not(_):hover");
+  });
+
+  test("node names keep the specificity of type selectors", async () => {
+    const out = await transform(
+      "list.boxed-list > row { outline-color: transparent; } row.entry.focused { outline-color: blue; } window:not(.solid-csd) row { color: red; }",
+    );
+    // GTK: (0,1,2) < (0,2,1), so the focus ring wins although it comes first.
+    expect(out).toContain(":where(.gtk-list):not(_).boxed-list > :where(.gtk-row):not(_)");
+    expect(out).toContain(":where(.gtk-row):not(_).entry.focused");
+    expect(out).toContain(":where(.gtk-window):not(_):not(.solid-csd) :where(.gtk-row):not(_)");
   });
 });
 
@@ -217,8 +227,8 @@ describe(":disabled", () => {
     const out = await transform(
       "button:disabled { opacity: 0.5; } button:not(:disabled):hover { color: red; }",
     );
-    expect(out).toContain(".gtk-button:is([data-disabled], :disabled)");
-    expect(out).toContain(".gtk-button:not(:is([data-disabled], :disabled)):hover");
+    expect(out).toContain(":where(.gtk-button):not(_):is([data-disabled], :disabled)");
+    expect(out).toContain(":where(.gtk-button):not(_):not(:is([data-disabled], :disabled)):hover");
     // Applied once, even though PostCSS revisits changed rules.
     expect(out).not.toContain(":is([data-disabled], :is(");
   });
