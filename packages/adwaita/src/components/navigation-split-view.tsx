@@ -1,4 +1,5 @@
 import { forwardRef, type HTMLAttributes, useCallback, useEffect, useState } from "react";
+import { HeaderBarTitleContext } from "./header-bar-title.ts";
 import { type AdwNavigationPageProps, AdwNavigationView, NavContext } from "./navigation-view.tsx";
 
 // Re-export the page props type for consumers
@@ -139,10 +140,14 @@ export const AdwNavigationSplitView = forwardRef<HTMLDivElement, AdwNavigationSp
               flexShrink: 0,
             }}
           >
-            {sidebar.children}
+            <HeaderBarTitleContext.Provider value={sidebar.title ?? ""}>
+              {sidebar.children}
+            </HeaderBarTitleContext.Provider>
           </div>
           <div className="widget content-pane" style={{ flex: 1, minWidth: 0 }}>
-            {content.children}
+            <HeaderBarTitleContext.Provider value={content.title ?? ""}>
+              {content.children}
+            </HeaderBarTitleContext.Provider>
           </div>
         </div>
       </NavContext.Provider>

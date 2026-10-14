@@ -10,6 +10,7 @@ import {
 } from "react";
 import type { AdwResponseAppearance } from "../types.ts";
 import { FloatingSheet } from "./floating-sheet.tsx";
+import { HeaderBarTitleContext } from "./header-bar-title.ts";
 
 /** BUTTON_SPACING in adw-alert-dialog.c. */
 const BUTTON_SPACING = 12;
@@ -235,69 +236,75 @@ export const AdwAlertDialog = forwardRef<HTMLDivElement, AdwAlertDialogProps>(
         aria-label={heading}
         {...rest}
       >
-        {/* AdwGizmo "contents" — no CSS class, just a layout container */}
-        <div ref={contentsRef}>
-          <div className="gtk-windowhandle">
-            <div className="gtk-box gtk-box-layout vertical">
-              <div className="body-scrolled-window" style={{ overflow: "auto", maxHeight: "70vh" }}>
-                <div className={messageAreaClasses.join(" ")}>
-                  {heading && (
-                    <div className="heading-bin gtk-bin-layout">
-                      {smallHeading ? (
-                        <span className="gtk-label title-4" style={WRAPPING_CENTERED}>
-                          {heading}
-                        </span>
-                      ) : (
-                        <span className="gtk-label title-2" style={CENTERED}>
-                          {heading}
-                        </span>
-                      )}
-                    </div>
-                  )}
-                  {body && (
-                    <span className="gtk-label body" style={WRAPPING_CENTERED}>
-                      {body}
-                    </span>
-                  )}
-                  {extraChild && <div className="child">{extraChild}</div>}
+        {/* An alert is a dialog: its header bars don't show the presenting page's title. */}
+        <HeaderBarTitleContext.Provider value="">
+          {/* AdwGizmo "contents" — no CSS class, just a layout container */}
+          <div ref={contentsRef}>
+            <div className="gtk-windowhandle">
+              <div className="gtk-box gtk-box-layout vertical">
+                <div
+                  className="body-scrolled-window"
+                  style={{ overflow: "auto", maxHeight: "70vh" }}
+                >
+                  <div className={messageAreaClasses.join(" ")}>
+                    {heading && (
+                      <div className="heading-bin gtk-bin-layout">
+                        {smallHeading ? (
+                          <span className="gtk-label title-4" style={WRAPPING_CENTERED}>
+                            {heading}
+                          </span>
+                        ) : (
+                          <span className="gtk-label title-2" style={CENTERED}>
+                            {heading}
+                          </span>
+                        )}
+                      </div>
+                    )}
+                    {body && (
+                      <span className="gtk-label body" style={WRAPPING_CENTERED}>
+                        {body}
+                      </span>
+                    )}
+                    {extraChild && <div className="child">{extraChild}</div>}
+                  </div>
                 </div>
-              </div>
-              <div
-                ref={responseAreaRef}
-                className={`response-area${compact ? " compact" : ""}`}
-                style={{
-                  display: "flex",
-                  flexDirection: compact ? "column-reverse" : "row",
-                  gap: BUTTON_SPACING,
-                }}
-              >
-                {responses.map((resp) => {
-                  const btnClasses = ["gtk-button"];
-                  if (resp.appearance === "suggested") btnClasses.push("suggested-action");
-                  if (resp.appearance === "destructive") btnClasses.push("destructive-action");
-                  if (resp.id === defaultResponse) btnClasses.push("default");
-                  return (
-                    <button
-                      key={resp.id}
-                      type="button"
-                      className={btnClasses.join(" ")}
-                      disabled={resp.enabled === false}
-                      autoFocus={resp.id === defaultResponse}
-                      style={{
-                        flex: compact ? undefined : "1 1 0",
-                        minWidth: compact ? undefined : 0,
-                      }}
-                      data-response={resp.id}
-                      onClick={() => onResponse?.(resp.id)}
-                    >
-                      <span className="gtk-label">{resp.label}</span>
-                    </button>
-                  );
-                })}
+                <div
+                  ref={responseAreaRef}
+                  className={`response-area${compact ? " compact" : ""}`}
+                  style={{
+                    display: "flex",
+                    flexDirection: compact ? "column-reverse" : "row",
+                    gap: BUTTON_SPACING,
+                  }}
+                >
+                  {responses.map((resp) => {
+                    const btnClasses = ["gtk-button"];
+                    if (resp.appearance === "suggested") btnClasses.push("suggested-action");
+                    if (resp.appearance === "destructive") btnClasses.push("destructive-action");
+                    if (resp.id === defaultResponse) btnClasses.push("default");
+                    return (
+                      <button
+                        key={resp.id}
+                        type="button"
+                        className={btnClasses.join(" ")}
+                        disabled={resp.enabled === false}
+                        autoFocus={resp.id === defaultResponse}
+                        style={{
+                          flex: compact ? undefined : "1 1 0",
+                          minWidth: compact ? undefined : 0,
+                        }}
+                        data-response={resp.id}
+                        onClick={() => onResponse?.(resp.id)}
+                      >
+                        <span className="gtk-label">{resp.label}</span>
+                      </button>
+                    );
+                  })}
+                </div>
               </div>
             </div>
           </div>
-        </div>
+        </HeaderBarTitleContext.Provider>
       </FloatingSheet>
     );
   },
