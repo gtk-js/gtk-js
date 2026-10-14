@@ -139,9 +139,12 @@ body:has(> :first-child:has([data-gtk-provider])) > :first-child {
   border-top-color: transparent;
 }
 
-/* GtkImage is a widget with intrinsic sizing — needs a proper box model */
+/* GtkImage is a widget with intrinsic sizing — needs a proper box model. Given
+   more room than its icon, it draws the icon centered (gtk_image_snapshot()). */
 :where([data-gtk-provider] .gtk-image) {
   display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 /* GtkLabel: inline text that vertically centers when stretched by a parent box.
