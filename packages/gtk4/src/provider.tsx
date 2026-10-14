@@ -6,6 +6,7 @@ import {
   type ReactNode,
   useContext,
   useInsertionEffect,
+  useMemo,
 } from "react";
 import { type IconMap, IconProvider } from "./icon-context.tsx";
 import layoutCSS from "./layouts/layout.css" with { type: "text" };
@@ -19,7 +20,10 @@ export interface GtkProviderProps {
   cssHref?: string;
   /** Theme CSS as a string (injected via <style> tag). Ignored if theme is set. Takes priority over cssHref. */
   cssText?: string;
-  /** Icon set to use. Pass the full export of an icon package (e.g. @gtk-js/icons-gtk4). */
+  /**
+   * Icon set to use. Pass the full export of an icon package (e.g. @gtk-js/icons-adwaita).
+   * Like GtkIconTheme, names it lacks fall back to GTK's own icons (@gtk-js/icons-gtk4).
+   */
   icons?: IconMap;
   /** Style applied to the root scoping div. */
   style?: CSSProperties;
@@ -53,6 +57,12 @@ export function GtkProvider({
   style,
   children,
 }: GtkProviderProps) {
+  // GTK looks an icon up in the theme, then in its own resources.
+  const iconMap = useMemo(
+    () => (icons === defaultIcons ? icons : { ...defaultIcons, ...icons }),
+    [icons],
+  );
+
   // Resolve theme CSS — theme takes priority, then cssText, then cssHref
   const resolvedCSSText = theme ? theme.getCSS() : cssText;
 
@@ -112,7 +122,7 @@ export function GtkProvider({
 
   return (
     <ThemeContext.Provider value={theme}>
-      <IconProvider value={icons}>
+      <IconProvider value={iconMap}>
         <div data-gtk-provider="" className="background" style={style}>
           {children}
         </div>

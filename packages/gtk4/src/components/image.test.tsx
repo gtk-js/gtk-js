@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test";
-import { createGtkIcon, createGtkIconFromUrl } from "@gtk-js/icon-helpers";
+import { createGtkIcon, createGtkIconFromSvg, createGtkIconFromUrl } from "@gtk-js/icon-helpers";
 import { renderToStaticMarkup } from "react-dom/server";
 import { IconProvider } from "../icon-context.tsx";
 import { GtkImage } from "./image.tsx";
@@ -7,6 +7,15 @@ import { GtkImage } from "./image.tsx";
 const icons = {
   ImageMissing: createGtkIcon("ImageMissing", [["path", { d: "M0 0h16v16H0z" }]]),
   ComExampleApp: createGtkIconFromUrl("ComExampleApp", "app.svg"),
+  ComExampleInline: createGtkIconFromSvg(
+    "ComExampleInline",
+    `<?xml version="1.0" encoding="UTF-8"?>
+<svg height="128px" viewBox="0 0 128 128" width="128px" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <linearGradient id="a"><stop offset="0" stop-color="#1a5fb4"/></linearGradient>
+  <linearGradient id="b" xlink:href="#a"/>
+  <path d="M0 0h128v128H0z" fill="url(#b)" style="stroke: url('#a')"/>
+</svg>`,
+  ),
 };
 
 function render(iconName?: string, pixelSize?: number) {
@@ -30,5 +39,21 @@ describe("GtkImage", () => {
     const html = render("ComExampleApp", 32);
     expect(html).toContain('width="32"');
     expect(html).toContain('<image href="app.svg" width="16" height="16"></image>');
+  });
+
+  test("draws full-color SVG icons inline, with the page", () => {
+    const html = render("ComExampleInline", 32);
+    expect(html).toContain('width="32" height="32" viewBox="0 0 128 128"');
+    expect(html).toContain('<path d="M0 0h128v128H0z"');
+    expect(html).not.toContain("<?xml");
+  });
+
+  test("keeps the ids of inline icons apart", () => {
+    const html = render("ComExampleInline");
+    expect(html).toContain('id="gtk-icon-ComExampleInline-a"');
+    expect(html).toContain('xlink:href="#gtk-icon-ComExampleInline-a"');
+    expect(html).toContain('fill="url(#gtk-icon-ComExampleInline-b)"');
+    expect(html).toContain("stroke: url(#gtk-icon-ComExampleInline-a)");
+    expect(html).not.toContain('id="a"');
   });
 });
