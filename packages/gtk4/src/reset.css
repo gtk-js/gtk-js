@@ -181,6 +181,15 @@ body:has(> :first-child:has([data-gtk-provider])) > :first-child {
   min-height: round(up, 1lh, 1px);
 }
 
+/* GtkTextView in a GtkScrolledWindow: a text view scrolls its own text
+   (GtkScrollable), so the scrolled window allocates it the whole viewport
+   (gtk_scrolled_window_allocate_child). A <textarea> keeps its intrinsic
+   `cols` and `rows` size; a one-cell grid stretches it in both directions. */
+:where([data-gtk-provider] .gtk-scrolledwindow:has(> .gtk-textview)) {
+  display: grid;
+  grid-template: minmax(0, 1fr) / minmax(0, 1fr);
+}
+
 /* GtkEntry / GtkSearchEntry: the entry's custom size_allocate lays out children
    (image.left, text, image.right) horizontally at the full widget height.
    We replicate this with flexbox. The text node (input) fills remaining width. */
