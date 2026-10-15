@@ -55,7 +55,9 @@ export const GtkFrame = forwardRef<HTMLDivElement, GtkFrameProps>(function GtkFr
       {...rest}
     >
       {labelContent && (
+        // Only the child counts for the frame's expand (gtk_frame_compute_expand()).
         <div
+          data-expand-ignored=""
           style={{ textAlign: labelXalign === 0 ? "start" : labelXalign === 1 ? "end" : "center" }}
         >
           {labelContent}

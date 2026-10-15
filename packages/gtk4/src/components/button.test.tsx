@@ -1,7 +1,44 @@
 import { describe, expect, test } from "bun:test";
 import { renderToStaticMarkup } from "react-dom/server";
+import { GtkBox } from "./box.tsx";
 import { GtkButton } from "./button.tsx";
+import { GtkImage } from "./image.tsx";
+import { GtkLabel } from "./label.tsx";
 import { GtkToggleButton } from "./toggle-button.tsx";
+
+const classOf = (html: string) => html.match(/<button[^>]*class="([^"]*)"/)?.[1]?.split(" ");
+
+describe("style classes", () => {
+  test("a label or image child makes a text or image button, like gtk_button_set_child()", () => {
+    expect(
+      classOf(
+        renderToStaticMarkup(
+          <GtkButton>
+            <GtkLabel label="Add" />
+          </GtkButton>,
+        ),
+      ),
+    ).toContain("text-button");
+    expect(
+      classOf(
+        renderToStaticMarkup(
+          <GtkButton>
+            <GtkImage iconName="list-add-symbolic" />
+          </GtkButton>,
+        ),
+      ),
+    ).toContain("image-button");
+    const other = classOf(
+      renderToStaticMarkup(
+        <GtkButton>
+          <GtkBox />
+        </GtkButton>,
+      ),
+    );
+    expect(other).not.toContain("text-button");
+    expect(other).not.toContain("image-button");
+  });
+});
 
 describe("tooltipText", () => {
   test("is the button's tooltip", () => {

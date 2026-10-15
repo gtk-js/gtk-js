@@ -6,8 +6,10 @@ import {
   type ReactNode,
   useContext,
   useInsertionEffect,
+  useLayoutEffect,
   useMemo,
 } from "react";
+import { trackExpand } from "./expand.ts";
 import { type IconMap, IconProvider } from "./icon-context.tsx";
 import layoutCSS from "./layouts/layout.css" with { type: "text" };
 import { weighGtkNodeClasses } from "./layouts/specificity.ts";
@@ -119,6 +121,9 @@ export function GtkProvider({
       link.remove();
     };
   }, [resolvedCSSText, cssHref]);
+
+  // Layout CSS reads hexpand/vexpand as GTK computes them up the widget tree.
+  useLayoutEffect(trackExpand, []);
 
   return (
     <ThemeContext.Provider value={theme}>

@@ -75,8 +75,10 @@ export const GtkExpander = forwardRef<HTMLDivElement, GtkExpanderProps>(function
       {...rest}
     >
       <div className="gtk-box gtk-box-layout vertical">
+        {/* Only the child counts for the expander's expand (gtk_expander_compute_expand()). */}
         <div
           className="title"
+          data-expand-ignored=""
           role="button"
           aria-expanded={expanded}
           tabIndex={0}

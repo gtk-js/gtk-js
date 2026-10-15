@@ -50,7 +50,12 @@ export const GtkOverlay = forwardRef<HTMLDivElement, GtkOverlayProps>(function G
     >
       {child && <div style={{ gridColumn: 1, gridRow: 1 }}>{child}</div>}
       {overlays?.map((overlay, i) => (
-        <div key={i} style={{ gridColumn: 1, gridRow: 1, pointerEvents: "none" }}>
+        // Only the main child counts for the overlay's expand (gtk_overlay_compute_expand()).
+        <div
+          key={i}
+          data-expand-ignored=""
+          style={{ gridColumn: 1, gridRow: 1, pointerEvents: "none" }}
+        >
           <div style={{ pointerEvents: "auto" }}>{overlay}</div>
         </div>
       ))}
