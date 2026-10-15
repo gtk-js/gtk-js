@@ -377,6 +377,11 @@ const cases: Record<string, () => React.ReactElement> = {
   "text-view-monospace": () => <GtkTextView monospace data-testid="target" />,
   "text-view-non-editable": () => <GtkTextView editable={false} data-testid="target" />,
   "text-view-disabled": () => <GtkTextView disabled data-testid="target" />,
+  "text-view-scrolled": () => (
+    <GtkScrolledWindow hasFrame style={{ width: "200px", height: "100px" }} data-testid="target">
+      <GtkTextView />
+    </GtkScrolledWindow>
+  ),
 
   // GtkToggleButton cases
   "toggle-text-default": () => <GtkToggleButton label="Toggle" data-testid="target" />,

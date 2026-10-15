@@ -177,6 +177,7 @@ pub mod text_view_default;
 pub mod text_view_disabled;
 pub mod text_view_monospace;
 pub mod text_view_non_editable;
+pub mod text_view_scrolled;
 pub mod toggle_disabled;
 pub mod toggle_group_homogeneous;
 pub mod toggle_group_icon;
