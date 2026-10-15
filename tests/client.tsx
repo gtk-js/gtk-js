@@ -76,6 +76,11 @@ import { createRoot } from "react-dom/client";
 const caseName = window.location.pathname.slice(1);
 const isGallery = caseName === "gallery";
 
+/** An app component that renders a row, which AdwPreferencesGroup can't tell from its type. */
+function WrappedActionRow(props: { title: string; subtitle?: string }) {
+  return <AdwActionRow {...props} />;
+}
+
 const cases: Record<string, () => React.ReactElement> = {
   // halign/valign alignment cases
   "button-valign-center-hbox": () => (
@@ -973,6 +978,14 @@ const cases: Record<string, () => React.ReactElement> = {
     <AdwPreferencesGroup title="Group Title" data-testid="target">
       <AdwActionRow title="Row" />
       <GtkLabel label="Footer" xalign={0} className="caption" />
+    </AdwPreferencesGroup>
+  ),
+  "adw-preferences-group-mixed": () => (
+    <AdwPreferencesGroup title="Group Title" data-testid="target">
+      <GtkLabel label="Note" xalign={0} />
+      <WrappedActionRow title="Row 1" subtitle="Subtitle" />
+      <GtkLabel label="Footer" xalign={0} className="caption" />
+      <AdwActionRow title="Row 2" />
     </AdwPreferencesGroup>
   ),
   "adw-preferences-group-label-only": () => (
