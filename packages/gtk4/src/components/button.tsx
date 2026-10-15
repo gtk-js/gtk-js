@@ -5,6 +5,7 @@ import React, {
   useCallback,
   useState,
 } from "react";
+import { useIcon } from "../icon-context.tsx";
 import { alignAttrs, type GtkAlignProps } from "../types.ts";
 
 /** Parse a mnemonic label: `_Save` → renders "S" with a low underline. */
@@ -75,6 +76,7 @@ export const GtkButton = forwardRef<HTMLButtonElement, GtkButtonProps>(function 
   ref,
 ) {
   const [keyboardActivating, setKeyboardActivating] = useState(false);
+  const Icon = useIcon(iconName ?? "");
 
   const hasCustomChild = children != null;
   const hasLabel = !hasCustomChild && label != null;
@@ -131,7 +133,7 @@ export const GtkButton = forwardRef<HTMLButtonElement, GtkButtonProps>(function 
         children
       ) : (
         <>
-          {hasIcon && <span className="gtk-image" />}
+          {hasIcon && <span className="gtk-image">{Icon && <Icon size={16} />}</span>}
           {hasLabel && (
             <span
               className="gtk-label"
