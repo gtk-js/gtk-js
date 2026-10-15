@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const PagePortrait = createGtkIcon("page-portrait", [["path",{"d":"M2 2C.892 2 0 2.892 0 4v8c0 1.108.892 2 2 2h10v-1H2c-.554 0-1-.446-1-1V4c0-.554.446-1 1-1h12c.554 0 1 .446 1 1v6h1V4c0-1.108-.892-2-2-2Z","transform":"matrix(0 1 1 0 0 0)"}],["path",{"d":"M12 9c-.554 0-1 .446-1 1v4h1v-4h4V9Z","transform":"matrix(0 1 1 0 0 0)"}],["path",{"d":"m15.293 9.293-4 4L12 14l4-4Z","transform":"matrix(0 1 1 0 0 0)"}]]);
+export const PagePortrait = createGtkIcon("page-portrait", [["path",{"d":"m8 21c-1.662 0-3-1.338-3-3v-12c0-1.662 1.338-3 3-3h8c1.662 0 3 1.338 3 3v10l-5 5h-1zm0-1h5v-5h5v-9c0-1.108-0.892-2-2-2h-8c-1.108 0-2 0.892-2 2v12c0 1.108 0.892 2 2 2zm6-0.41406 3.5859-3.5859h-3.5859z","fill":"currentColor"}]]);
