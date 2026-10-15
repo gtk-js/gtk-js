@@ -166,14 +166,31 @@ function buildSelectorRegex(): RegExp {
 const selectorRegex = buildSelectorRegex();
 
 /**
- * PostCSS plugin: Remap bare GTK widget selectors to .gtk-* class selectors.
+ * A GTK node name as a selector with the specificity of a type selector:
+ * `row` → `:where(.gtk-row):not(_)`.
+ *
+ * GTK counts node names like CSS type selectors (gtk_css_selector_compare()),
+ * so `row.entry.focused` (two classes) beats `list.boxed-list > row` (one).
+ * As plain classes both would weigh three classes and the later rule would win,
+ * hiding an entry row's focus ring inside a boxed list. `:where()` drops the
+ * class's weight and `:not(_)`, which every element matches, adds a type
+ * selector's. Browsers still index the rule by the class.
+ */
+export function gtkNodeSelector(cls: string): string {
+  return `:where(${cls}):not(_)`;
+}
+
+/**
+ * PostCSS plugin: Remap bare GTK widget selectors to .gtk-* class selectors,
+ * weighted like the type selectors they are in GTK (see gtkNodeSelector()).
  */
 const remapSelectors: Plugin = {
   postcssPlugin: "gtk-remap-selectors",
   Rule(rule) {
     const original = rule.selector;
     const remapped = original.replace(selectorRegex, (match) => {
-      return ALL_SELECTORS[match] ?? match;
+      const cls = ALL_SELECTORS[match];
+      return cls ? gtkNodeSelector(cls) : match;
     });
     if (remapped !== original) {
       rule.selector = remapped;
@@ -208,8 +225,11 @@ const remapPseudoClasses: Plugin = {
     // :visited → [data-visited] (browsers restrict :visited styling; use data attribute)
     sel = sel.replace(/:visited/g, "[data-visited]");
 
-    // :disabled → [data-disabled] (<span> doesn't support :disabled natively)
-    sel = sel.replace(/:disabled/g, "[data-disabled]");
+    // :disabled → also [data-disabled]: widgets rendered as <span>/<div> can't
+    // be :disabled, while real <button>/<input> elements are (and carry no
+    // data attribute), so match either.
+    // (Idempotent: PostCSS revisits rules whose selector changed.)
+    sel = sel.replace(/(?<!\[data-disabled\], ):disabled/g, ":is([data-disabled], :disabled)");
 
     if (sel !== rule.selector) {
       rule.selector = sel;
@@ -225,6 +245,42 @@ const handleGtkProperties: Plugin = {
   Declaration(decl) {
     // Strip GTK3-style uppercase widget properties: -GtkWidget-*, -GtkDialog-*, etc.
     if (/^-Gtk[A-Z]/.test(decl.prop)) {
+      decl.remove();
+      return;
+    }
+
+    // border-spacing is how GTK themes set a box's spacing: GtkBoxLayout,
+    // GtkCenterLayout and GtkGridLayout add it to their spacing (x between
+    // columns, y between rows). On the web it only affects tables, so turn it
+    // into custom properties the layout classes read (see layout.css).
+    if (decl.prop === "border-spacing") {
+      const [x = "0", y = x] = postcss.list.space(decl.value);
+      decl.cloneBefore({ prop: "--gtk-border-spacing-x", value: x });
+      decl.cloneBefore({ prop: "--gtk-border-spacing-y", value: y });
+      decl.remove();
+      return;
+    }
+
+    // `initial` fonts are GtkSettings:gtk-font-name in GTK (e.g. popovers use
+    // `font: initial`), not the browser's initial (serif, 16px) font. The
+    // provider root defines --gtk-font-family / --gtk-font-size. GTK's `font`
+    // shorthand covers family, style, variant-caps, weight, stretch and size
+    // (gtkcssshorthandpropertyimpl.c), not line-height.
+    if (/^font(-family|-size)?$/.test(decl.prop) && decl.value.trim() === "initial") {
+      if (decl.prop !== "font-size") {
+        decl.cloneBefore({
+          prop: "font-family",
+          value: "var(--gtk-font-family, Cantarell, sans-serif)",
+        });
+      }
+      if (decl.prop !== "font-family") {
+        decl.cloneBefore({ prop: "font-size", value: "var(--gtk-font-size, 11pt)" });
+      }
+      if (decl.prop === "font") {
+        for (const prop of ["font-style", "font-variant-caps", "font-weight", "font-stretch"]) {
+          decl.cloneBefore({ prop, value: "normal" });
+        }
+      }
       decl.remove();
       return;
     }
@@ -511,10 +567,56 @@ const convertGtkColorFunctions: Plugin = {
   },
 };
 
+/**
+ * A solid-color background-image overlay, as layers that can transition.
+ *
+ * GTK cross-fades `background-image: image(color)` overlays (a button's hover
+ * and pressed tints) over the widget's `background` transition: the old image
+ * fades out as the new one fades in. Browsers can't interpolate images, so the
+ * overlay would snap. It's drawn as two gradient layers of registered
+ * properties instead, which transition: a color (`--gtk-background-overlay`),
+ * and the widget's currentColor at an opacity (`--gtk-background-tint`), the
+ * usual alpha(currentColor, …) overlay. Fading a percentage keeps that layer
+ * on the widget's actual color, an app's included; a registered color can't
+ * transition to a mix of currentColor. Between two overlays, one layer fades
+ * out while the other fades in, like GTK's cross-fade.
+ */
+const OVERLAY = "--gtk-background-overlay";
+const TINT = "--gtk-background-tint";
+const TINT_COLOR = `color-mix(in oklab, currentColor var(${TINT}), transparent)`;
+const OVERLAY_IMAGE = `linear-gradient(var(${OVERLAY}), var(${OVERLAY})), linear-gradient(${TINT_COLOR}, ${TINT_COLOR})`;
+
+/** The opacity of an overlay that is currentColor at an opacity, like `10%`. */
+function currentColorTint(color: string): string | null {
+  return (
+    color.match(/^color-mix\(in [\w-]+, currentcolor (\d+(?:\.\d+)?%), transparent\)$/i)?.[1] ??
+    null
+  );
+}
+
+/** The color of a `background-image` that is exactly one `image(color)`. */
+function singleImageColor(value: string): string | null {
+  const v = value.trim();
+  if (!v.startsWith("image(")) return null;
+  const parens = extractBalancedParens(v, "image".length);
+  if (!parens || parens.end !== v.length) return null;
+  const args = splitArgs(parens.content);
+  return args.length === 1 && args[0] ? args[0] : null;
+}
+
 const replaceImageFunction: Plugin = {
   postcssPlugin: "gtk-replace-image-function",
   Declaration(decl) {
     if (!decl.value.includes("image(")) return;
+
+    const overlay = decl.prop === "background-image" ? singleImageColor(decl.value) : null;
+    if (overlay) {
+      // resolveCurrentColor moves a currentColor overlay to the tint layer.
+      decl.cloneBefore({ prop: OVERLAY, value: overlay });
+      decl.cloneBefore({ prop: TINT, value: "0%" });
+      decl.value = OVERLAY_IMAGE;
+      return;
+    }
 
     // GTK's image(color) creates a solid-color image layer.
     // Convert to linear-gradient(color, color) which is the web equivalent.
@@ -528,6 +630,70 @@ const replaceImageFunction: Plugin = {
     if (result !== decl.value) {
       decl.value = result;
     }
+  },
+};
+
+/**
+ * PostCSS plugin: Fade background-image overlays like GTK (see OVERLAY).
+ *
+ * Wherever `background` (or all) transitions, the overlay's color and tint
+ * transition the same way. Those widgets also keep the overlay gradients,
+ * transparent, as a zero-specificity default, so they fade out again instead
+ * of vanishing when the state that set them ends; any rule setting a
+ * background-image wins.
+ */
+const TRANSITIONED_OVERLAY_RE = /^(background|background-image|all)$/;
+const transitionBackgroundOverlay: Plugin = {
+  postcssPlugin: "gtk-transition-background-overlay",
+  prepare() {
+    const selectors = new Set<string>();
+    return {
+      Declaration(decl) {
+        if (!decl.prop.startsWith("transition") || decl.value.includes(OVERLAY)) return;
+        const entries = splitArgs(decl.value);
+        if (decl.prop === "transition") {
+          const entry = entries.find((e) => TRANSITIONED_OVERLAY_RE.test(e.split(/\s+/)[0] ?? ""));
+          if (!entry) return;
+          decl.value = `${decl.value}, ${entry.replace(/^\S+/, OVERLAY)}, ${entry.replace(/^\S+/, TINT)}`;
+        } else if (decl.prop === "transition-property") {
+          if (!entries.some((e) => TRANSITIONED_OVERLAY_RE.test(e))) return;
+          decl.value = `${decl.value}, ${OVERLAY}, ${TINT}`;
+        } else {
+          return;
+        }
+        if (decl.parent?.type !== "rule") return;
+        for (const selector of (decl.parent as postcss.Rule).selectors) {
+          if (!selector.includes("::")) selectors.add(selector);
+        }
+      },
+      OnceExit(root) {
+        if (!selectors.size) return;
+        root.prepend(
+          postcss.atRule({
+            name: "property",
+            params: OVERLAY,
+            nodes: [
+              postcss.decl({ prop: "syntax", value: '"<color>"' }),
+              postcss.decl({ prop: "inherits", value: "false" }),
+              postcss.decl({ prop: "initial-value", value: "transparent" }),
+            ],
+          }),
+          postcss.atRule({
+            name: "property",
+            params: TINT,
+            nodes: [
+              postcss.decl({ prop: "syntax", value: '"<percentage>"' }),
+              postcss.decl({ prop: "inherits", value: "false" }),
+              postcss.decl({ prop: "initial-value", value: "0%" }),
+            ],
+          }),
+          postcss.rule({
+            selector: `:where(${[...selectors].join(", ")})`,
+            nodes: [postcss.decl({ prop: "background-image", value: OVERLAY_IMAGE })],
+          }),
+        );
+      },
+    };
   },
 };
 
@@ -594,6 +760,134 @@ const fixColorMixGamut: Plugin = {
 };
 
 /**
+ * PostCSS plugin: Resolve currentColor like GTK, so transitions start from the
+ * color the widget had.
+ *
+ * GTK resolves currentcolor to the widget's color before it transitions a
+ * value (gtk_css_value_resolve(), gtkcssstyle.c), so a switch going from
+ * `color-mix(currentColor 15%)` to the accent color starts from the gray track
+ * it showed. Browsers keep currentColor unresolved in the computed value and
+ * resolve it against the element's *new* color. When the same state change
+ * also sets `color` (switch:checked, check:checked, button.osd:hover, …), the
+ * transition jumps to the new color's mix first: a checked switch's track
+ * blinks white for a frame.
+ *
+ * Every `color` declaration also sets `--gtk-current-color` to the same value.
+ * On widgets whose own color changes with their state (a selector setting
+ * `color` with a state pseudo-class on the widget itself, like switch:checked), other
+ * properties, overlays included, read currentColor through it. A custom
+ * property holding a concrete color is substituted at computed-value time, so
+ * the transition starts from the old value. Where the theme's color itself
+ * depends on currentColor, the property is left invalid and the fallback,
+ * currentColor, applies as before.
+ *
+ * Everywhere else currentColor stays as it is, and follows a color set by app
+ * CSS; an alpha(currentColor, …) overlay moves to the tint layer (see
+ * OVERLAY). The property holds the theme's color, and plain CSS doesn't update
+ * it: app CSS that changes the color of a widget whose color changes with its
+ * state should set `--gtk-current-color` to the same color (CSS run through
+ * gtkToWeb does). CSS can't otherwise start a transition from the old color.
+ */
+const CURRENT_COLOR_RE = /\bcurrentcolor\b/i;
+const CURRENT_COLOR_ALL_RE = /\bcurrentcolor\b/gi;
+const CURRENT_COLOR_VAR = "var(--gtk-current-color, currentColor)";
+/** GTK's state pseudo-classes (gtkcssselector.c), unlike :not() or :first-child. */
+const STATE_RE =
+  /:(active|backdrop|checked|disabled|drop|focus|focus-visible|focus-within|hover|indeterminate|link|selected|visited)\b/;
+const resolveCurrentColor: Plugin = {
+  postcssPlugin: "gtk-resolve-current-color",
+  prepare() {
+    const stateColored = new WeakSet<postcss.Container>();
+    return {
+      // Before the selectors are remapped: GTK selectors are simple to read.
+      Once(root) {
+        const keys = new Set<string>();
+        root.walkDecls("color", (decl) => {
+          if (decl.parent?.type !== "rule") return;
+          for (const selector of (decl.parent as postcss.Rule).selectors) {
+            const subject = lastCompound(selector);
+            if (STATE_RE.test(subject)) keys.add(compoundKey(subject));
+          }
+        });
+        root.walkRules((rule) => {
+          const colored = rule.selectors.filter((s) => keys.has(compoundKey(lastCompound(s))));
+          if (colored.length === 0) return;
+          // Only the selectors for such widgets read the property.
+          const readsCurrentColor = rule.some(
+            (node) =>
+              node.type === "decl" && node.prop !== "color" && CURRENT_COLOR_RE.test(node.value),
+          );
+          if (readsCurrentColor && colored.length < rule.selectors.length) {
+            rule.cloneAfter({ selectors: rule.selectors.filter((s) => !colored.includes(s)) });
+            rule.selectors = colored;
+          }
+          stateColored.add(rule);
+        });
+      },
+      Declaration(decl) {
+        if (decl.value.includes("--gtk-current-color") || decl.value === OVERLAY_IMAGE) return;
+        if (decl.prop.startsWith("--") && decl.prop !== OVERLAY) return;
+        const parent = decl.parent;
+        const resolved = !!parent && stateColored.has(parent);
+        if (decl.prop === OVERLAY) {
+          const tint = resolved ? null : currentColorTint(decl.value);
+          if (tint) {
+            parent?.each((node) => {
+              if (node.type === "decl" && node.prop === TINT) node.value = tint;
+            });
+            decl.value = "transparent";
+          } else if (CURRENT_COLOR_RE.test(decl.value)) {
+            // A registered color can't transition to a mix of currentColor.
+            decl.value = decl.value.replace(CURRENT_COLOR_ALL_RE, CURRENT_COLOR_VAR);
+          }
+          return;
+        }
+        if (decl.prop === "color") {
+          const next = decl.next();
+          if (next?.type === "decl" && next.prop === "--gtk-current-color") return;
+          decl.cloneAfter({
+            prop: "--gtk-current-color",
+            value: CURRENT_COLOR_RE.test(decl.value) ? "initial" : decl.value,
+          });
+        } else if (resolved && CURRENT_COLOR_RE.test(decl.value)) {
+          decl.value = decl.value.replace(CURRENT_COLOR_ALL_RE, CURRENT_COLOR_VAR);
+        }
+      },
+    };
+  },
+};
+
+/** The compound selector a selector matches, e.g. `switch:checked` in `row > switch:checked`. */
+function lastCompound(selector: string): string {
+  let depth = 0;
+  for (let i = selector.length - 1; i >= 0; i--) {
+    const c = selector[i];
+    if (c === ")" || c === "]") depth++;
+    else if (c === "(" || c === "[") depth--;
+    else if (depth === 0 && (c === " " || c === ">" || c === "+" || c === "~")) {
+      return selector.slice(i + 1).trim();
+    }
+  }
+  return selector.trim();
+}
+
+/** A compound selector without its pseudo-classes: the widget, whatever its state. */
+function compoundKey(compound: string): string {
+  let key = "";
+  let i = 0;
+  while (i < compound.length) {
+    if (compound[i] !== ":") {
+      key += compound[i++];
+      continue;
+    }
+    i++;
+    while (i < compound.length && /[\w:-]/.test(compound[i] ?? "")) i++;
+    if (compound[i] === "(") i = extractBalancedParens(compound, i)?.end ?? compound.length;
+  }
+  return key;
+}
+
+/**
  * PostCSS plugin: Convert .gtk-switch padding to transparent border.
  *
  * In native GTK, padding on the switch reduces the child allocation — the slider
@@ -632,7 +926,9 @@ export function buildGtkToWeb(assetPlugin?: Plugin) {
     fixGtkTransitionRefs,
     convertGtkColorFunctions,
     replaceImageFunction,
+    transitionBackgroundOverlay,
     fixColorMixGamut,
+    resolveCurrentColor,
     removeGtkRecolor,
     assetPlugin ?? removeGtkAssetFunctions,
     fixSwitchPadding,

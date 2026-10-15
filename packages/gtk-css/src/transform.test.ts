@@ -6,6 +6,25 @@ async function transform(css: string) {
   return result.css;
 }
 
+describe("remapSelectors", () => {
+  test("label links: link → .gtk-link, not the link class of button.link", async () => {
+    const out = await transform("link, button.link { color: blue; } link:hover { color: red; }");
+    expect(out).toContain(":where(.gtk-link):not(_),");
+    expect(out).toContain(":where(.gtk-button):not(_).link");
+    expect(out).toContain(":where(.gtk-link):not(_):hover");
+  });
+
+  test("node names keep the specificity of type selectors", async () => {
+    const out = await transform(
+      "list.boxed-list > row { outline-color: transparent; } row.entry.focused { outline-color: blue; } window:not(.solid-csd) row { color: red; }",
+    );
+    // GTK: (0,1,2) < (0,2,1), so the focus ring wins although it comes first.
+    expect(out).toContain(":where(.gtk-list):not(_).boxed-list > :where(.gtk-row):not(_)");
+    expect(out).toContain(":where(.gtk-row):not(_).entry.focused");
+    expect(out).toContain(":where(.gtk-window):not(_):not(.solid-csd) :where(.gtk-row):not(_)");
+  });
+});
+
 describe("remapPseudoClasses", () => {
   test(":checked → [data-checked]", async () => {
     const out = await transform(".gtk-button:checked { color: red; }");
@@ -168,5 +187,128 @@ describe("convertGtkColorFunctions", () => {
     test("non-numeric factor throws", async () => {
       expect(transform(".x { color: shade(#fff, abc); }")).rejects.toThrow();
     });
+  });
+});
+
+describe("border-spacing", () => {
+  test("one value → both spacing properties", async () => {
+    const out = await transform("box { border-spacing: 6px; }");
+    expect(out).toContain("--gtk-border-spacing-x: 6px");
+    expect(out).toContain("--gtk-border-spacing-y: 6px");
+    expect(out).not.toContain("border-spacing:");
+  });
+
+  test("two values → horizontal then vertical", async () => {
+    const out = await transform("grid { border-spacing: 4px 12px; }");
+    expect(out).toContain("--gtk-border-spacing-x: 4px");
+    expect(out).toContain("--gtk-border-spacing-y: 12px");
+  });
+});
+
+describe("initial fonts", () => {
+  test("font: initial → the GTK default font", async () => {
+    const out = await transform("popover.background { font: initial; }");
+    expect(out).toContain("font-family: var(--gtk-font-family, Cantarell, sans-serif)");
+    expect(out).toContain("font-size: var(--gtk-font-size, 11pt)");
+    expect(out).toContain("font-weight: normal");
+    expect(out).toContain("font-variant-caps: normal");
+    // Not part of GTK's font shorthand: an inherited line height is kept.
+    expect(out).not.toContain("line-height");
+    expect(out).not.toContain("font: initial");
+  });
+});
+
+describe(":disabled", () => {
+  test("matches native :disabled elements and [data-disabled] ones", async () => {
+    const out = await transform(
+      "button:disabled { opacity: 0.5; } button:not(:disabled):hover { color: red; }",
+    );
+    expect(out).toContain(":where(.gtk-button):not(_):is([data-disabled], :disabled)");
+    expect(out).toContain(":where(.gtk-button):not(_):not(:is([data-disabled], :disabled)):hover");
+    // Applied once, even though PostCSS revisits changed rules.
+    expect(out).not.toContain(":is([data-disabled], :is(");
+  });
+});
+
+describe("currentColor", () => {
+  test("other properties read the color through --gtk-current-color", async () => {
+    const out = await transform(
+      "switch { background-color: alpha(currentColor, 0.15); transition: background 200ms; } switch:checked { color: var(--accent-fg-color); background-color: var(--accent-bg-color); }",
+    );
+    expect(out).toContain(
+      "background-color: color-mix(in oklab, var(--gtk-current-color, currentColor) 15%, transparent)",
+    );
+    expect(out).toMatch(
+      /color: var\(--accent-fg-color\);\s*--gtk-current-color: var\(--accent-fg-color\)/,
+    );
+    // Applied once, even though PostCSS revisits changed declarations.
+    expect(out.match(/--gtk-current-color/g)).toHaveLength(2);
+  });
+
+  test("widgets whose color doesn't change with their state keep currentColor", async () => {
+    const out = await transform(
+      "row:hover { background-color: alpha(currentColor, 0.03); } row.error { color: red; } row:hover { background-image: image(alpha(currentColor, 0.1)); }",
+    );
+    // Follows a color set by app CSS, overlays included.
+    expect(out).toContain("background-color: color-mix(in oklab, currentColor 3%, transparent)");
+    expect(out).toContain("--gtk-background-overlay: transparent; --gtk-background-tint: 10%");
+    expect(out).toContain(
+      "color-mix(in oklab, currentColor var(--gtk-background-tint), transparent)",
+    );
+  });
+
+  test("a rule shared with such widgets only reads the property for them", async () => {
+    const out = await transform(
+      "menubutton > button:checked { color: inherit; } button.opaque:hover, menubutton > button:hover { background-image: image(alpha(currentColor, 0.1)); }",
+    );
+    expect(out).toMatch(
+      /> :where\(.gtk-button\):not\(_\):hover \{ --gtk-background-overlay: color-mix\(in oklab, var\(--gtk-current-color, currentColor\) 10%/,
+    );
+    expect(out).toMatch(
+      /:where\(.gtk-button\):not\(_\).opaque:hover \{ --gtk-background-overlay: transparent; --gtk-background-tint: 10%/,
+    );
+  });
+
+  test("overlays of widgets whose color changes with their state fade from the old color", async () => {
+    const out = await transform(
+      "switch { transition: background 200ms; } switch:checked { color: white; } switch:checked:hover { background-image: image(alpha(currentColor, 0.1)); }",
+    );
+    expect(out).toContain(
+      "--gtk-background-overlay: color-mix(in oklab, var(--gtk-current-color, currentColor) 10%, transparent); --gtk-background-tint: 0%",
+    );
+  });
+
+  test("a color that depends on currentColor leaves the property to fall back", async () => {
+    const out = await transform(
+      ".dim { color: alpha(currentColor, 0.55); } .plain { color: inherit !important; }",
+    );
+    expect(out).toContain("color: color-mix(in oklab, currentColor 55%, transparent)");
+    expect(out).toContain("--gtk-current-color: initial");
+    expect(out).toContain("--gtk-current-color: inherit !important");
+  });
+});
+
+describe("background-image overlays", () => {
+  test("image(color) overlays fade with the background transition", async () => {
+    const out = await transform(
+      "button { transition: background 200ms ease-out, box-shadow 200ms ease-out; } button:hover { background-image: image(alpha(currentColor, 0.1)); } button:active { background-image: image(rgb(0 0 6 / 20%)); } button.two { background-image: image(red), image(blue); }",
+    );
+    // currentColor at an opacity fades as a percentage; other colors as colors.
+    expect(out).toContain("--gtk-background-overlay: transparent; --gtk-background-tint: 10%");
+    expect(out).toContain("--gtk-background-overlay: rgb(0 0 6 / 20%); --gtk-background-tint: 0%");
+    expect(out).toContain(
+      "background-image: linear-gradient(var(--gtk-background-overlay), var(--gtk-background-overlay)), linear-gradient(color-mix(in oklab, currentColor var(--gtk-background-tint), transparent), color-mix(in oklab, currentColor var(--gtk-background-tint), transparent))",
+    );
+    expect(out).toContain(
+      "transition: background 200ms ease-out, box-shadow 200ms ease-out, --gtk-background-overlay 200ms ease-out, --gtk-background-tint 200ms ease-out",
+    );
+    expect(out).toMatch(/^@property --gtk-background-overlay \{/);
+    expect(out).toContain("@property --gtk-background-tint {");
+    // Kept, transparent, outside the hover state so the overlay fades out too.
+    expect(out).toContain(":where(:where(.gtk-button):not(_)) {");
+    // Layered images stay images.
+    expect(out).toContain(
+      "background-image: linear-gradient(red, red), linear-gradient(blue, blue)",
+    );
   });
 });

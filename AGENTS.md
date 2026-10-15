@@ -54,8 +54,10 @@ When implementing OR modifying a widget, component, or stylesheet:
 - `@define-color` light vs dark values must be separated — dark values live inside `@media (prefers-color-scheme: dark)` blocks. The preprocessor tracks brace depth.
 - `@accent_bg_color` and `@accent_fg_color` are set at runtime in native GTK, never in the stylesheet. We seed with GNOME default blue (#3584e4).
 - `image()` replacement needs balanced-paren matching for nested `color-mix()`.
-- Convert `background-image: image(X)` to `linear-gradient(X, X)` (NOT `background-color`) — this preserves layering so hover overlays (background-image) render on top of base background-color correctly.
+- Convert `background-image: image(X)` to a `linear-gradient` (NOT `background-color`) — this preserves layering so hover overlays (background-image) render on top of base background-color correctly. A single-color overlay is drawn as two layers that transition with `background`, because browsers can't interpolate images and GTK cross-fades them: the registered `--gtk-background-overlay` color, and currentColor at the registered `--gtk-background-tint` percentage for `alpha(currentColor, …)` overlays (a registered color can't fade to a mix of currentColor; a percentage can, and keeps the widget's actual color).
 - The selector map in `selectors.ts` must cover ALL bare GTK selectors. Audit after any upstream update.
+- GTK node names keep a type selector's specificity: `row` becomes `:where(.gtk-row):not(_)`, not `.gtk-row`. As plain classes, rules like `list.boxed-list > row` and `row.entry.focused` would tie and the later one would win. gtk-js's own `layout.css` is weighed the same way when injected.
+- `--gtk-current-color` mirrors every `color` declaration. Widgets whose own color changes with a state (`switch:checked`, `button:drop(active)`; only GTK's state pseudo-classes count, not `:not()`) read currentColor through it, overlays included: GTK resolves currentcolor before transitioning, browsers resolve it against the element's new color. Everything else keeps plain `currentColor`, so it follows colors set by app CSS. Plain app CSS that recolors one of those widgets has to set `--gtk-current-color` too (CSS run through `gtkToWeb` does).
 
 ## Box Model
 
