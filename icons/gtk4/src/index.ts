@@ -123,3 +123,4 @@ export { WindowRestore } from "./icons/window-restore.ts";
 export { ZoomIn } from "./icons/zoom-in.ts";
 export { ZoomOriginal } from "./icons/zoom-original.ts";
 export { ZoomOut } from "./icons/zoom-out.ts";
+export { MissingIcon } from "./icons/missing-icon.ts";

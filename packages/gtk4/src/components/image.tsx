@@ -3,7 +3,7 @@ import { useIcons } from "../icon-context.tsx";
 import { alignAttrs, type GtkAlignProps, type GtkIconSize } from "../types.ts";
 
 export interface GtkImageProps extends HTMLAttributes<HTMLSpanElement>, GtkAlignProps {
-  /** Icon name loaded from the provider's icon set. Unknown names show `ImageMissing`, as in GTK. */
+  /** Icon name loaded from the provider's icon set. Unknown names show the set's full-color image-missing, as in GTK. */
   iconName?: string;
   /** Explicit pixel size. Overrides iconSize when >= 0. Default: -1 (use iconSize). */
   pixelSize?: number;
@@ -33,8 +33,9 @@ export const GtkImage = forwardRef<HTMLSpanElement, GtkImageProps>(function GtkI
   ref,
 ) {
   const icons = useIcons();
-  // Like GtkIconTheme, a name the icon set doesn't have shows image-missing.
-  const Icon = iconName ? (icons[iconName] ?? icons.ImageMissing) : undefined;
+  // Like GtkIconTheme, a name the icon set doesn't have shows its full-color
+  // image-missing; a set without one shows the symbolic ImageMissing.
+  const Icon = iconName ? (icons[iconName] ?? icons.MissingIcon ?? icons.ImageMissing) : undefined;
 
   const classes = ["gtk-image"];
   if (iconSize === "normal") classes.push("normal-icons");
