@@ -1,4 +1,4 @@
-import { useWindowElement } from "@gtk-js/gtk4";
+import { useEscapeLayer, useWindowElement } from "@gtk-js/gtk4";
 import {
   type CSSProperties,
   forwardRef,
@@ -38,6 +38,8 @@ export interface FloatingSheetProps extends HTMLAttributes<HTMLDivElement> {
   sheetStyle?: CSSProperties;
   /** Clicking the dimmed area. */
   onDimmingClick?: () => void;
+  /** Escape, while this is the topmost dialog or popover. */
+  onEscape?: () => void;
   /** Called once the close animation finished and the dialog is gone. */
   onCloseAnimationDone?: () => void;
   /**
@@ -73,6 +75,7 @@ export const FloatingSheet = forwardRef<HTMLDivElement, FloatingSheetProps>(func
     sheetStyle,
     onDimmingClick,
     followsContentSize = false,
+    onEscape,
     onCloseAnimationDone,
     portal = false,
     children,
@@ -91,6 +94,8 @@ export const FloatingSheet = forwardRef<HTMLDivElement, FloatingSheetProps>(func
   const animation = useRef<SpringAnimationHandle | null>(null);
   const doneRef = useRef(onCloseAnimationDone);
   doneRef.current = onCloseAnimationDone;
+  // Only the topmost dialog closes, as the dialog on top has the focus in GTK.
+  useEscapeLayer(open, sheetRef, () => onEscape?.());
 
   if (open && !mounted) setMounted(true);
 
@@ -103,7 +108,11 @@ export const FloatingSheet = forwardRef<HTMLDivElement, FloatingSheetProps>(func
       const sheet = sheetRef.current;
       if (sheet) {
         sheet.style.opacity = opacity;
-        sheet.style.transform = `scale(${MIN_SCALE + (1 - MIN_SCALE) * value})`;
+        // None at rest: any transform makes the sheet the containing block of
+        // its position: fixed descendants, so popovers in the dialog would be
+        // placed and clipped against the sheet instead of the window.
+        sheet.style.transform =
+          value === 1 ? "none" : `scale(${MIN_SCALE + (1 - MIN_SCALE) * value})`;
       }
     };
     apply(progress.current);
