@@ -1,3 +1,5 @@
+import type { CSSProperties, ReactNode } from "react";
+
 /** Layout direction for containers. */
 export type GtkOrientation = "horizontal" | "vertical";
 
@@ -45,6 +47,24 @@ export function alignAttrs(
     "data-hexpand": hexpand === undefined ? undefined : String(hexpand),
     "data-vexpand": vexpand === undefined ? undefined : String(vexpand),
   };
+}
+
+/**
+ * A box's spacing property as `--gtk-spacing`, which layout.css adds to the
+ * theme's border-spacing like gtk_box_layout's get_spacing().
+ */
+export function spacingStyle(spacing: number): CSSProperties {
+  return spacing > 0 ? ({ "--gtk-spacing": `${spacing}px` } as CSSProperties) : {};
+}
+
+/**
+ * Marks which slots of a center layout hold a child (data-start / data-center /
+ * data-end): GtkCenterLayout only puts spacing between children that exist.
+ */
+export function centerSlotAttrs(start: ReactNode, center: ReactNode, end: ReactNode) {
+  const slot = (node: ReactNode) =>
+    node === undefined || node === null || node === false || node === "" ? undefined : "";
+  return { "data-start": slot(start), "data-center": slot(center), "data-end": slot(end) };
 }
 
 /** List selection behavior. */

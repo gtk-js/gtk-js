@@ -1,6 +1,7 @@
 import { forwardRef, type HTMLAttributes, type ReactNode } from "react";
 import {
   alignAttrs,
+  centerSlotAttrs,
   type GtkAlignProps,
   type GtkBaselinePosition,
   type GtkOrientation,
@@ -53,6 +54,7 @@ export const GtkCenterBox = forwardRef<HTMLDivElement, GtkCenterBoxProps>(functi
       ref={ref}
       className={classes.join(" ")}
       {...alignAttrs(halign, valign, hexpand, vexpand)}
+      {...centerSlotAttrs(startWidget, centerWidget, endWidget)}
       {...rest}
     >
       <div className="gtk-center-layout-start">{startWidget}</div>

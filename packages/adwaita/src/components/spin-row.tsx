@@ -70,11 +70,8 @@ export const AdwSpinRow = forwardRef<HTMLDivElement, AdwSpinRowProps>(function A
 
   return (
     <div ref={ref} className={classes.join(" ")} {...rest}>
-      <div
-        className="gtk-box gtk-box-layout horizontal header"
-        style={{ gap: 6, alignItems: "center" }}
-      >
-        <div className="gtk-box gtk-box-layout vertical title" style={{ flex: 1, gap: 3 }}>
+      <div className="gtk-box gtk-box-layout horizontal header" style={{ alignItems: "center" }}>
+        <div className="gtk-box gtk-box-layout vertical title" style={{ flex: 1 }}>
           <span className="gtk-label title">{title}</span>
           {subtitle && <span className="gtk-label subtitle">{subtitle}</span>}
         </div>

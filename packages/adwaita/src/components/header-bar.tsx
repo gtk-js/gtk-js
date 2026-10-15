@@ -56,7 +56,7 @@ function WindowControls({ side, layout }: { side: "start" | "end"; layout: strin
   };
 
   return (
-    <div className={`gtk-windowcontrols gtk-box-layout horizontal ${side}`} style={{ gap: 3 }}>
+    <div className={`gtk-windowcontrols gtk-box-layout horizontal ${side}`}>
       {buttons.map((name) => (
         <WindowControlButton key={name} name={name} onClick={clickHandlers[name]} />
       ))}
@@ -114,7 +114,13 @@ export const AdwHeaderBar = forwardRef<HTMLDivElement, AdwHeaderBarProps>(functi
   return (
     <div ref={ref} className={classes.join(" ")} {...rest}>
       <div className="gtk-windowhandle gtk-bin-layout" onPointerDown={handleDrag}>
-        <div className="gtk-box gtk-center-layout">
+        {/* The start and end boxes always exist, as in AdwHeaderBar. */}
+        <div
+          className="gtk-box gtk-center-layout"
+          data-start=""
+          data-center={showTitle && (titleWidget ?? children) ? "" : undefined}
+          data-end=""
+        >
           <div className="gtk-box gtk-box-layout horizontal start gtk-center-layout-start">
             {showStartTitleButtons && <WindowControls side="start" layout={decorationLayout} />}
             {showBackButton && nav.canPop && BackIcon && (

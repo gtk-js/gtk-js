@@ -12,6 +12,7 @@ import {
 import { trackExpand } from "./expand.ts";
 import { type IconMap, IconProvider } from "./icon-context.tsx";
 import layoutCSS from "./layouts/layout.css" with { type: "text" };
+import { weighGtkNodeClasses } from "./layouts/specificity.ts";
 import resetCSS from "./reset.css" with { type: "text" };
 
 export interface GtkProviderProps {
@@ -74,7 +75,7 @@ export function GtkProvider({
 
     const style = document.createElement("style");
     style.id = id;
-    style.textContent = resetCSS + "\n" + layoutCSS;
+    style.textContent = resetCSS + "\n" + weighGtkNodeClasses(layoutCSS);
     document.head.appendChild(style);
 
     return () => {

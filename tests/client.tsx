@@ -254,6 +254,15 @@ const cases: Record<string, () => React.ReactElement> = {
       data-testid="target"
     />
   ),
+  "label-heights": () => (
+    <GtkBox orientation="vertical" halign="start" valign="start" data-testid="target">
+      <GtkLabel label="Label" />
+      <GtkLabel label="Body" className="body" />
+      <GtkLabel label="Caption" className="caption" />
+      <GtkLabel label="Heading" className="heading" />
+      <GtkLabel label="Title" className="title-1" />
+    </GtkBox>
+  ),
   "label-justify-center": () => <GtkLabel label="Centered" justify="center" data-testid="target" />,
   "label-width-chars": () => <GtkLabel label="Hi" widthChars={20} data-testid="target" />,
   "label-xalign": () => <GtkLabel label="Aligned" xalign={0} data-testid="target" />,
@@ -395,6 +404,18 @@ const cases: Record<string, () => React.ReactElement> = {
       <GtkLabel label="C" />
     </GtkBox>
   ),
+  "box-spacing-toolbar": () => (
+    <GtkBox
+      orientation="horizontal"
+      spacing={6}
+      halign="start"
+      className="toolbar"
+      data-testid="target"
+    >
+      <GtkLabel label="One" />
+      <GtkLabel label="Two" />
+    </GtkBox>
+  ),
   "box-hexpand": () => (
     <GtkBox halign="start" style={{ width: 300 }} data-testid="target">
       <GtkBox orientation="vertical">
@@ -430,6 +451,91 @@ const cases: Record<string, () => React.ReactElement> = {
       startWidget={<GtkLabel label="Start" />}
       centerWidget={<GtkLabel label="Center" />}
       endWidget={<GtkLabel label="End" />}
+      data-testid="target"
+    />
+  ),
+
+  // GTK's width request includes the toolbar's 6px padding; CSS widths here are
+  // content widths.
+  "center-box-toolbar-center-end-narrow": () => (
+    <GtkCenterBox
+      halign="start"
+      className="toolbar"
+      style={{ width: 108 }}
+      centerWidget={<GtkLabel label="Center" />}
+      endWidget={<GtkLabel label="Side" />}
+      data-testid="target"
+    />
+  ),
+  "center-box-toolbar-center-only": () => (
+    <GtkCenterBox
+      halign="start"
+      className="toolbar"
+      centerWidget={<GtkLabel label="Center" />}
+      data-testid="target"
+    />
+  ),
+  "center-box-toolbar-start-center-wide": () => (
+    <GtkCenterBox
+      halign="start"
+      className="toolbar"
+      style={{ width: 288 }}
+      startWidget={<GtkLabel label="Side" />}
+      centerWidget={<GtkLabel label="Center" />}
+      data-testid="target"
+    />
+  ),
+  "center-box-toolbar-start-center-narrow": () => (
+    <GtkCenterBox
+      halign="start"
+      className="toolbar"
+      style={{ width: 108 }}
+      startWidget={<GtkLabel label="Side" />}
+      centerWidget={<GtkLabel label="Center" />}
+      data-testid="target"
+    />
+  ),
+  "center-box-toolbar-start-end": () => (
+    <GtkCenterBox
+      halign="start"
+      className="toolbar"
+      startWidget={<GtkLabel label="Side" />}
+      endWidget={<GtkLabel label="Side" />}
+      data-testid="target"
+    />
+  ),
+  "center-box-toolbar-vertical-start-center-narrow": () => (
+    <GtkCenterBox
+      orientation="vertical"
+      halign="start"
+      valign="start"
+      className="toolbar"
+      style={{ height: 60 }}
+      startWidget={<GtkLabel label="Side" />}
+      centerWidget={<GtkLabel label="Center" />}
+      data-testid="target"
+    />
+  ),
+  "center-box-toolbar-vertical-start-end": () => (
+    <GtkCenterBox
+      orientation="vertical"
+      halign="start"
+      valign="start"
+      className="toolbar"
+      startWidget={<GtkLabel label="Side" />}
+      endWidget={<GtkLabel label="Side" />}
+      data-testid="target"
+    />
+  ),
+  "center-box-toolbar-vertical-start-end-tall": () => (
+    <GtkCenterBox
+      orientation="vertical"
+      halign="start"
+      valign="start"
+      className="toolbar"
+      style={{ height: 100 }}
+      startWidget={<GtkLabel label="Side" />}
+      endWidget={<GtkLabel label="Wider side" />}
       data-testid="target"
     />
   ),
