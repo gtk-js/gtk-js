@@ -33,6 +33,8 @@ export const GtkSearchBar = forwardRef<HTMLDivElement, GtkSearchBarProps>(functi
     onSearchModeChanged,
     halign,
     valign,
+    hexpand,
+    vexpand,
     className,
     ...rest
   },
@@ -52,7 +54,7 @@ export const GtkSearchBar = forwardRef<HTMLDivElement, GtkSearchBarProps>(functi
       <div
         ref={ref}
         className={classes.join(" ")}
-        {...alignAttrs(halign, valign)}
+        {...alignAttrs(halign, valign, hexpand, vexpand)}
         style={{ display: "none" }}
         {...rest}
       />
@@ -63,7 +65,7 @@ export const GtkSearchBar = forwardRef<HTMLDivElement, GtkSearchBarProps>(functi
     <div
       ref={ref}
       className={classes.join(" ")}
-      {...alignAttrs(halign, valign)}
+      {...alignAttrs(halign, valign, hexpand, vexpand)}
       role="search"
       {...rest}
     >

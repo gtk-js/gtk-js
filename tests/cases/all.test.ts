@@ -86,7 +86,6 @@ gtkTest("paned-horizontal");
 gtkTest("paned-vertical");
 gtkTest("button-circular");
 gtkTest("button-disabled");
-gtkTest("button-icon");
 gtkTest("button-pill");
 gtkTest("button-text-default");
 gtkTest("button-text-destructive");

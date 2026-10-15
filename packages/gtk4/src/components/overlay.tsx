@@ -30,7 +30,7 @@ export interface GtkOverlayProps extends HTMLAttributes<HTMLDivElement>, GtkAlig
  * @see https://docs.gtk.org/gtk4/class.Overlay.html
  */
 export const GtkOverlay = forwardRef<HTMLDivElement, GtkOverlayProps>(function GtkOverlay(
-  { child, overlays, children, halign, valign, className, style, ...rest },
+  { child, overlays, children, halign, valign, hexpand, vexpand, className, style, ...rest },
   ref,
 ) {
   const classes = ["gtk-overlay"];
@@ -40,7 +40,7 @@ export const GtkOverlay = forwardRef<HTMLDivElement, GtkOverlayProps>(function G
     <div
       ref={ref}
       className={classes.join(" ")}
-      {...alignAttrs(halign, valign)}
+      {...alignAttrs(halign, valign, hexpand, vexpand)}
       style={{
         display: "grid",
         gridTemplate: "1fr / 1fr",
@@ -50,7 +50,12 @@ export const GtkOverlay = forwardRef<HTMLDivElement, GtkOverlayProps>(function G
     >
       {child && <div style={{ gridColumn: 1, gridRow: 1 }}>{child}</div>}
       {overlays?.map((overlay, i) => (
-        <div key={i} style={{ gridColumn: 1, gridRow: 1, pointerEvents: "none" }}>
+        // Only the main child counts for the overlay's expand (gtk_overlay_compute_expand()).
+        <div
+          key={i}
+          data-expand-ignored=""
+          style={{ gridColumn: 1, gridRow: 1, pointerEvents: "none" }}
+        >
           <div style={{ pointerEvents: "auto" }}>{overlay}</div>
         </div>
       ))}

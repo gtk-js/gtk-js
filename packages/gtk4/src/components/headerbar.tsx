@@ -89,9 +89,8 @@ function WindowControls({
     minimize: onWindowMinimize,
   };
 
-  if (buttons.length === 0) {
-    return <div className={`gtk-windowcontrols ${side} empty`} />;
-  }
+  // Empty controls are hidden, as GtkHeaderBar binds their visibility to "empty".
+  if (buttons.length === 0) return null;
 
   return (
     <div className={`gtk-windowcontrols gtk-box-layout horizontal ${side}`}>
@@ -132,6 +131,8 @@ export const GtkHeaderBar = forwardRef<HTMLDivElement, GtkHeaderBarProps>(functi
     end,
     halign,
     valign,
+    hexpand,
+    vexpand,
     className,
     children,
     onWindowClose,
@@ -146,7 +147,12 @@ export const GtkHeaderBar = forwardRef<HTMLDivElement, GtkHeaderBarProps>(functi
   if (className) classes.push(className);
 
   return (
-    <div ref={ref} className={classes.join(" ")} {...alignAttrs(halign, valign)} {...rest}>
+    <div
+      ref={ref}
+      className={classes.join(" ")}
+      {...alignAttrs(halign, valign, hexpand, vexpand)}
+      {...rest}
+    >
       <div className="gtk-windowhandle gtk-bin-layout" onPointerDown={onWindowHandleDragStart}>
         {/* The start and end boxes always exist, as in GtkHeaderBar. */}
         <div

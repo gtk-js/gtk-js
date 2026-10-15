@@ -19,4 +19,6 @@ await buildIconPackage(
     new URL("../../upstream/libadwaita/src/icons/", import.meta.url).pathname,
   ],
   new URL(".", import.meta.url).pathname,
+  // What GtkIconTheme shows for a name Adwaita doesn't have: the full-color image-missing.
+  `${theme}Adwaita/scalable/status/image-missing.svg`,
 );

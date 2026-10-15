@@ -24,7 +24,17 @@ export interface GtkListBoxRowProps extends HTMLAttributes<HTMLDivElement>, GtkA
  * @see https://docs.gtk.org/gtk4/class.ListBoxRow.html
  */
 export const GtkListBoxRow = forwardRef<HTMLDivElement, GtkListBoxRowProps>(function GtkListBoxRow(
-  { activatable = true, selectable = true, children, halign, valign, className, ...rest },
+  {
+    activatable = true,
+    selectable = true,
+    children,
+    halign,
+    valign,
+    hexpand,
+    vexpand,
+    className,
+    ...rest
+  },
   ref,
 ) {
   const classes = ["gtk-row", "gtk-bin-layout"];
@@ -36,7 +46,7 @@ export const GtkListBoxRow = forwardRef<HTMLDivElement, GtkListBoxRowProps>(func
       ref={ref}
       role="listitem"
       className={classes.join(" ")}
-      {...alignAttrs(halign, valign)}
+      {...alignAttrs(halign, valign, hexpand, vexpand)}
       data-selectable={selectable || undefined}
       {...rest}
     >
@@ -79,6 +89,8 @@ export const GtkListBox = forwardRef<HTMLDivElement, GtkListBoxProps>(function G
     children,
     halign,
     valign,
+    hexpand,
+    vexpand,
     className,
     ...rest
   },
@@ -129,7 +141,7 @@ export const GtkListBox = forwardRef<HTMLDivElement, GtkListBoxProps>(function G
       ref={ref}
       role="list"
       className={classes.join(" ")}
-      {...alignAttrs(halign, valign)}
+      {...alignAttrs(halign, valign, hexpand, vexpand)}
       {...rest}
     >
       {childCount === 0 && placeholder ? (
