@@ -255,6 +255,7 @@ export const AdwAboutDialog = forwardRef<HTMLDivElement, AdwAboutDialogProps>(
     const AppIcon = useIcon(applicationIcon ?? "");
     const [stack, setStack] = useState<string[]>(["main"]);
     const [copied, setCopied] = useState(false);
+    const [mainScrolled, setMainScrolled] = useState(false);
 
     const close = useCallback(() => onClosed?.(), [onClosed]);
     const open = useCallback(
@@ -277,14 +278,16 @@ export const AdwAboutDialog = forwardRef<HTMLDivElement, AdwAboutDialogProps>(
     const hasDetails = Boolean(comments);
 
     // Like the AdwHeaderBars of the navigation pages: subpages show the page
-    // title; the main page's (main_headerbar) shows none.
+    // title; the main page's (main_headerbar) shows its page's title only
+    // while the page is scrolled (update_headerbar_cb).
     const page = (content: ReactNode, title?: string) => (
       <AdwToolbarView
         style={{ height: "100%" }}
         topBars={
           <AdwHeaderBar
             className="flat"
-            titleWidget={title ? <GtkWindowTitle title={title} /> : <span />}
+            titleWidget={title ? <GtkWindowTitle title={title} /> : undefined}
+            showTitle={Boolean(title) || mainScrolled}
           />
         }
         content={content}
@@ -306,7 +309,11 @@ export const AdwAboutDialog = forwardRef<HTMLDivElement, AdwAboutDialogProps>(
       ) : null;
 
     const mainPage = page(
-      <div className="gtk-scrolledwindow main-page" style={{ overflow: "auto", height: "100%" }}>
+      <div
+        className="gtk-scrolledwindow main-page"
+        style={{ overflow: "auto", height: "100%" }}
+        onScroll={(e) => setMainScrolled(e.currentTarget.scrollTop > 0)}
+      >
         <div className="gtk-viewport">
           <AdwClamp>
             <div
