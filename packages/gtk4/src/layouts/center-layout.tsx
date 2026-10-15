@@ -1,5 +1,5 @@
 import { forwardRef, type HTMLAttributes, type ReactNode } from "react";
-import type { GtkOrientation } from "../types.ts";
+import { centerSlotAttrs, type GtkOrientation } from "../types.ts";
 
 export interface GtkCenterLayoutProps extends HTMLAttributes<HTMLDivElement> {
   orientation?: GtkOrientation;
@@ -29,7 +29,12 @@ export const GtkCenterLayout = forwardRef<HTMLDivElement, GtkCenterLayoutProps>(
     if (className) classes.push(className);
 
     return (
-      <div ref={ref} className={classes.join(" ")} {...rest}>
+      <div
+        ref={ref}
+        className={classes.join(" ")}
+        {...centerSlotAttrs(start, center ?? children, end)}
+        {...rest}
+      >
         <div className="gtk-center-layout-start">{start}</div>
         <div className="gtk-center-layout-center">{center ?? children}</div>
         <div className="gtk-center-layout-end">{end}</div>
