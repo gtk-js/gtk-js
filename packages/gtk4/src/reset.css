@@ -123,14 +123,13 @@ body:has(> :first-child:has([data-gtk-provider])) > :first-child {
   align-items: center;
 }
 
-/* GtkTextView in a GtkScrolledWindow: the scrolled window allocates its child
-   the full viewport width (gtk_scrolled_window_allocate_child), but a
-   <textarea> keeps its intrinsic `cols` width. */
-:where([data-gtk-provider] .gtk-scrolledwindow > .gtk-textview) {
-  display: block;
-  width: -webkit-fill-available;
-  width: -moz-available;
-  width: stretch;
+/* GtkTextView in a GtkScrolledWindow: a text view scrolls its own text
+   (GtkScrollable), so the scrolled window allocates it the whole viewport
+   (gtk_scrolled_window_allocate_child). A <textarea> keeps its intrinsic
+   `cols` and `rows` size; a one-cell grid stretches it in both directions. */
+:where([data-gtk-provider] .gtk-scrolledwindow:has(> .gtk-textview)) {
+  display: grid;
+  grid-template: minmax(0, 1fr) / minmax(0, 1fr);
 }
 
 /* GtkEntry / GtkSearchEntry: the entry's custom size_allocate lays out children
