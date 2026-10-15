@@ -60,7 +60,7 @@ export const AdwToolbarView = forwardRef<HTMLDivElement, AdwToolbarViewProps>(
       >
         {revealTopBars && topBars && (
           <div className={`gtk-revealer top-bar ${barStyleClasses(topBarStyle)}`}>
-            <div className="gtk-windowhandle">
+            <div className="gtk-windowhandle gtk-bin-layout">
               <div className="gtk-box gtk-box-layout vertical">{topBars}</div>
             </div>
           </div>
@@ -80,7 +80,7 @@ export const AdwToolbarView = forwardRef<HTMLDivElement, AdwToolbarViewProps>(
         </div>
         {revealBottomBars && bottomBars && (
           <div className={`gtk-revealer bottom-bar ${barStyleClasses(bottomBarStyle)}`}>
-            <div className="gtk-windowhandle">
+            <div className="gtk-windowhandle gtk-bin-layout">
               <div className="gtk-box gtk-box-layout vertical">{bottomBars}</div>
             </div>
           </div>

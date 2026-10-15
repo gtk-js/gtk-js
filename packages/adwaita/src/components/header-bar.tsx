@@ -93,7 +93,9 @@ export const AdwHeaderBar = forwardRef<HTMLDivElement, AdwHeaderBarProps>(functi
   const BackIcon = useIcon("GoPrevious");
   const controls = useWindowControls();
   const nav = useNavigation();
-  const classes = ["gtk-headerbar"];
+  // AdwHeaderBar and GtkWindowHandle are GtkBinLayout widgets: the window
+  // handle and its center box get the bar's full height (adw-header-bar.c).
+  const classes = ["gtk-headerbar", "gtk-bin-layout"];
   if (className) classes.push(className);
 
   const handleDrag = useCallback(
@@ -111,7 +113,7 @@ export const AdwHeaderBar = forwardRef<HTMLDivElement, AdwHeaderBarProps>(functi
 
   return (
     <div ref={ref} className={classes.join(" ")} {...rest}>
-      <div className="gtk-windowhandle" onPointerDown={handleDrag}>
+      <div className="gtk-windowhandle gtk-bin-layout" onPointerDown={handleDrag}>
         <div className="gtk-box gtk-center-layout">
           <div className="gtk-box gtk-box-layout horizontal start gtk-center-layout-start">
             {showStartTitleButtons && <WindowControls side="start" layout={decorationLayout} />}
