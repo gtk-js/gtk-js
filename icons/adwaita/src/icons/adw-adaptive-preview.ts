@@ -1,0 +1,3 @@
+import { createGtkIcon } from "@gtk-js/icon-helpers";
+
+export const AdwAdaptivePreview = createGtkIcon("adw-adaptive-preview", [["path",{"d":"m 1 3 v 9 c 0 1.65625 1.34375 3 3 3 h 2 v -2 h -2 c -0.550781 0 -1 -0.449219 -1 -1 v -9 c 0 -0.550781 0.449219 -1 1 -1 h 6 c 0.550781 0 1 0.449219 1 1 v 2 h 2 v -2 c 0 -1.65625 -1.34375 -3 -3 -3 h -6 c -1.65625 0 -3 1.34375 -3 3 z m 0 0"}],["path",{"d":"m 7 8 v 6 c 0 1.105469 0.894531 2 2 2 h 4 c 1.105469 0 2 -0.894531 2 -2 v -6 c 0 -1.105469 -0.894531 -2 -2 -2 h -4 c -1.105469 0 -2 0.894531 -2 2 z m 1.992188 0 h 4 v 6 h -4 z m 0 0"}]]);
