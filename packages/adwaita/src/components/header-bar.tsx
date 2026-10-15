@@ -96,7 +96,9 @@ export const AdwHeaderBar = forwardRef<HTMLDivElement, AdwHeaderBarProps>(functi
   const decorationLayout =
     decorationLayoutProp ?? controls?.decorationLayout ?? "appmenu:minimize,maximize,close";
   const nav = useNavigation();
-  const classes = ["gtk-headerbar"];
+  // AdwHeaderBar and GtkWindowHandle are GtkBinLayout widgets: the window
+  // handle and its center box get the bar's full height (adw-header-bar.c).
+  const classes = ["gtk-headerbar", "gtk-bin-layout"];
   if (className) classes.push(className);
 
   // Without a title widget, the title of the page or dialog it's in, like
@@ -130,7 +132,7 @@ export const AdwHeaderBar = forwardRef<HTMLDivElement, AdwHeaderBarProps>(functi
 
   return (
     <div ref={ref} className={classes.join(" ")} {...rest}>
-      <div className="gtk-windowhandle" onPointerDown={handleDrag}>
+      <div className="gtk-windowhandle gtk-bin-layout" onPointerDown={handleDrag}>
         {/* The start and end boxes always exist, as in AdwHeaderBar. */}
         <div
           className="gtk-box gtk-center-layout"
