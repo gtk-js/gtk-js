@@ -23,7 +23,7 @@ function barStyleClasses(s: AdwToolbarStyle): string {
  * AdwToolbarView — A layout with top/bottom bar slots.
  *
  * CSS node:
- *   toolbarview
+ *   toolbarview[.undershoot-top][.undershoot-bottom]
  *     ├── revealer.top-bar[.raised][.border]
  *     ├── [content]
  *     └── revealer.bottom-bar[.raised][.border]
@@ -49,6 +49,12 @@ export const AdwToolbarView = forwardRef<HTMLDivElement, AdwToolbarViewProps>(
     ref,
   ) {
     const classes = ["gtk-toolbarview"];
+    // Content scrolled under a flat bar gets the scrolled window's undershoot
+    // shade (update_undershoots()).
+    if (topBarStyle === "flat" && !extendContentToTopEdge && revealTopBars && topBars)
+      classes.push("undershoot-top");
+    if (bottomBarStyle === "flat" && !extendContentToBottomEdge && revealBottomBars && bottomBars)
+      classes.push("undershoot-bottom");
     if (className) classes.push(className);
 
     return (
