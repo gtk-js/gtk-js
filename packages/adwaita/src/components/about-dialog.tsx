@@ -1,4 +1,6 @@
 import {
+  GtkActionBar,
+  GtkButton,
   GtkImage,
   GtkScrolledWindow,
   GtkWindowTitle,
@@ -20,6 +22,40 @@ import { AdwHeaderBar } from "./header-bar.tsx";
 import { AdwNavigationView } from "./navigation-view.tsx";
 import { AdwPreferencesGroup } from "./preferences-group.tsx";
 import { AdwToolbarView } from "./toolbar-view.tsx";
+
+/** A titled list of people, for the Credits and Acknowledgements pages. */
+export interface AdwAboutDialogCreditSection {
+  /** Section title. Untitled when omitted. */
+  name?: string;
+  /** Names, optionally followed by an email (`Name <email>`) or URL (`Name https://…`). */
+  people: string[];
+}
+
+/** Copyright and license information of a component, for the Legal page. */
+export interface AdwAboutDialogLegalSection {
+  title: string;
+  copyright?: string;
+  /** SPDX identifier of a well known license, or "custom" to show `license`. */
+  licenseType?: string;
+  /** Custom license text. */
+  license?: string;
+}
+
+export interface AdwAboutDialogLink {
+  title: string;
+  url: string;
+}
+
+/** Another application by the same developer, shown at the bottom of the main page. */
+export interface AdwAboutDialogOtherApp {
+  /**
+   * Application ID: the app opened in the software center, and its icon
+   * (`com.example.App` is looked up as `ComExampleApp`).
+   */
+  appId: string;
+  name: string;
+  summary: string;
+}
 
 export interface AdwAboutDialogProps extends HTMLAttributes<HTMLDivElement> {
   applicationName: string;
@@ -44,6 +80,16 @@ export interface AdwAboutDialogProps extends HTMLAttributes<HTMLDivElement> {
   artists?: string[];
   documenters?: string[];
   translatorCredits?: string;
+  /** Extra Credits sections, after the standard ones (adw_about_dialog_add_credit_section). */
+  creditSections?: AdwAboutDialogCreditSection[];
+  /** Acknowledgements page sections (adw_about_dialog_add_acknowledgement_section). */
+  acknowledgementSections?: AdwAboutDialogCreditSection[];
+  /** Legal sections for dependencies or other components (adw_about_dialog_add_legal_section). */
+  legalSections?: AdwAboutDialogLegalSection[];
+  /** Extra links on the Details page, under the comments and website (adw_about_dialog_add_link). */
+  links?: AdwAboutDialogLink[];
+  /** The developer's other applications (adw_about_dialog_add_other_app). */
+  otherApps?: AdwAboutDialogOtherApp[];
   visible?: boolean;
   portal?: boolean | HTMLElement;
   onClosed?: () => void;
@@ -51,7 +97,7 @@ export interface AdwAboutDialogProps extends HTMLAttributes<HTMLDivElement> {
   onOpenUrl?: (url: string) => void;
 }
 
-/** Well known licenses, as GtkLicense names them in AdwAboutDialog's legal page. */
+/** Well known licenses, by SPDX identifier: gtk_license_info in adw-about-dialog.c. */
 const LICENSES: Record<string, { title: string; url: string }> = {
   "GPL-2.0-or-later": {
     title: "GNU General Public License, version 2 or later",
@@ -59,10 +105,6 @@ const LICENSES: Record<string, { title: string; url: string }> = {
   },
   "GPL-3.0-or-later": {
     title: "GNU General Public License, version 3 or later",
-    url: "https://www.gnu.org/licenses/gpl-3.0.html",
-  },
-  "GPL-3.0-only": {
-    title: "GNU General Public License, version 3 only",
     url: "https://www.gnu.org/licenses/gpl-3.0.html",
   },
   "LGPL-2.1-or-later": {
@@ -73,32 +115,91 @@ const LICENSES: Record<string, { title: string; url: string }> = {
     title: "GNU Lesser General Public License, version 3 or later",
     url: "https://www.gnu.org/licenses/lgpl-3.0.html",
   },
+  "BSD-2-Clause": {
+    title: "BSD 2-Clause License",
+    url: "https://opensource.org/licenses/bsd-license.php",
+  },
+  MIT: { title: "The MIT License (MIT)", url: "https://opensource.org/licenses/mit-license.php" },
+  "Artistic-2.0": {
+    title: "Artistic License 2.0",
+    url: "https://opensource.org/licenses/artistic-license-2.0.php",
+  },
+  "GPL-2.0-only": {
+    title: "GNU General Public License, version 2 only",
+    url: "https://www.gnu.org/licenses/old-licenses/gpl-2.0.html",
+  },
+  "GPL-3.0-only": {
+    title: "GNU General Public License, version 3 only",
+    url: "https://www.gnu.org/licenses/gpl-3.0.html",
+  },
+  "LGPL-2.1-only": {
+    title: "GNU Lesser General Public License, version 2.1 only",
+    url: "https://www.gnu.org/licenses/old-licenses/lgpl-2.1.html",
+  },
+  "LGPL-3.0-only": {
+    title: "GNU Lesser General Public License, version 3 only",
+    url: "https://www.gnu.org/licenses/lgpl-3.0.html",
+  },
   "AGPL-3.0-or-later": {
     title: "GNU Affero General Public License, version 3 or later",
     url: "https://www.gnu.org/licenses/agpl-3.0.html",
   },
-  "MPL-2.0": {
-    title: "Mozilla Public License 2.0",
-    url: "https://opensource.org/licenses/MPL-2.0",
+  "AGPL-3.0-only": {
+    title: "GNU Affero General Public License, version 3 only",
+    url: "https://www.gnu.org/licenses/agpl-3.0.html",
+  },
+  "BSD-3-Clause": {
+    title: "BSD 3-Clause License",
+    url: "https://opensource.org/licenses/BSD-3-Clause",
   },
   "Apache-2.0": {
     title: "Apache License, Version 2.0",
     url: "https://opensource.org/licenses/Apache-2.0",
   },
-  MIT: { title: "MIT License", url: "https://opensource.org/licenses/mit-license.php" },
-  "BSD-3-Clause": {
-    title: "BSD 3-Clause License",
-    url: "https://opensource.org/licenses/BSD-3-Clause",
+  "MPL-2.0": {
+    title: "Mozilla Public License 2.0",
+    url: "https://opensource.org/licenses/MPL-2.0",
   },
+  "0BSD": { title: "BSD Zero-Clause License", url: "https://opensource.org/license/0bsd" },
 };
 
-/** Parse "Name https://url" / "Name <email>" credit entries like upstream. */
-function parseCredit(entry: string): { name: string; link?: string } {
+/** Parse "Name https://url" / "Name <email>" credit entries like upstream's parse_person(). */
+function parseCredit(entry: string): { name: string; link?: string; isEmail?: boolean } {
   const email = entry.match(/^(.*?)\s*<([^>]+)>\s*$/);
-  if (email) return { name: email[1]!, link: `mailto:${email[2]}` };
+  if (email) return { name: email[1]!, link: email[2], isEmail: true };
   const url = entry.match(/^(.*?)\s+(https?:\/\/\S+)\s*$/);
   if (url) return { name: url[1]!, link: url[2] };
   return { name: entry };
+}
+
+/**
+ * The text of a license, like get_license_text(): a custom license as is, a
+ * well known one as a preamble linking to it, none otherwise.
+ */
+function licenseText(
+  licenseType: string | undefined,
+  license: string | undefined,
+  open: (url: string) => void,
+): ReactNode {
+  if (licenseType === "custom" || (!licenseType && license)) return license || null;
+  const known = licenseType ? LICENSES[licenseType] : undefined;
+  if (!known) return null;
+  return (
+    <>
+      This application comes with absolutely no warranty. See the{" "}
+      <a
+        className="gtk-link"
+        href={known.url}
+        onClick={(e) => {
+          e.preventDefault();
+          open(known.url);
+        }}
+      >
+        {known.title}
+      </a>{" "}
+      for details.
+    </>
+  );
 }
 
 /**
@@ -128,8 +229,9 @@ function ReleaseNotes({ version, markup }: { version?: string; markup: string })
         case "em":
           return <em key={key}>{children}</em>;
         case "code":
+          // Upstream's code tag uses the monospace font (monospace-font-name).
           return (
-            <code key={key} style={{ fontFamily: "monospace" }}>
+            <code key={key} className="monospace">
               {children}
             </code>
           );
@@ -168,14 +270,13 @@ function ReleaseNotes({ version, markup }: { version?: string; markup: string })
   );
 }
 
+/** A subpage: its box gets 18px margins and spacing from the theme (`.subpage`). */
 function Subpage({ children }: { children: ReactNode }) {
   return (
     <GtkScrolledWindow className="subpage" hscrollbarPolicy="never" style={{ height: "100%" }}>
       <div className="gtk-viewport">
         <AdwClamp>
-          <div className="gtk-box gtk-box-layout vertical" style={{ gap: 18 }}>
-            {children}
-          </div>
+          <div className="gtk-box gtk-box-layout vertical">{children}</div>
         </AdwClamp>
       </div>
     </GtkScrolledWindow>
@@ -195,21 +296,117 @@ function NavRow({ title, onActivated }: { title: string; onActivated: () => void
 
 function LinkRow({
   title,
+  subtitle,
   url,
+  tooltip = url,
+  icon = "AdwExternalLink",
+  prefixWidget,
   open,
 }: {
   title: string;
+  subtitle?: string;
   url: string;
+  tooltip?: string;
+  icon?: string;
+  prefixWidget?: ReactNode;
   open: (url: string) => void;
 }) {
   return (
     <AdwActionRow
       title={title}
+      subtitle={subtitle}
       activatable
-      tooltipText={url}
+      tooltipText={tooltip}
       onActivated={() => open(url)}
-      suffixWidget={<GtkImage iconName="AdwExternalLink" />}
+      prefixWidget={prefixWidget}
+      suffixWidget={<GtkImage iconName={icon} />}
     />
+  );
+}
+
+/**
+ * The icon component name for an application ID, as the icon packages name
+ * their icons (`org.gnome.Boxes` → `OrgGnomeBoxes`).
+ */
+function appIconName(appId: string): string {
+  return appId
+    .replace(/[^a-zA-Z0-9-_]/g, "-")
+    .split(/[-_]+/)
+    .filter(Boolean)
+    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+    .join("");
+}
+
+/** A section of people, like add_credits_section(); nothing when there's nobody. */
+function CreditSection({
+  title,
+  people,
+  open,
+}: {
+  title?: string;
+  people?: string[];
+  open: (url: string) => void;
+}) {
+  if (!people || people.length === 0) return null;
+  return (
+    <AdwPreferencesGroup title={title}>
+      {people.map((entry, i) => {
+        const { name, link, isEmail } = parseCredit(entry);
+        if (!link) return <AdwActionRow key={i} title={name} />;
+        return isEmail ? (
+          <LinkRow
+            key={i}
+            title={name}
+            url={`mailto:${encodeURIComponent(link)}`}
+            tooltip={link}
+            icon="AdwMailSend"
+            open={open}
+          />
+        ) : (
+          <LinkRow key={i} title={name} url={link} open={open} />
+        );
+      })}
+    </AdwPreferencesGroup>
+  );
+}
+
+/** A Legal page section, like append_legal_section(): a heading, then copyright and license. */
+function LegalSection({
+  title,
+  copyright,
+  license,
+  forceTitle,
+}: {
+  title?: string;
+  copyright?: string;
+  license: ReactNode;
+  forceTitle: boolean;
+}) {
+  if (!copyright && !license && !forceTitle) return null;
+  return (
+    <>
+      {title && (
+        <span className="gtk-label heading" style={{ whiteSpace: "normal", textAlign: "start" }}>
+          {title}
+        </span>
+      )}
+      {(copyright || license) && (
+        // A wrapping label: its text and link flow as one paragraph.
+        <span
+          className="gtk-label body"
+          style={{
+            display: "block",
+            whiteSpace: "pre-wrap",
+            textAlign: "start",
+            userSelect: "text",
+          }}
+        >
+          {copyright}
+          {copyright && license ? "\n\n" : null}
+          {license}
+        </span>
+      )}
+    </>
   );
 }
 
@@ -249,6 +446,11 @@ export const AdwAboutDialog = forwardRef<HTMLDivElement, AdwAboutDialogProps>(
       artists,
       documenters,
       translatorCredits,
+      creditSections,
+      acknowledgementSections,
+      legalSections,
+      links,
+      otherApps,
       visible = false,
       portal = false,
       onClosed,
@@ -272,16 +474,27 @@ export const AdwAboutDialog = forwardRef<HTMLDivElement, AdwAboutDialogProps>(
 
     const controls = useMemo(() => ({ close, decorationLayout: ":close" }), [close]);
 
+    const translators = translatorCredits
+      ?.split("\n")
+      .filter((line) => line.trim() !== "" && line !== "translator-credits");
     const hasCredits = Boolean(
       developers?.length ||
         designers?.length ||
         artists?.length ||
         documenters?.length ||
-        translatorCredits,
+        translators?.length ||
+        creditSections?.some((section) => section.people.length > 0),
     );
-    const knownLicense = licenseType ? LICENSES[licenseType] : undefined;
-    const hasLegal = Boolean(copyright || license || licenseType);
-    const hasDetails = Boolean(comments);
+    const hasAcknowledgements = Boolean(
+      acknowledgementSections?.some((section) => section.people.length > 0),
+    );
+    const appLicense = licenseText(licenseType, license, open);
+    const hasLegal = Boolean(copyright || appLicense || legalSections?.length);
+    // update_details(): extra links move the website from the main page to the
+    // Details page.
+    const hasLinks = Boolean(links?.length);
+    const showDetails = Boolean(comments) || hasLinks;
+    const showLinks = (Boolean(website) && Boolean(comments)) || hasLinks;
 
     // Like the AdwHeaderBars of the navigation pages: subpages show the page
     // title; the main page's (main_headerbar) shows its page's title only
@@ -299,20 +512,6 @@ export const AdwAboutDialog = forwardRef<HTMLDivElement, AdwAboutDialogProps>(
         content={content}
       />
     );
-
-    const creditSection = (title: string, people?: string[]) =>
-      people && people.length > 0 ? (
-        <AdwPreferencesGroup title={title}>
-          {people.map((entry) => {
-            const { name, link } = parseCredit(entry);
-            return link ? (
-              <LinkRow key={entry} title={name} url={link} open={open} />
-            ) : (
-              <AdwActionRow key={entry} title={name} />
-            );
-          })}
-        </AdwPreferencesGroup>
-      ) : null;
 
     const mainPage = page(
       <GtkScrolledWindow
@@ -364,13 +563,13 @@ export const AdwAboutDialog = forwardRef<HTMLDivElement, AdwAboutDialogProps>(
                 </button>
               )}
               <div className="gtk-box gtk-box-layout vertical" style={{ textAlign: "start" }}>
-                {(releaseNotes || hasDetails || website) && (
+                {(releaseNotes || showDetails || website) && (
                   <AdwPreferencesGroup>
                     {releaseNotes && (
                       <NavRow title="What’s New" onActivated={() => push("whats-new")} />
                     )}
-                    {hasDetails && <NavRow title="Details" onActivated={() => push("details")} />}
-                    {website && !hasDetails && (
+                    {showDetails && <NavRow title="Details" onActivated={() => push("details")} />}
+                    {website && !showDetails && (
                       <LinkRow title="Website" url={website} open={open} />
                     )}
                   </AdwPreferencesGroup>
@@ -386,10 +585,38 @@ export const AdwAboutDialog = forwardRef<HTMLDivElement, AdwAboutDialogProps>(
                     )}
                   </AdwPreferencesGroup>
                 )}
-                {(hasCredits || hasLegal) && (
+                {(hasCredits || hasLegal || hasAcknowledgements) && (
                   <AdwPreferencesGroup>
                     {hasCredits && <NavRow title="Credits" onActivated={() => push("credits")} />}
                     {hasLegal && <NavRow title="Legal" onActivated={() => push("legal")} />}
+                    {hasAcknowledgements && (
+                      <NavRow
+                        title="Acknowledgements"
+                        onActivated={() => push("acknowledgements")}
+                      />
+                    )}
+                  </AdwPreferencesGroup>
+                )}
+                {otherApps && otherApps.length > 0 && (
+                  <AdwPreferencesGroup
+                    title={developerName ? `Other Apps by ${developerName}` : "Other Apps"}
+                  >
+                    {otherApps.map((app) => (
+                      <LinkRow
+                        key={app.appId}
+                        title={app.name}
+                        subtitle={app.summary}
+                        url={`appstream:${app.appId}`}
+                        prefixWidget={
+                          <GtkImage
+                            iconName={appIconName(app.appId)}
+                            pixelSize={32}
+                            className="lowres-icon"
+                          />
+                        }
+                        open={open}
+                      />
+                    ))}
                   </AdwPreferencesGroup>
                 )}
               </div>
@@ -431,9 +658,12 @@ export const AdwAboutDialog = forwardRef<HTMLDivElement, AdwAboutDialogProps>(
                 {comments}
               </span>
             )}
-            {website && (
+            {showLinks && (
               <AdwPreferencesGroup>
-                <LinkRow title="Website" url={website} open={open} />
+                {website && <LinkRow title="Website" url={website} open={open} />}
+                {links?.map((link, i) => (
+                  <LinkRow key={i} title={link.title} url={link.url} open={open} />
+                ))}
               </AdwPreferencesGroup>
             )}
           </Subpage>,
@@ -450,40 +680,71 @@ export const AdwAboutDialog = forwardRef<HTMLDivElement, AdwAboutDialogProps>(
               information to the application developers can help diagnose any problems you encounter
               when you report an issue.
             </span>
-            <pre
-              className="gtk-textview monospace"
-              style={{ whiteSpace: "pre-wrap", margin: 0, userSelect: "text" }}
-            >
-              {debugInfo}
-            </pre>
-            <div
-              className="gtk-box gtk-box-layout horizontal"
-              style={{ gap: 6, justifyContent: "center" }}
-            >
-              <button
-                type="button"
-                className="gtk-button"
-                onClick={() => void navigator.clipboard?.writeText(debugInfo ?? "")}
-              >
-                <span className="gtk-label">Copy Text</span>
-              </button>
-              <button
-                type="button"
-                className="gtk-button"
-                onClick={() => {
-                  const blob = new Blob([debugInfo ?? ""], { type: "text/plain" });
-                  const a = document.createElement("a");
-                  a.href = URL.createObjectURL(blob);
-                  a.download = debugInfoFilename ?? "debug-info.txt";
-                  a.click();
-                  URL.revokeObjectURL(a.href);
-                }}
-              >
-                <span className="gtk-label">Save As…</span>
-              </button>
-            </div>
+            <AdwPreferencesGroup>
+              <NavRow title="Debugging Information" onActivated={() => push("debuginfo")} />
+            </AdwPreferencesGroup>
           </Subpage>,
           "Troubleshooting",
+        ),
+      },
+      {
+        tag: "debuginfo",
+        title: "Debugging Information",
+        // A GtkTextView in an AdwClampScrollable, above an action bar.
+        children: (
+          <AdwToolbarView
+            style={{ height: "100%" }}
+            topBars={
+              <AdwHeaderBar
+                className="flat"
+                titleWidget={<GtkWindowTitle title="Debugging Information" />}
+              />
+            }
+            content={
+              <GtkScrolledWindow
+                className="subpage"
+                hscrollbarPolicy="never"
+                style={{ height: "100%" }}
+              >
+                <AdwClamp>
+                  <div
+                    className="gtk-textview body"
+                    style={{
+                      padding: "18px 12px",
+                      whiteSpace: "pre-wrap",
+                      overflowWrap: "anywhere",
+                      userSelect: "text",
+                    }}
+                  >
+                    {debugInfo}
+                  </div>
+                </AdwClamp>
+              </GtkScrolledWindow>
+            }
+            bottomBars={
+              <GtkActionBar
+                start={
+                  <GtkButton
+                    label="Copy Text"
+                    onClicked={() => void navigator.clipboard?.writeText(debugInfo ?? "")}
+                  />
+                }
+                end={
+                  <GtkButton
+                    label="Save As…"
+                    onClicked={() => {
+                      const blob = new Blob([debugInfo ?? ""], { type: "text/plain" });
+                      const a = document.createElement("a");
+                      a.href = URL.createObjectURL(blob);
+                      a.download = debugInfoFilename ?? "debug-info.txt";
+                      a.click();
+                      URL.revokeObjectURL(a.href);
+                    }}
+                  />
+                }
+              />
+            }
+          />
         ),
       },
       {
@@ -491,15 +752,14 @@ export const AdwAboutDialog = forwardRef<HTMLDivElement, AdwAboutDialogProps>(
         title: "Credits",
         children: page(
           <Subpage>
-            {creditSection("Code by", developers)}
-            {creditSection("Design by", designers)}
-            {creditSection("Artwork by", artists)}
-            {creditSection("Documentation by", documenters)}
-            {translatorCredits &&
-              creditSection(
-                "Translated by",
-                translatorCredits.split("\n").filter((l) => l.trim() !== ""),
-              )}
+            <CreditSection title="Code by" people={developers} open={open} />
+            <CreditSection title="Design by" people={designers} open={open} />
+            <CreditSection title="Artwork by" people={artists} open={open} />
+            <CreditSection title="Documentation by" people={documenters} open={open} />
+            <CreditSection title="Translated by" people={translators} open={open} />
+            {creditSections?.map((section, i) => (
+              <CreditSection key={i} title={section.name} people={section.people} open={open} />
+            ))}
           </Subpage>,
           "Credits",
         ),
@@ -509,32 +769,37 @@ export const AdwAboutDialog = forwardRef<HTMLDivElement, AdwAboutDialogProps>(
         title: "Legal",
         children: page(
           <Subpage>
-            <div className="gtk-box gtk-box-layout vertical" style={{ gap: 6, textAlign: "start" }}>
-              <span className="gtk-label heading">{applicationName}</span>
-              {copyright && <span className="gtk-label body">{copyright}</span>}
-              {knownLicense && (
-                <span className="gtk-label body" style={{ whiteSpace: "normal" }}>
-                  This application comes with absolutely no warranty. See the{" "}
-                  <a
-                    href={knownLicense.url}
-                    onClick={(e) => {
-                      e.preventDefault();
-                      open(knownLicense.url);
-                    }}
-                  >
-                    {knownLicense.title}
-                  </a>{" "}
-                  for details.
-                </span>
-              )}
-              {license && (
-                <span className="gtk-label body" style={{ whiteSpace: "pre-wrap" }}>
-                  {license}
-                </span>
-              )}
-            </div>
+            {/* update_legal(): the application's own section is titled only
+                when there are more. */}
+            <LegalSection
+              title={legalSections?.length ? "This Application" : undefined}
+              copyright={copyright}
+              license={appLicense}
+              forceTitle={false}
+            />
+            {legalSections?.map((section, i) => (
+              <LegalSection
+                key={i}
+                title={section.title}
+                copyright={section.copyright}
+                license={licenseText(section.licenseType, section.license, open)}
+                forceTitle
+              />
+            ))}
           </Subpage>,
           "Legal",
+        ),
+      },
+      {
+        tag: "acknowledgements",
+        title: "Acknowledgements",
+        children: page(
+          <Subpage>
+            {acknowledgementSections?.map((section, i) => (
+              <CreditSection key={i} title={section.name} people={section.people} open={open} />
+            ))}
+          </Subpage>,
+          "Acknowledgements",
         ),
       },
     ];

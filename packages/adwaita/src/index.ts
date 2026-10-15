@@ -2,7 +2,13 @@
 
 // Re-export all GTK4 components for convenience
 export * from "@gtk-js/gtk4";
-export type { AdwAboutDialogProps } from "./components/about-dialog.tsx";
+export type {
+  AdwAboutDialogCreditSection,
+  AdwAboutDialogLegalSection,
+  AdwAboutDialogLink,
+  AdwAboutDialogOtherApp,
+  AdwAboutDialogProps,
+} from "./components/about-dialog.tsx";
 export { AdwAboutDialog } from "./components/about-dialog.tsx";
 export type { AdwActionRowProps } from "./components/action-row.tsx";
 export { AdwActionRow } from "./components/action-row.tsx";
