@@ -15,6 +15,13 @@ import { alignAttrs, type GtkAlignProps, type GtkPositionType } from "../types.t
 const TAIL_GAP_WIDTH = 24;
 const VIEWPORT_MARGIN = 4;
 
+const OPPOSITE: Record<GtkPositionType, GtkPositionType> = {
+  top: "bottom",
+  bottom: "top",
+  left: "right",
+  right: "left",
+};
+
 export interface GtkPopoverProps extends HTMLAttributes<HTMLDivElement>, GtkAlignProps {
   /** Content of the popover. */
   children?: ReactNode;
@@ -49,8 +56,9 @@ export interface GtkPopoverProps extends HTMLAttributes<HTMLDivElement>, GtkAlig
  * GtkPopover — A floating popup attached to a widget.
  *
  * Uses position: fixed to avoid causing document scrollbars (matching
- * GTK's separate-surface behavior). Centers on the anchor, then slides
- * along the cross-axis to stay within the viewport (GDK_ANCHOR_SLIDE).
+ * GTK's separate-surface behavior). Centers on the anchor, flips to the
+ * other side when the preferred one has no room (GDK_ANCHOR_FLIP), then
+ * slides along the cross-axis to stay within the viewport (GDK_ANCHOR_SLIDE).
  * The arrow dynamically points at the anchor's center, clamped to stay
  * within the popover's border-radius (gtk_popover_get_gap_coords).
  *
@@ -97,7 +105,6 @@ export const GtkPopover = forwardRef<HTMLDivElement, GtkPopoverProps>(function G
     if (!anchorEl || !(anchorEl instanceof HTMLElement)) return;
 
     const anchorRect = anchorEl.getBoundingClientRect();
-    const isVertical = position === "top" || position === "bottom";
 
     // Measure popover's natural size (reset position so size isn't constrained)
     popEl.style.left = "0";
@@ -112,13 +119,28 @@ export const GtkPopover = forwardRef<HTMLDivElement, GtkPopoverProps>(function G
     let x: number;
     let y: number;
 
-    if (position === "bottom") {
+    // Flip to the other side when the preferred one has no room and that one
+    // does (GDK_ANCHOR_FLIP_Y for top/bottom, GDK_ANCHOR_FLIP_X for left/right).
+    const fits = (side: GtkPositionType) =>
+      side === "bottom"
+        ? anchorRect.bottom + popHeight <= viewH - VIEWPORT_MARGIN
+        : side === "top"
+          ? anchorRect.top - popHeight >= VIEWPORT_MARGIN
+          : side === "right"
+            ? anchorRect.right + popWidth <= viewW - VIEWPORT_MARGIN
+            : anchorRect.left - popWidth >= VIEWPORT_MARGIN;
+    const side = !fits(position) && fits(OPPOSITE[position]) ? OPPOSITE[position] : position;
+    // The arrow and the contents' margin follow the side (layout.css).
+    popEl.dataset.position = side;
+    const isVertical = side === "top" || side === "bottom";
+
+    if (side === "bottom") {
       x = anchorRect.left + anchorRect.width / 2 - popWidth / 2;
       y = anchorRect.bottom;
-    } else if (position === "top") {
+    } else if (side === "top") {
       x = anchorRect.left + anchorRect.width / 2 - popWidth / 2;
       y = anchorRect.top - popHeight;
-    } else if (position === "right") {
+    } else if (side === "right") {
       x = anchorRect.right;
       y = anchorRect.top + anchorRect.height / 2 - popHeight / 2;
     } else {
@@ -172,16 +194,25 @@ export const GtkPopover = forwardRef<HTMLDivElement, GtkPopoverProps>(function G
     if (!popEl) return;
 
     let scheduled = false;
-    const ro = new ResizeObserver(() => {
+    const schedule = () => {
       if (scheduled) return;
       scheduled = true;
       requestAnimationFrame(() => {
         scheduled = false;
         updateLayout();
       });
-    });
+    };
+    const ro = new ResizeObserver(schedule);
     ro.observe(popEl);
-    return () => ro.disconnect();
+    // Follow the anchor when anything scrolls or the window resizes, as GTK
+    // moves a popover with its parent.
+    window.addEventListener("resize", schedule);
+    document.addEventListener("scroll", schedule, true);
+    return () => {
+      ro.disconnect();
+      window.removeEventListener("resize", schedule);
+      document.removeEventListener("scroll", schedule, true);
+    };
   }, [visible, updateLayout, resolvedRef]);
 
   // Handle click outside and Escape

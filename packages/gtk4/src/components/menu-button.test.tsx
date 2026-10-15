@@ -32,3 +32,13 @@ describe("GtkMenuButton popover", () => {
     expect(popoverClasses({ popover: <div>Custom</div> })).not.toContain("menu");
   });
 });
+
+describe("GtkPopoverMenu focus", () => {
+  test("the menu takes the focus and moves it between its items, which leave the page's tab order", () => {
+    const html = renderToStaticMarkup(<GtkMenuButton label="Menu" active menuModel={model} />);
+    expect(html).toMatch(/role="menu" tabindex="-1"/);
+    const items = [...html.matchAll(/<button[^>]*role="menuitem"[^>]*>/g)].map((m) => m[0]);
+    expect(items).toHaveLength(2);
+    for (const item of items) expect(item).toContain('tabindex="-1"');
+  });
+});

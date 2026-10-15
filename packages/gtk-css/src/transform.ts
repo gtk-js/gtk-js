@@ -212,8 +212,9 @@ const remapPseudoClasses: Plugin = {
     // :drop(active) → [data-drop-active]
     sel = sel.replace(/:drop\(active\)/g, "[data-drop-active]");
 
-    // :selected → [aria-selected="true"]
-    sel = sel.replace(/:selected/g, '[aria-selected="true"]');
+    // :selected → [aria-selected="true"], or [data-selected] where ARIA has no
+    // selected state (a menu's active item, GtkModelButton)
+    sel = sel.replace(/:selected/g, ':is([aria-selected="true"], [data-selected])');
 
     // :checked → [data-checked] (GTK uses checked state for toggles/spinners)
     sel = sel.replace(/:checked/g, "[data-checked]");

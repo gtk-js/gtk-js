@@ -50,9 +50,9 @@ describe("remapPseudoClasses", () => {
     expect(out).not.toContain(":drop(active)");
   });
 
-  test(":selected → [aria-selected]", async () => {
+  test(":selected → [aria-selected] or [data-selected]", async () => {
     const out = await transform(".gtk-row:selected { background: blue; }");
-    expect(out).toContain('[aria-selected="true"]');
+    expect(out).toContain(':is([aria-selected="true"], [data-selected])');
     expect(out).not.toContain(":selected");
   });
 });
