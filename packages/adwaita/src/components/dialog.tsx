@@ -4,7 +4,6 @@ import React, {
   type HTMLAttributes,
   type ReactNode,
   useCallback,
-  useEffect,
   useMemo,
 } from "react";
 import type { AdwDialogPresentationMode } from "../types.ts";
@@ -73,15 +72,6 @@ export const AdwDialog = forwardRef<HTMLDivElement, AdwDialogProps>(function Adw
     onClosed?.();
   }, [canClose, onClosed, onCloseAttempt]);
 
-  useEffect(() => {
-    if (!visible) return;
-    const handleKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape" && !e.defaultPrevented) close();
-    };
-    document.addEventListener("keydown", handleKey);
-    return () => document.removeEventListener("keydown", handleKey);
-  }, [visible, close]);
-
   // Header bars inside a dialog only get a close button, which closes the dialog.
   const controls = useMemo(
     () => ({ close: canClose ? close : undefined, decorationLayout: canClose ? ":close" : ":" }),
@@ -111,6 +101,7 @@ export const AdwDialog = forwardRef<HTMLDivElement, AdwDialogProps>(function Adw
       className={className}
       sheetStyle={sheetStyle}
       onDimmingClick={close}
+      onEscape={close}
       onCloseAnimationDone={onHidden}
       portal={portal}
       aria-label={title}

@@ -1,4 +1,4 @@
-import { useWindowElement } from "@gtk-js/gtk4";
+import { useEscapeLayer, useWindowElement } from "@gtk-js/gtk4";
 import {
   type CSSProperties,
   forwardRef,
@@ -28,6 +28,8 @@ export interface FloatingSheetProps extends HTMLAttributes<HTMLDivElement> {
   sheetStyle?: CSSProperties;
   /** Clicking the dimmed area. */
   onDimmingClick?: () => void;
+  /** Escape, while this is the topmost dialog or popover. */
+  onEscape?: () => void;
   /** Called once the close animation finished and the dialog is gone. */
   onCloseAnimationDone?: () => void;
   portal?: boolean | HTMLElement;
@@ -55,6 +57,7 @@ export const FloatingSheet = forwardRef<HTMLDivElement, FloatingSheetProps>(func
     dialogClasses,
     sheetStyle,
     onDimmingClick,
+    onEscape,
     onCloseAnimationDone,
     portal = false,
     children,
@@ -72,6 +75,8 @@ export const FloatingSheet = forwardRef<HTMLDivElement, FloatingSheetProps>(func
   const animation = useRef<SpringAnimationHandle | null>(null);
   const doneRef = useRef(onCloseAnimationDone);
   doneRef.current = onCloseAnimationDone;
+  // Only the topmost dialog closes, as the dialog on top has the focus in GTK.
+  useEscapeLayer(open, sheetRef, () => onEscape?.());
 
   if (open && !mounted) setMounted(true);
 

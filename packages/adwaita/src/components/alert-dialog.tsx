@@ -3,7 +3,6 @@ import {
   type HTMLAttributes,
   type ReactNode,
   useCallback,
-  useEffect,
   useLayoutEffect,
   useRef,
   useState,
@@ -85,15 +84,6 @@ export const AdwAlertDialog = forwardRef<HTMLDivElement, AdwAlertDialogProps>(
   ) {
     const handleClose = useCallback(() => onResponse?.(closeResponse), [onResponse, closeResponse]);
 
-    useEffect(() => {
-      if (!visible) return;
-      const handleKey = (e: KeyboardEvent) => {
-        if (e.key === "Escape" && !e.defaultPrevented) handleClose();
-      };
-      document.addEventListener("keydown", handleKey);
-      return () => document.removeEventListener("keydown", handleKey);
-    }, [visible, handleClose]);
-
     // Upstream allocate_responses(): buttons share the row equally; when their
     // widest natural size doesn't fit, they stack vertically ("compact"),
     // the first response at the bottom.
@@ -140,6 +130,7 @@ export const AdwAlertDialog = forwardRef<HTMLDivElement, AdwAlertDialogProps>(
         // Upstream DIALOG_MIN_WIDTH / DIALOG_MAX_WIDTH / DIALOG_MAX_WIDE_WIDTH.
         sheetStyle={{ minWidth: "min(300px, 100%)", maxWidth: preferWideLayout ? 600 : 372 }}
         onDimmingClick={handleClose}
+        onEscape={handleClose}
         onCloseAnimationDone={onHidden}
         portal={portal}
         aria-label={heading}
