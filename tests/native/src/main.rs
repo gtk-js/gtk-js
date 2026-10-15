@@ -218,6 +218,7 @@ enum Command {
     TextViewDisabled,
     TextViewMonospace,
     TextViewNonEditable,
+    TextViewScrolled,
     ToggleTextDefault,
     ToggleTextChecked,
     ToggleTextFlat,
@@ -448,6 +449,7 @@ impl Command {
             Self::TextViewDisabled => Some("text-view-disabled"),
             Self::TextViewMonospace => Some("text-view-monospace"),
             Self::TextViewNonEditable => Some("text-view-non-editable"),
+            Self::TextViewScrolled => Some("text-view-scrolled"),
             Self::ToggleTextDefault => Some("toggle-text-default"),
             Self::ToggleTextChecked => Some("toggle-text-checked"),
             Self::ToggleTextFlat => Some("toggle-text-flat"),
@@ -939,6 +941,7 @@ fn create_widget_for_case(name: &str) -> Option<(gtk::Widget, bool)> {
         "text-view-non-editable" => {
             widget_case!(cases::text_view_non_editable::TextViewNonEditable, false)
         }
+        "text-view-scrolled" => widget_case!(cases::text_view_scrolled::TextViewScrolled, false),
         "toggle-text-default" => widget_case!(cases::toggle_text_default::ToggleTextDefault, false),
         "toggle-text-checked" => widget_case!(cases::toggle_text_checked::ToggleTextChecked, false),
         "toggle-text-flat" => widget_case!(cases::toggle_text_flat::ToggleTextFlat, false),
@@ -1158,6 +1161,7 @@ fn is_known_case(name: &str) -> bool {
             | "text-view-disabled"
             | "text-view-monospace"
             | "text-view-non-editable"
+            | "text-view-scrolled"
             | "toggle-text-default"
             | "toggle-text-checked"
             | "toggle-text-flat"
