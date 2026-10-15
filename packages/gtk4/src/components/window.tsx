@@ -10,7 +10,11 @@ import {
   useState,
 } from "react";
 import { alignAttrs, type GtkAlignProps } from "../types.ts";
-import { type WindowControlsAPI, WindowControlsContext } from "../window-controls-context.tsx";
+import {
+  type WindowControlsAPI,
+  WindowControlsContext,
+  WindowElementContext,
+} from "../window-controls-context.tsx";
 
 export interface GtkWindowProps extends HTMLAttributes<HTMLDivElement>, GtkAlignProps {
   /** The titlebar widget (typically a GtkHeaderBar). */
@@ -225,10 +229,12 @@ export const GtkWindow = forwardRef<HTMLDivElement, GtkWindowProps>(function Gtk
 
   const windowRef = useRef<HTMLDivElement>(null);
   const [shadowPadding, setShadowPadding] = useState(0);
+  const [windowElement, setWindowElement] = useState<HTMLDivElement | null>(null);
 
   const mergedRef = useCallback(
     (node: HTMLDivElement | null) => {
       windowRef.current = node;
+      setWindowElement(node);
       if (typeof ref === "function") ref(node);
       else if (ref) ref.current = node;
     },
@@ -315,7 +321,7 @@ export const GtkWindow = forwardRef<HTMLDivElement, GtkWindowProps>(function Gtk
 
   const showHandles = allocateShadow && !maximized && !!onResize;
 
-  const windowElement = (
+  const windowNode = (
     <div
       ref={mergedRef}
       className={classes.join(" ")}
@@ -347,7 +353,9 @@ export const GtkWindow = forwardRef<HTMLDivElement, GtkWindowProps>(function Gtk
   if (!allocateShadow) {
     return (
       <WindowControlsContext.Provider value={windowControls}>
-        {windowElement}
+        <WindowElementContext.Provider value={windowElement}>
+          {windowNode}
+        </WindowElementContext.Provider>
       </WindowControlsContext.Provider>
     );
   }
@@ -364,7 +372,9 @@ export const GtkWindow = forwardRef<HTMLDivElement, GtkWindowProps>(function Gtk
           boxSizing: "border-box",
         }}
       >
-        {windowElement}
+        <WindowElementContext.Provider value={windowElement}>
+          {windowNode}
+        </WindowElementContext.Provider>
       </div>
     </WindowControlsContext.Provider>
   );
