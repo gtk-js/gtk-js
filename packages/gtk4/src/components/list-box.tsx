@@ -110,7 +110,15 @@ export const GtkListBox = forwardRef<HTMLDivElement, GtkListBoxProps>(function G
         : selectionMode === "multiple"
           ? selectableRows
           : selectableRows.slice(-1);
-  const selectedIndices = controlledSelection ? new Set(controlledSelection) : internalSelected;
+  // A selected row that stops being selectable is unselected
+  // (gtk_list_box_row_set_selectable()).
+  const stillSelectable = [...internalSelected].filter((index) => !unselectable.has(index));
+  if (!selectedRows && stillSelectable.length !== internalSelected.size) {
+    setSelectedIndices(new Set(stillSelectable));
+  }
+  const selectedIndices = controlledSelection
+    ? new Set(controlledSelection)
+    : new Set(stillSelectable);
 
   const classes = ["gtk-list"];
   if (showSeparators) classes.push("separators");

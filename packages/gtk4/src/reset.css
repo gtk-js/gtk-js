@@ -66,6 +66,11 @@ body:has(> :first-child:has([data-gtk-provider])) > :first-child {
   outline: none;
 }
 
+/* A menu takes the focus when its popover opens; GTK draws no ring for it. */
+:where([data-gtk-provider] [role="menu"]) {
+  outline: none;
+}
+
 :where([data-gtk-provider] input),
 :where([data-gtk-provider] textarea),
 :where([data-gtk-provider] select) {
