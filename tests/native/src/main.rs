@@ -51,6 +51,7 @@ enum Command {
     AdwHeaderbarWithTitle,
     AdwHeaderbarStartEnd,
     AdwNavigationViewDefault,
+    AdwNavigationViewScrolled,
     AdwOverlaySplitViewDefault,
     AdwPasswordEntryRowDefault,
     AdwPreferencesGroupDefault,
@@ -284,6 +285,7 @@ impl Command {
             Self::AdwHeaderbarWithTitle => Some("adw-headerbar-with-title"),
             Self::AdwHeaderbarStartEnd => Some("adw-headerbar-start-end"),
             Self::AdwNavigationViewDefault => Some("adw-navigation-view-default"),
+            Self::AdwNavigationViewScrolled => Some("adw-navigation-view-scrolled"),
             Self::AdwOverlaySplitViewDefault => Some("adw-overlay-split-view-default"),
             Self::AdwPasswordEntryRowDefault => Some("adw-password-entry-row-default"),
             Self::AdwPreferencesGroupDefault => Some("adw-preferences-group-default"),
@@ -513,6 +515,9 @@ fn create_widget_for_case(name: &str) -> Option<(gtk::Widget, bool)> {
         }
         "adw-navigation-view-default" => {
             widget_case!(cases::adw_navigation_view_default::AdwNavigationViewDefault, false)
+        }
+        "adw-navigation-view-scrolled" => {
+            widget_case!(cases::adw_navigation_view_scrolled::AdwNavigationViewScrolled, false)
         }
         "adw-overlay-split-view-default" => {
             widget_case!(cases::adw_overlay_split_view_default::AdwOverlaySplitViewDefault, false)
@@ -1008,6 +1013,7 @@ fn is_known_case(name: &str) -> bool {
             | "adw-headerbar-with-title"
             | "adw-headerbar-start-end"
             | "adw-navigation-view-default"
+            | "adw-navigation-view-scrolled"
             | "adw-overlay-split-view-default"
             | "adw-password-entry-row-default"
             | "adw-preferences-group-default"
