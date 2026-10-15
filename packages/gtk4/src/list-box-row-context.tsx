@@ -5,6 +5,7 @@ import {
   type ReactNode,
   useContext,
   useId,
+  useSyncExternalStore,
 } from "react";
 import { createPortal } from "react-dom";
 
@@ -19,6 +20,9 @@ import { createPortal } from "react-dom";
  * where it was rendered: the row is never moved between containers (which
  * would remount it), and the container puts the rows in the order of their
  * markers. Rows and GtkListBox give their own children no container.
+ *
+ * A server render has no DOM to portal into: rows render in place there, and
+ * hydrate in place before they move into the list.
  */
 export interface GtkRowContainer {
   /** Where the rows go; null until the container has mounted. */
@@ -27,12 +31,20 @@ export interface GtkRowContainer {
 
 export const GtkListBoxRowContext = createContext<GtkRowContainer | null>(null);
 
+const subscribeNever = () => () => {};
+
 /** Places the calling component's row in the enclosing container: wrap what it renders. */
 export function useListBoxRow(): (row: ReactElement) => ReactNode {
   const container = useContext(GtkListBoxRowContext);
   const id = useId();
+  // False on the server and while hydrating.
+  const hydrated = useSyncExternalStore(
+    subscribeNever,
+    () => true,
+    () => false,
+  );
   return (row) => {
-    if (!container) return row;
+    if (!container || !hydrated) return row;
     return (
       <>
         <template data-gtk-row={id} />
