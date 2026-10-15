@@ -55,74 +55,90 @@
 /* GtkWidget:hexpand / vexpand: the children that expand share the box's extra
  * space equally (gtk_box_layout_allocate()). A child expands when something in
  * it does too (gtk_widget_compute_expand()), unless it sets expand to false.
+ * A popover's content doesn't count: in GTK it's a surface of its own, and
+ * the widget it's attached to (a GtkMenuButton) doesn't compute expand.
  * With halign/valign start, end or center, an expanding child keeps its
  * natural size, followed (or preceded) by the extra space. Flexbox only gives
  * auto margins what growing children leave, so in a box that also has a
  * filling child that expands, such a child gets no share; GTK splits it. */
 .gtk-box-layout.horizontal
-> :is([data-hexpand="true"], :not([data-hexpand="false"]):has([data-hexpand="true"])) {
+> :is(
+  [data-hexpand="true"],
+  :not([data-hexpand="false"]):has([data-hexpand="true"]:not(.gtk-popover *)),
+  .gtk-popover :not([data-hexpand="false"]):has([data-hexpand="true"])
+) {
   flex-grow: 1;
 }
 .gtk-box-layout.horizontal
-  > :is([data-hexpand="true"], :not([data-hexpand="false"]):has([data-hexpand="true"])):is(
-    [data-halign="start"],
-    [data-halign="end"],
-    [data-halign="center"]
-  ) {
+  > :is(
+    [data-hexpand="true"],
+    :not([data-hexpand="false"]):has([data-hexpand="true"]:not(.gtk-popover *)),
+    .gtk-popover :not([data-hexpand="false"]):has([data-hexpand="true"])
+  ):is([data-halign="start"], [data-halign="end"], [data-halign="center"]) {
   flex-grow: 0;
 }
 .gtk-box-layout.horizontal
   > :is(
     [data-hexpand="true"],
-    :not([data-hexpand="false"]):has([data-hexpand="true"])
+    :not([data-hexpand="false"]):has([data-hexpand="true"]:not(.gtk-popover *)),
+    .gtk-popover :not([data-hexpand="false"]):has([data-hexpand="true"])
   )[data-halign="start"] {
   margin-inline-end: auto;
 }
 .gtk-box-layout.horizontal
   > :is(
     [data-hexpand="true"],
-    :not([data-hexpand="false"]):has([data-hexpand="true"])
+    :not([data-hexpand="false"]):has([data-hexpand="true"]:not(.gtk-popover *)),
+    .gtk-popover :not([data-hexpand="false"]):has([data-hexpand="true"])
   )[data-halign="end"] {
   margin-inline-start: auto;
 }
 .gtk-box-layout.horizontal
   > :is(
     [data-hexpand="true"],
-    :not([data-hexpand="false"]):has([data-hexpand="true"])
+    :not([data-hexpand="false"]):has([data-hexpand="true"]:not(.gtk-popover *)),
+    .gtk-popover :not([data-hexpand="false"]):has([data-hexpand="true"])
   )[data-halign="center"] {
   margin-inline: auto;
 }
 
 .gtk-box-layout.vertical
-  > :is([data-vexpand="true"], :not([data-vexpand="false"]):has([data-vexpand="true"])) {
+  > :is(
+    [data-vexpand="true"],
+    :not([data-vexpand="false"]):has([data-vexpand="true"]:not(.gtk-popover *)),
+    .gtk-popover :not([data-vexpand="false"]):has([data-vexpand="true"])
+  ) {
   flex-grow: 1;
 }
 .gtk-box-layout.vertical
-  > :is([data-vexpand="true"], :not([data-vexpand="false"]):has([data-vexpand="true"])):is(
-    [data-valign="start"],
-    [data-valign="end"],
-    [data-valign="center"]
-  ) {
+  > :is(
+    [data-vexpand="true"],
+    :not([data-vexpand="false"]):has([data-vexpand="true"]:not(.gtk-popover *)),
+    .gtk-popover :not([data-vexpand="false"]):has([data-vexpand="true"])
+  ):is([data-valign="start"], [data-valign="end"], [data-valign="center"]) {
   flex-grow: 0;
 }
 .gtk-box-layout.vertical
   > :is(
     [data-vexpand="true"],
-    :not([data-vexpand="false"]):has([data-vexpand="true"])
+    :not([data-vexpand="false"]):has([data-vexpand="true"]:not(.gtk-popover *)),
+    .gtk-popover :not([data-vexpand="false"]):has([data-vexpand="true"])
   )[data-valign="start"] {
   margin-block-end: auto;
 }
 .gtk-box-layout.vertical
   > :is(
     [data-vexpand="true"],
-    :not([data-vexpand="false"]):has([data-vexpand="true"])
+    :not([data-vexpand="false"]):has([data-vexpand="true"]:not(.gtk-popover *)),
+    .gtk-popover :not([data-vexpand="false"]):has([data-vexpand="true"])
   )[data-valign="end"] {
   margin-block-start: auto;
 }
 .gtk-box-layout.vertical
   > :is(
     [data-vexpand="true"],
-    :not([data-vexpand="false"]):has([data-vexpand="true"])
+    :not([data-vexpand="false"]):has([data-vexpand="true"]:not(.gtk-popover *)),
+    .gtk-popover :not([data-vexpand="false"]):has([data-vexpand="true"])
   )[data-valign="center"] {
   margin-block: auto;
 }

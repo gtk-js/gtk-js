@@ -50,10 +50,23 @@ describe("GtkImage", () => {
 
   test("keeps the ids of inline icons apart", () => {
     const html = render("ComExampleInline");
-    expect(html).toContain('id="gtk-icon-ComExampleInline-a"');
-    expect(html).toContain('xlink:href="#gtk-icon-ComExampleInline-a"');
-    expect(html).toContain('fill="url(#gtk-icon-ComExampleInline-b)"');
-    expect(html).toContain("stroke: url(#gtk-icon-ComExampleInline-a)");
+    const prefix = html.match(/id="(gtk-icon-ComExampleInline-[\w-]*-)a"/)?.[1];
+    expect(prefix).toBeDefined();
+    expect(html).toContain(`xlink:href="#${prefix}a"`);
+    expect(html).toContain(`fill="url(#${prefix}b)"`);
+    expect(html).toContain(`stroke: url(#${prefix}a)`);
     expect(html).not.toContain('id="a"');
+  });
+
+  test("gives each copy of an inline icon its own ids", () => {
+    const html = renderToStaticMarkup(
+      <IconProvider value={icons}>
+        <GtkImage iconName="ComExampleInline" />
+        <GtkImage iconName="ComExampleInline" />
+      </IconProvider>,
+    );
+    const ids = [...html.matchAll(/id="([^"]+)"/g)].map((m) => m[1]);
+    expect(ids).toHaveLength(4);
+    expect(new Set(ids).size).toBe(4);
   });
 });
