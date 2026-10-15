@@ -1080,6 +1080,30 @@ const cases: Record<string, () => React.ReactElement> = {
       data-testid="target"
     />
   ),
+  "adw-navigation-view-scrolled": () => (
+    <AdwNavigationView
+      pages={[
+        {
+          tag: "home",
+          title: "Home",
+          children: (
+            <GtkBox orientation="vertical">
+              <GtkScrolledWindow>
+                <GtkBox orientation="vertical">
+                  {Array.from({ length: 12 }, (_, i) => (
+                    <GtkLabel key={i} label={`Row ${i + 1}`} />
+                  ))}
+                </GtkBox>
+              </GtkScrolledWindow>
+            </GtkBox>
+          ),
+        },
+      ]}
+      initialPage="home"
+      style={{ width: "200px", height: "150px" }}
+      data-testid="target"
+    />
+  ),
 
   // AdwOverlaySplitView cases
   "adw-overlay-split-view-default": () => (

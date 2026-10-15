@@ -407,6 +407,10 @@ export const AdwNavigationView = forwardRef<HTMLDivElement, AdwNavigationViewPro
                 inert={tag !== visibleTag ? true : undefined}
                 style={{
                   gridArea: "1 / 1",
+                  // The page gets the whole view, and its child the whole
+                  // page (adw_navigation_view_size_allocate()): content
+                  // taller than the view scrolls in it, not past the page.
+                  gridTemplate: "minmax(0, 1fr) / minmax(0, 1fr)",
                   position: "relative",
                   minWidth: 0,
                   minHeight: 0,
