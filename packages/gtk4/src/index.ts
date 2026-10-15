@@ -88,6 +88,7 @@ export type { GtkWindowProps } from "./components/window.tsx";
 export { GtkWindow } from "./components/window.tsx";
 export type { GtkWindowTitleProps } from "./components/window-title.tsx";
 export { GtkWindowTitle } from "./components/window-title.tsx";
+export { isCoveredByLayer, useEscapeLayer } from "./escape-layers.ts";
 export type { IconMap } from "./icon-context.tsx";
 // Icon context
 export { IconProvider, useIcon, useIcons } from "./icon-context.tsx";
