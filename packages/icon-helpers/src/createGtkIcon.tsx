@@ -4,6 +4,8 @@ import {
   forwardRef,
   type RefAttributes,
   type SVGProps,
+  useId,
+  useMemo,
 } from "react";
 
 export interface GtkIconProps extends SVGProps<SVGSVGElement> {
@@ -90,8 +92,10 @@ export function createGtkIconFromUrl(displayName: string, url: string): GtkIcon 
  * drawn with the widget showing it, as GTK loads an icon before drawing it.
  *
  * Only for trusted SVG, such as the app's own assets: the markup is inserted
- * as is. Its ids are prefixed with the icon's name, so the gradients of two
- * icons (both often `id="a"`) don't clash.
+ * as is. Its ids are prefixed for each icon drawn, so the gradients of two
+ * icons (both often `id="a"`), or of one icon shown twice, don't clash:
+ * `url(#a)` picks the first element with that id in the document, which may be
+ * in a hidden page that isn't drawn.
  */
 export function createGtkIconFromSvg(displayName: string, svg: string): GtkIcon {
   const root = svg.match(/<svg\b([^>]*)>([\s\S]*)<\/svg>/i);
@@ -101,14 +105,17 @@ export function createGtkIconFromSvg(displayName: string, svg: string): GtkIcon 
   const viewBox =
     attr("viewBox") ??
     `0 0 ${parseFloat(attr("width") ?? "16")} ${parseFloat(attr("height") ?? "16")}`;
-  const prefix = `gtk-icon-${displayName}-`;
-  const markup = root[2]!
-    .replace(/\bid="([^"]+)"/g, `id="${prefix}$1"`)
-    .replace(/url\((['"]?)#([^'")]+)\1\)/g, `url(#${prefix}$2)`)
-    .replace(/\b((?:xlink:)?href)="#([^"]+)"/g, `$1="#${prefix}$2"`);
+  const content = root[2]!;
+  const withPrefix = (prefix: string) =>
+    content
+      .replace(/\bid="([^"]+)"/g, `id="${prefix}$1"`)
+      .replace(/url\((['"]?)#([^'")]+)\1\)/g, `url(#${prefix}$2)`)
+      .replace(/\b((?:xlink:)?href)="#([^"]+)"/g, `$1="#${prefix}$2"`);
 
   const Component = forwardRef<SVGSVGElement, GtkIconProps>(
     ({ size = 16, className, ...props }, ref) => {
+      const id = useId().replace(/[^\w-]/g, "");
+      const markup = useMemo(() => withPrefix(`gtk-icon-${displayName}-${id}-`), [id]);
       return createElement("svg", {
         ref,
         xmlns: "http://www.w3.org/2000/svg",
