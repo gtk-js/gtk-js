@@ -1,4 +1,4 @@
-import { useIcon } from "@gtk-js/gtk4";
+import { GtkScrolledWindow, useIcon } from "@gtk-js/gtk4";
 import { forwardRef, type HTMLAttributes, type ReactNode } from "react";
 import { AdwClamp } from "./clamp.tsx";
 
@@ -39,7 +39,7 @@ export const AdwStatusPage = forwardRef<HTMLDivElement, AdwStatusPageProps>(func
 
   return (
     <div ref={ref} className={classes.join(" ")} {...rest}>
-      <div className="gtk-scrolledwindow" style={{ overflow: "auto", height: "100%" }}>
+      <GtkScrolledWindow hscrollbarPolicy="never" style={{ height: "100%" }}>
         <div
           className="gtk-viewport"
           style={{ minHeight: "100%", display: "flex", flexDirection: "column" }}
@@ -73,7 +73,7 @@ export const AdwStatusPage = forwardRef<HTMLDivElement, AdwStatusPageProps>(func
             {children}
           </div>
         </div>
-      </div>
+      </GtkScrolledWindow>
     </div>
   );
 });
