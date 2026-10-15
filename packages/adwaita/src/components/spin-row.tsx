@@ -65,11 +65,11 @@ export const AdwSpinRow = forwardRef<HTMLDivElement, AdwSpinRowProps>(function A
     [clamp, isControlled, onValueChanged],
   );
 
-  useListBoxRow();
+  const placeRow = useListBoxRow();
   const classes = ["gtk-row", "spin"];
   if (className) classes.push(className);
 
-  return (
+  return placeRow(
     <div ref={ref} className={classes.join(" ")} {...rest}>
       <div className="gtk-box gtk-box-layout horizontal header" style={{ alignItems: "center" }}>
         <div className="gtk-box gtk-box-layout vertical title" style={{ flex: 1 }}>
@@ -106,6 +106,6 @@ export const AdwSpinRow = forwardRef<HTMLDivElement, AdwSpinRowProps>(function A
           </button>
         </div>
       </div>
-    </div>
+    </div>,
   );
 });
