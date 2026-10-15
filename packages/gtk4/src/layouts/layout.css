@@ -461,78 +461,110 @@
 }
 
 /* === Popover Arrow ===
- * GTK draws the popover arrow as a 24x12 triangle via Cairo (gtkpopover.c).
- * TAIL_GAP_WIDTH=24, TAIL_HEIGHT=12. We replicate with clip-path.
+ * GTK draws the arrow as a TAIL_GAP_WIDTH × TAIL_HEIGHT (24×12) triangle
+ * whose base lies on the contents' outer edge plus their border, so it
+ * covers the contents' border where they meet (gtk_popover_get_gap_coords).
+ * It fills the triangle with the arrow node's background and strokes its two
+ * sides in the arrow's border color (create_arrow_render_node). Only the
+ * contents cast a shadow, their box-shadow; the arrow has none.
  *
- * The arrow is absolutely positioned within the popover. The JS component
- * computes its offset to point at the anchor element's center, clamped to
- * stay within the popover's border-radius (matching gtk_popover_get_gap_coords).
+ * Here .gtk-arrow is the triangle's bounding box, 24×13 with Adwaita's 1px
+ * border, and clips at whole pixels a square rotated 45° and stretched to the
+ * triangle's height: its ::before. The square inherits the theme's arrow
+ * background and border, so its two outer sides are the stroke. .gtk-arrow
+ * itself isn't drawn, and its own border lies just outside the clip
+ * (margin: -1px). It also ignores the theme's `menubutton arrow` minimum
+ * size, which GTK never applies to this node.
  *
- * GTK paints a unified shadow around arrow+contents as one shape. We
- * approximate this with filter: drop-shadow() on the parent, replacing
- * per-element box-shadow. The drop-shadow values below are from Adwaita.
- * TODO: Read shadow from theme CSS at runtime so non-Adwaita themes
- * (e.g. WhiteSur) get correct shadows. Requires converting computed
- * box-shadow to drop-shadow format, or emitting a CSS custom property
- * from the compile pipeline. */
-
-.gtk-popover.background[data-position] {
-  filter: drop-shadow(0 1px 6px rgba(0, 0, 0, 0.09)) drop-shadow(0 2px 17px rgba(0, 0, 0, 0.05));
-}
-
-.gtk-popover.background[data-position] > .gtk-arrow,
-.gtk-popover.background[data-position] > .gtk-contents {
-  box-shadow: none;
-}
+ * The JS component computes the box's offset to point at the anchor's
+ * center, clamped to stay within the contents' border radius (matching
+ * gtk_popover_get_gap_coords). */
 
 .gtk-popover.background[data-position] > .gtk-arrow {
   position: absolute;
-  border: none;
   z-index: 1;
+  min-width: 0;
+  min-height: 0;
+  margin: -1px;
+  overflow: hidden;
+  visibility: hidden;
+  box-shadow: none;
+}
+
+.gtk-popover.background[data-position] > .gtk-arrow::before {
+  content: "";
+  position: absolute;
+  /* Not a GTK node: border-box keeps the square the triangle's size
+   * whatever the theme's border. 24px / √2: rotated, its diagonal spans the
+   * triangle's base. */
+  box-sizing: border-box;
+  width: 16.9706px;
+  height: 16.9706px;
+  visibility: visible;
+  background-color: inherit;
+  /* GTK strokes the sides over the arrow's background. */
+  background-clip: border-box;
+  border: inherit;
 }
 
 /* Bottom: popover below anchor, arrow points up from top edge */
 .gtk-popover.background[data-position="bottom"] > .gtk-arrow {
   width: 24px;
-  height: 12px;
-  clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+  height: 13px;
   top: 0;
 }
+.gtk-popover.background[data-position="bottom"] > .gtk-arrow::before {
+  left: 3.5147px;
+  top: 4.5147px;
+  transform: scaleY(calc(13 / 12)) rotate(45deg);
+}
 .gtk-popover.background[data-position="bottom"] > .gtk-contents {
-  margin-top: 11px; /* TAIL_HEIGHT - 1px overlap */
+  margin-top: 12px; /* TAIL_HEIGHT */
 }
 
 /* Top: popover above anchor, arrow points down from bottom edge */
 .gtk-popover.background[data-position="top"] > .gtk-arrow {
   width: 24px;
-  height: 12px;
-  clip-path: polygon(0% 0%, 50% 100%, 100% 0%);
+  height: 13px;
   bottom: 0;
 }
+.gtk-popover.background[data-position="top"] > .gtk-arrow::before {
+  left: 3.5147px;
+  top: -8.4853px;
+  transform: scaleY(calc(13 / 12)) rotate(225deg);
+}
 .gtk-popover.background[data-position="top"] > .gtk-contents {
-  margin-bottom: 11px;
+  margin-bottom: 12px;
 }
 
 /* Right: popover right of anchor, arrow points left from left edge */
 .gtk-popover.background[data-position="right"] > .gtk-arrow {
-  width: 12px;
+  width: 13px;
   height: 24px;
-  clip-path: polygon(100% 0%, 0% 50%, 100% 100%);
   left: 0;
 }
+.gtk-popover.background[data-position="right"] > .gtk-arrow::before {
+  left: 4.5147px;
+  top: 3.5147px;
+  transform: scaleX(calc(13 / 12)) rotate(-45deg);
+}
 .gtk-popover.background[data-position="right"] > .gtk-contents {
-  margin-left: 11px;
+  margin-left: 12px;
 }
 
 /* Left: popover left of anchor, arrow points right from right edge */
 .gtk-popover.background[data-position="left"] > .gtk-arrow {
-  width: 12px;
+  width: 13px;
   height: 24px;
-  clip-path: polygon(0% 0%, 100% 50%, 0% 100%);
   right: 0;
 }
+.gtk-popover.background[data-position="left"] > .gtk-arrow::before {
+  left: -8.4853px;
+  top: 3.5147px;
+  transform: scaleX(calc(13 / 12)) rotate(135deg);
+}
 .gtk-popover.background[data-position="left"] > .gtk-contents {
-  margin-right: 11px;
+  margin-right: 12px;
 }
 
 /* === GtkCalendar grid ===
