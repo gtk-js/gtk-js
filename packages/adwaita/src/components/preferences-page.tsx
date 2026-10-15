@@ -1,3 +1,4 @@
+import { GtkScrolledWindow } from "@gtk-js/gtk4";
 import { forwardRef, type HTMLAttributes, type ReactNode } from "react";
 import { AdwClamp } from "./clamp.tsx";
 
@@ -43,7 +44,7 @@ export const AdwPreferencesPage = forwardRef<HTMLDivElement, AdwPreferencesPageP
         style={{ flex: 1, minHeight: 0, ...style }}
         {...rest}
       >
-        <div className="gtk-scrolledwindow" style={{ overflow: "auto", flex: 1, minHeight: 0 }}>
+        <GtkScrolledWindow hscrollbarPolicy="never" style={{ flex: 1, minHeight: 0 }}>
           <div className="gtk-viewport">
             <AdwClamp>
               <div
@@ -62,7 +63,7 @@ export const AdwPreferencesPage = forwardRef<HTMLDivElement, AdwPreferencesPageP
               </div>
             </AdwClamp>
           </div>
-        </div>
+        </GtkScrolledWindow>
       </div>
     );
   },
