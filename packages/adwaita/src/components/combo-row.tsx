@@ -87,12 +87,12 @@ export const AdwComboRow = forwardRef<HTMLDivElement, AdwComboRowProps>(function
 
   const displaySubtitle = useSubtitle ? items[selected] : subtitle;
 
-  useListBoxRow();
+  const placeRow = useListBoxRow();
   const classes = ["gtk-row", "combo", "activatable"];
   if (open) classes.push("has-open-popup");
   if (className) classes.push(className);
 
-  return (
+  return placeRow(
     <div
       ref={(el) => {
         rowRef.current = el;
@@ -175,6 +175,6 @@ export const AdwComboRow = forwardRef<HTMLDivElement, AdwComboRowProps>(function
           </div>
         </div>
       )}
-    </div>
+    </div>,
   );
 });

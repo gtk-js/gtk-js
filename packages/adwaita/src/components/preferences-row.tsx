@@ -35,14 +35,14 @@ export const AdwPreferencesRow = forwardRef<HTMLDivElement, AdwPreferencesRowPro
     },
     ref,
   ) {
-    useListBoxRow();
+    const placeRow = useListBoxRow();
     const classes = ["gtk-row", "gtk-bin-layout"];
     if (className) classes.push(className);
 
-    return (
+    return placeRow(
       <div ref={ref} role="listitem" className={classes.join(" ")} {...rest}>
         {children ?? <span className="gtk-label title">{title}</span>}
-      </div>
+      </div>,
     );
   },
 );
