@@ -72,6 +72,8 @@ export const GtkCalendar = forwardRef<HTMLDivElement, GtkCalendarProps>(function
     onDaySelected,
     halign,
     valign,
+    hexpand,
+    vexpand,
     className,
     ...rest
   },
@@ -158,7 +160,12 @@ export const GtkCalendar = forwardRef<HTMLDivElement, GtkCalendarProps>(function
   if (className) classes.push(className);
 
   return (
-    <div ref={ref} className={classes.join(" ")} {...alignAttrs(halign, valign)} {...rest}>
+    <div
+      ref={ref}
+      className={classes.join(" ")}
+      {...alignAttrs(halign, valign, hexpand, vexpand)}
+      {...rest}
+    >
       {showHeading && (
         <div className="gtk-header gtk-box-layout horizontal">
           <button className="gtk-button flat" type="button" onClick={() => navigate(0, -1)}>
@@ -169,6 +176,7 @@ export const GtkCalendar = forwardRef<HTMLDivElement, GtkCalendarProps>(function
             className="gtk-button flat"
             type="button"
             data-hexpand="true"
+            data-halign="start"
             onClick={() => navigate(0, 1)}
           >
             <span className="gtk-image">{NextIcon && <NextIcon size={16} />}</span>

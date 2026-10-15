@@ -1,5 +1,5 @@
 import { expect } from "bun:test";
-import { compare, gtkTest } from "../harness";
+import { compare, findChild, gtkTest, type WidgetSnapshot } from "../harness";
 
 // Filtered: font_weight, inset_shadows.
 //
@@ -19,4 +19,10 @@ gtkTest("adw-headerbar-with-title", (native, web) => {
   expect(
     failures.filter((f) => f.property !== "font_weight" && !f.property.startsWith("inset_shadows")),
   ).toEqual([]);
+
+  // AdwHeaderBar and GtkWindowHandle are bin layouts: the window handle fills
+  // the bar's height, so the title is vertically centered in it. (The native
+  // bar is as tall as its test window, so compare the slack, not heights.)
+  const slack = (bar: WidgetSnapshot) => bar.height - findChild(bar, "windowhandle").height;
+  expect(slack(web)).toBeCloseTo(slack(native), 0);
 });

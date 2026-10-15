@@ -25,7 +25,10 @@ export interface GtkFlowBoxChildProps extends HTMLAttributes<HTMLDivElement>, Gt
  * @see https://docs.gtk.org/gtk4/class.FlowBoxChild.html
  */
 export const GtkFlowBoxChild = forwardRef<HTMLDivElement, GtkFlowBoxChildProps>(
-  function GtkFlowBoxChild({ children, halign, valign, className, ...rest }, ref) {
+  function GtkFlowBoxChild(
+    { children, halign, valign, hexpand, vexpand, className, ...rest },
+    ref,
+  ) {
     const classes = ["gtk-flowboxchild", "gtk-bin-layout"];
     if (className) classes.push(className);
 
@@ -34,7 +37,7 @@ export const GtkFlowBoxChild = forwardRef<HTMLDivElement, GtkFlowBoxChildProps>(
         ref={ref}
         role="gridcell"
         className={classes.join(" ")}
-        {...alignAttrs(halign, valign)}
+        {...alignAttrs(halign, valign, hexpand, vexpand)}
         {...rest}
       >
         {children}
@@ -88,6 +91,8 @@ export const GtkFlowBox = forwardRef<HTMLDivElement, GtkFlowBoxProps>(function G
     children,
     halign,
     valign,
+    hexpand,
+    vexpand,
     className,
     style,
     ...rest
@@ -140,7 +145,7 @@ export const GtkFlowBox = forwardRef<HTMLDivElement, GtkFlowBoxProps>(function G
       ref={ref}
       role="grid"
       className={classes.join(" ")}
-      {...alignAttrs(halign, valign)}
+      {...alignAttrs(halign, valign, hexpand, vexpand)}
       style={flowStyle}
       {...rest}
     >

@@ -1,12 +1,15 @@
 import React, {
   type ButtonHTMLAttributes,
   forwardRef,
+  isValidElement,
   type ReactNode,
   useCallback,
   useState,
 } from "react";
 import { useIcon } from "../icon-context.tsx";
 import { alignAttrs, type GtkAlignProps } from "../types.ts";
+import { GtkImage } from "./image.tsx";
+import { GtkLabel } from "./label.tsx";
 
 /** Parse a mnemonic label: `_Save` → renders "S" with a low underline. */
 function parseMnemonicLabel(text: string): ReactNode {
@@ -36,6 +39,8 @@ export interface GtkButtonProps
   canShrink?: boolean;
   /** Whether underlines in the label indicate mnemonics. */
   useUnderline?: boolean;
+  /** Tooltip shown when hovering the button (GtkWidget:tooltip-text). */
+  tooltipText?: string;
   /** Callback when the button is clicked. */
   onClicked?: () => void;
   /** Custom child widget. Overrides label/iconName if provided. */
@@ -58,10 +63,13 @@ export const GtkButton = forwardRef<HTMLButtonElement, GtkButtonProps>(function 
     hasFrame = true,
     canShrink = false,
     useUnderline = false,
+    tooltipText,
     onClicked,
     children,
     halign,
     valign,
+    hexpand,
+    vexpand,
     className,
     onKeyDown,
     onKeyUp,
@@ -77,10 +85,16 @@ export const GtkButton = forwardRef<HTMLButtonElement, GtkButtonProps>(function 
   const hasLabel = !hasCustomChild && label != null;
   const hasIcon = !hasCustomChild && iconName != null;
 
+  // A label or image child makes it a text or image button too, like
+  // gtk_button_set_child().
+  const childType = isValidElement(children) ? children.type : null;
+  const textButton = hasCustomChild ? childType === GtkLabel : hasLabel && !hasIcon;
+  const imageButton = hasCustomChild ? childType === GtkImage : hasIcon && !hasLabel;
+
   const classes = ["gtk-button"];
   if (!hasFrame) classes.push("flat");
-  if (hasLabel && !hasIcon) classes.push("text-button");
-  if (hasIcon && !hasLabel) classes.push("image-button");
+  if (textButton) classes.push("text-button");
+  if (imageButton) classes.push("image-button");
   if (hasIcon && hasLabel) classes.push("image-text-button");
   if (keyboardActivating) classes.push("keyboard-activating");
   if (className) classes.push(className);
@@ -117,7 +131,8 @@ export const GtkButton = forwardRef<HTMLButtonElement, GtkButtonProps>(function 
     <button
       ref={ref}
       className={classes.join(" ")}
-      {...alignAttrs(halign, valign)}
+      title={tooltipText}
+      {...alignAttrs(halign, valign, hexpand, vexpand)}
       onClick={handleClick}
       onKeyDown={handleKeyDown}
       onKeyUp={handleKeyUp}
@@ -127,7 +142,12 @@ export const GtkButton = forwardRef<HTMLButtonElement, GtkButtonProps>(function 
         children
       ) : (
         <>
-          {hasIcon && <span className="gtk-image">{Icon && <Icon size={16} />}</span>}
+          {/* gtk_button_set_icon_name() centers its image vertically. */}
+          {hasIcon && (
+            <span className="gtk-image" data-valign="center">
+              {Icon && <Icon size={16} />}
+            </span>
+          )}
           {hasLabel && (
             <span
               className="gtk-label"

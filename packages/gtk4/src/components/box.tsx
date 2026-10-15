@@ -28,6 +28,8 @@ export const GtkBox = forwardRef<HTMLDivElement, GtkBoxProps>(function GtkBox(
     children,
     halign,
     valign,
+    hexpand,
+    vexpand,
     className,
     style,
     ...rest
@@ -42,7 +44,7 @@ export const GtkBox = forwardRef<HTMLDivElement, GtkBoxProps>(function GtkBox(
     <div
       ref={ref}
       className={classes.join(" ")}
-      {...alignAttrs(halign, valign)}
+      {...alignAttrs(halign, valign, hexpand, vexpand)}
       style={{ ...spacingStyle(spacing), ...style }}
       {...rest}
     >

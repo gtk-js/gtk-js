@@ -23,7 +23,7 @@ function barStyleClasses(s: AdwToolbarStyle): string {
  * AdwToolbarView — A layout with top/bottom bar slots.
  *
  * CSS node:
- *   toolbarview
+ *   toolbarview[.undershoot-top][.undershoot-bottom]
  *     ├── revealer.top-bar[.raised][.border]
  *     ├── [content]
  *     └── revealer.bottom-bar[.raised][.border]
@@ -49,6 +49,12 @@ export const AdwToolbarView = forwardRef<HTMLDivElement, AdwToolbarViewProps>(
     ref,
   ) {
     const classes = ["gtk-toolbarview"];
+    // Content scrolled under a flat bar gets the scrolled window's undershoot
+    // shade (update_undershoots()).
+    if (topBarStyle === "flat" && !extendContentToTopEdge && revealTopBars && topBars)
+      classes.push("undershoot-top");
+    if (bottomBarStyle === "flat" && !extendContentToBottomEdge && revealBottomBars && bottomBars)
+      classes.push("undershoot-bottom");
     if (className) classes.push(className);
 
     return (
@@ -60,15 +66,27 @@ export const AdwToolbarView = forwardRef<HTMLDivElement, AdwToolbarViewProps>(
       >
         {revealTopBars && topBars && (
           <div className={`gtk-revealer top-bar ${barStyleClasses(topBarStyle)}`}>
-            <div className="gtk-windowhandle">
+            <div className="gtk-windowhandle gtk-bin-layout">
               <div className="gtk-box gtk-box-layout vertical">{topBars}</div>
             </div>
           </div>
         )}
-        <div style={{ flex: 1, overflow: "hidden" }}>{content}</div>
+        {/* The content gets the rest of the view, and aligns in it with its
+            halign/valign (adw_toolbar_view_size_allocate()). */}
+        <div
+          className="gtk-bin-layout"
+          style={{
+            flex: 1,
+            overflow: "hidden",
+            minHeight: 0,
+            gridTemplate: "minmax(0, 1fr) / minmax(0, 1fr)",
+          }}
+        >
+          {content}
+        </div>
         {revealBottomBars && bottomBars && (
           <div className={`gtk-revealer bottom-bar ${barStyleClasses(bottomBarStyle)}`}>
-            <div className="gtk-windowhandle">
+            <div className="gtk-windowhandle gtk-bin-layout">
               <div className="gtk-box gtk-box-layout vertical">{bottomBars}</div>
             </div>
           </div>

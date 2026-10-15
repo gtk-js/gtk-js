@@ -1,4 +1,14 @@
-import { forwardRef, type HTMLAttributes, type ReactNode } from "react";
+import {
+  forwardRef,
+  type HTMLAttributes,
+  type ReactNode,
+  type UIEvent,
+  useCallback,
+  useImperativeHandle,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from "react";
 import { alignAttrs, type GtkAlignProps, type GtkPolicyType } from "../types.ts";
 
 export interface GtkScrolledWindowProps extends HTMLAttributes<HTMLDivElement>, GtkAlignProps {
@@ -27,11 +37,30 @@ const policyToOverflow: Record<GtkPolicyType, string> = {
 };
 
 /**
+ * The vertical edges a scrolled window isn't scrolled to, where GTK draws its
+ * undershoot nodes (gtk_scrolled_window_snapshot_undershoot()).
+ */
+export function undershootEdges(el: {
+  scrollTop: number;
+  scrollHeight: number;
+  clientHeight: number;
+}): { top: boolean; bottom: boolean } {
+  return {
+    top: el.scrollTop > 0,
+    // A fractional scroll position can stop just short of the end.
+    bottom: el.scrollTop < el.scrollHeight - el.clientHeight - 0.5,
+  };
+}
+
+/**
  * GtkScrolledWindow — A scrollable container.
  *
  * CSS node: scrolledwindow[.frame]
+ *   ├── [child]
+ *   └── undershoot.top / undershoot.bottom   (while not scrolled to that edge)
  *
- * Uses native browser scrolling via CSS overflow.
+ * Uses native browser scrolling via CSS overflow. The theme draws a shade
+ * along an undershoot, e.g. under the flat top bar of an AdwToolbarView.
  *
  * @see https://docs.gtk.org/gtk4/class.ScrolledWindow.html
  */
@@ -48,12 +77,55 @@ export const GtkScrolledWindow = forwardRef<HTMLDivElement, GtkScrolledWindowPro
       children,
       halign,
       valign,
+      hexpand,
+      vexpand,
       className,
       style,
+      onScroll,
       ...rest
     },
     ref,
   ) {
+    const scrollerRef = useRef<HTMLDivElement>(null);
+    useImperativeHandle(ref, () => scrollerRef.current as HTMLDivElement);
+
+    const [undershoot, setUndershoot] = useState({ top: false, bottom: false });
+    const updateUndershoot = useCallback(() => {
+      const el = scrollerRef.current;
+      if (!el) return;
+      const next = undershootEdges(el);
+      setUndershoot((prev) => (prev.top === next.top && prev.bottom === next.bottom ? prev : next));
+    }, []);
+    // Content that grows or shrinks moves the edges too.
+    useLayoutEffect(() => {
+      const el = scrollerRef.current;
+      if (!el) return;
+      updateUndershoot();
+      const resizes = new ResizeObserver(updateUndershoot);
+      const observe = () => {
+        resizes.disconnect();
+        resizes.observe(el);
+        for (const child of el.children) resizes.observe(child);
+      };
+      observe();
+      const children = new MutationObserver(() => {
+        observe();
+        updateUndershoot();
+      });
+      children.observe(el, { childList: true });
+      return () => {
+        resizes.disconnect();
+        children.disconnect();
+      };
+    }, [updateUndershoot]);
+    const handleScroll = useCallback(
+      (e: UIEvent<HTMLDivElement>) => {
+        updateUndershoot();
+        onScroll?.(e);
+      },
+      [updateUndershoot, onScroll],
+    );
+
     const classes = ["gtk-scrolledwindow"];
     if (hasFrame) classes.push("frame");
     if (className) classes.push(className);
@@ -70,13 +142,16 @@ export const GtkScrolledWindow = forwardRef<HTMLDivElement, GtkScrolledWindowPro
 
     return (
       <div
-        ref={ref}
+        ref={scrollerRef}
         className={classes.join(" ")}
-        {...alignAttrs(halign, valign)}
+        {...alignAttrs(halign, valign, hexpand, vexpand)}
         style={cssStyle}
+        onScroll={handleScroll}
         {...rest}
       >
+        {undershoot.top && <div className="gtk-undershoot top" />}
         {children}
+        {undershoot.bottom && <div className="gtk-undershoot bottom" />}
       </div>
     );
   },

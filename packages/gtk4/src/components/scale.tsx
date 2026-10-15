@@ -76,6 +76,8 @@ export const GtkScale = forwardRef<HTMLDivElement, GtkScaleProps>(function GtkSc
     onValueChanged,
     halign,
     valign,
+    hexpand,
+    vexpand,
     className,
     ...rest
   },
@@ -259,7 +261,7 @@ export const GtkScale = forwardRef<HTMLDivElement, GtkScaleProps>(function GtkSc
       aria-orientation={orientation}
       tabIndex={0}
       className={classes.join(" ")}
-      {...alignAttrs(halign, valign)}
+      {...alignAttrs(halign, valign, hexpand, vexpand)}
       onKeyDown={handleKeyDown}
       onPointerDown={handlePointerDown}
       onPointerMove={handlePointerMove}
