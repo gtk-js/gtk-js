@@ -1,12 +1,42 @@
-import { forwardRef, type HTMLAttributes, type ReactNode, useCallback, useState } from "react";
+import {
+  forwardRef,
+  type HTMLAttributes,
+  isValidElement,
+  type MouseEvent,
+  type ReactNode,
+  useCallback,
+  useImperativeHandle,
+  useRef,
+  useState,
+} from "react";
 import { useIcon } from "../icon-context.tsx";
-import { alignAttrs, type GtkAlignProps, type GtkArrowType } from "../types.ts";
+import {
+  alignAttrs,
+  type GtkAlignProps,
+  type GtkArrowType,
+  type GtkPositionType,
+} from "../types.ts";
+import { GtkPopover } from "./popover.tsx";
+import {
+  type GtkMenuModel,
+  GtkPopoverMenu,
+  PopoverMenuCloseProvider,
+  PopoverMenuKeyboardProvider,
+} from "./popover-menu.tsx";
 
 export interface GtkMenuButtonProps
   extends Omit<HTMLAttributes<HTMLDivElement>, "popover">,
     GtkAlignProps {
   /** Popover content to show when clicked. */
   popover?: ReactNode;
+  /** Menu model; renders a GtkPopoverMenu (popover.menu) when set. */
+  menuModel?: GtkMenuModel;
+  /** Whether the popover is open (controlled). */
+  active?: boolean;
+  /** Called when the popover opens or closes. */
+  onActiveChanged?: (active: boolean) => void;
+  /** Tooltip for the button. */
+  tooltipText?: string;
   /** Icon name for the button. */
   iconName?: string;
   /** Text label for the button. */
@@ -49,6 +79,10 @@ const arrowIconMap: Record<GtkArrowType, string> = {
 export const GtkMenuButton = forwardRef<HTMLDivElement, GtkMenuButtonProps>(function GtkMenuButton(
   {
     popover,
+    menuModel,
+    active,
+    onActiveChanged,
+    tooltipText,
     iconName,
     label,
     direction = "down",
@@ -67,7 +101,27 @@ export const GtkMenuButton = forwardRef<HTMLDivElement, GtkMenuButtonProps>(func
   },
   ref,
 ) {
-  const [open, setOpen] = useState(false);
+  const [internalOpen, setInternalOpen] = useState(false);
+  const open = active ?? internalOpen;
+  const rootRef = useRef<HTMLDivElement>(null);
+  const buttonRef = useRef<HTMLButtonElement>(null);
+  useImperativeHandle(ref, () => rootRef.current as HTMLDivElement);
+
+  const setOpen = useCallback(
+    (next: boolean) => {
+      if (active === undefined) setInternalOpen(next);
+      onActiveChanged?.(next);
+    },
+    [active, onActiveChanged],
+  );
+  const popoverRef = useRef<HTMLDivElement>(null);
+  const close = useCallback(() => {
+    // A popover closing with the keyboard focus gives it back to the button,
+    // as in GTK.
+    if (popoverRef.current?.contains(document.activeElement))
+      buttonRef.current?.focus({ preventScroll: true });
+    setOpen(false);
+  }, [setOpen]);
 
   const ArrowIcon = useIcon(arrowIconMap[direction] ?? "PanDown");
   const ContentIcon = useIcon(iconName ?? "");
@@ -88,20 +142,43 @@ export const GtkMenuButton = forwardRef<HTMLDivElement, GtkMenuButtonProps>(func
   if (showArrow && !arrowOnly) btnClasses.push("arrow-button");
   if (open) btnClasses.push("has-open-popup");
 
-  const toggle = useCallback(() => {
-    if (!disabled) setOpen((o) => !o);
-  }, [disabled]);
+  const [openedFromKeyboard, setOpenedFromKeyboard] = useState(false);
+  const toggle = useCallback(
+    (e: MouseEvent) => {
+      if (disabled) return;
+      // Enter and Space click without a pointer (detail 0).
+      setOpenedFromKeyboard(e.detail === 0);
+      setOpen(!open);
+    },
+    [disabled, open, setOpen],
+  );
+
+  // Popovers open away from the arrow direction, like GTK.
+  const position: GtkPositionType =
+    direction === "up"
+      ? "top"
+      : direction === "left"
+        ? "left"
+        : direction === "right"
+          ? "right"
+          : "bottom";
+  const hasPopover = popover != null || menuModel != null;
+  // popover.menu, which the theme's menu rules need, for a menu model or a
+  // GtkPopoverMenu passed as the popover.
+  const isMenu = menuModel != null || (isValidElement(popover) && popover.type === GtkPopoverMenu);
 
   return (
     <div
-      ref={ref}
+      ref={rootRef}
       className={rootClasses.join(" ")}
       {...alignAttrs(halign, valign, hexpand, vexpand)}
       aria-disabled={disabled || undefined}
       {...rest}
     >
       <button
+        ref={buttonRef}
         type="button"
+        title={tooltipText}
         className={btnClasses.join(" ")}
         aria-haspopup="true"
         aria-expanded={open}
@@ -134,10 +211,22 @@ export const GtkMenuButton = forwardRef<HTMLDivElement, GtkMenuButtonProps>(func
           </span>
         )}
       </button>
-      {open && popover && (
-        <div className="gtk-popover background menu">
-          <div className="gtk-contents">{popover}</div>
-        </div>
+      {hasPopover && (
+        <GtkPopover
+          ref={popoverRef}
+          visible={open}
+          position={position}
+          anchorRef={rootRef}
+          pointingTo={buttonRef}
+          onClosed={close}
+          className={isMenu ? "menu" : undefined}
+        >
+          <PopoverMenuCloseProvider value={close}>
+            <PopoverMenuKeyboardProvider value={openedFromKeyboard}>
+              {menuModel ? <GtkPopoverMenu model={menuModel}>{popover}</GtkPopoverMenu> : popover}
+            </PopoverMenuKeyboardProvider>
+          </PopoverMenuCloseProvider>
+        </GtkPopover>
       )}
     </div>
   );
