@@ -217,6 +217,27 @@ body:has(> :first-child:has([data-gtk-provider])) > :first-child {
    Colors: currentColor at 20% idle, 40% hover, 60% active
    Transition: 200ms linear */
 
+/* GtkScrolledWindow's undershoot nodes, drawn over the content along an edge
+   it isn't scrolled to (gtk_scrolled_window_snapshot_undershoot(), 40px). The
+   scrolled window is the scroll container, so they stick to its edges, and
+   their negative margins give back the space they take in the flow. */
+:where([data-gtk-provider] .gtk-scrolledwindow > .gtk-undershoot) {
+  position: sticky;
+  z-index: 1;
+  height: 40px;
+  pointer-events: none;
+}
+
+:where([data-gtk-provider] .gtk-scrolledwindow > .gtk-undershoot.top) {
+  top: 0;
+  margin-bottom: -40px;
+}
+
+:where([data-gtk-provider] .gtk-scrolledwindow > .gtk-undershoot.bottom) {
+  bottom: 0;
+  margin-top: -40px;
+}
+
 /* Standard scrollbar properties (Firefox) */
 :where([data-gtk-provider] .gtk-scrolledwindow) {
   scrollbar-width: thin;
