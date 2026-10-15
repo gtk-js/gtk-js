@@ -1,6 +1,18 @@
-import { forwardRef, type HTMLAttributes, type ReactNode, useCallback, useEffect } from "react";
-import { createPortal } from "react-dom";
+import {
+  forwardRef,
+  type HTMLAttributes,
+  type ReactNode,
+  useCallback,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from "react";
 import type { AdwResponseAppearance } from "../types.ts";
+import { FloatingSheet } from "./floating-sheet.tsx";
+import { HeaderBarTitleContext } from "./header-bar-title.ts";
+
+/** BUTTON_SPACING in adw-alert-dialog.c. */
+const BUTTON_SPACING = 12;
 
 export interface AdwAlertDialogResponse {
   id: string;
@@ -22,6 +34,12 @@ export interface AdwAlertDialogProps extends HTMLAttributes<HTMLDivElement> {
   visible?: boolean;
   portal?: boolean | HTMLElement;
   onResponse?: (id: string) => void;
+  /**
+   * Called once the close animation finished and the dialog is gone. Unlike
+   * GTK, React can't keep a widget alive on its own: unmount the dialog here,
+   * not on response, so it can animate out.
+   */
+  onHidden?: () => void;
 }
 
 /**
@@ -58,6 +76,7 @@ export const AdwAlertDialog = forwardRef<HTMLDivElement, AdwAlertDialogProps>(
       visible = false,
       portal = false,
       onResponse,
+      onHidden,
       className,
       ...rest
     },
@@ -65,19 +84,36 @@ export const AdwAlertDialog = forwardRef<HTMLDivElement, AdwAlertDialogProps>(
   ) {
     const handleClose = useCallback(() => onResponse?.(closeResponse), [onResponse, closeResponse]);
 
-    useEffect(() => {
-      if (!visible) return;
-      const handleKey = (e: KeyboardEvent) => {
-        if (e.key === "Escape") handleClose();
+    // Upstream allocate_responses(): buttons share the row equally; when their
+    // widest natural size doesn't fit, they stack vertically ("compact"),
+    // the first response at the bottom.
+    const responseAreaRef = useRef<HTMLDivElement>(null);
+    const [compact, setCompact] = useState(false);
+    useLayoutEffect(() => {
+      const area = responseAreaRef.current;
+      if (!area || !visible) return;
+      const measure = () => {
+        const buttons = Array.from(area.children) as HTMLElement[];
+        if (buttons.length === 0) return;
+        const style = getComputedStyle(area);
+        const available =
+          area.clientWidth - parseFloat(style.paddingLeft) - parseFloat(style.paddingRight);
+        const widest = Math.max(
+          ...buttons.map((b) => {
+            const label = b.firstElementChild as HTMLElement | null;
+            const bs = getComputedStyle(b);
+            const padding = parseFloat(bs.paddingLeft) + parseFloat(bs.paddingRight);
+            return Math.max(parseFloat(bs.minWidth) || 0, (label?.scrollWidth ?? 0) + padding);
+          }),
+        );
+        const wide = widest * buttons.length + BUTTON_SPACING * (buttons.length - 1);
+        setCompact(wide > available + 0.5);
       };
-      document.addEventListener("keydown", handleKey);
-      return () => document.removeEventListener("keydown", handleKey);
-    }, [visible, handleClose]);
-
-    if (!visible) return null;
-
-    const dialogClasses = ["gtk-dialog", "alert", "background", "floating"];
-    if (className) dialogClasses.push(className);
+      measure();
+      const ro = new ResizeObserver(measure);
+      ro.observe(area);
+      return () => ro.disconnect();
+    }, [visible, responses]);
 
     // Upstream: .message-area gets .has-heading / .has-body conditionally,
     // which the SCSS uses for border-spacing (10px when both, 24px otherwise).
@@ -85,80 +121,79 @@ export const AdwAlertDialog = forwardRef<HTMLDivElement, AdwAlertDialogProps>(
     if (heading) messageAreaClasses.push("has-heading");
     if (body) messageAreaClasses.push("has-body");
 
-    const content = (
-      <div
+    return (
+      <FloatingSheet
         ref={ref}
-        className={dialogClasses.join(" ")}
-        style={{
-          position: "fixed",
-          inset: 0,
-          zIndex: 1000,
-        }}
+        open={visible}
+        dialogClasses={["alert", "background", "floating"]}
+        className={className}
+        // Upstream DIALOG_MIN_WIDTH / DIALOG_MAX_WIDTH / DIALOG_MAX_WIDE_WIDTH.
+        sheetStyle={{ minWidth: "min(300px, 100%)", maxWidth: preferWideLayout ? 600 : 372 }}
+        onDimmingClick={handleClose}
+        onEscape={handleClose}
+        onCloseAnimationDone={onHidden}
+        portal={portal}
+        aria-label={heading}
         {...rest}
       >
-        <div
-          className="gtk-floating-sheet"
-          style={{
-            position: "absolute",
-            inset: 0,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          <div
-            className="gtk-dimming"
-            style={{ position: "absolute", inset: 0 }}
-            onClick={handleClose}
-          />
-          <div
-            className="gtk-sheet"
-            style={{ position: "relative", maxWidth: preferWideLayout ? 600 : 372 }}
-          >
-            {/* AdwGizmo "contents" — no CSS class, just a layout container */}
-            <div>
-              <div className="gtk-windowhandle">
-                <div className="gtk-box gtk-box-layout vertical">
-                  <div className="body-scrolled-window" style={{ overflow: "auto" }}>
-                    <div className={messageAreaClasses.join(" ")}>
-                      {heading && (
-                        <div className="heading-bin">
-                          <span className="gtk-label title-2">{heading}</span>
-                        </div>
-                      )}
-                      {body && <span className="gtk-label body">{body}</span>}
-                      {extraChild && <div className="child">{extraChild}</div>}
-                    </div>
+        {/* An alert is a dialog: its header bars don't show the presenting page's title. */}
+        <HeaderBarTitleContext.Provider value="">
+          {/* AdwGizmo "contents" — no CSS class, just a layout container */}
+          <div>
+            <div className="gtk-windowhandle">
+              <div className="gtk-box gtk-box-layout vertical">
+                <div
+                  className="body-scrolled-window"
+                  style={{ overflow: "auto", maxHeight: "70vh" }}
+                >
+                  <div className={messageAreaClasses.join(" ")}>
+                    {heading && (
+                      <div className="heading-bin">
+                        <span className="gtk-label title-2">{heading}</span>
+                      </div>
+                    )}
+                    {body && <span className="gtk-label body">{body}</span>}
+                    {extraChild && <div className="child">{extraChild}</div>}
                   </div>
-                  <div className="response-area">
-                    {responses.map((resp) => {
-                      const btnClasses = ["gtk-button"];
-                      if (resp.appearance === "suggested") btnClasses.push("suggested-action");
-                      if (resp.appearance === "destructive") btnClasses.push("destructive-action");
-                      if (resp.id === defaultResponse) btnClasses.push("default");
-                      return (
-                        <button
-                          key={resp.id}
-                          type="button"
-                          className={btnClasses.join(" ")}
-                          disabled={resp.enabled === false}
-                          onClick={() => onResponse?.(resp.id)}
-                        >
-                          <span className="gtk-label">{resp.label}</span>
-                        </button>
-                      );
-                    })}
-                  </div>
+                </div>
+                <div
+                  ref={responseAreaRef}
+                  className={`response-area${compact ? " compact" : ""}`}
+                  style={{
+                    display: "flex",
+                    flexDirection: compact ? "column-reverse" : "row",
+                    gap: BUTTON_SPACING,
+                  }}
+                >
+                  {responses.map((resp) => {
+                    const btnClasses = ["gtk-button"];
+                    if (resp.appearance === "suggested") btnClasses.push("suggested-action");
+                    if (resp.appearance === "destructive") btnClasses.push("destructive-action");
+                    if (resp.id === defaultResponse) btnClasses.push("default");
+                    return (
+                      <button
+                        key={resp.id}
+                        type="button"
+                        className={btnClasses.join(" ")}
+                        disabled={resp.enabled === false}
+                        autoFocus={resp.id === defaultResponse}
+                        style={{
+                          flex: compact ? undefined : "1 1 0",
+                          minWidth: compact ? undefined : 0,
+                        }}
+                        data-response={resp.id}
+                        onClick={() => onResponse?.(resp.id)}
+                      >
+                        <span className="gtk-label">{resp.label}</span>
+                      </button>
+                    );
+                  })}
                 </div>
               </div>
             </div>
           </div>
-        </div>
-      </div>
+        </HeaderBarTitleContext.Provider>
+      </FloatingSheet>
     );
-
-    if (portal === true) return createPortal(content, document.body);
-    if (portal instanceof HTMLElement) return createPortal(content, portal);
-    return content;
   },
 );

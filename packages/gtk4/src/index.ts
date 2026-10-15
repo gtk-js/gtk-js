@@ -95,6 +95,7 @@ export type { GtkWindowProps } from "./components/window.tsx";
 export { GtkWindow } from "./components/window.tsx";
 export type { GtkWindowTitleProps } from "./components/window-title.tsx";
 export { GtkWindowTitle } from "./components/window-title.tsx";
+export { isCoveredByLayer, useEscapeLayer } from "./escape-layers.ts";
 export type { IconMap } from "./icon-context.tsx";
 // Icon context
 export { IconProvider, useIcon, useIcons } from "./icon-context.tsx";
@@ -118,4 +119,9 @@ export type * from "./types.ts";
 export { DecorationLayout } from "./types.ts";
 // Window controls
 export type { WindowControlsAPI } from "./window-controls-context.tsx";
-export { useWindowControls } from "./window-controls-context.tsx";
+export {
+  useWindowControls,
+  useWindowElement,
+  WindowControlsContext,
+  WindowElementContext,
+} from "./window-controls-context.tsx";
