@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const InputTouchpadOff = createGtkIcon("input-touchpad-off", [["path",{"d":"m5.0175781 3 1 1h11.9824219v11.984375l1 1v-13.984375zm-2.0175781 2.015625v13.984375h13.984375l-1-1h-11.984375v-11.984375zm2 9.984375v2h5v-2zm7 0v2h2.984375l-2-2z"}],["path",{"d":"m-.49999994 4.7426407h1v21.6274173h-1z","transform":"matrix(.70710678 -.70710678 .70710678 .70710678 0 0)"}]]);
+export const InputTouchpadOff = createGtkIcon("input-touchpad-off", [["path",{"d":"m2 1c-0.822 0-1.5 0.678-1.5 1.5v11c0 0.822 0.678 1.5 1.5 1.5h12c0.823 0 1.5-0.678 1.5-1.5v-11c0-0.822-0.677-1.5-1.5-1.5zm0 1h12c0.286 0 0.5 0.214 0.5 0.5v8.496h-13v-8.496c0-0.286 0.215-0.5 0.5-0.5zm-0.5 9.996h6.01v2.004h-5.51a0.488 0.488 0 0 1-0.5-0.5zm7.01 0h5.99v1.504c0 0.286-0.214 0.5-0.5 0.5h-5.49z","opacity":".3"}]]);
