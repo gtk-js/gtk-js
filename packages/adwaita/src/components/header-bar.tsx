@@ -47,7 +47,8 @@ function WindowControls({ side, layout }: { side: "start" | "end"; layout: strin
   const [startPart = "", endPart = ""] = layout.split(":");
   const part = side === "start" ? startPart : endPart;
   const buttons = part.split(",").filter((b) => b && b !== "appmenu" && b !== "icon");
-  if (buttons.length === 0) return <div className={`gtk-windowcontrols ${side} empty`} />;
+  // Empty controls are hidden, as AdwHeaderBar binds their visibility to "empty".
+  if (buttons.length === 0) return null;
 
   const clickHandlers: Record<string, (() => void) | undefined> = {
     close: controls?.close,
