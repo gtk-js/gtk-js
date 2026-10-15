@@ -1,5 +1,19 @@
 # @gtk-js/icons-mactahoe
 
+## [0.1.6](https://github.com/gtk-js/gtk-js/compare/icons-mactahoe-v0.1.5...icons-mactahoe-v0.1.6) (2026-10-15)
+
+
+### Bug Fixes
+
+* ship libadwaita's own icons, render GtkButton icon-name icons, build icons deterministically ([#35](https://github.com/gtk-js/gtk-js/issues/35)) ([36d9619](https://github.com/gtk-js/gtk-js/commit/36d96199f87e6f70e4f97436805b98ee23cdb1e9))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @gtk-js/icon-helpers bumped to 0.1.6
+
 ## 0.1.3
 
 ### Patch Changes

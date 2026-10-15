@@ -1,5 +1,19 @@
 # @gtk-js/icons-gtk4
 
+## [0.1.6](https://github.com/gtk-js/gtk-js/compare/icons-gtk4-v0.1.5...icons-gtk4-v0.1.6) (2026-10-15)
+
+
+### Features
+
+* add expand, tooltips, icon fallback and native widget layout ([#45](https://github.com/gtk-js/gtk-js/issues/45)) ([cbd75ef](https://github.com/gtk-js/gtk-js/commit/cbd75ef0d6d98bf47c9c12a7a5184b0512e91b90))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @gtk-js/icon-helpers bumped to 0.1.6
+
 ## 0.1.3
 
 ### Patch Changes
