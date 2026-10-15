@@ -57,6 +57,7 @@ enum Command {
     AdwPreferencesGroupWithDescription,
     AdwPreferencesGroupFooter,
     AdwPreferencesGroupLabelOnly,
+    AdwPreferencesGroupMixed,
     AdwPreferencesPageDefault,
     AdwPreferencesRowDefault,
     AdwSpinRowDefault,
@@ -286,6 +287,7 @@ impl Command {
             Self::AdwPreferencesGroupWithDescription => Some("adw-preferences-group-with-description"),
             Self::AdwPreferencesGroupFooter => Some("adw-preferences-group-footer"),
             Self::AdwPreferencesGroupLabelOnly => Some("adw-preferences-group-label-only"),
+            Self::AdwPreferencesGroupMixed => Some("adw-preferences-group-mixed"),
             Self::AdwPreferencesPageDefault => Some("adw-preferences-page-default"),
             Self::AdwPreferencesRowDefault => Some("adw-preferences-row-default"),
             Self::AdwSpinRowDefault => Some("adw-spin-row-default"),
@@ -523,6 +525,9 @@ fn create_widget_for_case(name: &str) -> Option<(gtk::Widget, bool)> {
         }
         "adw-preferences-group-label-only" => {
             widget_case!(cases::adw_preferences_group_label_only::AdwPreferencesGroupLabelOnly, false)
+        }
+        "adw-preferences-group-mixed" => {
+            widget_case!(cases::adw_preferences_group_mixed::AdwPreferencesGroupMixed, false)
         }
         "adw-preferences-page-default" => {
             widget_case!(cases::adw_preferences_page_default::AdwPreferencesPageDefault, false)
@@ -998,6 +1003,7 @@ fn is_known_case(name: &str) -> bool {
             | "adw-preferences-group-with-description"
             | "adw-preferences-group-footer"
             | "adw-preferences-group-label-only"
+            | "adw-preferences-group-mixed"
             | "adw-preferences-page-default"
             | "adw-preferences-row-default"
             | "adw-spin-row-default"

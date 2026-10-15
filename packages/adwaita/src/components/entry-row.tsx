@@ -84,7 +84,7 @@ export const AdwEntryRow = forwardRef<HTMLDivElement, AdwEntryRowProps>(function
   const ApplyIcon = useIcon("AdwEntryApply");
   const EditIcon = useIcon("DocumentEdit");
 
-  useListBoxRow();
+  const placeRow = useListBoxRow();
   const classes = ["gtk-row", "entry"];
   if (focused) classes.push("focused");
   if (className) classes.push(className);
@@ -114,7 +114,7 @@ export const AdwEntryRow = forwardRef<HTMLDivElement, AdwEntryRowProps>(function
     [showApplyButton, textChanged, onApply, onEntryActivated, onEntryKeyDown],
   );
 
-  return (
+  return placeRow(
     <div
       ref={ref}
       className={classes.join(" ")}
@@ -201,6 +201,6 @@ export const AdwEntryRow = forwardRef<HTMLDivElement, AdwEntryRowProps>(function
           <div className="gtk-box gtk-box-layout horizontal suffixes">{suffixWidget}</div>
         )}
       </div>
-    </div>
+    </div>,
   );
 });

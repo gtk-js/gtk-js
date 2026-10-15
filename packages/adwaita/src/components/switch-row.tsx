@@ -33,11 +33,11 @@ export const AdwSwitchRow = forwardRef<HTMLDivElement, AdwSwitchRowProps>(functi
     onActiveChanged?.(next);
   }, [active, isControlled, onActiveChanged]);
 
-  useListBoxRow();
+  const placeRow = useListBoxRow();
   const classes = ["gtk-row", "activatable"];
   if (className) classes.push(className);
 
-  return (
+  return placeRow(
     <div
       ref={ref}
       role="switch"
@@ -69,6 +69,6 @@ export const AdwSwitchRow = forwardRef<HTMLDivElement, AdwSwitchRowProps>(functi
           </div>
         </div>
       </div>
-    </div>
+    </div>,
   );
 });
