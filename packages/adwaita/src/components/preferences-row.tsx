@@ -1,3 +1,4 @@
+import { useListBoxRow } from "@gtk-js/gtk4";
 import { forwardRef, type HTMLAttributes, type ReactNode } from "react";
 
 export interface AdwPreferencesRowProps extends HTMLAttributes<HTMLDivElement> {
@@ -34,13 +35,14 @@ export const AdwPreferencesRow = forwardRef<HTMLDivElement, AdwPreferencesRowPro
     },
     ref,
   ) {
+    const placeRow = useListBoxRow();
     const classes = ["gtk-row", "gtk-bin-layout"];
     if (className) classes.push(className);
 
-    return (
+    return placeRow(
       <div ref={ref} role="listitem" className={classes.join(" ")} {...rest}>
         {children ?? <span className="gtk-label title">{title}</span>}
-      </div>
+      </div>,
     );
   },
 );
