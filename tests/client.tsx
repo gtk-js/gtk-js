@@ -107,7 +107,7 @@ const cases: Record<string, () => React.ReactElement> = {
   "button-text-destructive": () => (
     <GtkButton label="Button" className="destructive-action" data-testid="target" />
   ),
-  "button-icon": () => <GtkButton iconName="open-menu-symbolic" data-testid="target" />,
+  "button-icon": () => <GtkButton iconName="OpenMenu" data-testid="target" />,
   "button-circular": () => (
     <GtkButton iconName="open-menu-symbolic" className="circular" data-testid="target" />
   ),

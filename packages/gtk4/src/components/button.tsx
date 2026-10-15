@@ -142,7 +142,12 @@ export const GtkButton = forwardRef<HTMLButtonElement, GtkButtonProps>(function 
         children
       ) : (
         <>
-          {hasIcon && <span className="gtk-image">{Icon && <Icon size={16} />}</span>}
+          {/* gtk_button_set_icon_name() centers its image vertically. */}
+          {hasIcon && (
+            <span className="gtk-image" data-valign="center">
+              {Icon && <Icon size={16} />}
+            </span>
+          )}
           {hasLabel && (
             <span
               className="gtk-label"
