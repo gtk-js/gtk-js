@@ -74,6 +74,8 @@ export const GtkPopover = forwardRef<HTMLDivElement, GtkPopoverProps>(function G
     onClosed,
     halign,
     valign,
+    hexpand,
+    vexpand,
     className,
     style,
     ...rest
@@ -232,7 +234,7 @@ export const GtkPopover = forwardRef<HTMLDivElement, GtkPopoverProps>(function G
     <div
       ref={resolvedRef}
       className={classes.join(" ")}
-      {...alignAttrs(halign, valign)}
+      {...alignAttrs(halign, valign, hexpand, vexpand)}
       data-position={position}
       style={positionStyle}
       {...rest}

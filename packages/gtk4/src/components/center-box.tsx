@@ -39,6 +39,8 @@ export const GtkCenterBox = forwardRef<HTMLDivElement, GtkCenterBoxProps>(functi
     endWidget,
     halign,
     valign,
+    hexpand,
+    vexpand,
     className,
     ...rest
   },
@@ -51,7 +53,7 @@ export const GtkCenterBox = forwardRef<HTMLDivElement, GtkCenterBoxProps>(functi
     <div
       ref={ref}
       className={classes.join(" ")}
-      {...alignAttrs(halign, valign)}
+      {...alignAttrs(halign, valign, hexpand, vexpand)}
       {...centerSlotAttrs(startWidget, centerWidget, endWidget)}
       {...rest}
     >

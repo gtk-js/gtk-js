@@ -19,13 +19,21 @@ export interface GtkWindowTitleProps extends HTMLAttributes<HTMLDivElement>, Gtk
  * @see https://docs.gtk.org/gtk4/class.WindowTitle.html
  */
 export const GtkWindowTitle = forwardRef<HTMLDivElement, GtkWindowTitleProps>(
-  function GtkWindowTitle({ title, subtitle, halign, valign, className, ...rest }, ref) {
+  function GtkWindowTitle(
+    { title, subtitle, halign, valign, hexpand, vexpand, className, ...rest },
+    ref,
+  ) {
     const classes = ["gtk-windowtitle"];
     if (className) classes.push(className);
 
     // The grid that ellipsizes the labels is in layout.css.
     return (
-      <div ref={ref} className={classes.join(" ")} {...alignAttrs(halign, valign)} {...rest}>
+      <div
+        ref={ref}
+        className={classes.join(" ")}
+        {...alignAttrs(halign, valign, hexpand, vexpand)}
+        {...rest}
+      >
         {title && <span className="gtk-label title">{title}</span>}
         {subtitle && <span className="gtk-label subtitle">{subtitle}</span>}
       </div>

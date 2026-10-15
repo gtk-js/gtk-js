@@ -50,6 +50,8 @@ export const GtkSearchEntry = forwardRef<HTMLInputElement, GtkSearchEntryProps>(
       onPreviousMatch,
       halign,
       valign,
+      hexpand,
+      vexpand,
       className,
       onChange,
       onKeyDown,
@@ -109,7 +111,11 @@ export const GtkSearchEntry = forwardRef<HTMLInputElement, GtkSearchEntryProps>(
     if (className) classes.push(className);
 
     return (
-      <div className={classes.join(" ")} {...alignAttrs(halign, valign)} role="searchbox">
+      <div
+        className={classes.join(" ")}
+        {...alignAttrs(halign, valign, hexpand, vexpand)}
+        role="searchbox"
+      >
         <span className="gtk-image left">{SearchIcon && <SearchIcon size={16} />}</span>
         <input
           ref={ref}

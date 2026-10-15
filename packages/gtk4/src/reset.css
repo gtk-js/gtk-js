@@ -127,21 +127,21 @@ body:has(> :first-child:has([data-gtk-provider])) > :first-child {
   align-self: auto;
 }
 
-/* GtkSpinner — GTK draws this via -gtk-icon-source (process-working-symbolic).
-   On the web we replicate it with a CSS border spinner.
-   The spin keyframe and opacity/animation are provided by Adwaita CSS. */
+/* GtkSpinner — its icon (process-working-symbolic) centered in the space it
+   gets, like gtk_spinner_snapshot(). The spin keyframe and opacity/animation
+   are provided by Adwaita CSS. */
 :where([data-gtk-provider] .gtk-spinner) {
-  display: inline-block;
-  width: 16px;
-  height: 16px;
-  border-radius: 50%;
-  border: 2px solid currentColor;
-  border-top-color: transparent;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
-/* GtkImage is a widget with intrinsic sizing — needs a proper box model */
+/* GtkImage is a widget with intrinsic sizing — needs a proper box model. Given
+   more room than its icon, it draws the icon centered (gtk_image_snapshot()). */
 :where([data-gtk-provider] .gtk-image) {
   display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 /* GtkLabel: inline text that vertically centers when stretched by a parent box.
@@ -184,6 +184,27 @@ body:has(> :first-child:has([data-gtk-provider])) > :first-child {
    Dimensions: slider 8px wide, 40px min length, border-radius 99px
    Colors: currentColor at 20% idle, 40% hover, 60% active
    Transition: 200ms linear */
+
+/* GtkScrolledWindow's undershoot nodes, drawn over the content along an edge
+   it isn't scrolled to (gtk_scrolled_window_snapshot_undershoot(), 40px). The
+   scrolled window is the scroll container, so they stick to its edges, and
+   their negative margins give back the space they take in the flow. */
+:where([data-gtk-provider] .gtk-scrolledwindow > .gtk-undershoot) {
+  position: sticky;
+  z-index: 1;
+  height: 40px;
+  pointer-events: none;
+}
+
+:where([data-gtk-provider] .gtk-scrolledwindow > .gtk-undershoot.top) {
+  top: 0;
+  margin-bottom: -40px;
+}
+
+:where([data-gtk-provider] .gtk-scrolledwindow > .gtk-undershoot.bottom) {
+  bottom: 0;
+  margin-top: -40px;
+}
 
 /* Standard scrollbar properties (Firefox) */
 :where([data-gtk-provider] .gtk-scrolledwindow) {

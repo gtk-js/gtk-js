@@ -52,14 +52,46 @@
   flex: 1;
 }
 
-/* hexpand + halign=start: widget stays natural size, margin fills remaining space.
- * Equivalent to GTK hexpand=TRUE, halign=GTK_ALIGN_START — the allocation grows
- * but the widget renders at its natural size, pushing siblings to the end. */
-.gtk-box-layout.horizontal > [data-hexpand="true"] {
-  margin-right: auto;
+/* GtkWidget:hexpand / vexpand: the children that expand share the box's extra
+ * space equally (gtk_box_layout_allocate()). Whether a child expands is
+ * computed up the widget tree like gtk_widget_compute_expand() does it (see
+ * expand.ts, which sets data-computed-hexpand / data-computed-vexpand).
+ * With halign/valign start, end or center, an expanding child keeps its
+ * natural size, followed (or preceded) by the extra space. Flexbox only gives
+ * auto margins what growing children leave, so in a box that also has a
+ * filling child that expands, such a child gets no share; GTK splits it. */
+.gtk-box-layout.horizontal > [data-computed-hexpand] {
+  flex-grow: 1;
 }
-.gtk-box-layout.vertical > [data-hexpand="true"] {
-  margin-bottom: auto;
+.gtk-box-layout.horizontal
+  > [data-computed-hexpand]:is([data-halign="start"], [data-halign="end"], [data-halign="center"]) {
+  flex-grow: 0;
+}
+.gtk-box-layout.horizontal > [data-computed-hexpand][data-halign="start"] {
+  margin-inline-end: auto;
+}
+.gtk-box-layout.horizontal > [data-computed-hexpand][data-halign="end"] {
+  margin-inline-start: auto;
+}
+.gtk-box-layout.horizontal > [data-computed-hexpand][data-halign="center"] {
+  margin-inline: auto;
+}
+
+.gtk-box-layout.vertical > [data-computed-vexpand] {
+  flex-grow: 1;
+}
+.gtk-box-layout.vertical
+  > [data-computed-vexpand]:is([data-valign="start"], [data-valign="end"], [data-valign="center"]) {
+  flex-grow: 0;
+}
+.gtk-box-layout.vertical > [data-computed-vexpand][data-valign="start"] {
+  margin-block-end: auto;
+}
+.gtk-box-layout.vertical > [data-computed-vexpand][data-valign="end"] {
+  margin-block-start: auto;
+}
+.gtk-box-layout.vertical > [data-computed-vexpand][data-valign="center"] {
+  margin-block: auto;
 }
 
 /* -- Widget alignment in horizontal BoxLayout: valign = cross-axis -- */
@@ -91,35 +123,51 @@
 }
 
 /* === BinLayout === */
-/* Single-cell grid overlay. Used by GtkButton, GtkHeaderBar (outer), etc. */
-.gtk-bin-layout {
+/* Single-cell grid overlay. Used by GtkHeaderBar (outer), GtkWindowHandle, etc.
+ * GtkButton and the widgets built on it lay out their one child with it too
+ * (gtk_button_class_init()), so a button node uses it without the class: an
+ * image child fills the button and centers its icon, like gtk_image_snapshot().
+ * gtk-js's icon-and-label buttons (.image-text-button) have two children and
+ * stay inline. */
+:is(.gtk-bin-layout, .gtk-button:not(.image-text-button)) {
   display: grid;
   grid-template-columns: 1fr;
   grid-template-rows: 1fr;
 }
 
-.gtk-bin-layout > * {
+/* Buttons stay inline-level, as <button> is. */
+.gtk-button:not(.image-text-button) {
+  display: inline-grid;
+}
+
+:is(.gtk-bin-layout, .gtk-button:not(.image-text-button)) > * {
   grid-column: 1;
   grid-row: 1;
 }
 
+/* A button's label is centered: GtkLabel's default xalign is 0.5, which labels
+ * don't otherwise apply. */
+.gtk-button:not(.image-text-button) > .gtk-label {
+  justify-content: center;
+}
+
 /* -- Widget alignment in BinLayout (grid): both axes independent -- */
-.gtk-bin-layout > [data-halign="start"] {
+:is(.gtk-bin-layout, .gtk-button:not(.image-text-button)) > [data-halign="start"] {
   justify-self: start;
 }
-.gtk-bin-layout > [data-halign="end"] {
+:is(.gtk-bin-layout, .gtk-button:not(.image-text-button)) > [data-halign="end"] {
   justify-self: end;
 }
-.gtk-bin-layout > [data-halign="center"] {
+:is(.gtk-bin-layout, .gtk-button:not(.image-text-button)) > [data-halign="center"] {
   justify-self: center;
 }
-.gtk-bin-layout > [data-valign="start"] {
+:is(.gtk-bin-layout, .gtk-button:not(.image-text-button)) > [data-valign="start"] {
   align-self: start;
 }
-.gtk-bin-layout > [data-valign="end"] {
+:is(.gtk-bin-layout, .gtk-button:not(.image-text-button)) > [data-valign="end"] {
   align-self: end;
 }
-.gtk-bin-layout > [data-valign="center"] {
+:is(.gtk-bin-layout, .gtk-button:not(.image-text-button)) > [data-valign="center"] {
   align-self: center;
 }
 
@@ -131,6 +179,17 @@
  * is represented here by the absence of data-halign. */
 .gtk-actionbar:not([data-halign]) {
   width: 100%;
+}
+
+/* === GtkStack === */
+/* All pages share one cell, like gtk_stack_size_allocate(): the visible page,
+   and the hidden ones a homogeneous stack is sized by. */
+.gtk-stack {
+  display: grid;
+}
+
+.gtk-stack > * {
+  grid-area: 1 / 1;
 }
 
 /* === CenterLayout === */

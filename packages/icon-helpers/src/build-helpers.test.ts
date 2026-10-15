@@ -2,7 +2,7 @@ import { afterAll, expect, test } from "bun:test";
 import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "fs";
 import { tmpdir } from "os";
 import { join, relative } from "path";
-import { buildIconComponents, findSvgFiles } from "./build-helpers";
+import { buildIconComponents, findSvgFiles, missingIconSource } from "./build-helpers";
 
 const root = mkdtempSync(join(tmpdir(), "icon-helpers-"));
 afterAll(() => rmSync(root, { recursive: true, force: true }));
@@ -40,4 +40,17 @@ test("buildIconComponents takes a clashing icon from the first directory", async
 
   expect(exports).toEqual(['export { Folder } from "./icons/folder.ts";']);
   expect(readFileSync(join(out, "folder.ts"), "utf8")).toContain('"d":"M 1"');
+});
+
+test("missingIconSource inlines a full-color SVG and embeds other images as data URLs", () => {
+  const svg = `<svg viewBox="0 0 128 128"><path fill="#f6f5f4" d="M 0"/></svg>`;
+  const fromSvg = missingIconSource("image-missing.svg", new TextEncoder().encode(svg));
+  expect(fromSvg).toContain(`createGtkIconFromSvg("image-missing", ${JSON.stringify(svg)})`);
+  expect(fromSvg).toContain("export const MissingIcon");
+
+  const png = new Uint8Array([0x89, 0x50, 0x4e, 0x47]);
+  const fromPng = missingIconSource("image-missing.png", png);
+  expect(fromPng).toContain(
+    `createGtkIconFromUrl("image-missing", "data:image/png;base64,iVBORw==")`,
+  );
 });
