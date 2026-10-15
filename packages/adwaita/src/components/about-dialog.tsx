@@ -1,5 +1,5 @@
-import { useIcon } from "@gtk-js/gtk4";
-import { forwardRef, type HTMLAttributes, useCallback, useEffect } from "react";
+import { useEscapeLayer, useIcon } from "@gtk-js/gtk4";
+import { forwardRef, type HTMLAttributes, useCallback, useRef } from "react";
 import { createPortal } from "react-dom";
 
 export interface AdwAboutDialogProps extends HTMLAttributes<HTMLDivElement> {
@@ -86,14 +86,8 @@ export const AdwAboutDialog = forwardRef<HTMLDivElement, AdwAboutDialogProps>(
       onClosed?.();
     }, [onClosed]);
 
-    useEffect(() => {
-      if (!visible) return;
-      const handleKey = (e: KeyboardEvent) => {
-        if (e.key === "Escape") close();
-      };
-      document.addEventListener("keydown", handleKey);
-      return () => document.removeEventListener("keydown", handleKey);
-    }, [visible, close]);
+    const sheetRef = useRef<HTMLDivElement>(null);
+    useEscapeLayer(visible, sheetRef, close);
 
     if (!visible) return null;
 
@@ -112,6 +106,7 @@ export const AdwAboutDialog = forwardRef<HTMLDivElement, AdwAboutDialogProps>(
         {...rest}
       >
         <div
+          ref={sheetRef}
           className="gtk-floating-sheet"
           style={{
             position: "absolute",

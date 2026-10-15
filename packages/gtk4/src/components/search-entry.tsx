@@ -93,7 +93,11 @@ export const GtkSearchEntry = forwardRef<HTMLInputElement, GtkSearchEntryProps>(
     const handleKeyDown = useCallback(
       (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.key === "Enter") onActivate?.();
-        if (e.key === "Escape") onStopSearch?.();
+        if (e.key === "Escape") {
+          // Bound to stop-search, which consumes it: a dialog around the entry stays open.
+          e.preventDefault();
+          onStopSearch?.();
+        }
         if (e.key === "g" && e.ctrlKey && !e.shiftKey) {
           e.preventDefault();
           onNextMatch?.();
