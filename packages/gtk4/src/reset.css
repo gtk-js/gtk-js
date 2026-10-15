@@ -136,8 +136,8 @@ body:has(> :first-child:has([data-gtk-provider])) > :first-child {
   justify-content: center;
 }
 
-/* GtkImage is a widget with intrinsic sizing — needs a proper box model. It
-   draws its icon centered in the space it gets (gtk_image_snapshot()). */
+/* GtkImage is a widget with intrinsic sizing — needs a proper box model. Given
+   more room than its icon, it draws the icon centered (gtk_image_snapshot()). */
 :where([data-gtk-provider] .gtk-image) {
   display: inline-flex;
   align-items: center;
