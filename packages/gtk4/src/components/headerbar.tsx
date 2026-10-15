@@ -89,9 +89,8 @@ function WindowControls({
     minimize: onWindowMinimize,
   };
 
-  if (buttons.length === 0) {
-    return <div className={`gtk-windowcontrols ${side} empty`} />;
-  }
+  // Empty controls are hidden, as GtkHeaderBar binds their visibility to "empty".
+  if (buttons.length === 0) return null;
 
   return (
     <div className={`gtk-windowcontrols gtk-box-layout horizontal ${side}`}>
