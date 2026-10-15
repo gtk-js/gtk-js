@@ -1,11 +1,15 @@
 import { describe, expect, test } from "bun:test";
 import { createGtkIcon, createGtkIconFromSvg, createGtkIconFromUrl } from "@gtk-js/icon-helpers";
 import { renderToStaticMarkup } from "react-dom/server";
-import { IconProvider } from "../icon-context.tsx";
+import { type IconMap, IconProvider } from "../icon-context.tsx";
 import { GtkImage } from "./image.tsx";
 
 const icons = {
   ImageMissing: createGtkIcon("ImageMissing", [["path", { d: "M0 0h16v16H0z" }]]),
+  MissingIcon: createGtkIconFromSvg(
+    "image-missing",
+    `<svg viewBox="0 0 16 16"><path d="M1 1h14v14H1z" fill="#f6f5f4"/></svg>`,
+  ),
   ComExampleApp: createGtkIconFromUrl("ComExampleApp", "app.svg"),
   ComExampleInline: createGtkIconFromSvg(
     "ComExampleInline",
@@ -18,17 +22,24 @@ const icons = {
   ),
 };
 
-function render(iconName?: string, pixelSize?: number) {
+function render(iconName?: string, pixelSize?: number, set: IconMap = icons) {
   return renderToStaticMarkup(
-    <IconProvider value={icons}>
+    <IconProvider value={set}>
       <GtkImage iconName={iconName} pixelSize={pixelSize} />
     </IconProvider>,
   );
 }
 
 describe("GtkImage", () => {
-  test("shows image-missing for a name the icon set doesn't have, like GtkIconTheme", () => {
-    expect(render("NoSuchIcon")).toContain("gtk-icon-ImageMissing");
+  test("shows the full-color image-missing for a name the icon set doesn't have, like GtkIconTheme", () => {
+    const html = render("NoSuchIcon");
+    expect(html).toContain("gtk-icon-image-missing");
+    expect(html).toContain('fill="#f6f5f4"');
+  });
+
+  test("falls back to the symbolic ImageMissing in a set without a full-color one", () => {
+    const { MissingIcon: _, ...symbolicOnly } = icons;
+    expect(render("NoSuchIcon", undefined, symbolicOnly)).toContain("gtk-icon-ImageMissing");
   });
 
   test("shows nothing without an icon name", () => {
