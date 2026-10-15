@@ -474,78 +474,95 @@
 }
 
 /* === Popover Arrow ===
- * GTK draws the popover arrow as a 24x12 triangle via Cairo (gtkpopover.c).
- * TAIL_GAP_WIDTH=24, TAIL_HEIGHT=12. We replicate with clip-path.
+ * GTK draws the arrow as a TAIL_GAP_WIDTH × TAIL_HEIGHT (24×12) triangle
+ * whose base lies on the contents' outer edge plus their border, so it
+ * covers the contents' border where they meet (gtk_popover_get_gap_coords).
+ * It fills the triangle with the arrow node's background and strokes its two
+ * sides in the arrow's border color (create_arrow_render_node). Only the
+ * contents cast a shadow, their box-shadow; the arrow has none.
  *
- * The arrow is absolutely positioned within the popover. The JS component
- * computes its offset to point at the anchor element's center, clamped to
- * stay within the popover's border-radius (matching gtk_popover_get_gap_coords).
- *
- * GTK paints a unified shadow around arrow+contents as one shape. We
- * approximate this with filter: drop-shadow() on the parent, replacing
- * per-element box-shadow. The drop-shadow values below are from Adwaita.
- * TODO: Read shadow from theme CSS at runtime so non-Adwaita themes
- * (e.g. WhiteSur) get correct shadows. Requires converting computed
- * box-shadow to drop-shadow format, or emitting a CSS custom property
- * from the compile pipeline. */
-
-.gtk-popover.background[data-position] {
-  filter: drop-shadow(0 1px 6px rgba(0, 0, 0, 0.09)) drop-shadow(0 2px 17px rgba(0, 0, 0, 0.05));
-}
-
-.gtk-popover.background[data-position] > .gtk-arrow,
-.gtk-popover.background[data-position] > .gtk-contents {
-  box-shadow: none;
-}
+ * Here .gtk-arrow spans the edge the arrow is on, 13px deep with Adwaita's
+ * 1px border. Its own border fills it in the border color, its ::before in
+ * the background color, and the JS component clips them to the triangle and
+ * to the triangle inside the stroke (--gtk-arrow-fill). It also ignores the
+ * theme's `menubutton arrow` minimum size, which GTK never applies to this
+ * node. */
 
 .gtk-popover.background[data-position] > .gtk-arrow {
   position: absolute;
-  border: none;
   z-index: 1;
+  min-width: 0;
+  min-height: 0;
+  margin: 0;
+  padding: 0;
+  box-shadow: none;
+}
+
+.gtk-popover.background[data-position] > .gtk-arrow::before {
+  content: "";
+  position: absolute;
+  background-color: inherit;
+  clip-path: var(--gtk-arrow-fill);
+}
+
+/* Vertical: the arrow box is as wide as the popover. */
+.gtk-popover.background:is([data-position="bottom"], [data-position="top"]) > .gtk-arrow {
+  left: 0;
+  right: 0;
+  height: 0;
+  border-width: 13px 0 0;
+}
+.gtk-popover.background:is([data-position="bottom"], [data-position="top"]) > .gtk-arrow::before {
+  left: 0;
+  right: 0;
+  top: -13px;
+  height: 13px;
+}
+
+/* Horizontal: the arrow box is as tall as the popover. */
+.gtk-popover.background:is([data-position="right"], [data-position="left"]) > .gtk-arrow {
+  top: 0;
+  bottom: 0;
+  width: 0;
+  border-width: 0 0 0 13px;
+}
+.gtk-popover.background:is([data-position="right"], [data-position="left"]) > .gtk-arrow::before {
+  top: 0;
+  bottom: 0;
+  left: -13px;
+  width: 13px;
 }
 
 /* Bottom: popover below anchor, arrow points up from top edge */
 .gtk-popover.background[data-position="bottom"] > .gtk-arrow {
-  width: 24px;
-  height: 12px;
-  clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
   top: 0;
 }
 .gtk-popover.background[data-position="bottom"] > .gtk-contents {
-  margin-top: 11px; /* TAIL_HEIGHT - 1px overlap */
+  margin-top: 12px; /* TAIL_HEIGHT */
 }
 
 /* Top: popover above anchor, arrow points down from bottom edge */
 .gtk-popover.background[data-position="top"] > .gtk-arrow {
-  width: 24px;
-  height: 12px;
-  clip-path: polygon(0% 0%, 50% 100%, 100% 0%);
   bottom: 0;
 }
 .gtk-popover.background[data-position="top"] > .gtk-contents {
-  margin-bottom: 11px;
+  margin-bottom: 12px;
 }
 
 /* Right: popover right of anchor, arrow points left from left edge */
 .gtk-popover.background[data-position="right"] > .gtk-arrow {
-  width: 12px;
-  height: 24px;
-  clip-path: polygon(100% 0%, 0% 50%, 100% 100%);
   left: 0;
 }
 .gtk-popover.background[data-position="right"] > .gtk-contents {
-  margin-left: 11px;
+  margin-left: 12px;
 }
 
 /* Left: popover left of anchor, arrow points right from right edge */
 .gtk-popover.background[data-position="left"] > .gtk-arrow {
-  width: 12px;
-  height: 24px;
-  clip-path: polygon(0% 0%, 100% 50%, 0% 100%);
   right: 0;
 }
 .gtk-popover.background[data-position="left"] > .gtk-contents {
-  margin-right: 11px;
+  margin-right: 12px;
 }
 
 /* === GtkCalendar grid ===
