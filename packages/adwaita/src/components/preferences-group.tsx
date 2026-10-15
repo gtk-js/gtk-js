@@ -100,8 +100,10 @@ export const AdwPreferencesGroup = forwardRef<HTMLDivElement, AdwPreferencesGrou
       if (next.size !== others.size || [...next].some((key) => !others.has(key))) {
         setOthers(next);
       }
-      // GTK hides the list while it has no rows.
-      if ((nodes.length === 0) !== listEmpty) setListEmpty(nodes.length === 0);
+      // GTK hides the list while it has no rows. A list that is about to
+      // appear starts shown, so the rows mounting in it can take the focus.
+      const empty = !!list && nodes.length === 0;
+      if (empty !== listEmpty) setListEmpty(empty);
     });
 
     const slot = ({ child, key }: (typeof items)[number]) => (
