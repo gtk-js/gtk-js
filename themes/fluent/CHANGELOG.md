@@ -1,5 +1,14 @@
 # @gtk-js/theme-fluent
 
+## [0.0.7](https://github.com/gtk-js/gtk-js/compare/theme-fluent-v0.0.6...theme-fluent-v0.0.7) (2026-10-15)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @gtk-js/gtk-css bumped to 0.1.6
+
 ## 0.0.4
 
 ### Patch Changes

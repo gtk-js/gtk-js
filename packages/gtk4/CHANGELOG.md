@@ -1,5 +1,35 @@
 # @gtk-js/gtk4
 
+## [0.1.6](https://github.com/gtk-js/gtk-js/compare/gtk4-v0.1.5...gtk4-v0.1.6) (2026-10-15)
+
+
+### Features
+
+* add expand, tooltips, icon fallback and native widget layout ([#45](https://github.com/gtk-js/gtk-js/issues/45)) ([cbd75ef](https://github.com/gtk-js/gtk-js/commit/cbd75ef0d6d98bf47c9c12a7a5184b0512e91b90))
+* add GtkPopoverMenu and anchored menu button popovers ([#38](https://github.com/gtk-js/gtk-js/issues/38)) ([3d5f6f7](https://github.com/gtk-js/gtk-js/commit/3d5f6f70ea9e007d4050d6a78e77f33a10870acd))
+* add useUnderline prop to GtkButton ([#31](https://github.com/gtk-js/gtk-js/issues/31)) ([5cfb75b](https://github.com/gtk-js/gtk-js/commit/5cfb75bb450e544312f032b6a3a2633ba75da081))
+* animate navigation, dialogs and toasts like libadwaita ([#40](https://github.com/gtk-js/gtk-js/issues/40)) ([3d66efc](https://github.com/gtk-js/gtk-js/commit/3d66efc5f68bb33a1fa05066622e06231e305d3d))
+* match libadwaita's preference and status pages ([#39](https://github.com/gtk-js/gtk-js/issues/39)) ([c2c3ecc](https://github.com/gtk-js/gtk-js/commit/c2c3ecc0fc2fe7177d090c883ebc5ff4c7c9b5e6))
+* report window shadow width and draggable regions ([#44](https://github.com/gtk-js/gtk-js/issues/44)) ([f212f5e](https://github.com/gtk-js/gtk-js/commit/f212f5e8242a0efc647427422319e097237e97ab))
+
+
+### Bug Fixes
+
+* build the gtk4 and adwaita bundles with the production JSX runtime ([#34](https://github.com/gtk-js/gtk-js/issues/34)) ([6192460](https://github.com/gtk-js/gtk-js/commit/61924607b66666d81471c7daa12f76affa40193c))
+* follow GTK CSS for border-spacing, fonts, line height, links, :disabled, specificity and transitions ([#36](https://github.com/gtk-js/gtk-js/issues/36)) ([bc00d61](https://github.com/gtk-js/gtk-js/commit/bc00d6136b666c6d5463d1f1b7f11899536e355e))
+* GtkLabel ellipsizing and whitespace, AdwWindowTitle and GtkTextView width ([#37](https://github.com/gtk-js/gtk-js/issues/37)) ([9ba3dab](https://github.com/gtk-js/gtk-js/commit/9ba3dab9b12e87c5b6ee4f4c8f1095a46df2725e))
+* ship libadwaita's own icons, render GtkButton icon-name icons, build icons deterministically ([#35](https://github.com/gtk-js/gtk-js/issues/35)) ([36d9619](https://github.com/gtk-js/gtk-js/commit/36d96199f87e6f70e4f97436805b98ee23cdb1e9))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @gtk-js/icons-gtk4 bumped to 0.1.6
+    * @gtk-js/icon-helpers bumped to 0.1.6
+  * devDependencies
+    * @gtk-js/gtk-css bumped to 0.1.6
+
 ## 0.1.3
 
 ### Patch Changes

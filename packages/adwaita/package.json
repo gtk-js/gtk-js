@@ -3,7 +3,7 @@
   "publishConfig": {
     "access": "public"
   },
-  "version": "0.1.5",
+  "version": "0.1.6",
   "type": "module",
   "main": "dist/index.js",
   "files": [
@@ -21,12 +21,12 @@
     "build": "bun build.ts && tsc -p tsconfig.build.json && NODE_ENV=production bun build src/index.ts --outdir dist --format esm --packages external"
   },
   "dependencies": {
-    "@gtk-js/icons-adwaita": "workspace:*",
-    "@gtk-js/gtk4": "workspace:*",
-    "@gtk-js/theme-adwaita": "workspace:*"
+    "@gtk-js/icons-adwaita": "0.1.6",
+    "@gtk-js/gtk4": "0.1.6",
+    "@gtk-js/theme-adwaita": "0.0.7"
   },
   "devDependencies": {
-    "@gtk-js/gtk-css": "workspace:*",
+    "@gtk-js/gtk-css": "0.1.6",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3"
   },
