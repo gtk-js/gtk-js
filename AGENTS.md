@@ -57,7 +57,7 @@ When implementing OR modifying a widget, component, or stylesheet:
 - Convert `background-image: image(X)` to a `linear-gradient` (NOT `background-color`) — this preserves layering so hover overlays (background-image) render on top of base background-color correctly. A single-color overlay is drawn from the registered `--gtk-background-overlay` color, which transitions with `background`, because browsers can't interpolate images and GTK cross-fades them.
 - The selector map in `selectors.ts` must cover ALL bare GTK selectors. Audit after any upstream update.
 - GTK node names keep a type selector's specificity: `row` becomes `:where(.gtk-row):not(_)`, not `.gtk-row`. As plain classes, rules like `list.boxed-list > row` and `row.entry.focused` would tie and the later one would win. gtk-js's own `layout.css` is weighed the same way when injected.
-- `currentColor` in properties other than `color` is read through `--gtk-current-color`, which mirrors every `color` declaration: GTK resolves currentcolor before transitioning, browsers resolve it against the element's new color.
+- `--gtk-current-color` mirrors every `color` declaration. Background overlays, and widgets whose own color changes with their state (`switch:checked`), read currentColor through it: GTK resolves currentcolor before transitioning, browsers resolve it against the element's new color, and can't fade a registered color to a mix of currentColor. Everything else keeps plain `currentColor`, so it follows colors set by app CSS.
 
 ## Box Model
 
