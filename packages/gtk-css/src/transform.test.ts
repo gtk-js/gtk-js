@@ -106,12 +106,8 @@ describe("convertGtkColorFunctions", () => {
         ".x { box-shadow: inset 0 0 0 1px alpha(currentColor, 0.04), inset 0 1px alpha(currentColor, 0.05); }",
       );
       expect(out).not.toContain("alpha(");
-      expect(out).toContain(
-        "color-mix(in oklab, var(--gtk-current-color, currentColor) 4%, transparent)",
-      );
-      expect(out).toContain(
-        "color-mix(in oklab, var(--gtk-current-color, currentColor) 5%, transparent)",
-      );
+      expect(out).toContain("color-mix(in oklab, currentColor 4%, transparent)");
+      expect(out).toContain("color-mix(in oklab, currentColor 5%, transparent)");
     });
 
     test("rgba() arg → color-mix()", async () => {
@@ -247,6 +243,18 @@ describe("currentColor", () => {
     );
     // Applied once, even though PostCSS revisits changed declarations.
     expect(out.match(/--gtk-current-color/g)).toHaveLength(2);
+  });
+
+  test("widgets whose color doesn't change with their state keep currentColor", async () => {
+    const out = await transform(
+      "row:hover { background-color: alpha(currentColor, 0.03); } row.error { color: red; } row:hover { background-image: image(alpha(currentColor, 0.1)); }",
+    );
+    // Follows a color set by app CSS.
+    expect(out).toContain("background-color: color-mix(in oklab, currentColor 3%, transparent)");
+    // Overlays can only fade from a concrete color.
+    expect(out).toContain(
+      "--gtk-background-overlay: color-mix(in oklab, var(--gtk-current-color, currentColor) 10%, transparent)",
+    );
   });
 
   test("a color that depends on currentColor leaves the property to fall back", async () => {

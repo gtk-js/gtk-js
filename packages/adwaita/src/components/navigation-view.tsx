@@ -1,3 +1,4 @@
+import { isCoveredByLayer } from "@gtk-js/gtk4";
 import React, {
   createContext,
   forwardRef,
@@ -264,7 +265,10 @@ export const AdwNavigationView = forwardRef<HTMLDivElement, AdwNavigationViewPro
 
     const handleKeyDown = useCallback(
       (e: React.KeyboardEvent) => {
-        if (!canPopSelf) return;
+        // Keys from a dialog or popover over the view (React events bubble out
+        // of portals, and a dialog doesn't take the focus from the page) are
+        // theirs: in GTK they never reach the view.
+        if (!canPopSelf || e.defaultPrevented || isCoveredByLayer(e.currentTarget)) return;
         if ((popOnEscape && e.key === "Escape") || (e.altKey && e.key === "ArrowLeft")) {
           e.preventDefault();
           e.stopPropagation();

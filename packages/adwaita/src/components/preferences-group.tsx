@@ -42,22 +42,36 @@ export const AdwPreferencesGroup = forwardRef<HTMLDivElement, AdwPreferencesGrou
     const singleLine = hasTitle && !hasDescription;
 
     // Like adw_preferences_group_add(): rows go in the list and other widgets
-    // below it. Rows register through GtkListBoxRowContext (useListBoxRow), so
-    // a child renders in the list until it has mounted without registering.
+    // below it. Rows register through GtkListBoxRowContext (useListBoxRow), and
+    // a component is only known to render one once it has: it starts in the
+    // list and moves below it if it rendered something else there. Moving
+    // remounts it, so a child that has rendered a row stays in the list even
+    // while it renders nothing, and one that renders nothing isn't moved.
     const items = Children.toArray(children).map((child, index) => ({
       child,
       key: isValidElement(child) && child.key != null ? child.key : `#${index}`,
+      // Text and plain elements are never rows.
+      plain: !isValidElement(child) || typeof child.type === "string",
     }));
+    const listRef = useRef<HTMLDivElement>(null);
     const rowCounts = useRef(new Map<string, number>());
+    const rowKeys = useRef(new Set<string>());
     const registrations = useRef(new Map<string, () => () => void>());
     const [others, setOthers] = useState<ReadonlySet<string>>(() => new Set());
+    const [listEmpty, setListEmpty] = useState(false);
+    // Rows register in their layout effects: look again when one comes or goes.
+    const [, setRegistrations] = useState(0);
 
     const registration = (key: string) => {
       let register = registrations.current.get(key);
       if (!register) {
+        const count = (delta: number) => {
+          rowCounts.current.set(key, (rowCounts.current.get(key) ?? 0) + delta);
+          setRegistrations((n) => n + 1);
+        };
         register = () => {
-          rowCounts.current.set(key, (rowCounts.current.get(key) ?? 0) + 1);
-          return () => rowCounts.current.set(key, (rowCounts.current.get(key) ?? 1) - 1);
+          count(1);
+          return () => count(-1);
         };
         registrations.current.set(key, register);
       }
@@ -66,16 +80,30 @@ export const AdwPreferencesGroup = forwardRef<HTMLDivElement, AdwPreferencesGrou
 
     useLayoutEffect(() => {
       const present = new Set(items.map(({ key }) => key));
-      for (const key of registrations.current.keys()) {
-        if (!present.has(key)) {
-          registrations.current.delete(key);
-          rowCounts.current.delete(key);
-        }
+      for (const keys of [registrations.current, rowCounts.current, rowKeys.current]) {
+        for (const key of keys.keys()) if (!present.has(key)) keys.delete(key);
       }
-      const next = new Set([...present].filter((key) => !rowCounts.current.get(key)));
+      for (const [key, count] of rowCounts.current) if (count > 0) rowKeys.current.add(key);
+
+      const list = listRef.current;
+      const nodes = list ? [...list.childNodes] : [];
+      const strays = nodes.some(
+        (node) => !(node instanceof Element && node.classList.contains("gtk-row")),
+      );
+      const next = new Set(
+        items
+          .filter(
+            ({ key, plain }) => !plain && !rowKeys.current.has(key) && (strays || others.has(key)),
+          )
+          .map(({ key }) => key),
+      );
       if (next.size !== others.size || [...next].some((key) => !others.has(key))) {
         setOthers(next);
       }
+      // GTK hides the list while it has no rows. A list that is about to
+      // appear starts shown, so the rows mounting in it can take the focus.
+      const empty = !!list && nodes.length === 0;
+      if (empty !== listEmpty) setListEmpty(empty);
     });
 
     const slot = ({ child, key }: (typeof items)[number]) => (
@@ -83,7 +111,8 @@ export const AdwPreferencesGroup = forwardRef<HTMLDivElement, AdwPreferencesGrou
         {child}
       </GtkListBoxRowContext.Provider>
     );
-    const rows = items.filter(({ key }) => !others.has(key));
+    const inList = ({ key, plain }: (typeof items)[number]) => !plain && !others.has(key);
+    const rows = items.filter(inList);
 
     const classes = ["gtk-preferencesgroup"];
     if (className) classes.push(className);
@@ -110,14 +139,15 @@ export const AdwPreferencesGroup = forwardRef<HTMLDivElement, AdwPreferencesGrou
           <div className="gtk-box gtk-box-layout vertical">
             {rows.length > 0 && (
               <div
+                ref={listRef}
                 className={`gtk-list ${separateRows ? "boxed-list-separate" : "boxed-list"}`}
                 role="list"
-                style={{ display: "flex", flexDirection: "column" }}
+                style={{ display: listEmpty ? "none" : "flex", flexDirection: "column" }}
               >
                 {rows.map(slot)}
               </div>
             )}
-            {items.filter(({ key }) => others.has(key)).map(slot)}
+            {items.filter((item) => !inList(item)).map(slot)}
           </div>
         </div>
       </div>

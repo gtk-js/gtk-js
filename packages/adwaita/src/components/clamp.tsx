@@ -68,6 +68,10 @@ export function clampChildSize(
  * @see https://gnome.pages.gitlab.gnome.org/libadwaita/doc/1-latest/class.Clamp.html
  * @see upstream/libadwaita/src/adw-clamp-layout.c
  */
+function applySizeClass(child: Element, sizeClass: string) {
+  for (const c of ["small", "medium", "large"]) child.classList.toggle(c, c === sizeClass);
+}
+
 export const AdwClamp = forwardRef<HTMLDivElement, AdwClampProps>(function AdwClamp(
   {
     maximumSize = 600,
@@ -82,6 +86,7 @@ export const AdwClamp = forwardRef<HTMLDivElement, AdwClampProps>(function AdwCl
   ref,
 ) {
   const containerRef = useRef<HTMLDivElement | null>(null);
+  const sizeClassRef = useRef<string | null>(null);
   const horizontal = orientation === "horizontal";
 
   const allocate = useCallback(() => {
@@ -111,7 +116,8 @@ export const AdwClamp = forwardRef<HTMLDivElement, AdwClampProps>(function AdwCl
     const cssSize = `${Math.max(0, size - (horizontal ? extra("left", "right") : extra("top", "bottom")))}px`;
     if (horizontal) child.style.width = cssSize;
     else child.style.height = cssSize;
-    for (const c of ["small", "medium", "large"]) child.classList.toggle(c, c === sizeClass);
+    sizeClassRef.current = sizeClass;
+    applySizeClass(child, sizeClass);
   }, [horizontal, maximumSize, tighteningThreshold, unit]);
 
   // Children can change on any render.
@@ -122,7 +128,19 @@ export const AdwClamp = forwardRef<HTMLDivElement, AdwClampProps>(function AdwCl
     if (!clamp) return;
     const observer = new ResizeObserver(allocate);
     observer.observe(clamp);
-    return () => observer.disconnect();
+    // The size class isn't in the child's className: React drops it when the
+    // child's own className changes, so put it back.
+    const classes = new MutationObserver((records) => {
+      const child = clamp.firstElementChild;
+      if (child && sizeClassRef.current && records.some((r) => r.target === child)) {
+        applySizeClass(child, sizeClassRef.current);
+      }
+    });
+    classes.observe(clamp, { subtree: true, attributeFilter: ["class"] });
+    return () => {
+      observer.disconnect();
+      classes.disconnect();
+    };
   }, [allocate]);
 
   const setRef = (el: HTMLDivElement | null) => {

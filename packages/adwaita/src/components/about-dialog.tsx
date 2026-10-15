@@ -11,7 +11,6 @@ import {
   type HTMLAttributes,
   type ReactNode,
   useCallback,
-  useEffect,
   useMemo,
   useState,
 } from "react";
@@ -471,15 +470,6 @@ export const AdwAboutDialog = forwardRef<HTMLDivElement, AdwAboutDialogProps>(
     );
     const push = (tag: string) => setStack((s) => [...s, tag]);
 
-    useEffect(() => {
-      if (!visible) return;
-      const handleKey = (e: KeyboardEvent) => {
-        if (e.key === "Escape" && !e.defaultPrevented) close();
-      };
-      document.addEventListener("keydown", handleKey);
-      return () => document.removeEventListener("keydown", handleKey);
-    }, [visible, close]);
-
     const controls = useMemo(() => ({ close, decorationLayout: ":close" }), [close]);
 
     const translators = translatorCredits
@@ -813,6 +803,7 @@ export const AdwAboutDialog = forwardRef<HTMLDivElement, AdwAboutDialogProps>(
           flexDirection: "column",
         }}
         onDimmingClick={close}
+        onEscape={close}
         // Like a new dialog each time, it opens on its main page: the stack
         // resets once the dialog has animated out, so it doesn't navigate
         // while closing or opening.

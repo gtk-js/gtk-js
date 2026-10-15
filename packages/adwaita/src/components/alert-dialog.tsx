@@ -3,7 +3,6 @@ import {
   type HTMLAttributes,
   type ReactNode,
   useCallback,
-  useEffect,
   useLayoutEffect,
   useRef,
   useState,
@@ -104,15 +103,6 @@ export const AdwAlertDialog = forwardRef<HTMLDivElement, AdwAlertDialogProps>(
     ref,
   ) {
     const handleClose = useCallback(() => onResponse?.(closeResponse), [onResponse, closeResponse]);
-
-    useEffect(() => {
-      if (!visible) return;
-      const handleKey = (e: KeyboardEvent) => {
-        if (e.key === "Escape" && !e.defaultPrevented) handleClose();
-      };
-      document.addEventListener("keydown", handleKey);
-      return () => document.removeEventListener("keydown", handleKey);
-    }, [visible, handleClose]);
 
     // Upstream measure_contents() picks the width: at least DIALOG_MIN_WIDTH;
     // normally the heading's natural width, clamped between the widths the
@@ -231,6 +221,7 @@ export const AdwAlertDialog = forwardRef<HTMLDivElement, AdwAlertDialogProps>(
         // The UI template sets follows-content-size.
         followsContentSize
         onDimmingClick={handleClose}
+        onEscape={handleClose}
         onCloseAnimationDone={onHidden}
         portal={portal}
         aria-label={heading}

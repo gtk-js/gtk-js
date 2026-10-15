@@ -9,6 +9,7 @@ import React, {
   useRef,
 } from "react";
 import { createPortal } from "react-dom";
+import { useEscapeLayer } from "../escape-layers.ts";
 import { alignAttrs, type GtkAlignProps, type GtkPositionType } from "../types.ts";
 
 // GTK constants from gtkpopover.c lines 162-163
@@ -215,7 +216,10 @@ export const GtkPopover = forwardRef<HTMLDivElement, GtkPopoverProps>(function G
     };
   }, [visible, updateLayout, resolvedRef]);
 
-  // Handle click outside and Escape
+  // Escape closes the topmost popover or dialog only.
+  useEscapeLayer(visible && autohide, resolvedRef, () => onClosed?.());
+
+  // Handle click outside
   useEffect(() => {
     if (!visible || !autohide) return;
 
@@ -229,19 +233,13 @@ export const GtkPopover = forwardRef<HTMLDivElement, GtkPopoverProps>(function G
       }
     };
 
-    const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClosed?.();
-    };
-
     const timeout = setTimeout(() => {
       document.addEventListener("pointerdown", handleClickOutside);
-      document.addEventListener("keydown", handleEscape);
     }, 0);
 
     return () => {
       clearTimeout(timeout);
       document.removeEventListener("pointerdown", handleClickOutside);
-      document.removeEventListener("keydown", handleEscape);
     };
   }, [visible, autohide, onClosed, resolvedRef, anchorRef]);
 
