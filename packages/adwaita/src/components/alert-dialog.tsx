@@ -151,7 +151,8 @@ export const AdwAlertDialog = forwardRef<HTMLDivElement, AdwAlertDialogProps>(
               parseFloat(bs.paddingRight) +
               parseFloat(bs.borderLeftWidth) +
               parseFloat(bs.borderRightWidth);
-            return Math.max(parseFloat(bs.minWidth) || 0, (label?.scrollWidth ?? 0) + extra);
+            // The label on its own line: a button's bin layout stretches it.
+            return Math.max(parseFloat(bs.minWidth) || 0, singleLineWidth(label) + extra);
           }),
         );
         const n = buttons.length;
