@@ -701,9 +701,10 @@ export const AdwAboutDialog = forwardRef<HTMLDivElement, AdwAboutDialogProps>(
               />
             }
             content={
-              <div
-                className="gtk-scrolledwindow subpage"
-                style={{ overflow: "auto", height: "100%" }}
+              <GtkScrolledWindow
+                className="subpage"
+                hscrollbarPolicy="never"
+                style={{ height: "100%" }}
               >
                 <AdwClamp>
                   <div
@@ -718,7 +719,7 @@ export const AdwAboutDialog = forwardRef<HTMLDivElement, AdwAboutDialogProps>(
                     {debugInfo}
                   </div>
                 </AdwClamp>
-              </div>
+              </GtkScrolledWindow>
             }
             bottomBars={
               <GtkActionBar
