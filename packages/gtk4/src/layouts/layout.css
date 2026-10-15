@@ -501,3 +501,16 @@
   background-color: color-mix(in srgb, currentColor 7%, transparent);
   border-radius: 9px;
 }
+
+/* -- AdwPreferencesGroup's list --
+ * Its rows portal into it (useListBoxRow). GTK hides it while it has no rows
+ * (update_listbox_visibility() in adw-preferences-group.c); with :empty it's
+ * shown as soon as a row is inserted, so a mounting row can take the focus. */
+.gtk-preferencesgroup-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.gtk-preferencesgroup-list:empty {
+  display: none;
+}

@@ -288,7 +288,8 @@ export async function extractWebStyles(
         };
         const children: RawElementData[] = [];
         for (const child of element.children) {
-          if (child instanceof HTMLElement) {
+          // Like the native side, which only snapshots visible widgets.
+          if (child instanceof HTMLElement && getComputedStyle(child).display !== "none") {
             children.push(extractElement(child, content));
           }
         }

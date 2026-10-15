@@ -59,7 +59,7 @@ export const AdwActionRow = forwardRef<HTMLDivElement, AdwActionRowProps>(functi
   },
   ref,
 ) {
-  useListBoxRow();
+  const placeRow = useListBoxRow();
   const classes = ["gtk-row"];
   if (activatable) classes.push("activatable");
   if (className) classes.push(className);
@@ -84,7 +84,7 @@ export const AdwActionRow = forwardRef<HTMLDivElement, AdwActionRowProps>(functi
         }
       : {};
 
-  return (
+  return placeRow(
     <div
       ref={ref}
       role="listitem"
@@ -126,6 +126,6 @@ export const AdwActionRow = forwardRef<HTMLDivElement, AdwActionRowProps>(functi
           </div>
         )}
       </div>
-    </div>
+    </div>,
   );
 });
