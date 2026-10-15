@@ -4,11 +4,12 @@ import { renderToStaticMarkup } from "react-dom/server";
 import { GtkWindowTitle } from "./window-title.tsx";
 
 describe("GtkWindowTitle", () => {
-  test("a caller's style merges with the title's grid layout", () => {
-    const html = renderToStaticMarkup(<GtkWindowTitle title="Title" style={{ color: "red" }} />);
-    const style = html.match(/class="gtk-windowtitle"[^>]*style="([^"]*)"/)?.[1] ?? "";
-    expect(style).toContain("display:grid");
-    expect(style).toContain("grid-template-columns:minmax(calc(5ch + 24px), max-content)");
-    expect(style).toContain("color:red");
+  test("is laid out by its layout class, keeping a caller's style", () => {
+    const html = renderToStaticMarkup(
+      <GtkWindowTitle title="Title" subtitle="Subtitle" style={{ color: "red" }} />,
+    );
+    expect(html).toContain('<div class="gtk-windowtitle" style="color:red">');
+    expect(html).toContain('<span class="gtk-label title">Title</span>');
+    expect(html).toContain('<span class="gtk-label subtitle">Subtitle</span>');
   });
 });

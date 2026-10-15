@@ -325,6 +325,36 @@
   align-self: center;
 }
 
+/* === AdwWindowTitle === */
+/*
+ * Its labels are single-line and ellipsize, and the title has width-chars=5
+ * (upstream/libadwaita/src/adw-window-title.ui): the minimum width is five
+ * characters (plus the labels' padding, 12px a side in the theme) while the
+ * natural width is the full text. A grid track with a fixed minimum reproduces
+ * that min/natural split, so a long title ellipsizes instead of forcing the
+ * header bar wider than the window.
+ */
+.gtk-windowtitle {
+  display: grid;
+  grid-template-columns: minmax(0px, max-content);
+  align-content: center;
+}
+
+.gtk-windowtitle:has(> .title) {
+  grid-template-columns: minmax(calc(5ch + 24px), max-content);
+}
+
+/* Blocks, not the default inline-flex: text-overflow only applies to blocks.
+   The labels stretch to the grid track, padding included, and center their
+   text, so a shrunk title ellipsizes within it. */
+.gtk-windowtitle > .gtk-label {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-align: center;
+}
+
 /* === Scale (GtkRange / GtkScale) === */
 /*
  * GTK uses a custom layout manager (gtk_range_allocate_trough) for the trough.
