@@ -1,4 +1,4 @@
-import { type GtkInputPurpose, useIcon } from "@gtk-js/gtk4";
+import { type GtkInputPurpose, useIcon, useListBoxRow } from "@gtk-js/gtk4";
 import React, {
   forwardRef,
   type HTMLAttributes,
@@ -19,6 +19,16 @@ export interface AdwEntryRowProps extends HTMLAttributes<HTMLDivElement> {
   onChanged?: (text: string) => void;
   onApply?: () => void;
   onEntryActivated?: () => void;
+  /** Whether the text is visible (GtkText:visibility). Default: true. */
+  visibility?: boolean;
+  /** Tooltip shown when hovering the row (GtkWidget:tooltip-text). */
+  tooltipText?: string;
+  /** Focus the entry when it mounts. */
+  autoFocus?: boolean;
+  /** Extra content shown after the text, inside the editable area (e.g. indicators). */
+  editableSuffix?: ReactNode;
+  /** Receives key presses from the text entry. */
+  onEntryKeyDown?: (event: React.KeyboardEvent<HTMLInputElement>) => void;
 }
 
 /**
@@ -52,6 +62,11 @@ export const AdwEntryRow = forwardRef<HTMLDivElement, AdwEntryRowProps>(function
     onChanged,
     onApply,
     onEntryActivated,
+    visibility = true,
+    tooltipText,
+    autoFocus,
+    editableSuffix,
+    onEntryKeyDown,
     className,
     ...rest
   },
@@ -69,6 +84,7 @@ export const AdwEntryRow = forwardRef<HTMLDivElement, AdwEntryRowProps>(function
   const ApplyIcon = useIcon("AdwEntryApply");
   const EditIcon = useIcon("DocumentEdit");
 
+  const placeRow = useListBoxRow();
   const classes = ["gtk-row", "entry"];
   if (focused) classes.push("focused");
   if (className) classes.push(className);
@@ -85,6 +101,7 @@ export const AdwEntryRow = forwardRef<HTMLDivElement, AdwEntryRowProps>(function
 
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent<HTMLInputElement>) => {
+      onEntryKeyDown?.(e);
       if (e.key === "Enter") {
         if (showApplyButton && textChanged) {
           onApply?.();
@@ -94,13 +111,14 @@ export const AdwEntryRow = forwardRef<HTMLDivElement, AdwEntryRowProps>(function
         }
       }
     },
-    [showApplyButton, textChanged, onApply, onEntryActivated],
+    [showApplyButton, textChanged, onApply, onEntryActivated, onEntryKeyDown],
   );
 
-  return (
+  return placeRow(
     <div
       ref={ref}
       className={classes.join(" ")}
+      title={tooltipText}
       onClick={() => inputRef.current?.focus()}
       {...rest}
     >
@@ -136,7 +154,11 @@ export const AdwEntryRow = forwardRef<HTMLDivElement, AdwEntryRowProps>(function
             <input
               ref={inputRef}
               className="gtk-text"
-              type={inputPurpose === "password" ? "password" : "text"}
+              type={inputPurpose === "password" || !visibility ? "password" : "text"}
+              autoFocus={autoFocus}
+              spellCheck={
+                inputPurpose === "free-form" || inputPurpose === "name" ? undefined : false
+              }
               value={text}
               maxLength={maxLength > 0 ? maxLength : undefined}
               onChange={handleChange}
@@ -151,7 +173,10 @@ export const AdwEntryRow = forwardRef<HTMLDivElement, AdwEntryRowProps>(function
               }}
             />
           </div>
-          {!focused && !hasContent && EditIcon && (
+          {editableSuffix}
+          {/* Upstream update_empty(): shown unless editing, or while the apply
+              button is offered for changed text. */}
+          {!focused && !(showApplyButton && textChanged) && EditIcon && (
             <span className="gtk-image edit-icon" style={{ display: "flex", alignItems: "center" }}>
               <EditIcon size={16} />
             </span>
@@ -176,6 +201,6 @@ export const AdwEntryRow = forwardRef<HTMLDivElement, AdwEntryRowProps>(function
           <div className="gtk-box gtk-box-layout horizontal suffixes">{suffixWidget}</div>
         )}
       </div>
-    </div>
+    </div>,
   );
 });

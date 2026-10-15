@@ -1,4 +1,4 @@
-import { useIcon } from "@gtk-js/gtk4";
+import { useIcon, useListBoxRow } from "@gtk-js/gtk4";
 import { forwardRef, type HTMLAttributes, useCallback, useState } from "react";
 
 export interface AdwSpinRowProps extends HTMLAttributes<HTMLDivElement> {
@@ -65,10 +65,11 @@ export const AdwSpinRow = forwardRef<HTMLDivElement, AdwSpinRowProps>(function A
     [clamp, isControlled, onValueChanged],
   );
 
+  const placeRow = useListBoxRow();
   const classes = ["gtk-row", "spin"];
   if (className) classes.push(className);
 
-  return (
+  return placeRow(
     <div ref={ref} className={classes.join(" ")} {...rest}>
       <div className="gtk-box gtk-box-layout horizontal header" style={{ alignItems: "center" }}>
         <div className="gtk-box gtk-box-layout vertical title" style={{ flex: 1 }}>
@@ -105,6 +106,6 @@ export const AdwSpinRow = forwardRef<HTMLDivElement, AdwSpinRowProps>(function A
           </button>
         </div>
       </div>
-    </div>
+    </div>,
   );
 });
