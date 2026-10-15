@@ -107,7 +107,7 @@ const cases: Record<string, () => React.ReactElement> = {
   "button-text-destructive": () => (
     <GtkButton label="Button" className="destructive-action" data-testid="target" />
   ),
-  "button-icon": () => <GtkButton iconName="open-menu-symbolic" data-testid="target" />,
+  "button-icon": () => <GtkButton iconName="OpenMenu" data-testid="target" />,
   "button-circular": () => (
     <GtkButton iconName="open-menu-symbolic" className="circular" data-testid="target" />
   ),
@@ -421,6 +421,26 @@ const cases: Record<string, () => React.ReactElement> = {
       <GtkLabel label="Two" />
     </GtkBox>
   ),
+  "box-hexpand": () => (
+    <GtkBox halign="start" style={{ width: 300 }} data-testid="target">
+      <GtkBox orientation="vertical">
+        <GtkLabel label="Same" hexpand />
+      </GtkBox>
+      <GtkLabel label="Same" hexpand />
+      <GtkLabel label="End" />
+    </GtkBox>
+  ),
+  "box-hexpand-computed": () => (
+    <GtkBox halign="start" style={{ width: 360 }} data-testid="target">
+      <GtkButton>
+        <GtkLabel label="Button" hexpand />
+      </GtkButton>
+      <GtkCenterBox centerWidget={<GtkLabel label="Center" hexpand />} />
+      <GtkBox hexpand={false}>
+        <GtkLabel label="Box" hexpand />
+      </GtkBox>
+    </GtkBox>
+  ),
   "box-homogeneous": () => (
     <GtkBox orientation="horizontal" homogeneous style={{ width: "200px" }} data-testid="target">
       <GtkLabel label="A" />
@@ -625,6 +645,19 @@ const cases: Record<string, () => React.ReactElement> = {
         <GtkLabel label="Second" />
       </GtkStackPage>
     </GtkStack>
+  ),
+  "stack-homogeneous": () => (
+    <GtkBox orientation="vertical" halign="start" data-testid="target">
+      <GtkStack visibleChildName="short" halign="start">
+        <GtkStackPage name="short">
+          <GtkLabel label="A" />
+        </GtkStackPage>
+        <GtkStackPage name="long">
+          <GtkLabel label="A much longer page" />
+        </GtkStackPage>
+      </GtkStack>
+      <GtkLabel label="A much longer page" />
+    </GtkBox>
   ),
 
   // GtkNotebook cases

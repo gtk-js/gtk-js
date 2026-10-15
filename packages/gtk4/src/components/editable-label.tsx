@@ -39,6 +39,8 @@ export const GtkEditableLabel = forwardRef<HTMLDivElement, GtkEditableLabelProps
       onEditingChanged,
       halign,
       valign,
+      hexpand,
+      vexpand,
       className,
       ...rest
     },
@@ -108,7 +110,12 @@ export const GtkEditableLabel = forwardRef<HTMLDivElement, GtkEditableLabelProps
     if (className) classes.push(className);
 
     return (
-      <div ref={ref} className={classes.join(" ")} {...alignAttrs(halign, valign)} {...rest}>
+      <div
+        ref={ref}
+        className={classes.join(" ")}
+        {...alignAttrs(halign, valign, hexpand, vexpand)}
+        {...rest}
+      >
         <div className="gtk-stack">
           {editing ? (
             <input

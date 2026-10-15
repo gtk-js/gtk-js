@@ -33,6 +33,8 @@ export const GtkScrollbar = forwardRef<HTMLDivElement, GtkScrollbarProps>(functi
     onValueChanged,
     halign,
     valign,
+    hexpand,
+    vexpand,
     className,
     ...rest
   },
@@ -92,7 +94,12 @@ export const GtkScrollbar = forwardRef<HTMLDivElement, GtkScrollbarProps>(functi
   }, []);
 
   return (
-    <div ref={ref} className={classes.join(" ")} {...alignAttrs(halign, valign)} {...rest}>
+    <div
+      ref={ref}
+      className={classes.join(" ")}
+      {...alignAttrs(halign, valign, hexpand, vexpand)}
+      {...rest}
+    >
       <div className="gtk-range">
         <div
           ref={troughRef}

@@ -56,6 +56,8 @@ export const GtkLevelBar = forwardRef<HTMLDivElement, GtkLevelBarProps>(function
     offsets,
     halign,
     valign,
+    hexpand,
+    vexpand,
     className,
     ...rest
   },
@@ -94,7 +96,7 @@ export const GtkLevelBar = forwardRef<HTMLDivElement, GtkLevelBarProps>(function
         aria-valuemin={minValue}
         aria-valuemax={maxValue}
         className={classes.join(" ")}
-        {...alignAttrs(halign, valign)}
+        {...alignAttrs(halign, valign, hexpand, vexpand)}
         {...rest}
       >
         <div
@@ -122,7 +124,7 @@ export const GtkLevelBar = forwardRef<HTMLDivElement, GtkLevelBarProps>(function
       aria-valuemin={minValue}
       aria-valuemax={maxValue}
       className={classes.join(" ")}
-      {...alignAttrs(halign, valign)}
+      {...alignAttrs(halign, valign, hexpand, vexpand)}
       {...rest}
     >
       <div className="gtk-trough">

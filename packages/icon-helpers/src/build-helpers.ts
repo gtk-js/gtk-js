@@ -157,17 +157,43 @@ export async function buildIconComponents(
 }
 
 /**
+ * Source of the `MissingIcon` module: the full-color icon GtkIconTheme shows
+ * for a name the theme doesn't have ("image-missing", never its symbolic
+ * variant). An SVG is inlined; any other image is embedded as a data URL.
+ */
+export function missingIconSource(fileName: string, contents: Uint8Array): string {
+  const helpers = `"@gtk-js/icon-helpers"`;
+  if (fileName.endsWith(".svg")) {
+    const svg = JSON.stringify(new TextDecoder().decode(contents));
+    return `import { createGtkIconFromSvg } from ${helpers};\n\nexport const MissingIcon = createGtkIconFromSvg("image-missing", ${svg});\n`;
+  }
+  const type = fileName.endsWith(".png") ? "image/png" : "application/octet-stream";
+  const url = `data:${type};base64,${Buffer.from(contents).toString("base64")}`;
+  return `import { createGtkIconFromUrl } from ${helpers};\n\nexport const MissingIcon = createGtkIconFromUrl("image-missing", "${url}");\n`;
+}
+
+/**
  * Build a complete icon package from a directory of SVGs.
  * Writes generated components to src/icons/ and an index to src/index.ts.
  *
  * @param iconsDir - directory (or directories) containing SVG files (can be nested)
  * @param pkgDir - root directory of the icon package (contains src/)
+ * @param missingIcon - the theme's full-color image-missing, exported as `MissingIcon`
  */
-export async function buildIconPackage(iconsDir: string | string[], pkgDir: string): Promise<void> {
+export async function buildIconPackage(
+  iconsDir: string | string[],
+  pkgDir: string,
+  missingIcon?: string,
+): Promise<void> {
   const outDir = `${pkgDir}/src/icons`;
   const indexPath = `${pkgDir}/src/index.ts`;
 
   const exports = await buildIconComponents(iconsDir, outDir, "@gtk-js/icon-helpers");
+  if (missingIcon) {
+    const contents = new Uint8Array(await Bun.file(missingIcon).arrayBuffer());
+    await Bun.write(`${outDir}/missing-icon.ts`, missingIconSource(missingIcon, contents));
+    exports.push(`export { MissingIcon } from "./icons/missing-icon.ts";`);
+  }
 
   await Bun.write(
     indexPath,

@@ -33,6 +33,8 @@ export const GtkSwitch = forwardRef<HTMLDivElement, GtkSwitchProps>(function Gtk
     onStateSet,
     halign,
     valign,
+    hexpand,
+    vexpand,
     className,
     onClick,
     ...rest
@@ -117,7 +119,7 @@ export const GtkSwitch = forwardRef<HTMLDivElement, GtkSwitchProps>(function Gtk
       aria-checked={state}
       tabIndex={0}
       className={classes.join(" ")}
-      {...alignAttrs(halign, valign)}
+      {...alignAttrs(halign, valign, hexpand, vexpand)}
       data-checked={state || undefined}
       onClick={handleClick}
       onPointerDown={handlePointerDown}
