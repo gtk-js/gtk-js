@@ -3,7 +3,7 @@
   "release-type": "node",
   "bump-minor-pre-major": true,
   "bump-patch-for-minor-pre-major": true,
-  "group-pull-request-title-pattern": "chore: release ${component}",
+  "group-pull-request-title-pattern": "chore: release${component}",
   "pull-request-title-pattern": "chore: release ${component} ${version}",
   "bootstrap-sha": "a580a61e2ae9ce610ff5aa6f9c7b67b33d4015f4",
   "packages": {
