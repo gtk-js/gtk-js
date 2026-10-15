@@ -25,7 +25,10 @@ import { createPortal } from "react-dom";
  * hydrate in place before they move into the list.
  */
 export interface GtkRowContainer {
-  /** Where the rows go; null until the container has mounted. */
+  /**
+   * Where the rows go; null on the server. Have it from the container's first
+   * render, so the rows are in it when the container's parents first measure it.
+   */
   list: HTMLElement | null;
 }
 

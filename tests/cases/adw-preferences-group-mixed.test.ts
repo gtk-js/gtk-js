@@ -34,4 +34,9 @@ gtkTest("adw-preferences-group-mixed", (native, web) => {
     gtkAssert.numbersEqual(label.y ?? Number.NaN, webLabels[i]!.y ?? Number.NaN, `label ${i} y`);
     gtkAssert.numbersEqual(label.height, webLabels[i]!.height, `label ${i} height`);
   });
+
+  // The web group's height is fixed when it mounts, like a dialog's natural
+  // size: the rows are already in the list then, so the group fits its box.
+  const slack = (group: WidgetSnapshot) => group.height - group.children![0]!.height;
+  gtkAssert.numbersEqual(slack(native), slack(web), "group height - box height");
 });

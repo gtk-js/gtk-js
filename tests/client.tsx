@@ -70,7 +70,7 @@ import {
   GtkToggleButton,
   GtkWindowTitle,
 } from "@gtk-js/adwaita";
-import { Fragment } from "react";
+import { Fragment, type ReactElement, useLayoutEffect, useRef } from "react";
 import { createRoot } from "react-dom/client";
 
 const caseName = window.location.pathname.slice(1);
@@ -79,6 +79,16 @@ const isGallery = caseName === "gallery";
 /** An app component that renders a row, which AdwPreferencesGroup can't tell from its type. */
 function WrappedActionRow(props: { title: string; subtitle?: string }) {
   return <AdwActionRow {...props} />;
+}
+
+/** Fixes its child's height when it mounts, like AdwDialog fixing its natural size when presented. */
+function SizedOnMount({ children }: { children: ReactElement }) {
+  const ref = useRef<HTMLDivElement>(null);
+  useLayoutEffect(() => {
+    const child = ref.current?.firstElementChild;
+    if (child instanceof HTMLElement) child.style.height = `${child.offsetHeight}px`;
+  }, []);
+  return <div ref={ref}>{children}</div>;
 }
 
 const cases: Record<string, () => React.ReactElement> = {
@@ -959,12 +969,14 @@ const cases: Record<string, () => React.ReactElement> = {
     </AdwPreferencesGroup>
   ),
   "adw-preferences-group-mixed": () => (
-    <AdwPreferencesGroup title="Group Title" data-testid="target">
-      <GtkLabel label="Note" xalign={0} />
-      <WrappedActionRow title="Row 1" subtitle="Subtitle" />
-      <GtkLabel label="Footer" xalign={0} className="caption" />
-      <AdwActionRow title="Row 2" />
-    </AdwPreferencesGroup>
+    <SizedOnMount>
+      <AdwPreferencesGroup title="Group Title" data-testid="target">
+        <GtkLabel label="Note" xalign={0} />
+        <WrappedActionRow title="Row 1" subtitle="Subtitle" />
+        <GtkLabel label="Footer" xalign={0} className="caption" />
+        <AdwActionRow title="Row 2" />
+      </AdwPreferencesGroup>
+    </SizedOnMount>
   ),
   "adw-preferences-group-label-only": () => (
     <AdwPreferencesGroup data-testid="target">
