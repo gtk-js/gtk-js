@@ -84,7 +84,11 @@ export const FloatingSheet = forwardRef<HTMLDivElement, FloatingSheetProps>(func
       const sheet = sheetRef.current;
       if (sheet) {
         sheet.style.opacity = opacity;
-        sheet.style.transform = `scale(${MIN_SCALE + (1 - MIN_SCALE) * value})`;
+        // None at rest: any transform makes the sheet the containing block of
+        // its position: fixed descendants, so popovers in the dialog would be
+        // placed and clipped against the sheet instead of the window.
+        sheet.style.transform =
+          value === 1 ? "none" : `scale(${MIN_SCALE + (1 - MIN_SCALE) * value})`;
       }
     };
     apply(progress.current);
