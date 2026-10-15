@@ -2,6 +2,7 @@ import {
   GtkActionBar,
   GtkButton,
   GtkImage,
+  GtkScrolledWindow,
   GtkWindowTitle,
   useIcon,
   WindowControlsContext,
@@ -272,13 +273,13 @@ function ReleaseNotes({ version, markup }: { version?: string; markup: string })
 /** A subpage: its box gets 18px margins and spacing from the theme (`.subpage`). */
 function Subpage({ children }: { children: ReactNode }) {
   return (
-    <div className="gtk-scrolledwindow subpage" style={{ overflow: "auto", height: "100%" }}>
+    <GtkScrolledWindow className="subpage" hscrollbarPolicy="never" style={{ height: "100%" }}>
       <div className="gtk-viewport">
         <AdwClamp>
           <div className="gtk-box gtk-box-layout vertical">{children}</div>
         </AdwClamp>
       </div>
-    </div>
+    </GtkScrolledWindow>
   );
 }
 
@@ -513,9 +514,10 @@ export const AdwAboutDialog = forwardRef<HTMLDivElement, AdwAboutDialogProps>(
     );
 
     const mainPage = page(
-      <div
-        className="gtk-scrolledwindow main-page"
-        style={{ overflow: "auto", height: "100%" }}
+      <GtkScrolledWindow
+        className="main-page"
+        hscrollbarPolicy="never"
+        style={{ height: "100%" }}
         onScroll={(e) => setMainScrolled(e.currentTarget.scrollTop > 0)}
       >
         <div className="gtk-viewport">
@@ -621,7 +623,7 @@ export const AdwAboutDialog = forwardRef<HTMLDivElement, AdwAboutDialogProps>(
             </div>
           </AdwClamp>
         </div>
-      </div>,
+      </GtkScrolledWindow>,
     );
 
     const pages = [
@@ -631,11 +633,15 @@ export const AdwAboutDialog = forwardRef<HTMLDivElement, AdwAboutDialogProps>(
         title: "What’s New",
         // A GtkTextView in an AdwClampScrollable (no viewport).
         children: page(
-          <div className="gtk-scrolledwindow subpage" style={{ overflow: "auto", height: "100%" }}>
+          <GtkScrolledWindow
+            className="subpage"
+            hscrollbarPolicy="never"
+            style={{ height: "100%" }}
+          >
             <AdwClamp>
               <ReleaseNotes version={releaseNotesVersion} markup={releaseNotes ?? ""} />
             </AdwClamp>
-          </div>,
+          </GtkScrolledWindow>,
           "What’s New",
         ),
       },
