@@ -744,33 +744,96 @@ const fixColorMixGamut: Plugin = {
  * transition jumps to the new color's mix first: a checked switch's track
  * blinks white for a frame.
  *
- * Every `color` declaration also sets `--gtk-current-color` to the same value,
- * and other properties read currentColor through it. A custom property holding
- * a concrete color is substituted at computed-value time, so the transition
- * starts from the old value. Where the theme's color itself depends on
+ * Every `color` declaration also sets `--gtk-current-color` to the same value.
+ * On widgets whose own color changes with their state (a selector setting
+ * `color` with a pseudo-class on the widget itself, like switch:checked), other
+ * properties read currentColor through it. A custom property holding a
+ * concrete color is substituted at computed-value time, so the transition
+ * starts from the old value. Background overlays always read it: browsers
+ * can't transition a registered color to a mix of currentColor, so the overlay
+ * would snap instead of fading. Where the theme's color itself depends on
  * currentColor, the property is left invalid and the fallback, currentColor,
  * applies as before.
+ *
+ * The property is inherited and holds the theme's color, so a color set by app
+ * CSS doesn't update it. Everything else keeps plain currentColor and follows
+ * an app's color; app CSS that recolors a widget's text should set
+ * `--gtk-current-color` to the same color for its overlays and state changes.
  */
 const CURRENT_COLOR_RE = /\bcurrentcolor\b/i;
 const CURRENT_COLOR_ALL_RE = /\bcurrentcolor\b/gi;
 const CURRENT_COLOR_VAR = "var(--gtk-current-color, currentColor)";
 const resolveCurrentColor: Plugin = {
   postcssPlugin: "gtk-resolve-current-color",
-  Declaration(decl) {
-    if (decl.value.includes("--gtk-current-color")) return;
-    if (decl.prop.startsWith("--") && decl.prop !== OVERLAY) return;
-    if (decl.prop === "color") {
-      const next = decl.next();
-      if (next?.type === "decl" && next.prop === "--gtk-current-color") return;
-      decl.cloneAfter({
-        prop: "--gtk-current-color",
-        value: CURRENT_COLOR_RE.test(decl.value) ? "initial" : decl.value,
-      });
-    } else if (CURRENT_COLOR_RE.test(decl.value)) {
-      decl.value = decl.value.replace(CURRENT_COLOR_ALL_RE, CURRENT_COLOR_VAR);
-    }
+  prepare() {
+    const stateColored = new WeakSet<postcss.Container>();
+    return {
+      // Before the selectors are remapped: GTK selectors are simple to read.
+      Once(root) {
+        const keys = new Set<string>();
+        root.walkDecls("color", (decl) => {
+          if (decl.parent?.type !== "rule") return;
+          for (const selector of (decl.parent as postcss.Rule).selectors) {
+            const subject = lastCompound(selector);
+            if (subject.includes(":")) keys.add(compoundKey(subject));
+          }
+        });
+        root.walkRules((rule) => {
+          if (rule.selectors.some((s) => keys.has(compoundKey(lastCompound(s))))) {
+            stateColored.add(rule);
+          }
+        });
+      },
+      Declaration(decl) {
+        if (decl.value.includes("--gtk-current-color")) return;
+        if (decl.prop.startsWith("--") && decl.prop !== OVERLAY) return;
+        if (decl.prop === "color") {
+          const next = decl.next();
+          if (next?.type === "decl" && next.prop === "--gtk-current-color") return;
+          decl.cloneAfter({
+            prop: "--gtk-current-color",
+            value: CURRENT_COLOR_RE.test(decl.value) ? "initial" : decl.value,
+          });
+        } else if (
+          CURRENT_COLOR_RE.test(decl.value) &&
+          (decl.prop === OVERLAY || (decl.parent && stateColored.has(decl.parent)))
+        ) {
+          decl.value = decl.value.replace(CURRENT_COLOR_ALL_RE, CURRENT_COLOR_VAR);
+        }
+      },
+    };
   },
 };
+
+/** The compound selector a selector matches, e.g. `switch:checked` in `row > switch:checked`. */
+function lastCompound(selector: string): string {
+  let depth = 0;
+  for (let i = selector.length - 1; i >= 0; i--) {
+    const c = selector[i];
+    if (c === ")" || c === "]") depth++;
+    else if (c === "(" || c === "[") depth--;
+    else if (depth === 0 && (c === " " || c === ">" || c === "+" || c === "~")) {
+      return selector.slice(i + 1).trim();
+    }
+  }
+  return selector.trim();
+}
+
+/** A compound selector without its pseudo-classes: the widget, whatever its state. */
+function compoundKey(compound: string): string {
+  let key = "";
+  let i = 0;
+  while (i < compound.length) {
+    if (compound[i] !== ":") {
+      key += compound[i++];
+      continue;
+    }
+    i++;
+    while (i < compound.length && /[\w:-]/.test(compound[i] ?? "")) i++;
+    if (compound[i] === "(") i = extractBalancedParens(compound, i)?.end ?? compound.length;
+  }
+  return key;
+}
 
 /**
  * PostCSS plugin: Convert .gtk-switch padding to transparent border.
