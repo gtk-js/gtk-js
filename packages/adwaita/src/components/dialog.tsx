@@ -85,8 +85,6 @@ export const AdwDialog = forwardRef<HTMLDivElement, AdwDialogProps>(function Adw
   const sheetStyle: React.CSSProperties = {
     width: contentWidth > 0 ? contentWidth : undefined,
     height: contentHeight > 0 ? contentHeight : undefined,
-    maxWidth: "calc(100% - 24px)",
-    maxHeight: "calc(100% - 24px)",
     display: "flex",
     flexDirection: "column",
     overflow: "hidden",
@@ -100,6 +98,7 @@ export const AdwDialog = forwardRef<HTMLDivElement, AdwDialogProps>(function Adw
       dialogClasses={["background", modeClass]}
       className={className}
       sheetStyle={sheetStyle}
+      followsContentSize={followsContentSize}
       onDimmingClick={close}
       onEscape={close}
       onCloseAnimationDone={onHidden}
