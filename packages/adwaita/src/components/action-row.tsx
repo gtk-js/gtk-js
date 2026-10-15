@@ -92,16 +92,11 @@ export const AdwActionRow = forwardRef<HTMLDivElement, AdwActionRowProps>(functi
       }}
       {...rest}
     >
-      <div
-        className="gtk-box gtk-box-layout horizontal header"
-        style={{ gap: 6, alignItems: "center" }}
-      >
+      <div className="gtk-box gtk-box-layout horizontal header" style={{ alignItems: "center" }}>
         {prefixWidget && (
-          <div className="gtk-box gtk-box-layout horizontal prefixes" style={{ gap: 6 }}>
-            {prefixWidget}
-          </div>
+          <div className="gtk-box gtk-box-layout horizontal prefixes">{prefixWidget}</div>
         )}
-        <div className="gtk-box gtk-box-layout vertical title" style={{ flex: 1, gap: 3 }}>
+        <div className="gtk-box gtk-box-layout vertical title" style={{ flex: 1 }}>
           <span className="gtk-label title" style={titleStyle}>
             {title}
           </span>
@@ -112,7 +107,7 @@ export const AdwActionRow = forwardRef<HTMLDivElement, AdwActionRowProps>(functi
           )}
         </div>
         {(suffixWidget || children) && (
-          <div className="gtk-box gtk-box-layout horizontal suffixes" style={{ gap: 6 }}>
+          <div className="gtk-box gtk-box-layout horizontal suffixes">
             {suffixWidget}
             {children}
           </div>

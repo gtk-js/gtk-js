@@ -1,5 +1,5 @@
 import { forwardRef, type HTMLAttributes, type ReactNode } from "react";
-import type { GtkOrientation } from "../types.ts";
+import { type GtkOrientation, spacingStyle } from "../types.ts";
 
 export interface GtkBoxLayoutProps extends HTMLAttributes<HTMLDivElement> {
   orientation?: GtkOrientation;
@@ -36,7 +36,7 @@ export const GtkBoxLayout = forwardRef<HTMLDivElement, GtkBoxLayoutProps>(functi
     <div
       ref={ref}
       className={classes.join(" ")}
-      style={{ gap: spacing > 0 ? spacing : undefined, ...style }}
+      style={{ ...spacingStyle(spacing), ...style }}
       {...rest}
     >
       {children}
