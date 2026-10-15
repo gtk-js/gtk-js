@@ -23,15 +23,10 @@ export const GtkWindowTitle = forwardRef<HTMLDivElement, GtkWindowTitleProps>(
     const classes = ["gtk-windowtitle"];
     if (className) classes.push(className);
 
+    // The grid that ellipsizes the labels is in layout.css.
     return (
-      <div
-        ref={ref}
-        className={classes.join(" ") + " gtk-box-layout vertical"}
-        {...alignAttrs(halign, valign)}
-        style={{ alignItems: "center" }}
-        {...rest}
-      >
-        <span className="gtk-label title">{title}</span>
+      <div ref={ref} className={classes.join(" ")} {...alignAttrs(halign, valign)} {...rest}>
+        {title && <span className="gtk-label title">{title}</span>}
         {subtitle && <span className="gtk-label subtitle">{subtitle}</span>}
       </div>
     );
