@@ -35,6 +35,7 @@ pub mod status_page_default;
 pub mod status_page_no_icon;
 pub mod toast_overlay_default;
 pub mod box_hexpand;
+pub mod box_hexpand_computed;
 pub mod box_homogeneous;
 pub mod box_horizontal_default;
 pub mod box_spacing;

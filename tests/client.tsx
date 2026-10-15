@@ -404,6 +404,17 @@ const cases: Record<string, () => React.ReactElement> = {
       <GtkLabel label="End" />
     </GtkBox>
   ),
+  "box-hexpand-computed": () => (
+    <GtkBox halign="start" style={{ width: 360 }} data-testid="target">
+      <GtkButton>
+        <GtkLabel label="Button" hexpand />
+      </GtkButton>
+      <GtkCenterBox centerWidget={<GtkLabel label="Center" hexpand />} />
+      <GtkBox hexpand={false}>
+        <GtkLabel label="Box" hexpand />
+      </GtkBox>
+    </GtkBox>
+  ),
   "box-homogeneous": () => (
     <GtkBox orientation="horizontal" homogeneous style={{ width: "200px" }} data-testid="target">
       <GtkLabel label="A" />
