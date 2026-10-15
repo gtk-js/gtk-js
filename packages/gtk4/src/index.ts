@@ -105,6 +105,12 @@ export type { GtkBoxLayoutProps } from "./layouts/box-layout.tsx";
 export { GtkBoxLayout } from "./layouts/box-layout.tsx";
 export type { GtkCenterLayoutProps } from "./layouts/center-layout.tsx";
 export { GtkCenterLayout } from "./layouts/center-layout.tsx";
+export {
+  GtkListBoxRowContext,
+  type GtkRowContainer,
+  orderRows,
+  useListBoxRow,
+} from "./list-box-row-context.tsx";
 export type { GtkProviderProps } from "./provider.tsx";
 export { GtkProvider, useGtkTheme } from "./provider.tsx";
 // Types

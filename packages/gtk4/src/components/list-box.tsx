@@ -6,6 +6,7 @@ import React, {
   useCallback,
   useState,
 } from "react";
+import { GtkListBoxRowContext, useListBoxRow } from "../list-box-row-context.tsx";
 import { alignAttrs, type GtkAlignProps, type GtkSelectionMode } from "../types.ts";
 
 export interface GtkListBoxRowProps extends HTMLAttributes<HTMLDivElement>, GtkAlignProps {
@@ -37,11 +38,12 @@ export const GtkListBoxRow = forwardRef<HTMLDivElement, GtkListBoxRowProps>(func
   },
   ref,
 ) {
+  const placeRow = useListBoxRow();
   const classes = ["gtk-row", "gtk-bin-layout"];
   if (activatable) classes.push("activatable");
   if (className) classes.push(className);
 
-  return (
+  return placeRow(
     <div
       ref={ref}
       role="listitem"
@@ -51,7 +53,7 @@ export const GtkListBoxRow = forwardRef<HTMLDivElement, GtkListBoxRowProps>(func
       {...rest}
     >
       {children}
-    </div>
+    </div>,
   );
 });
 
@@ -184,30 +186,33 @@ export const GtkListBox = forwardRef<HTMLDivElement, GtkListBoxProps>(function G
       {...alignAttrs(halign, valign, hexpand, vexpand)}
       {...rest}
     >
-      {childCount === 0 && placeholder ? (
-        <div className="gtk-placeholder">{placeholder}</div>
-      ) : (
-        Children.map(children, (child, index) => {
-          if (!React.isValidElement(child)) return child;
-          const isSelected = selectedIndices.has(index);
+      {/* Its rows are its own, not an enclosing preferences group's. */}
+      <GtkListBoxRowContext.Provider value={null}>
+        {childCount === 0 && placeholder ? (
+          <div className="gtk-placeholder">{placeholder}</div>
+        ) : (
+          Children.map(children, (child, index) => {
+            if (!React.isValidElement(child)) return child;
+            const isSelected = selectedIndices.has(index);
 
-          return React.cloneElement(
-            child as React.ReactElement<GtkListBoxRowProps & Record<string, unknown>>,
-            {
-              "aria-selected": isSelected,
-              "data-checked": isSelected || undefined,
-              onClick: (e: React.MouseEvent) => {
-                handleRowClick(index);
-                (child.props as Record<string, (e: React.MouseEvent) => void>).onClick?.(e);
-              },
-              onDoubleClick: (e: React.MouseEvent) => {
-                handleRowDoubleClick(index);
-                (child.props as Record<string, (e: React.MouseEvent) => void>).onDoubleClick?.(e);
-              },
-            } as Partial<GtkListBoxRowProps>,
-          );
-        })
-      )}
+            return React.cloneElement(
+              child as React.ReactElement<GtkListBoxRowProps & Record<string, unknown>>,
+              {
+                "aria-selected": isSelected,
+                "data-checked": isSelected || undefined,
+                onClick: (e: React.MouseEvent) => {
+                  handleRowClick(index);
+                  (child.props as Record<string, (e: React.MouseEvent) => void>).onClick?.(e);
+                },
+                onDoubleClick: (e: React.MouseEvent) => {
+                  handleRowDoubleClick(index);
+                  (child.props as Record<string, (e: React.MouseEvent) => void>).onDoubleClick?.(e);
+                },
+              } as Partial<GtkListBoxRowProps>,
+            );
+          })
+        )}
+      </GtkListBoxRowContext.Provider>
     </div>
   );
 });

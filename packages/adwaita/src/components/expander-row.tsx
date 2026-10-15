@@ -1,4 +1,4 @@
-import { useIcon } from "@gtk-js/gtk4";
+import { useIcon, useListBoxRow } from "@gtk-js/gtk4";
 import React, {
   forwardRef,
   type HTMLAttributes,
@@ -65,11 +65,12 @@ export const AdwExpanderRow = forwardRef<HTMLDivElement, AdwExpanderRowProps>(
       onExpandedChanged?.(next);
     }, [expanded, enableExpansion, isControlled, onExpandedChanged]);
 
+    const placeRow = useListBoxRow();
     const classes = ["gtk-row", "expander"];
     if (!children || React.Children.count(children) === 0) classes.push("empty");
     if (className) classes.push(className);
 
-    return (
+    return placeRow(
       <div ref={ref} className={classes.join(" ")} {...rest}>
         <div className="gtk-box gtk-box-layout vertical">
           <div className="gtk-list">
@@ -127,7 +128,7 @@ export const AdwExpanderRow = forwardRef<HTMLDivElement, AdwExpanderRowProps>(
             </div>
           )}
         </div>
-      </div>
+      </div>,
     );
   },
 );
