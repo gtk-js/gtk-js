@@ -24,7 +24,7 @@ export interface GtkLabelProps extends HTMLAttributes<HTMLSpanElement>, GtkAlign
   widthChars?: number;
   /** Maximum width in characters. Default: -1 (natural). */
   maxWidthChars?: number;
-  /** Maximum number of lines. Default: -1 (unlimited). */
+  /** The number of lines a wrapping, ellipsized label is limited to. Default: -1 (one line per paragraph). */
   lines?: number;
   /** Horizontal alignment 0.0 (left) to 1.0 (right). Default: 0.5. */
   xalign?: number;
@@ -89,14 +89,17 @@ export const GtkLabel = forwardRef<HTMLSpanElement, GtkLabelProps>(function GtkL
       wrapMode === "char" ? "anywhere" : wrapMode === "word-char" ? "break-word" : "normal";
   }
 
+  // `lines` only limits a wrapping, ellipsizing label, which wraps up to that
+  // many lines. Otherwise an ellipsized paragraph is one line (Pango's default
+  // layout height of -1).
+  const lineLimit = wrap && ellipsize !== "none" && lines > 0;
   // The label is a flex container (so it can center its text vertically) and
   // text-overflow doesn't apply to flex containers: an ellipsizing label puts
   // its text in a block that can shrink and draw the ellipsis.
-  const ellipsizing = ellipsize !== "none" && lines <= 0;
-  if (ellipsize !== "none") {
+  const ellipsizing = ellipsize !== "none" && !lineLimit;
+  if (ellipsizing) {
     cssStyle.overflow = "hidden";
     cssStyle.whiteSpace = "pre";
-    if (!ellipsizing) cssStyle.textOverflow = "ellipsis";
   }
 
   if (widthChars > 0) {
@@ -105,7 +108,8 @@ export const GtkLabel = forwardRef<HTMLSpanElement, GtkLabelProps>(function GtkL
   if (maxWidthChars > 0) {
     cssStyle.maxWidth = `${maxWidthChars}ch`;
   }
-  if (lines > 0) {
+  if (lineLimit) {
+    // The clamp draws the ellipsis at the end of its last line.
     cssStyle.display = "-webkit-box";
     cssStyle.WebkitLineClamp = lines;
     cssStyle.WebkitBoxOrient = "vertical";
