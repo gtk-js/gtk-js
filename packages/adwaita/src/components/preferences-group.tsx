@@ -44,12 +44,32 @@ export const AdwPreferencesGroup = forwardRef<HTMLDivElement, AdwPreferencesGrou
     // below it. Every child is rendered below the list, and a row portals itself
     // into the list (useListBoxRow), so no child moves when it turns out to be a
     // row, or stops being one.
-    const [list, setList] = useState<HTMLDivElement | null>(null);
+    //
+    // The list exists from the first render, so the rows portal into it in the
+    // group's first commit: a parent that measures the group when it mounts,
+    // like a dialog fixing its natural size, sees them. React doesn't render
+    // the list; the group puts it first in its box. None on the server.
+    const [list] = useState(() =>
+      typeof document === "undefined" ? null : document.createElement("div"),
+    );
     const container = useMemo(() => ({ list }), [list]);
     const boxRef = useRef<HTMLDivElement>(null);
     useLayoutEffect(() => {
-      if (list && boxRef.current) return orderRows(list, boxRef.current);
+      const box = boxRef.current;
+      if (!list || !box) return;
+      // GTK hides the list while it has no rows: see .gtk-preferencesgroup-list.
+      list.setAttribute("role", "list");
+      box.prepend(list);
+      const stopOrdering = orderRows(list, box);
+      return () => {
+        stopOrdering();
+        list.remove();
+      };
     }, [list]);
+    useLayoutEffect(() => {
+      if (list)
+        list.className = `gtk-list gtk-preferencesgroup-list ${separateRows ? "boxed-list-separate" : "boxed-list"}`;
+    }, [list, separateRows]);
 
     const classes = ["gtk-preferencesgroup"];
     if (className) classes.push(className);
@@ -76,12 +96,6 @@ export const AdwPreferencesGroup = forwardRef<HTMLDivElement, AdwPreferencesGrou
             </div>
           )}
           <div ref={boxRef} className="gtk-box gtk-box-layout vertical">
-            {/* GTK hides the list while it has no rows: see .gtk-preferencesgroup-list. */}
-            <div
-              ref={setList}
-              className={`gtk-list gtk-preferencesgroup-list ${separateRows ? "boxed-list-separate" : "boxed-list"}`}
-              role="list"
-            />
             <GtkListBoxRowContext.Provider value={container}>
               {children}
             </GtkListBoxRowContext.Provider>
