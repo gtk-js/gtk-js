@@ -18,7 +18,7 @@
     "./gtk4.css": "./dist/gtk4.css"
   },
   "scripts": {
-    "build": "bun build.ts && tsc -p tsconfig.build.json && bun build src/index.ts --outdir dist --format esm --packages external"
+    "build": "bun build.ts && tsc -p tsconfig.build.json && NODE_ENV=production bun build src/index.ts --outdir dist --format esm --packages external"
   },
   "dependencies": {
     "@gtk-js/icons-gtk4": "workspace:*",
