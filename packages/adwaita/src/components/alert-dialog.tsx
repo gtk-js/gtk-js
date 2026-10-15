@@ -13,6 +13,25 @@ import { HeaderBarTitleContext } from "./header-bar-title.ts";
 
 /** BUTTON_SPACING in adw-alert-dialog.c. */
 const BUTTON_SPACING = 12;
+/** adw-alert-dialog.c sizes (sp, i.e. px at the default text scale). */
+const RESPONSE_HORZ_PADDING = 48;
+const DIALOG_MIN_WIDTH = 300;
+const DIALOG_PREFERRED_WIDTH = 300;
+const DIALOG_MAX_WIDTH = 372;
+const DIALOG_MAX_WIDE_WIDTH = 600;
+
+/** The heading and body labels: justify center, xalign 0.5. */
+const CENTERED: React.CSSProperties = {
+  textAlign: "center",
+  justifyContent: "center",
+  whiteSpace: "pre",
+};
+/** The small heading and body labels also wrap, word-char. */
+const WRAPPING_CENTERED: React.CSSProperties = {
+  ...CENTERED,
+  whiteSpace: "pre-wrap",
+  overflowWrap: "break-word",
+};
 
 export interface AdwAlertDialogResponse {
   id: string;
@@ -53,7 +72,8 @@ export interface AdwAlertDialogProps extends HTMLAttributes<HTMLDivElement> {
  *   AdwGizmo (contents) > GtkWindowHandle > GtkBox(vertical)
  *     > GtkScrolledWindow.body-scrolled-window
  *       > GtkBox.message-area[.has-heading][.has-body](vertical)
- *         > AdwGizmo.heading-bin > GtkLabel.title-2 (heading)
+ *         > AdwGizmo.heading-bin > GtkLabel.title-2 (heading), or the wrapping
+ *           GtkLabel.title-4 when that doesn't fit on one line
  *         > GtkLabel.body (body text)
  *         > AdwBin.child (extra child)
  *     > AdwGizmo.response-area
@@ -84,40 +104,106 @@ export const AdwAlertDialog = forwardRef<HTMLDivElement, AdwAlertDialogProps>(
   ) {
     const handleClose = useCallback(() => onResponse?.(closeResponse), [onResponse, closeResponse]);
 
-    // Upstream allocate_responses(): buttons share the row equally; when their
-    // widest natural size doesn't fit, they stack vertically ("compact"),
-    // the first response at the bottom.
+    // Upstream measure_contents() picks the width: at least DIALOG_MIN_WIDTH;
+    // normally the heading's natural width, clamped between the widths the
+    // responses need stacked and side by side (plus RESPONSE_HORZ_PADDING),
+    // up to DIALOG_MAX_WIDTH (or the side-by-side width up to
+    // DIALOG_MAX_WIDE_WIDTH with preferWideLayout). The body wraps instead of
+    // widening the dialog. allocate_responses() then lays the buttons out:
+    // sharing the row equally, or stacked ("compact", the first response at
+    // the bottom) when side by side doesn't fit.
+    const contentsRef = useRef<HTMLDivElement>(null);
     const responseAreaRef = useRef<HTMLDivElement>(null);
     const [compact, setCompact] = useState(false);
+    const [width, setWidth] = useState<number | null>(null);
+    const [smallHeading, setSmallHeading] = useState(false);
     useLayoutEffect(() => {
+      const contents = contentsRef.current;
       const area = responseAreaRef.current;
-      if (!area || !visible) return;
+      if (!contents || !area || !visible) return;
+      // Layout sizes only (offset/scroll), unaffected by the opening scale.
+      // A label's natural width: its text on one line, plus its own padding.
+      const singleLineWidth = (el: Element | null, className?: string) => {
+        if (!el?.parentElement) return 0;
+        const probe = el.cloneNode(true) as HTMLElement;
+        if (className) probe.className = className;
+        probe.style.cssText +=
+          ";position:absolute;visibility:hidden;white-space:pre;width:max-content";
+        el.parentElement.appendChild(probe);
+        const w = probe.offsetWidth;
+        probe.remove();
+        return w;
+      };
+      const horizontalPadding = (el: Element | null) => {
+        if (!el) return 0;
+        const cs = getComputedStyle(el);
+        return parseFloat(cs.paddingLeft) + parseFloat(cs.paddingRight);
+      };
       const measure = () => {
         const buttons = Array.from(area.children) as HTMLElement[];
-        if (buttons.length === 0) return;
-        const style = getComputedStyle(area);
-        const available =
-          area.clientWidth - parseFloat(style.paddingLeft) - parseFloat(style.paddingRight);
-        const widest = Math.max(
+        const buttonNat = Math.max(
+          0,
           ...buttons.map((b) => {
             const label = b.firstElementChild as HTMLElement | null;
             const bs = getComputedStyle(b);
-            const padding = parseFloat(bs.paddingLeft) + parseFloat(bs.paddingRight);
-            return Math.max(parseFloat(bs.minWidth) || 0, (label?.scrollWidth ?? 0) + padding);
+            const extra =
+              parseFloat(bs.paddingLeft) +
+              parseFloat(bs.paddingRight) +
+              parseFloat(bs.borderLeftWidth) +
+              parseFloat(bs.borderRightWidth);
+            // The label on its own line: a button's bin layout stretches it.
+            return Math.max(parseFloat(bs.minWidth) || 0, singleLineWidth(label) + extra);
           }),
         );
-        const wide = widest * buttons.length + BUTTON_SPACING * (buttons.length - 1);
-        setCompact(wide > available + 0.5);
+        const n = buttons.length;
+        const wideNat = buttonNat * n + BUTTON_SPACING * Math.max(0, n - 1) + RESPONSE_HORZ_PADDING;
+        const narrowNat = Math.max(buttonNat + RESPONSE_HORZ_PADDING, DIALOG_PREFERRED_WIDTH);
+        // measure_heading(): the larger of the title-2 label on one line and
+        // the wrapping title-4 one, whose natural width is also one line.
+        const headingBin = contents.querySelector(".heading-bin") as HTMLElement | null;
+        const headingEl = headingBin?.firstElementChild ?? null;
+        const binPadding = horizontalPadding(headingBin);
+        const largeNat = singleLineWidth(headingEl, "gtk-label title-2");
+        const headingBinNat = headingBin
+          ? Math.max(largeNat, singleLineWidth(headingEl, "gtk-label title-4")) + binPadding
+          : 0;
+        const headingNat = Math.min(Math.max(headingBinNat, narrowNat), wideNat);
+        let maxSize = preferWideLayout
+          ? Math.min(DIALOG_MAX_WIDE_WIDTH, wideNat)
+          : wideNat > DIALOG_MIN_WIDTH
+            ? Math.min(DIALOG_MAX_WIDTH, headingNat)
+            : DIALOG_MAX_WIDTH;
+        maxSize = Math.max(DIALOG_MIN_WIDTH, maxSize);
+        // The contents' natural width: the message area's children (labels on
+        // one line) with their padding, or the responses side by side.
+        const messageArea = contents.querySelector(".message-area") as HTMLElement | null;
+        const messagePadding = horizontalPadding(messageArea);
+        const bodyEl = messageArea?.querySelector(":scope > .body") ?? null;
+        const extraChild = messageArea?.querySelector(":scope > .child") as HTMLElement | null;
+        const baseNat = Math.max(
+          wideNat,
+          headingBinNat + messagePadding,
+          singleLineWidth(bodyEl) + messagePadding,
+          extraChild ? extraChild.scrollWidth + horizontalPadding(extraChild) + messagePadding : 0,
+        );
+        const next = Math.min(Math.max(baseNat, DIALOG_MIN_WIDTH), maxSize);
+        setWidth(next);
+        const as = getComputedStyle(area);
+        const available = next - parseFloat(as.paddingLeft) - parseFloat(as.paddingRight);
+        setCompact(n > 1 && wideNat - RESPONSE_HORZ_PADDING > available + 0.5);
+        // allocate_heading(): the title-4 label, wrapping, once the title-2
+        // one doesn't fit on one line.
+        if (headingBin) setSmallHeading(largeNat > headingBin.clientWidth - binPadding + 0.5);
       };
       measure();
       const ro = new ResizeObserver(measure);
-      ro.observe(area);
+      ro.observe(contents);
       return () => ro.disconnect();
-    }, [visible, responses]);
+    }, [visible, responses, heading, body, preferWideLayout]);
 
     // Upstream: .message-area gets .has-heading / .has-body conditionally,
     // which the SCSS uses for border-spacing (10px when both, 24px otherwise).
-    const messageAreaClasses = ["message-area"];
+    const messageAreaClasses = ["gtk-box", "gtk-box-layout", "vertical", "message-area"];
     if (heading) messageAreaClasses.push("has-heading");
     if (body) messageAreaClasses.push("has-body");
 
@@ -128,7 +214,13 @@ export const AdwAlertDialog = forwardRef<HTMLDivElement, AdwAlertDialogProps>(
         dialogClasses={["alert", "background", "floating"]}
         className={className}
         // Upstream DIALOG_MIN_WIDTH / DIALOG_MAX_WIDTH / DIALOG_MAX_WIDE_WIDTH.
-        sheetStyle={{ minWidth: "min(300px, 100%)", maxWidth: preferWideLayout ? 600 : 372 }}
+        sheetStyle={{
+          width: width ?? undefined,
+          minWidth: `min(${DIALOG_MIN_WIDTH}px, 100%)`,
+          maxWidth: `min(${preferWideLayout ? DIALOG_MAX_WIDE_WIDTH : DIALOG_MAX_WIDTH}px, 100%)`,
+        }}
+        // The UI template sets follows-content-size.
+        followsContentSize
         onDimmingClick={handleClose}
         onEscape={handleClose}
         onCloseAnimationDone={onHidden}
@@ -139,7 +231,7 @@ export const AdwAlertDialog = forwardRef<HTMLDivElement, AdwAlertDialogProps>(
         {/* An alert is a dialog: its header bars don't show the presenting page's title. */}
         <HeaderBarTitleContext.Provider value="">
           {/* AdwGizmo "contents" — no CSS class, just a layout container */}
-          <div>
+          <div ref={contentsRef}>
             <div className="gtk-windowhandle">
               <div className="gtk-box gtk-box-layout vertical">
                 <div
@@ -148,11 +240,23 @@ export const AdwAlertDialog = forwardRef<HTMLDivElement, AdwAlertDialogProps>(
                 >
                   <div className={messageAreaClasses.join(" ")}>
                     {heading && (
-                      <div className="heading-bin">
-                        <span className="gtk-label title-2">{heading}</span>
+                      <div className="heading-bin gtk-bin-layout">
+                        {smallHeading ? (
+                          <span className="gtk-label title-4" style={WRAPPING_CENTERED}>
+                            {heading}
+                          </span>
+                        ) : (
+                          <span className="gtk-label title-2" style={CENTERED}>
+                            {heading}
+                          </span>
+                        )}
                       </div>
                     )}
-                    {body && <span className="gtk-label body">{body}</span>}
+                    {body && (
+                      <span className="gtk-label body" style={WRAPPING_CENTERED}>
+                        {body}
+                      </span>
+                    )}
                     {extraChild && <div className="child">{extraChild}</div>}
                   </div>
                 </div>
