@@ -1086,6 +1086,17 @@ fn is_known_case(name: &str) -> bool {
 fn configure_environment() {
     unsafe {
         std::env::set_var("GDK_SCALE", "1");
+        // Snapshots are read from render nodes, so no GPU renderer is needed,
+        // and the GL/Vulkan setup each new window does can stall on a headless
+        // X server. Accessibility isn't used either, and registering every
+        // window with an unreachable AT-SPI bus blocks on D-Bus timeouts.
+        // Both can still be overridden from the environment.
+        if std::env::var_os("GSK_RENDERER").is_none() {
+            std::env::set_var("GSK_RENDERER", "cairo");
+        }
+        if std::env::var_os("GTK_A11Y").is_none() {
+            std::env::set_var("GTK_A11Y", "none");
+        }
     }
 }
 
