@@ -1,15 +1,6 @@
-import { expect, test } from "bun:test";
 import type { Browser } from "playwright";
-
-function debugEnabled(): boolean {
-  return Bun.env.GTK_JS_TEST_DEBUG != null;
-}
-
-function debugLog(scope: string, message: string): void {
-  if (debugEnabled()) {
-    console.error(`[${scope}] ${message}`);
-  }
-}
+import { expect, test } from "vite-plus/test";
+import { debugLog } from "./debug.ts";
 
 const GTK_TEST_TIMEOUT = 30_000;
 

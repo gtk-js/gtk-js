@@ -1,4 +1,4 @@
-import { describe, expect, test } from "bun:test";
+import { describe, expect, test } from "vite-plus/test";
 import { adwEase, easeOutCubic, lerp } from "./easing.ts";
 
 describe("adwEase", () => {

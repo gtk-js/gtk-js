@@ -6,7 +6,7 @@ description: Install gtk-js packages in your project.
 ## With Adwaita (recommended)
 
 ```bash
-bun add @gtk-js/adwaita @gtk-js/adwaita-icons react react-dom
+npm install @gtk-js/adwaita @gtk-js/adwaita-icons react react-dom
 ```
 
 This gives you all GTK4 components + Adwaita components + the Adwaita theme CSS (auto-injected).
@@ -14,7 +14,7 @@ This gives you all GTK4 components + Adwaita components + the Adwaita theme CSS 
 ## GTK4 only (no Adwaita)
 
 ```bash
-bun add @gtk-js/gtk4 @gtk-js/gtk4-icons react react-dom
+npm install @gtk-js/gtk4 @gtk-js/gtk4-icons react react-dom
 ```
 
 Use this if you want GTK4's default theme instead of Adwaita. You'll need to provide your own theme CSS via `GtkProvider`'s `cssHref` or `cssText` prop.

@@ -1,4 +1,4 @@
-import { expect } from "bun:test";
+import { expect } from "vite-plus/test";
 import { compare, findChild, gtkTest } from "../harness";
 
 gtkTest("check-button-no-label", (native, web) => {

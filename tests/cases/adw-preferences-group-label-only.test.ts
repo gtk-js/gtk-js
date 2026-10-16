@@ -1,4 +1,4 @@
-import { expect } from "bun:test";
+import { expect } from "vite-plus/test";
 import { gtkAssert } from "../assert";
 import { gtkTest, type WidgetSnapshot } from "../harness";
 

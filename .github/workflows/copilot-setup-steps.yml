@@ -29,10 +29,10 @@ jobs:
         run: docker run -dit --name gtk-js -v "$PWD:/workspace" -w /workspace gtk-js-test bash
 
       - name: Install dependencies
-        run: docker exec gtk-js bash -c "HOME=/root bun install"
+        run: docker exec gtk-js bash -c "HOME=/root vp install"
 
       - name: Build packages
-        run: docker exec gtk-js bun run build:packages
+        run: docker exec gtk-js vp run build:packages
 
       - name: Build native test binary
         run: docker exec gtk-js bash -c "cd tests/native && cargo build"

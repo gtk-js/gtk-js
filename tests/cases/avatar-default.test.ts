@@ -1,4 +1,4 @@
-import { expect } from "bun:test";
+import { expect } from "vite-plus/test";
 import { compare, gtkTest } from "../harness";
 
 // Both sides extract the `avatar` gizmo inside AdwAvatar (adw-avatar.c:467),

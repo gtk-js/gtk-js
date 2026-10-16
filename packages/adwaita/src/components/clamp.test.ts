@@ -1,5 +1,5 @@
 // Unit tests — no Playwright/cargo preload needed.
-import { describe, expect, test } from "bun:test";
+import { describe, expect, test } from "vite-plus/test";
 import { clampChildSize } from "./clamp.tsx";
 
 // Expected values follow child_size_from_clamp() in adw-clamp-layout.c:

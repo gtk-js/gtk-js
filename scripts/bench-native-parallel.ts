@@ -1,3 +1,7 @@
+import { spawn } from "node:child_process";
+import { Readable } from "node:stream";
+import { setTimeout as sleep } from "node:timers/promises";
+
 const cases = [
   "button-circular",
   "button-disabled",
@@ -65,19 +69,21 @@ async function waitForReady(port: number): Promise<void> {
       // Keep polling until the server is ready.
     }
 
-    await Bun.sleep(50);
+    await sleep(50);
   }
 
   throw new Error(`Native server on port ${port} did not become ready in time`);
 }
 
-const proc = Bun.spawn(["xvfb-run", "-a", "tests/native/target/debug/gtk-js-test", "serve"], {
-  stdout: "pipe",
-  stderr: "inherit",
+// In its own process group: stopping xvfb-run alone would leave Xvfb and the server
+// running, and the server would keep stdout open, so the script wouldn't exit.
+const proc = spawn("xvfb-run", ["-a", "tests/native/target/debug/gtk-js-test", "serve"], {
+  stdio: ["ignore", "pipe", "inherit"],
+  detached: true,
 });
 
 try {
-  const port = await readListeningPort(proc.stdout);
+  const port = await readListeningPort(Readable.toWeb(proc.stdout) as ReadableStream<Uint8Array>);
   await waitForReady(port);
 
   const overallStart = performance.now();
@@ -112,5 +118,6 @@ try {
     ),
   );
 } finally {
-  proc.kill();
+  if (proc.pid != null) process.kill(-proc.pid);
+  proc.stdout.destroy();
 }

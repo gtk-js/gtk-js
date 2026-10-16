@@ -1,12 +1,12 @@
 import { GtkTheme, resolveColorScheme } from "@gtk-js/gtk-css";
-import dark_circular_default from "../dist/dark_circular_default.css" with { type: "text" };
-import dark_circular_round from "../dist/dark_circular_round.css" with { type: "text" };
-import dark_square_default from "../dist/dark_square_default.css" with { type: "text" };
-import dark_square_round from "../dist/dark_square_round.css" with { type: "text" };
-import light_circular_default from "../dist/light_circular_default.css" with { type: "text" };
-import light_circular_round from "../dist/light_circular_round.css" with { type: "text" };
-import light_square_default from "../dist/light_square_default.css" with { type: "text" };
-import light_square_round from "../dist/light_square_round.css" with { type: "text" };
+import dark_circular_default from "../dist/dark_circular_default.css?raw";
+import dark_circular_round from "../dist/dark_circular_round.css?raw";
+import dark_square_default from "../dist/dark_square_default.css?raw";
+import dark_square_round from "../dist/dark_square_round.css?raw";
+import light_circular_default from "../dist/light_circular_default.css?raw";
+import light_circular_round from "../dist/light_circular_round.css?raw";
+import light_square_default from "../dist/light_square_default.css?raw";
+import light_square_round from "../dist/light_square_round.css?raw";
 
 const CSS_MAP = {
   light_circular_default,

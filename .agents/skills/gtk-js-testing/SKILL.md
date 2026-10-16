@@ -9,19 +9,19 @@ Tests live in `tests/` and compare native GTK4/Adwaita rendering (Rust/relm4) ag
 
 ## Running tests
 
-- `bun test` — run all tests (e2e + unit)
-- `bun test <filter>` — run tests matching substring (e.g. `bun test toggle`, `bun test link`)
-- `bun test packages/gtk-css` — run CSS transform unit tests only
+- `vp test` — run all tests (e2e + unit)
+- `vp test <filter>` — run test files matching substring (e.g. `vp test toggle`, `vp test link`)
+- `vp test --project unit` — run the unit tests only (no Playwright, cargo or native server); `vp test --project unit packages/gtk-css` for the CSS transform tests
 - Tests run against both Chromium and Firefox (2 tests per case)
 
-`bun test` must always be redirected to a file:
+`vp test` must always be redirected to a file:
 
 ```sh
-bun test > /tmp/out.txt 2>&1
+vp test > /tmp/out.txt 2>&1
 # then read /tmp/out.txt
 ```
 
-Other commands (`bun run check`, `bun run fix`, `bun run build`, etc.) can be run directly.
+Other commands (`vp run check`, `vp run fix`, `vp run build`, etc.) can be run directly.
 
 ## Adding a new test case
 
@@ -93,7 +93,7 @@ Before adding or modifying tests, read these to understand current state:
 
 ## Unit tests
 
-`packages/gtk-css/` has its own `bunfig.toml` so unit tests there run without the Playwright/cargo preload. Add CSS transform regression tests in `packages/gtk-css/src/transform.test.ts`.
+Unit tests (`packages/*/src/**/*.test.ts(x)`) are the `unit` project in `vite.config.ts`, which runs without the Playwright/cargo setup. Add CSS transform regression tests in `packages/gtk-css/src/transform.test.ts`.
 
 ## Naming conventions
 

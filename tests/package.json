@@ -3,7 +3,7 @@
   "private": true,
   "type": "module",
   "dependencies": {
-    "@gtk-js/adwaita": "workspace:*",
+    "@gtk-js/adwaita": "*",
     "playwright": "^1.52.0",
     "react": "^19",
     "react-dom": "^19"

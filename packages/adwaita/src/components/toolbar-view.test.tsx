@@ -1,6 +1,7 @@
 // Unit tests — no Playwright/cargo preload needed.
-import { describe, expect, test } from "bun:test";
+
 import { renderToStaticMarkup } from "react-dom/server";
+import { describe, expect, test } from "vite-plus/test";
 import { AdwToolbarView } from "./toolbar-view.tsx";
 
 const classOf = (html: string) => html.match(/class="([^"]*)"/)?.[1]?.split(" ");

@@ -18,14 +18,14 @@
     "./gtk4.css": "./dist/gtk4.css"
   },
   "scripts": {
-    "build": "bun build.ts && tsc -p tsconfig.build.json && NODE_ENV=production bun build src/index.ts --outdir dist --format esm --packages external"
+    "build": "node build.ts && vp pack"
   },
   "dependencies": {
-    "@gtk-js/icons-gtk4": "0.1.6",
-    "@gtk-js/icon-helpers": "0.1.6"
+    "@gtk-js/gtk-css": "0.1.7",
+    "@gtk-js/icon-helpers": "0.1.6",
+    "@gtk-js/icons-gtk4": "0.1.6"
   },
   "devDependencies": {
-    "@gtk-js/gtk-css": "0.1.7",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3"
   },

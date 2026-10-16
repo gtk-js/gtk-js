@@ -1,7 +1,7 @@
 import { GtkTheme } from "@gtk-js/gtk-css";
-import autoCSS from "../dist/auto.css" with { type: "text" };
-import darkCSS from "../dist/dark.css" with { type: "text" };
-import lightCSS from "../dist/light.css" with { type: "text" };
+import autoCSS from "../dist/auto.css?raw";
+import darkCSS from "../dist/dark.css?raw";
+import lightCSS from "../dist/light.css?raw";
 
 /**
  * The Adwaita theme — the default GNOME/libadwaita theme.

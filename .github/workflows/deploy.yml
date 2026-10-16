@@ -22,16 +22,13 @@ jobs:
         with:
           submodules: recursive
 
-      - uses: oven-sh/setup-bun@v2
-
       - name: Install sassc
         run: sudo apt-get install -y sassc
 
-      - name: Install dependencies
-        run: bun install
+      - uses: voidzero-dev/setup-vp@v1.21.2
 
       - name: Build website
-        run: bun run build
+        run: vp run build
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3

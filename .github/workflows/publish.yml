@@ -33,14 +33,12 @@ jobs:
         with:
           submodules: recursive
 
-      - uses: oven-sh/setup-bun@v2
-
       - name: Install sassc
         run: sudo apt-get install -y sassc
 
-      - run: bun install
+      - uses: voidzero-dev/setup-vp@v1.21.2
 
       - name: Build and publish packages
-        run: bun run publish
+        run: vp run publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

@@ -1,6 +1,6 @@
 import { GtkTheme, resolveColorScheme } from "@gtk-js/gtk-css";
-import dark from "../dist/dark_default.css" with { type: "text" };
-import light from "../dist/light_default.css" with { type: "text" };
+import dark from "../dist/dark_default.css?raw";
+import light from "../dist/light_default.css?raw";
 
 export class WhiteSurTheme extends GtkTheme {
   readonly colorScheme: "light" | "dark" | "auto";

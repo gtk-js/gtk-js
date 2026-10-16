@@ -17,7 +17,7 @@
     }
   },
   "scripts": {
-    "build": "bun build.ts && tsc -p tsconfig.build.json && bun build src/index.ts --outdir dist --format esm --packages external"
+    "build": "node build.ts && vp pack"
   },
   "dependencies": {
     "@gtk-js/gtk-css": "0.1.7"

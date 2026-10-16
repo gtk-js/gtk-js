@@ -1,3 +1,6 @@
+import { spawnSync } from "node:child_process";
+import { readFileSync } from "node:fs";
+
 const packages = [
   "packages/gtk-css",
   "packages/icon-helpers",
@@ -15,7 +18,7 @@ const packages = [
 ];
 
 for (const dir of packages) {
-  const pkg = await Bun.file(`${dir}/package.json`).json();
+  const pkg = JSON.parse(readFileSync(`${dir}/package.json`, "utf8"));
   const { name, version } = pkg;
 
   const res = await fetch(`https://registry.npmjs.org/${encodeURIComponent(name)}/${version}`);
@@ -25,14 +28,10 @@ for (const dir of packages) {
   }
 
   console.log(`Publishing ${name}@${version}...`);
-  const result = Bun.spawnSync({
-    cmd: ["bun", "publish", "--cwd", dir],
-    stdout: "inherit",
-    stderr: "inherit",
-  });
+  const result = spawnSync("npm", ["publish", "--workspace", dir], { stdio: "inherit" });
 
-  if (result.exitCode !== 0) {
-    process.exit(result.exitCode);
+  if (result.status !== 0) {
+    process.exit(result.status ?? 1);
   }
 
   console.log(`New tag: ${name}@${version}`);
