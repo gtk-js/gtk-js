@@ -78,6 +78,11 @@ export const GtkLabel = forwardRef<HTMLSpanElement, GtkLabelProps>(function GtkL
   const cssStyle: React.CSSProperties = {
     textAlign,
     userSelect: selectable ? "text" : "none",
+    // xalign and yalign place the text in a label bigger than it
+    // (gtk_label_get_layout_location()). Flex start and end follow the text
+    // direction, as GTK flips xalign in RTL.
+    justifyContent: flexAlign(xalign),
+    ...(yalign !== 0.5 && { alignItems: flexAlign(yalign) }),
     ...style,
   };
 
@@ -130,6 +135,11 @@ export const GtkLabel = forwardRef<HTMLSpanElement, GtkLabelProps>(function GtkL
     </span>
   );
 });
+
+/** A GTK alignment (0 start, 0.5 center, 1 end) as a flex one; others take the nearest. */
+function flexAlign(align: number): "flex-start" | "center" | "flex-end" {
+  return align < 0.25 ? "flex-start" : align > 0.75 ? "flex-end" : "center";
+}
 
 const ELLIPSIS_STYLE: React.CSSProperties = {
   display: "block",
