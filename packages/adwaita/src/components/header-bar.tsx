@@ -16,6 +16,13 @@ export interface AdwHeaderBarProps extends HTMLAttributes<HTMLDivElement> {
   end?: ReactNode;
 }
 
+/** The window controls' accessible labels (gtkwindowcontrols.c). */
+const WINDOW_CONTROL_LABELS: Record<string, string> = {
+  close: "Close",
+  minimize: "Minimize",
+  maximize: "Maximize",
+};
+
 function WindowControlButton({ name, onClick }: { name: string; onClick?: () => void }) {
   const iconMap: Record<string, string> = {
     close: "WindowClose",
@@ -24,10 +31,15 @@ function WindowControlButton({ name, onClick }: { name: string; onClick?: () => 
   };
   const Icon = useIcon(iconMap[name] ?? "");
   if (!Icon) return null;
+  // Window controls can't take focus (gtk_widget_set_can_focus (button, FALSE)
+  // in gtkwindowcontrols.c), and have an accessible label.
   return (
     <button
       className={`gtk-button image-button ${name}`}
       type="button"
+      tabIndex={-1}
+      aria-label={WINDOW_CONTROL_LABELS[name]}
+      onMouseDown={(e) => e.preventDefault()}
       onClick={onClick}
       onPointerDown={(e) => {
         // Stop propagation so the windowhandle drag handler doesn't fire.
@@ -147,6 +159,8 @@ export const AdwHeaderBar = forwardRef<HTMLDivElement, AdwHeaderBarProps>(functi
               <button
                 className="gtk-button image-button back flat"
                 type="button"
+                aria-label="Back"
+                title={nav.previousTitle || "Back"}
                 onClick={() => nav.pop()}
                 onPointerDown={(e) => e.stopPropagation()}
               >
