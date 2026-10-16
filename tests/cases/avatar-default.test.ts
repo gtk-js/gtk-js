@@ -1,20 +1,9 @@
-import { expect } from "bun:test";
-import { compare, gtkTest } from "../harness";
+import { gtkTest } from "../harness";
 
-// Filtered: color — extraction-level structural mismatch + random color for empty text.
+// The web component has the same two levels as native AdwAvatar
+// (adw-avatar.c:467): the outer widget, which both sides extract, and the
+// `avatar` gizmo inside it that the SCSS colors (_avatar.scss:27-35).
 //
-// Native AdwAvatar has a two-level structure (adw-avatar.c:467): the outer
-// AdwAvatar widget (no CSS name) contains a child gizmo with CSS name "avatar"
-// (adw_gizmo_new_with_role("avatar", ...)). The SCSS color rules target the
-// gizmo: `avatar.color#{$i} { color: ... }` (_avatar.scss:27-32). The test
-// extracts from the outer widget (use_inner=false), which has no avatar SCSS
-// applied. The web component's root div IS the avatar node (class="gtk-avatar
-// colorN"), so color is set. This structural mismatch causes color to differ.
-//
-// Additionally, both native (adw-avatar.c:137-139, g_rand_int_range) and web
-// (Math.random) use random color selection when text is empty, so color can
-// never match deterministically for this case.
-gtkTest("avatar-default", (native, web) => {
-  const { failures } = compare(native, web);
-  expect(failures.filter((f) => f.property !== "color")).toEqual([]);
-});
+// Empty text picks a random color on both sides (adw-avatar.c:137-139,
+// Math.random), but only the gizmo is colored, so the outer widgets match.
+gtkTest("avatar-default");

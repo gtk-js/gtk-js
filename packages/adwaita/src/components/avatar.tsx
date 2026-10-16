@@ -54,7 +54,9 @@ function getInitials(text: string): string {
 /**
  * AdwAvatar — A circular avatar widget.
  *
- * CSS node: avatar[.color1..color14][.contrasted][.image]
+ * CSS nodes (adw-avatar.c): the widget itself (no name, GtkBinLayout), and a
+ * child gizmo `avatar[.color1..color14][.contrasted][.image]` of the avatar's
+ * size, centered in whatever the widget is allocated.
  *
  * @see https://gnome.pages.gitlab.gnome.org/libadwaita/doc/1-latest/class.Avatar.html
  */
@@ -77,7 +79,6 @@ export const AdwAvatar = forwardRef<HTMLDivElement, AdwAvatarProps>(function Adw
   const classes = ["gtk-avatar", `color${colorIndex + 1}`];
   if (size < 25) classes.push("contrasted");
   if (customImage) classes.push("image");
-  if (className) classes.push(className);
 
   const avatarStyle: React.CSSProperties = {
     width: size,
@@ -91,7 +92,6 @@ export const AdwAvatar = forwardRef<HTMLDivElement, AdwAvatarProps>(function Adw
     color: fontColor,
     fontSize: size * 0.4,
     fontWeight: "bold",
-    ...style,
   };
 
   return (
@@ -99,17 +99,24 @@ export const AdwAvatar = forwardRef<HTMLDivElement, AdwAvatarProps>(function Adw
       ref={ref}
       role="img"
       aria-label={text ? `Avatar of ${text}` : undefined}
-      className={classes.join(" ")}
-      style={avatarStyle}
+      className={className ? `gtk-bin-layout ${className}` : "gtk-bin-layout"}
+      style={style}
       {...rest}
     >
-      {customImage}
-      {showText && <span className="gtk-label">{initials}</span>}
-      {showIcon && FallbackIcon && (
-        <span className="gtk-image">
-          <FallbackIcon size={Math.round(size * 0.5)} />
-        </span>
-      )}
+      <div
+        className={classes.join(" ")}
+        data-halign="center"
+        data-valign="center"
+        style={avatarStyle}
+      >
+        {customImage}
+        {showText && <span className="gtk-label">{initials}</span>}
+        {showIcon && FallbackIcon && (
+          <span className="gtk-image">
+            <FallbackIcon size={Math.round(size * 0.5)} />
+          </span>
+        )}
+      </div>
     </div>
   );
 });
