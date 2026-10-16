@@ -14,23 +14,8 @@ export interface AdwAvatarProps extends HTMLAttributes<HTMLDivElement> {
   size?: number;
 }
 
-// 14 color palettes: [font, gradientTop, gradientBottom]
-const COLORS: [string, string, string][] = [
-  ["#cfe1f5", "#83b6ec", "#337fdc"],
-  ["#caeaf2", "#7ad9f1", "#0f9ac8"],
-  ["#cef8d8", "#8de6b1", "#29ae74"],
-  ["#e6f9d7", "#b5e98a", "#6ab85b"],
-  ["#f9f4e1", "#f8e359", "#d29d09"],
-  ["#ffead1", "#ffcb62", "#d68400"],
-  ["#ffe5c5", "#ffa95a", "#ed5b00"],
-  ["#f8d2ce", "#f78773", "#e62d42"],
-  ["#fac7de", "#e973ab", "#e33b6a"],
-  ["#e7c2e8", "#cb78d4", "#9945b5"],
-  ["#d5d2f5", "#9e91e8", "#7a59ca"],
-  ["#f2eade", "#e3cf9c", "#b08952"],
-  ["#e5d6ca", "#be916d", "#785336"],
-  ["#d8d7d3", "#c0bfbc", "#6e6d71"],
-];
+// Number of avatar palettes in _avatar.scss (NUMBER_OF_COLORS in adw-avatar.c).
+const NUMBER_OF_COLORS = 14;
 
 // Matches GLib's g_str_hash: DJB2-add seeded at 5381, unsigned 32-bit result.
 // adw-avatar.c:143 uses g_str_hash(text) % NUMBER_OF_COLORS directly.
@@ -54,7 +39,9 @@ function getInitials(text: string): string {
 /**
  * AdwAvatar — A circular avatar widget.
  *
- * CSS node: avatar[.color1..color14][.contrasted][.image]
+ * CSS nodes (adw-avatar.c): the widget itself (no name, GtkBinLayout), and a
+ * child gizmo `avatar[.color1..color14][.contrasted][.image]` of the avatar's
+ * size, centered in whatever the widget is allocated.
  *
  * @see https://gnome.pages.gitlab.gnome.org/libadwaita/doc/1-latest/class.Avatar.html
  */
@@ -63,11 +50,10 @@ export const AdwAvatar = forwardRef<HTMLDivElement, AdwAvatarProps>(function Adw
   ref,
 ) {
   const colorIndex = useMemo(() => {
-    if (!text) return Math.floor(Math.random() * 14);
-    return hashString(text) % 14;
+    if (!text) return Math.floor(Math.random() * NUMBER_OF_COLORS);
+    return hashString(text) % NUMBER_OF_COLORS;
   }, [text]);
 
-  const [fontColor, gradTop, gradBottom] = COLORS[colorIndex]!;
   const initials = useMemo(() => getInitials(text), [text]);
   const FallbackIcon = useIcon(iconName ?? "AvatarDefault");
 
@@ -77,21 +63,17 @@ export const AdwAvatar = forwardRef<HTMLDivElement, AdwAvatarProps>(function Adw
   const classes = ["gtk-avatar", `color${colorIndex + 1}`];
   if (size < 25) classes.push("contrasted");
   if (customImage) classes.push("image");
-  if (className) classes.push(className);
 
+  // The colors, gradient, radius and weight come from the theme
+  // (_avatar.scss), so .contrasted and .image can override the palette.
   const avatarStyle: React.CSSProperties = {
     width: size,
     height: size,
-    borderRadius: "50%",
     overflow: "hidden",
     display: "inline-flex",
     alignItems: "center",
     justifyContent: "center",
-    backgroundImage: customImage ? "none" : `linear-gradient(${gradTop}, ${gradBottom})`,
-    color: fontColor,
     fontSize: size * 0.4,
-    fontWeight: "bold",
-    ...style,
   };
 
   return (
@@ -99,17 +81,24 @@ export const AdwAvatar = forwardRef<HTMLDivElement, AdwAvatarProps>(function Adw
       ref={ref}
       role="img"
       aria-label={text ? `Avatar of ${text}` : undefined}
-      className={classes.join(" ")}
-      style={avatarStyle}
+      className={className ? `gtk-bin-layout ${className}` : "gtk-bin-layout"}
+      style={style}
       {...rest}
     >
-      {customImage}
-      {showText && <span className="gtk-label">{initials}</span>}
-      {showIcon && FallbackIcon && (
-        <span className="gtk-image">
-          <FallbackIcon size={Math.round(size * 0.5)} />
-        </span>
-      )}
+      <div
+        className={classes.join(" ")}
+        data-halign="center"
+        data-valign="center"
+        style={avatarStyle}
+      >
+        {customImage}
+        {showText && <span className="gtk-label">{initials}</span>}
+        {showIcon && FallbackIcon && (
+          <span className="gtk-image">
+            <FallbackIcon size={Math.round(size * 0.5)} />
+          </span>
+        )}
+      </div>
     </div>
   );
 });
