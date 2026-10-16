@@ -1,3 +1,4 @@
+import { wrapStyle } from "@gtk-js/gtk4";
 import {
   forwardRef,
   type HTMLAttributes,
@@ -27,11 +28,9 @@ const CENTERED: React.CSSProperties = {
   whiteSpace: "pre",
 };
 /** The small heading and body labels also wrap, word-char. */
-const WRAPPING_CENTERED: React.CSSProperties = {
-  ...CENTERED,
-  whiteSpace: "pre-wrap",
-  overflowWrap: "break-word",
-};
+const WRAPPING_CENTERED: React.CSSProperties = { ...CENTERED, ...wrapStyle("word-char") };
+/** Response labels never wrap (gtk_button_new_with_mnemonic()): the buttons stack instead. */
+const RESPONSE_LABEL: React.CSSProperties = { whiteSpace: "pre" };
 
 export interface AdwAlertDialogResponse {
   id: string;
@@ -288,7 +287,9 @@ export const AdwAlertDialog = forwardRef<HTMLDivElement, AdwAlertDialogProps>(
                         data-response={resp.id}
                         onClick={() => onResponse?.(resp.id)}
                       >
-                        <span className="gtk-label">{resp.label}</span>
+                        <span className="gtk-label" style={RESPONSE_LABEL}>
+                          {resp.label}
+                        </span>
                       </button>
                     );
                   })}

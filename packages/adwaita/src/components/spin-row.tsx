@@ -1,4 +1,4 @@
-import { useIcon, useListBoxRow } from "@gtk-js/gtk4";
+import { useIcon, useListBoxRow, wrapStyle } from "@gtk-js/gtk4";
 import { forwardRef, type HTMLAttributes, useCallback, useState } from "react";
 
 export interface AdwSpinRowProps extends HTMLAttributes<HTMLDivElement> {
@@ -73,8 +73,14 @@ export const AdwSpinRow = forwardRef<HTMLDivElement, AdwSpinRowProps>(function A
     <div ref={ref} className={classes.join(" ")} {...rest}>
       <div className="gtk-box gtk-box-layout horizontal header" style={{ alignItems: "center" }}>
         <div className="gtk-box gtk-box-layout vertical title" style={{ flex: 1 }}>
-          <span className="gtk-label title">{title}</span>
-          {subtitle && <span className="gtk-label subtitle">{subtitle}</span>}
+          <span className="gtk-label title" style={wrapStyle("word-char")}>
+            {title}
+          </span>
+          {subtitle && (
+            <span className="gtk-label subtitle" style={wrapStyle("word-char")}>
+              {subtitle}
+            </span>
+          )}
         </div>
         <div className="gtk-spinbutton horizontal" style={{ gap: 6 }}>
           <input
