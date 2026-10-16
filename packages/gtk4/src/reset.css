@@ -194,6 +194,12 @@ body:has(> :first-child:has([data-gtk-provider])) > :first-child {
   min-height: 100%;
 }
 
+/* GtkTextView: the text node fills the widget, as its text window does
+   (gtk_text_view_size_allocate()). Inline, like the <textarea> it wraps. */
+:where([data-gtk-provider] .gtk-textview) {
+  display: inline-grid;
+}
+
 /* GtkTextView in a GtkScrolledWindow: a text view scrolls its own text
    (GtkScrollable), so the scrolled window allocates it the whole viewport
    (gtk_scrolled_window_allocate_child). A <textarea> keeps its intrinsic
