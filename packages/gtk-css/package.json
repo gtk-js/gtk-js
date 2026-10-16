@@ -19,10 +19,9 @@
     "./compile": "./src/compile.ts"
   },
   "scripts": {
-    "build": "tsc -p tsconfig.build.json && bun build src/index.ts --outdir dist --format esm --packages external"
+    "build": "vp pack"
   },
   "dependencies": {
-    "postcss": "^8.5.8",
-    "sass": "^1.99.0"
+    "postcss": "^8.5.8"
   }
 }

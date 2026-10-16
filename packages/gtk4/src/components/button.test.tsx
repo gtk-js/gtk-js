@@ -1,5 +1,5 @@
-import { describe, expect, test } from "bun:test";
 import { renderToStaticMarkup } from "react-dom/server";
+import { describe, expect, test } from "vite-plus/test";
 import { GtkBox } from "./box.tsx";
 import { GtkButton } from "./button.tsx";
 import { GtkImage } from "./image.tsx";

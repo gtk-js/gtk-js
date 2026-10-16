@@ -18,7 +18,7 @@
     "./build": "./src/build-helpers.ts"
   },
   "scripts": {
-    "build": "tsc -p tsconfig.build.json && bun build src/index.ts --outdir dist --format esm --packages external"
+    "build": "vp pack"
   },
   "peerDependencies": {
     "react": "^18 || ^19"

@@ -2,7 +2,7 @@
   "compilerOptions": {
     // Environment setup & latest features
     "lib": ["ESNext", "DOM"],
-    "types": ["bun"],
+    "types": ["node", "vite-plus/client"],
     "target": "ESNext",
     "module": "Preserve",
     "moduleDetection": "force",
@@ -27,7 +27,7 @@
     "noUnusedParameters": false,
     "noPropertyAccessFromIndexSignature": false
   },
-  "include": ["types.d.ts", "packages/*/src/**/*.ts", "packages/*/src/**/*.tsx"],
+  "include": ["packages/*/src/**/*.ts", "packages/*/src/**/*.tsx", "themes/*/src/**/*.ts"],
   "exclude": [
     "packages/adwaita-icons/src/icons/**",
     "packages/gtk4-icons/src/icons/**",

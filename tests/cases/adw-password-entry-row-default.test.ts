@@ -1,4 +1,4 @@
-import { expect } from "bun:test";
+import { expect } from "vite-plus/test";
 import { compare, gtkTest } from "../harness";
 
 // Filtered: opacity — native empty-state animation bleed (inherited).

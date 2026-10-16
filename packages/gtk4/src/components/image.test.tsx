@@ -1,6 +1,6 @@
-import { describe, expect, test } from "bun:test";
 import { createGtkIcon, createGtkIconFromSvg, createGtkIconFromUrl } from "@gtk-js/icon-helpers";
 import { renderToStaticMarkup } from "react-dom/server";
+import { describe, expect, test } from "vite-plus/test";
 import { type IconMap, IconProvider } from "../icon-context.tsx";
 import { GtkImage } from "./image.tsx";
 

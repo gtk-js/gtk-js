@@ -1,4 +1,4 @@
-import { expect, test } from "bun:test";
+import { expect, test } from "vite-plus/test";
 import { extractWebStyles } from "../harness";
 
 // GtkImage with iconSize but no iconName produces no render nodes in native GTK

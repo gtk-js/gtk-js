@@ -1,4 +1,4 @@
-import { expect } from "bun:test";
+import { expect } from "vite-plus/test";
 import { compare, findChild, gtkTest } from "../harness";
 
 gtkTest("progressbar-horizontal-100", (native, web) => {

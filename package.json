@@ -1,6 +1,7 @@
 {
   "name": "gtk-js",
   "private": true,
+  "type": "module",
   "workspaces": [
     "packages/*",
     "icons/*",
@@ -8,17 +9,20 @@
     "tests"
   ],
   "scripts": {
-    "dev": "bun run --cwd packages/website dev",
-    "build:packages": "bun run --filter '!@gtk-js/website' build",
-    "build": "bun run build:packages && bun run --cwd packages/website build",
-    "check": "biome check . && tsc --noEmit && bun run --cwd packages/website tsc --noEmit",
+    "dev": "vp run --filter @gtk-js/website dev",
+    "build:packages": "vp run --filter '@gtk-js/*' --filter '!@gtk-js/website' build",
+    "build": "vp run -r build",
+    "test": "vp test",
+    "check": "biome check . && tsc --noEmit && tsc --noEmit -p packages/website",
     "fix": "biome check . --write",
-    "update-upstream": "bun scripts/update-upstream.ts",
-    "publish": "bun run build:packages && bun scripts/publish.ts"
+    "update-upstream": "node scripts/update-upstream.ts",
+    "publish": "vp run build:packages && node scripts/publish.ts"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.4.10",
-    "@types/bun": "^1.3.11",
-    "typescript": "^6.0.2"
-  }
+    "@types/node": "^22",
+    "typescript": "^6.0.2",
+    "vite-plus": "^1.2.0"
+  },
+  "packageManager": "npm@11.21.1"
 }

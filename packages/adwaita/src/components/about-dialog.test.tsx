@@ -1,5 +1,5 @@
-import { describe, expect, test } from "bun:test";
 import { renderToStaticMarkup } from "react-dom/server";
+import { describe, expect, test } from "vite-plus/test";
 import { AdwAboutDialog, type AdwAboutDialogProps } from "./about-dialog.tsx";
 
 // react-dom/server checks `instanceof HTMLElement` for the dialog's portal prop.

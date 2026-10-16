@@ -1,4 +1,4 @@
-import { expect } from "bun:test";
+import { expect } from "vite-plus/test";
 import { compare, gtkTest } from "../harness";
 
 // Three known native extraction artifacts on the outer actionbar node:

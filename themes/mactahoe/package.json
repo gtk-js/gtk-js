@@ -20,7 +20,7 @@
     }
   },
   "scripts": {
-    "build": "bun build.ts && tsc -p tsconfig.build.json && bun build src/index.ts --outdir dist --format esm --packages external"
+    "build": "node build.ts && vp pack"
   },
   "type": "module"
 }

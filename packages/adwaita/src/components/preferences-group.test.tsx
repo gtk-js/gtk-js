@@ -1,7 +1,8 @@
 // Unit tests — no Playwright/cargo preload needed.
-import { describe, expect, test } from "bun:test";
+
 import { GtkLabel } from "@gtk-js/gtk4";
 import { renderToStaticMarkup } from "react-dom/server";
+import { describe, expect, test } from "vite-plus/test";
 import { AdwActionRow } from "./action-row.tsx";
 import { AdwPreferencesGroup } from "./preferences-group.tsx";
 

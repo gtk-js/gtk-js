@@ -4,6 +4,7 @@
  */
 
 import { mkdirSync, readdirSync, statSync } from "fs";
+import { readFile, writeFile } from "fs/promises";
 
 // Attributes to strip (GTK/namespace-specific or invalid as React props)
 const STRIP_ATTR_PREFIXES = ["gpa:", "xmlns:", "xml:", "cc:", "dc:", "rdf:"];
@@ -141,14 +142,14 @@ export async function buildIconComponents(
   // Phase 2: parallel read + write
   const results = await Promise.all(
     toProcess.map(async ({ filePath, kebabName, pascalName }) => {
-      const svg = await Bun.file(filePath).text();
+      const svg = await readFile(filePath, "utf8");
       const children = parseSvgChildren(svg);
       if (children.length === 0) return null;
 
       const childrenLiteral = JSON.stringify(children.map((c) => [c.tag, c.attrs]));
       const code = `import { createGtkIcon } from "${createGtkIconImport}";\n\nexport const ${pascalName} = createGtkIcon("${kebabName}", ${childrenLiteral});\n`;
 
-      await Bun.write(`${outDir}/${kebabName}.ts`, code);
+      await writeFile(`${outDir}/${kebabName}.ts`, code);
       return `export { ${pascalName} } from "./icons/${kebabName}.ts";`;
     }),
   );
@@ -190,12 +191,12 @@ export async function buildIconPackage(
 
   const exports = await buildIconComponents(iconsDir, outDir, "@gtk-js/icon-helpers");
   if (missingIcon) {
-    const contents = new Uint8Array(await Bun.file(missingIcon).arrayBuffer());
-    await Bun.write(`${outDir}/missing-icon.ts`, missingIconSource(missingIcon, contents));
+    const contents = new Uint8Array(await readFile(missingIcon));
+    await writeFile(`${outDir}/missing-icon.ts`, missingIconSource(missingIcon, contents));
     exports.push(`export { MissingIcon } from "./icons/missing-icon.ts";`);
   }
 
-  await Bun.write(
+  await writeFile(
     indexPath,
     `export type { GtkIconProps, GtkIcon } from "@gtk-js/icon-helpers";\n\n${exports.join("\n")}\n`,
   );

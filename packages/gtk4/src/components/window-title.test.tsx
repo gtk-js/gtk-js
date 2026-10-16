@@ -1,6 +1,7 @@
 // Unit tests — no Playwright/cargo preload needed.
-import { describe, expect, test } from "bun:test";
+
 import { renderToStaticMarkup } from "react-dom/server";
+import { describe, expect, test } from "vite-plus/test";
 import { GtkWindowTitle } from "./window-title.tsx";
 
 describe("GtkWindowTitle", () => {

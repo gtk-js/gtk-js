@@ -1,4 +1,4 @@
-import { expect } from "bun:test";
+import { expect } from "vite-plus/test";
 import { compare, gtkTest } from "../harness";
 
 // Filtered: font_weight, background_color — host/inner-node bleed artifacts.
