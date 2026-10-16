@@ -186,6 +186,14 @@ body:has(> :first-child:has([data-gtk-provider])) > :first-child {
   min-height: round(up, 1lh, 1px);
 }
 
+/* GtkViewport: a scrolled window's child that doesn't scroll itself is put in a
+   viewport, which allocates it at least the visible area
+   (gtk_viewport_size_allocate()). It fills it, or its halign/valign place it
+   there (the viewport is a bin layout). */
+:where([data-gtk-provider] .gtk-scrolledwindow > .gtk-viewport.gtk-bin-layout) {
+  min-height: 100%;
+}
+
 /* GtkTextView in a GtkScrolledWindow: a text view scrolls its own text
    (GtkScrollable), so the scrolled window allocates it the whole viewport
    (gtk_scrolled_window_allocate_child). A <textarea> keeps its intrinsic
