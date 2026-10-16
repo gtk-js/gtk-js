@@ -82,6 +82,11 @@ function avatarGizmoTarget(el: HTMLDivElement | null) {
   el?.firstElementChild?.setAttribute("data-testid", "target");
 }
 
+// GtkTextView's ref is its text node; the native cases measure the textview node.
+function textViewTarget(el: HTMLTextAreaElement | null) {
+  el?.parentElement?.setAttribute("data-testid", "target");
+}
+
 /** An app component that renders a row, which AdwPreferencesGroup can't tell from its type. */
 function WrappedActionRow(props: { title: string; subtitle?: string }) {
   return <AdwActionRow {...props} />;
@@ -379,10 +384,10 @@ const cases: Record<string, () => React.ReactElement> = {
   "switch-on-disabled": () => <GtkSwitch active disabled data-testid="target" />,
 
   // GtkTextView cases
-  "text-view-default": () => <GtkTextView data-testid="target" />,
-  "text-view-monospace": () => <GtkTextView monospace data-testid="target" />,
-  "text-view-non-editable": () => <GtkTextView editable={false} data-testid="target" />,
-  "text-view-disabled": () => <GtkTextView disabled data-testid="target" />,
+  "text-view-default": () => <GtkTextView ref={textViewTarget} />,
+  "text-view-monospace": () => <GtkTextView monospace ref={textViewTarget} />,
+  "text-view-non-editable": () => <GtkTextView editable={false} ref={textViewTarget} />,
+  "text-view-disabled": () => <GtkTextView disabled ref={textViewTarget} />,
   "text-view-scrolled": () => (
     <GtkScrolledWindow hasFrame style={{ width: "200px", height: "100px" }} data-testid="target">
       <GtkTextView />

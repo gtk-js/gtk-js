@@ -143,8 +143,9 @@ export const AdwEntryRow = forwardRef<HTMLDivElement, AdwEntryRowProps>(function
           >
             <span
               className={`gtk-label title ${expanded ? "subtitle" : "dimmed"}`}
+              // Expanded, the title is a subtitle: the theme makes it smaller
+              // (row label.subtitle in _lists.scss).
               style={{
-                fontSize: expanded ? "0.75em" : "1em",
                 transition: `font-size ${EMPTY_TRANSITION}`,
                 transformOrigin: "left center",
               }}
@@ -166,7 +167,8 @@ export const AdwEntryRow = forwardRef<HTMLDivElement, AdwEntryRowProps>(function
               onFocus={() => setFocused(true)}
               onBlur={() => setFocused(false)}
               style={{
-                height: expanded ? "1.2em" : 0,
+                // One line, as tall as GtkText makes it (see reset.css).
+                height: expanded ? "1lh" : 0,
                 opacity: expanded ? 1 : 0,
                 overflow: "hidden",
                 transition: `height ${EMPTY_TRANSITION}, opacity ${EMPTY_TRANSITION}`,
