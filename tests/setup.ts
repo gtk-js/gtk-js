@@ -1,57 +1,44 @@
 import { type Browser, chromium, firefox, type Page } from "playwright";
 import { inject } from "vite-plus/test";
+import { debugLog } from "./debug.ts";
 
 declare global {
   var __testBrowsers: Record<string, Browser>;
   var __testPages: Record<string, Page>;
   var __nativeServerPort: number;
+  var __testSetup: Promise<void> | undefined;
 }
 
-function debugLog(message: string): void {
-  if (process.env.GTK_JS_TEST_DEBUG != null) {
-    console.error(`[setup] ${message}`);
-  }
-}
+/**
+ * Connects to the browsers tests/global-setup.ts launched (it also closes them) and opens
+ * the gallery in each.
+ */
+async function connect(): Promise<void> {
+  const endpoints = inject("browserEndpoints");
+  const galleryUrl = `http://127.0.0.1:${inject("webServerPort")}/gallery`;
 
-async function createHostPage(browser: Browser): Promise<Page> {
-  const page = await browser.newPage({
-    viewport: { width: 1600, height: 1200 },
-    deviceScaleFactor: 1,
-  });
-  return page;
-}
+  const entries = await Promise.all(
+    [chromium, firefox].map(async (type) => {
+      const endpoint = endpoints[type.name()];
+      if (endpoint == null) throw new Error(`No ${type.name()} was launched`);
+      const browser = await type.connect(endpoint);
+      const page = await browser.newPage({
+        viewport: { width: 1600, height: 1200 },
+        deviceScaleFactor: 1,
+      });
+      await page.goto(galleryUrl);
+      await page.waitForSelector(`[data-case="button-text-default"] [data-testid="target"]`);
+      return [type.name(), browser, page] as const;
+    }),
+  );
+  debugLog("setup", "browsers connected, gallery loaded");
 
-// Test files share one worker (see the `native` project in vite.config.ts), so the
-// browsers and their gallery pages are set up once, before the first file.
-if (globalThis.__testPages == null) {
-  const webServerPort = inject("webServerPort");
-
-  const [chromiumBrowser, firefoxBrowser] = await Promise.all([
-    chromium.launch({ headless: true }),
-    firefox.launch({ headless: true }),
-  ]);
-  debugLog("browsers launched");
-
-  const [chromiumHostPage, firefoxHostPage] = await Promise.all([
-    createHostPage(chromiumBrowser),
-    createHostPage(firefoxBrowser),
-  ]);
-  await Promise.all([
-    chromiumHostPage.goto(`http://127.0.0.1:${webServerPort}/gallery`),
-    firefoxHostPage.goto(`http://127.0.0.1:${webServerPort}/gallery`),
-  ]);
-  await Promise.all([
-    chromiumHostPage.waitForSelector(`[data-case="button-text-default"] [data-testid="target"]`),
-    firefoxHostPage.waitForSelector(`[data-case="button-text-default"] [data-testid="target"]`),
-  ]);
-
-  globalThis.__testBrowsers = {
-    chromium: chromiumBrowser,
-    firefox: firefoxBrowser,
-  };
-  globalThis.__testPages = {
-    chromium: chromiumHostPage,
-    firefox: firefoxHostPage,
-  };
+  globalThis.__testBrowsers = Object.fromEntries(entries.map(([name, browser]) => [name, browser]));
+  globalThis.__testPages = Object.fromEntries(entries.map(([name, , page]) => [name, page]));
   globalThis.__nativeServerPort = inject("nativeServerPort");
 }
+
+// Test files share one worker (see the `native` project in vite.config.ts), so this runs
+// once, before the first file. If it fails, every file fails with that error at once,
+// instead of trying again for each.
+await (globalThis.__testSetup ??= connect());

@@ -1,15 +1,6 @@
 import type { Browser } from "playwright";
 import { expect, test } from "vite-plus/test";
-
-function debugEnabled(): boolean {
-  return process.env.GTK_JS_TEST_DEBUG != null;
-}
-
-function debugLog(scope: string, message: string): void {
-  if (debugEnabled()) {
-    console.error(`[${scope}] ${message}`);
-  }
-}
+import { debugLog } from "./debug.ts";
 
 const GTK_TEST_TIMEOUT = 30_000;
 
