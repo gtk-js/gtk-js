@@ -177,7 +177,7 @@ export const INTERNAL_SELECTORS: Record<string, string> = {
   check: ".gtk-check",
   radio: ".gtk-radio",
   dnd: ".gtk-dnd",
-  selection: ".gtk-selection",
+  // `selection` is the ::selection pseudo-element (see remapSelectionNode).
   block: ".gtk-block",
   title: ".gtk-title",
   // A link in a label's markup (GtkLabel's `link` subnode).

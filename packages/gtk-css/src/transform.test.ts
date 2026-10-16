@@ -25,6 +25,37 @@ describe("remapSelectors", () => {
   });
 });
 
+describe("text selection", () => {
+  test("the selection node is ::selection, its state on the text", async () => {
+    const out = await transform(
+      "selection { background-color: gray; } selection:focus-within { background-color: blue; } label > selection:disabled { background-color: red; }",
+    );
+    expect(out).toContain("::selection {");
+    expect(out).toContain(":focus-within::selection {");
+    expect(out).toContain(":where(.gtk-label):not(_):is([data-disabled], :disabled)::selection {");
+    expect(out).not.toContain("gtk-selection");
+  });
+
+  test("a descendant selection is the text's or a descendant's", async () => {
+    const out = await transform("entry selection:focus { color: white; }");
+    expect(out).toContain(
+      ":where(.gtk-entry):not(_):focus::selection, :where(.gtk-entry):not(_) *:focus::selection {",
+    );
+  });
+
+  test("a transparent color keeps the text's, which browsers draw over the selection", async () => {
+    const out = await transform("selection { background-color: gray; color: transparent; }");
+    expect(out).toMatch(/::selection \{\s*background-color: gray;\s*\}/);
+  });
+
+  test("other selectors in the rule keep their declarations", async () => {
+    const out = await transform("text > selection, row:selected { color: transparent; }");
+    expect(out).toContain(':where(.gtk-row):not(_):is([aria-selected="true"], [data-selected]) {');
+    expect(out).toContain("color: transparent");
+    expect(out).toMatch(/:where\(\.gtk-text\):not\(_\)::selection \{\s*\}/);
+  });
+});
+
 describe("remapPseudoClasses", () => {
   test(":checked → [data-checked]", async () => {
     const out = await transform(".gtk-button:checked { color: red; }");
