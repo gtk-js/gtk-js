@@ -75,8 +75,11 @@ async function waitForReady(port: number): Promise<void> {
   throw new Error(`Native server on port ${port} did not become ready in time`);
 }
 
+// In its own process group: stopping xvfb-run alone would leave Xvfb and the server
+// running, and the server would keep stdout open, so the script wouldn't exit.
 const proc = spawn("xvfb-run", ["-a", "tests/native/target/debug/gtk-js-test", "serve"], {
   stdio: ["ignore", "pipe", "inherit"],
+  detached: true,
 });
 
 try {
@@ -115,5 +118,6 @@ try {
     ),
   );
 } finally {
-  proc.kill();
+  if (proc.pid != null) process.kill(-proc.pid);
+  proc.stdout.destroy();
 }
