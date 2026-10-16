@@ -1,3 +1,4 @@
+import { wrapStyle } from "@gtk-js/gtk4";
 import { forwardRef, type HTMLAttributes } from "react";
 
 export interface AdwBannerProps extends HTMLAttributes<HTMLDivElement> {
@@ -38,7 +39,9 @@ export const AdwBanner = forwardRef<HTMLDivElement, AdwBannerProps>(function Adw
     <div ref={ref} className={classes.join(" ")} {...rest}>
       <div className="gtk-revealer">
         <div>
-          <span className="gtk-label heading">{title}</span>
+          <span className="gtk-label heading" style={wrapStyle("word-char")}>
+            {title}
+          </span>
           {buttonLabel && (
             <button type="button" className="gtk-button" onClick={onButtonClicked}>
               <span className="gtk-label">{buttonLabel}</span>
