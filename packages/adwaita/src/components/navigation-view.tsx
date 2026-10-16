@@ -29,6 +29,8 @@ export interface NavigationContextValue {
   pop: () => boolean;
   /** Whether a back button should be shown. */
   canPop: boolean;
+  /** Title of the page a back button returns to: its tooltip (AdwBackButton). */
+  previousTitle?: string;
 }
 
 export const NavContext = createContext<NavigationContextValue>({
@@ -292,13 +294,17 @@ export const AdwNavigationView = forwardRef<HTMLDivElement, AdwNavigationViewPro
 
     // At the root page, back buttons belong to an enclosing navigator (e.g. a
     // collapsed AdwNavigationSplitView), like upstream's header bar logic.
+    const previousTitle = canPopSelf
+      ? pages.find((p) => p.tag === stack[stack.length - 2])?.title
+      : parentNav.previousTitle;
     const contextValue = useMemo<NavigationContextValue>(
       () => ({
         push,
         pop: canPopSelf ? pop : parentNav.pop,
         canPop: canPopSelf || parentNav.canPop,
+        previousTitle,
       }),
-      [push, pop, canPopSelf, parentNav],
+      [push, pop, canPopSelf, parentNav, previousTitle],
     );
 
     // --- render ------------------------------------------------------------
@@ -312,17 +318,24 @@ export const AdwNavigationView = forwardRef<HTMLDivElement, AdwNavigationViewPro
     const contextFor = (tag: string): NavigationContextValue => {
       const index = stack.indexOf(tag);
       const hasPrevious = index >= 0 ? index > 0 : (hadPrevious.current.get(tag) ?? false);
+      const cached = pageContexts.current.get(tag);
       const value: NavigationContextValue = {
         push,
         pop: hasPrevious ? pop : parentNav.pop,
         canPop: pageFor(tag)?.canPop !== false && (hasPrevious || parentNav.canPop),
+        previousTitle:
+          index > 0
+            ? pageFor(stack[index - 1] ?? "")?.title
+            : index < 0 && hasPrevious
+              ? cached?.previousTitle
+              : parentNav.previousTitle,
       };
-      const cached = pageContexts.current.get(tag);
       if (
         cached &&
         cached.push === value.push &&
         cached.pop === value.pop &&
-        cached.canPop === value.canPop
+        cached.canPop === value.canPop &&
+        cached.previousTitle === value.previousTitle
       ) {
         return cached;
       }

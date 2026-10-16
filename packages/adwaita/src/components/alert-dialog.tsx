@@ -1,3 +1,4 @@
+import { wrapStyle } from "@gtk-js/gtk4";
 import {
   forwardRef,
   type HTMLAttributes,
@@ -27,11 +28,9 @@ const CENTERED: React.CSSProperties = {
   whiteSpace: "pre",
 };
 /** The small heading and body labels also wrap, word-char. */
-const WRAPPING_CENTERED: React.CSSProperties = {
-  ...CENTERED,
-  whiteSpace: "pre-wrap",
-  overflowWrap: "break-word",
-};
+const WRAPPING_CENTERED: React.CSSProperties = { ...CENTERED, ...wrapStyle("word-char") };
+/** Response labels never wrap (gtk_button_new_with_mnemonic()): the buttons stack instead. */
+const RESPONSE_LABEL: React.CSSProperties = { whiteSpace: "pre" };
 
 export interface AdwAlertDialogResponse {
   id: string;
@@ -121,8 +120,11 @@ export const AdwAlertDialog = forwardRef<HTMLDivElement, AdwAlertDialogProps>(
       const contents = contentsRef.current;
       const area = responseAreaRef.current;
       if (!contents || !area || !visible) return;
-      // Layout sizes only (offset/scroll), unaffected by the opening scale.
-      // A label's natural width: its text on one line, plus its own padding.
+      // Layout sizes only (offset/scroll/computed), unaffected by the opening scale.
+      // A label's natural width: its text on one line rounded up to a whole
+      // pixel, like gtk_label_measure(), plus its own padding. offsetWidth
+      // rounds to the nearest pixel instead, which can fit the responses side
+      // by side by a pixel where GTK stacks them.
       const singleLineWidth = (el: Element | null, className?: string) => {
         if (!el?.parentElement) return 0;
         const probe = el.cloneNode(true) as HTMLElement;
@@ -130,7 +132,11 @@ export const AdwAlertDialog = forwardRef<HTMLDivElement, AdwAlertDialogProps>(
         probe.style.cssText +=
           ";position:absolute;visibility:hidden;white-space:pre;width:max-content";
         el.parentElement.appendChild(probe);
-        const w = probe.offsetWidth;
+        const cs = getComputedStyle(probe);
+        const w =
+          Math.ceil(parseFloat(cs.width) - 0.001) +
+          parseFloat(cs.paddingLeft) +
+          parseFloat(cs.paddingRight);
         probe.remove();
         return w;
       };
@@ -288,7 +294,9 @@ export const AdwAlertDialog = forwardRef<HTMLDivElement, AdwAlertDialogProps>(
                         data-response={resp.id}
                         onClick={() => onResponse?.(resp.id)}
                       >
-                        <span className="gtk-label">{resp.label}</span>
+                        <span className="gtk-label" style={RESPONSE_LABEL}>
+                          {resp.label}
+                        </span>
                       </button>
                     );
                   })}

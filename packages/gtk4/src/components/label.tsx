@@ -33,6 +33,18 @@ export interface GtkLabelProps extends HTMLAttributes<HTMLSpanElement>, GtkAlign
 }
 
 /**
+ * The text style of a label that wraps (GtkLabel:wrap). Pango keeps every
+ * space and line break ("pre-wrap"). With "word-char" or "char" wrapping, a
+ * word too long for a line breaks between characters, so the label's minimum
+ * width is a character or so rather than its longest word (gtk_label_measure()).
+ * `anywhere` counts those breaks in min-content, unlike `break-word`: a long
+ * path shrinks with its box instead of overflowing it.
+ */
+export function wrapStyle(mode: GtkWrapMode = "word"): React.CSSProperties {
+  return { whiteSpace: "pre-wrap", overflowWrap: mode === "word" ? "normal" : "anywhere" };
+}
+
+/**
  * GtkLabel — A widget that displays text.
  *
  * CSS node:
@@ -78,18 +90,18 @@ export const GtkLabel = forwardRef<HTMLSpanElement, GtkLabelProps>(function GtkL
   const cssStyle: React.CSSProperties = {
     textAlign,
     userSelect: selectable ? "text" : "none",
+    // xalign and yalign place the text in a label bigger than it
+    // (gtk_label_get_layout_location()). Flex start and end follow the text
+    // direction, as GTK flips xalign in RTL.
+    justifyContent: flexAlign(xalign),
+    ...(yalign !== 0.5 && { alignItems: flexAlign(yalign) }),
     ...style,
   };
 
-  // Pango keeps every space and line break of the text: "pre" / "pre-wrap"
-  // rather than the collapsing "nowrap" / "normal".
-  if (!wrap) {
-    cssStyle.whiteSpace = "pre";
-  } else {
-    cssStyle.whiteSpace = "pre-wrap";
-    cssStyle.overflowWrap =
-      wrapMode === "char" ? "anywhere" : wrapMode === "word-char" ? "break-word" : "normal";
-  }
+  // Pango keeps every space and line break of the text: "pre" rather than the
+  // collapsing "nowrap".
+  if (!wrap) cssStyle.whiteSpace = "pre";
+  else Object.assign(cssStyle, wrapStyle(wrapMode));
 
   // `lines` only limits a wrapping, ellipsizing label, which wraps up to that
   // many lines. Otherwise an ellipsized paragraph is one line (Pango's default
@@ -130,6 +142,11 @@ export const GtkLabel = forwardRef<HTMLSpanElement, GtkLabelProps>(function GtkL
     </span>
   );
 });
+
+/** A GTK alignment (0 start, 0.5 center, 1 end) as a flex one; others take the nearest. */
+function flexAlign(align: number): "flex-start" | "center" | "flex-end" {
+  return align < 0.25 ? "flex-start" : align > 0.75 ? "flex-end" : "center";
+}
 
 const ELLIPSIS_STYLE: React.CSSProperties = {
   display: "block",

@@ -1,6 +1,8 @@
 import {
+  Children,
   forwardRef,
   type HTMLAttributes,
+  isValidElement,
   type ReactNode,
   type UIEvent,
   useCallback,
@@ -10,6 +12,7 @@ import {
   useState,
 } from "react";
 import { alignAttrs, type GtkAlignProps, type GtkPolicyType } from "../types.ts";
+import { GtkTextView } from "./text-view.tsx";
 
 export interface GtkScrolledWindowProps extends HTMLAttributes<HTMLDivElement>, GtkAlignProps {
   /** Horizontal scrollbar policy. Default: "automatic". */
@@ -50,6 +53,18 @@ export function undershootEdges(el: {
     // A fractional scroll position can stop just short of the end.
     bottom: el.scrollTop < el.scrollHeight - el.clientHeight - 0.5,
   };
+}
+
+/**
+ * Whether a child scrolls itself (GtkScrollable): a text view, or a viewport a
+ * component builds itself. gtk_scrolled_window_set_child() puts any other
+ * child in a GtkViewport.
+ */
+function isScrollable(child: ReactNode): boolean {
+  if (!isValidElement<{ className?: unknown }>(child)) return false;
+  if (child.type === GtkTextView) return true;
+  const { className } = child.props;
+  return typeof className === "string" && className.split(/\s+/).includes("gtk-viewport");
 }
 
 /**
@@ -150,7 +165,11 @@ export const GtkScrolledWindow = forwardRef<HTMLDivElement, GtkScrolledWindowPro
         {...rest}
       >
         {undershoot.top && <div className="gtk-undershoot top" />}
-        {children}
+        {Children.count(children) === 1 && !isScrollable(children) ? (
+          <div className="gtk-viewport gtk-bin-layout">{children}</div>
+        ) : (
+          children
+        )}
         {undershoot.bottom && <div className="gtk-undershoot bottom" />}
       </div>
     );

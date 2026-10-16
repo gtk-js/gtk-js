@@ -26,4 +26,18 @@ describe("GtkLabel", () => {
     const style = styleOf(renderToStaticMarkup(<GtkLabel label="text" wrap lines={2} />));
     expect(style).not.toContain("line-clamp");
   });
+
+  test("xalign places the text, centered by default like GtkLabel", () => {
+    const style = (props: object) =>
+      styleOf(renderToStaticMarkup(<GtkLabel label="text" {...props} />));
+    expect(style({})).toContain("justify-content:center");
+    expect(style({ xalign: 0 })).toContain("justify-content:flex-start");
+    expect(style({ xalign: 1 })).toContain("justify-content:flex-end");
+  });
+
+  test("yalign other than 0.5 moves the text off the middle", () => {
+    const html = (props: object) => renderToStaticMarkup(<GtkLabel label="text" {...props} />);
+    expect(styleOf(html({}))).not.toContain("align-items");
+    expect(styleOf(html({ yalign: 0 }))).toContain("align-items:flex-start");
+  });
 });

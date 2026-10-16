@@ -1,5 +1,14 @@
 # @gtk-js/theme-adwaita
 
+## [0.0.8](https://github.com/gtk-js/gtk-js/compare/theme-adwaita-v0.0.7...theme-adwaita-v0.0.8) (2026-10-16)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @gtk-js/gtk-css bumped from 0.1.6 to 0.1.7
+
 ## [0.0.7](https://github.com/gtk-js/gtk-js/compare/theme-adwaita-v0.0.6...theme-adwaita-v0.0.7) (2026-10-15)
 
 

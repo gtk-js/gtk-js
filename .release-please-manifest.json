@@ -1,15 +1,15 @@
 {
-  "packages/gtk-css": "0.1.6",
+  "packages/gtk-css": "0.1.7",
   "packages/icon-helpers": "0.1.6",
   "icons/gtk4": "0.1.6",
   "icons/adwaita": "0.1.6",
   "icons/whitesur": "0.1.6",
   "icons/mactahoe": "0.1.6",
   "icons/fluent": "0.1.6",
-  "packages/gtk4": "0.1.6",
-  "packages/adwaita": "0.1.6",
-  "themes/adwaita": "0.0.7",
-  "themes/whitesur": "0.0.7",
-  "themes/mactahoe": "0.0.7",
-  "themes/fluent": "0.0.7"
+  "packages/gtk4": "0.1.7",
+  "packages/adwaita": "0.1.7",
+  "themes/adwaita": "0.0.8",
+  "themes/whitesur": "0.0.8",
+  "themes/mactahoe": "0.0.8",
+  "themes/fluent": "0.0.8"
 }

@@ -1,6 +1,7 @@
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, test } from "vite-plus/test";
 import { GtkScrolledWindow, undershootEdges } from "./scrolled-window.tsx";
+import { GtkTextView } from "./text-view.tsx";
 
 describe("undershoot", () => {
   test("is drawn along each edge the content isn't scrolled to", () => {
@@ -24,5 +25,32 @@ describe("undershoot", () => {
     expect(renderToStaticMarkup(<GtkScrolledWindow>Content</GtkScrolledWindow>)).not.toContain(
       "gtk-undershoot",
     );
+  });
+});
+
+describe("viewport", () => {
+  test("a child that doesn't scroll itself is put in a viewport", () => {
+    expect(
+      renderToStaticMarkup(
+        <GtkScrolledWindow>
+          <div className="content" />
+        </GtkScrolledWindow>,
+      ),
+    ).toContain('<div class="gtk-viewport gtk-bin-layout"><div class="content"></div></div>');
+  });
+
+  test("a viewport or a text view is the scrolled window's own child", () => {
+    const viewport = renderToStaticMarkup(
+      <GtkScrolledWindow>
+        <div className="gtk-viewport" />
+      </GtkScrolledWindow>,
+    );
+    expect(viewport.match(/gtk-viewport/g)).toHaveLength(1);
+    const text = renderToStaticMarkup(
+      <GtkScrolledWindow>
+        <GtkTextView value="" />
+      </GtkScrolledWindow>,
+    );
+    expect(text).not.toContain("gtk-viewport");
   });
 });

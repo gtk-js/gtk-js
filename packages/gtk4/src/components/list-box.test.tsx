@@ -47,3 +47,17 @@ describe("GtkListBox selectedRows", () => {
     expect(selection("single")).toEqual([false, false, false]);
   });
 });
+
+describe("GtkListBoxRow focus", () => {
+  test("every row is a Tab stop, like GTK_LIST_TAB_ALL", () => {
+    const html = renderToStaticMarkup(
+      <GtkListBox>
+        <GtkListBoxRow>A</GtkListBoxRow>
+        <GtkListBoxRow activatable={false} selectable={false}>
+          B
+        </GtkListBoxRow>
+      </GtkListBox>,
+    );
+    expect(html.match(/tabindex="0"/g)).toHaveLength(2);
+  });
+});
