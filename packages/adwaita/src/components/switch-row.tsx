@@ -1,4 +1,4 @@
-import { useListBoxRow } from "@gtk-js/gtk4";
+import { useListBoxRow, wrapStyle } from "@gtk-js/gtk4";
 import { forwardRef, type HTMLAttributes, useCallback, useState } from "react";
 
 export interface AdwSwitchRowProps extends HTMLAttributes<HTMLDivElement> {
@@ -54,8 +54,14 @@ export const AdwSwitchRow = forwardRef<HTMLDivElement, AdwSwitchRowProps>(functi
         style={{ gap: 6, alignItems: "center" }}
       >
         <div className="gtk-box gtk-box-layout vertical title" style={{ flex: 1, gap: 3 }}>
-          <span className="gtk-label title">{title}</span>
-          {subtitle && <span className="gtk-label subtitle">{subtitle}</span>}
+          <span className="gtk-label title" style={wrapStyle("word-char")}>
+            {title}
+          </span>
+          {subtitle && (
+            <span className="gtk-label subtitle" style={wrapStyle("word-char")}>
+              {subtitle}
+            </span>
+          )}
         </div>
         <div className="gtk-box suffixes">
           <div

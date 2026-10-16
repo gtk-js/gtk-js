@@ -1,4 +1,4 @@
-import { GtkScrolledWindow } from "@gtk-js/gtk4";
+import { GtkScrolledWindow, wrapStyle } from "@gtk-js/gtk4";
 import { forwardRef, type HTMLAttributes, type ReactNode } from "react";
 import { AdwClamp } from "./clamp.tsx";
 
@@ -54,7 +54,10 @@ export const AdwPreferencesPage = forwardRef<HTMLDivElement, AdwPreferencesPageP
                 {description && (
                   <span
                     className="gtk-label body dimmed description"
-                    style={{ textAlign: descriptionCentered ? "center" : "start" }}
+                    style={{
+                      ...wrapStyle("word-char"),
+                      textAlign: descriptionCentered ? "center" : "start",
+                    }}
                   >
                     {description}
                   </span>
