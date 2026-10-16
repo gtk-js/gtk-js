@@ -1,7 +1,7 @@
 import { readFile } from "node:fs/promises";
 import type { UserConfig } from "vite-plus";
 
-/** Inlines `import css from "./file.css?raw"` as a string, as Vite does in dev and tests. */
+/** Inlines `?raw` imports, which Vite supports but `vp pack` (tsdown) doesn't: https://github.com/voidzero-dev/vite-plus/issues/2796 */
 const raw = {
   name: "gtk-js:raw",
   async load(id: string) {
