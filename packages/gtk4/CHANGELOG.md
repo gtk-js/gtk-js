@@ -1,5 +1,13 @@
 # @gtk-js/gtk4
 
+## [0.1.8](https://github.com/gtk-js/gtk-js/compare/gtk4-v0.1.7...gtk4-v0.1.8) (2026-10-16)
+
+
+### Bug Fixes
+
+* give GtkTextView its text node, so themes style and select its text ([#62](https://github.com/gtk-js/gtk-js/issues/62)) ([19ecdc8](https://github.com/gtk-js/gtk-js/commit/19ecdc8e5329b36fec3b18c579da78367ac8f8c7))
+* size GtkText and AdwEntryRow's title like GTK ([#61](https://github.com/gtk-js/gtk-js/issues/61)) ([966f9fd](https://github.com/gtk-js/gtk-js/commit/966f9fdeaea85687a42389496292de39d568e5ab))
+
 ## [0.1.7](https://github.com/gtk-js/gtk-js/compare/gtk4-v0.1.6...gtk4-v0.1.7) (2026-10-16)
 
 
