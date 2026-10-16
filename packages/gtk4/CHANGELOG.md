@@ -1,5 +1,23 @@
 # @gtk-js/gtk4
 
+## [0.1.7](https://github.com/gtk-js/gtk-js/compare/gtk4-v0.1.6...gtk4-v0.1.7) (2026-10-16)
+
+
+### Bug Fixes
+
+* give GtkScrolledWindow's child a viewport like GTK ([#52](https://github.com/gtk-js/gtk-js/issues/52)) ([0f42046](https://github.com/gtk-js/gtk-js/commit/0f4204636089b4bcde7e374ac383116a45a8d158))
+* label the back button and window controls like GTK ([#54](https://github.com/gtk-js/gtk-js/issues/54)) ([5ea4804](https://github.com/gtk-js/gtk-js/commit/5ea48049b3ea44191bc66ea9a1020b994305d620))
+* let GtkListBox rows take focus and move with the keyboard ([#53](https://github.com/gtk-js/gtk-js/issues/53)) ([41e6c8c](https://github.com/gtk-js/gtk-js/commit/41e6c8c638c96b2d6c76bd8978b775103a57214e))
+* place GtkLabel's text by its xalign and yalign like GTK ([#58](https://github.com/gtk-js/gtk-js/issues/58)) ([e4265fe](https://github.com/gtk-js/gtk-js/commit/e4265feb16cdb9424965f454cd0a07771c344fc6))
+* wrap word-char labels like Pango, and never wrap response labels ([#56](https://github.com/gtk-js/gtk-js/issues/56)) ([12b6676](https://github.com/gtk-js/gtk-js/commit/12b66762f4d76ac0e89c7d54368baa164aaeb56d))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * devDependencies
+    * @gtk-js/gtk-css bumped from 0.1.6 to 0.1.7
+
 ## [0.1.6](https://github.com/gtk-js/gtk-js/compare/gtk4-v0.1.5...gtk4-v0.1.6) (2026-10-15)
 
 

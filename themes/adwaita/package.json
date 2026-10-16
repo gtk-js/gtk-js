@@ -3,7 +3,7 @@
   "publishConfig": {
     "access": "public"
   },
-  "version": "0.0.7",
+  "version": "0.0.8",
   "type": "module",
   "main": "dist/index.js",
   "files": [
@@ -20,6 +20,6 @@
     "build": "bun build.ts && tsc -p tsconfig.build.json && bun build src/index.ts --outdir dist --format esm --packages external"
   },
   "dependencies": {
-    "@gtk-js/gtk-css": "0.1.6"
+    "@gtk-js/gtk-css": "0.1.7"
   }
 }

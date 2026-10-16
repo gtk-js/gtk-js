@@ -1,5 +1,26 @@
 # @gtk-js/adwaita
 
+## [0.1.7](https://github.com/gtk-js/gtk-js/compare/adwaita-v0.1.6...adwaita-v0.1.7) (2026-10-16)
+
+
+### Bug Fixes
+
+* center AdwAvatar like libadwaita, and let the theme style it ([#51](https://github.com/gtk-js/gtk-js/issues/51)) ([6b05514](https://github.com/gtk-js/gtk-js/commit/6b05514bc70fd04f04929a10223a9e6ac2024009))
+* label the back button and window controls like GTK ([#54](https://github.com/gtk-js/gtk-js/issues/54)) ([5ea4804](https://github.com/gtk-js/gtk-js/commit/5ea48049b3ea44191bc66ea9a1020b994305d620))
+* move the focus into dialogs and give it back when they close ([#55](https://github.com/gtk-js/gtk-js/issues/55)) ([7c2bb04](https://github.com/gtk-js/gtk-js/commit/7c2bb0402b9671fb520b82ae6f9894f59f2538c3))
+* open AdwComboRow's choices in a GtkPopover ([#57](https://github.com/gtk-js/gtk-js/issues/57)) ([eb9fb45](https://github.com/gtk-js/gtk-js/commit/eb9fb45577fbbf4a689f5d9ac2ff8361a7d0f6bc))
+* wrap word-char labels like Pango, and never wrap response labels ([#56](https://github.com/gtk-js/gtk-js/issues/56)) ([12b6676](https://github.com/gtk-js/gtk-js/commit/12b66762f4d76ac0e89c7d54368baa164aaeb56d))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @gtk-js/gtk4 bumped from 0.1.6 to 0.1.7
+    * @gtk-js/theme-adwaita bumped from 0.0.7 to 0.0.8
+  * devDependencies
+    * @gtk-js/gtk-css bumped from 0.1.6 to 0.1.7
+
 ## [0.1.6](https://github.com/gtk-js/gtk-js/compare/adwaita-v0.1.5...adwaita-v0.1.6) (2026-10-15)
 
 
