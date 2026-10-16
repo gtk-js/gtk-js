@@ -1,7 +1,8 @@
-import { useIcon, useListBoxRow, wrapStyle } from "@gtk-js/gtk4";
+import { GtkLabel, GtkPopover, useIcon, useListBoxRow, wrapStyle } from "@gtk-js/gtk4";
 import {
   forwardRef,
   type HTMLAttributes,
+  type KeyboardEvent,
   useCallback,
   useEffect,
   useMemo,
@@ -23,7 +24,8 @@ export interface AdwComboRowProps extends HTMLAttributes<HTMLDivElement> {
 /**
  * AdwComboRow — An ActionRow with a dropdown selection.
  *
- * CSS node: row.combo
+ * CSS node: row.combo; its popover (popover.menu) points at the dropdown
+ * arrow, like the GtkPopover in arrow_box.
  *
  * @see upstream/libadwaita/src/adw-combo-row.ui
  * @see https://gnome.pages.gitlab.gnome.org/libadwaita/doc/1-latest/class.ComboRow.html
@@ -40,6 +42,7 @@ export const AdwComboRow = forwardRef<HTMLDivElement, AdwComboRowProps>(function
     onSelected,
     className,
     style,
+    onKeyDown,
     ...rest
   },
   ref,
@@ -50,6 +53,8 @@ export const AdwComboRow = forwardRef<HTMLDivElement, AdwComboRowProps>(function
   const [search, setSearch] = useState("");
   const selected = isControlled ? controlledSelected : internalSelected;
   const rowRef = useRef<HTMLDivElement>(null);
+  const arrowRef = useRef<HTMLSpanElement>(null);
+  const listRef = useRef<HTMLDivElement>(null);
 
   const ArrowIcon = useIcon("PanDown");
   const CheckIcon = useIcon("ObjectSelect");
@@ -62,28 +67,74 @@ export const AdwComboRow = forwardRef<HTMLDivElement, AdwComboRowProps>(function
       .filter(({ item }) => item.toLowerCase().includes(search.toLowerCase()));
   }, [items, search]);
 
+  // Closing the popover clears the search (notify_popover_visible_cb()) and
+  // gives the focus back to the row, as a GtkPopover does to its parent.
+  const close = useCallback(() => {
+    setOpen(false);
+    setSearch("");
+    if (
+      rowRef.current?.contains(document.activeElement) ||
+      document.activeElement === document.body
+    ) {
+      rowRef.current?.focus();
+    }
+  }, []);
+
   const selectItem = useCallback(
     (i: number) => {
       if (!isControlled) setInternalSelected(i);
       onSelected?.(i);
-      setOpen(false);
-      setSearch("");
+      close();
+      rowRef.current?.focus();
     },
-    [isControlled, onSelected],
+    [isControlled, onSelected, close],
   );
 
-  // Close popover on outside click
+  // Opening focuses the selected item, so the keyboard picks up from it.
   useEffect(() => {
     if (!open) return;
-    const handler = (e: PointerEvent) => {
-      if (rowRef.current && e.target instanceof Node && !rowRef.current.contains(e.target)) {
-        setOpen(false);
-        setSearch("");
-      }
-    };
-    document.addEventListener("pointerdown", handler);
-    return () => document.removeEventListener("pointerdown", handler);
+    const items = listRef.current?.querySelectorAll<HTMLElement>(".gtk-row");
+    const current = listRef.current?.querySelector<HTMLElement>('.gtk-row[aria-selected="true"]');
+    (current ?? items?.[0])?.focus({ preventScroll: false });
   }, [open]);
+
+  // adw_combo_row_activate(): activating the row (a click, Enter or Space)
+  // pops the popover up.
+  const handleRowKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
+    onKeyDown?.(e);
+    if (e.defaultPrevented || e.target !== e.currentTarget) return;
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      setOpen(true);
+    }
+  };
+
+  // The popover's list view: the arrows, Home and End move between items,
+  // Enter and Space pick one.
+  const handleListKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
+    const rows = Array.from(e.currentTarget.querySelectorAll<HTMLElement>(".gtk-row"));
+    const index = rows.indexOf(e.target as HTMLElement);
+    if (index < 0) return;
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      const item = filtered[index];
+      if (item) selectItem(item.i);
+      return;
+    }
+    const target =
+      e.key === "ArrowUp"
+        ? index - 1
+        : e.key === "ArrowDown"
+          ? index + 1
+          : e.key === "Home"
+            ? 0
+            : e.key === "End"
+              ? rows.length - 1
+              : null;
+    if (target === null) return;
+    e.preventDefault();
+    rows[Math.max(0, Math.min(rows.length - 1, target))]?.focus();
+  };
 
   const displaySubtitle = useSubtitle ? items[selected] : subtitle;
 
@@ -100,16 +151,17 @@ export const AdwComboRow = forwardRef<HTMLDivElement, AdwComboRowProps>(function
         else if (ref) ref.current = el;
       }}
       className={classes.join(" ")}
+      tabIndex={0}
+      aria-haspopup="listbox"
+      aria-expanded={open}
       style={{ position: "relative", ...style }}
+      onKeyDown={handleRowKeyDown}
       {...rest}
     >
       <div
         className="gtk-box gtk-box-layout horizontal header"
         style={{ alignItems: "center", cursor: "pointer" }}
-        onClick={() => {
-          setOpen(!open);
-          setSearch("");
-        }}
+        onClick={() => (open ? close() : setOpen(true))}
       >
         {PrefixIcon && (
           <div className="gtk-box gtk-box-layout horizontal prefixes">
@@ -130,57 +182,67 @@ export const AdwComboRow = forwardRef<HTMLDivElement, AdwComboRowProps>(function
         </div>
         {!useSubtitle && <span className="gtk-label">{items[selected] ?? ""}</span>}
         {ArrowIcon && (
-          <span className="gtk-image dropdown-arrow">
+          <span ref={arrowRef} className="gtk-image dropdown-arrow">
             <ArrowIcon size={16} />
           </span>
         )}
       </div>
-      {open && (
-        <div
-          className="gtk-popover menu"
-          style={{ position: "absolute", top: "100%", left: 0, right: 0, zIndex: 100 }}
-        >
-          <div className="gtk-contents">
-            {enableSearch && (
-              <div
-                className="gtk-entry search combo-searchbar"
-                onClick={(e) => e.stopPropagation()}
-              >
-                <input
-                  type="search"
-                  className="gtk-text"
-                  placeholder="Search..."
-                  value={search}
-                  onChange={(e) => setSearch(e.target.value)}
-                  autoFocus
-                />
-              </div>
-            )}
-            <div className="gtk-scrolledwindow" style={{ maxHeight: 400, overflow: "auto" }}>
-              <div className="gtk-viewport">
-                <div className="gtk-list">
-                  {filtered.map(({ item, i }) => (
-                    <div
-                      key={i}
-                      className="gtk-row activatable"
-                      role="option"
-                      aria-selected={i === selected}
-                      onClick={() => selectItem(i)}
-                    >
-                      <span className="gtk-label">{item}</span>
-                      {i === selected && CheckIcon && (
-                        <span className="gtk-image">
+      <GtkPopover
+        visible={open}
+        className="menu"
+        position="bottom"
+        anchorRef={rowRef}
+        pointingTo={arrowRef}
+        onClosed={close}
+      >
+        <div className="gtk-box gtk-box-layout vertical">
+          {enableSearch && (
+            <div className="gtk-entry search combo-searchbar">
+              <input
+                type="search"
+                className="gtk-text"
+                placeholder="Search"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+              />
+            </div>
+          )}
+          <div className="gtk-scrolledwindow" style={{ maxHeight: 400, overflowY: "auto" }}>
+            <div className="gtk-viewport">
+              <div ref={listRef} className="gtk-list" role="listbox" onKeyDown={handleListKeyDown}>
+                {filtered.map(({ item, i }) => (
+                  // Every item has the checkmark; only the selected one shows it,
+                  // so the items line up (selected_item_changed()).
+                  <div
+                    key={i}
+                    className="gtk-row activatable"
+                    role="option"
+                    tabIndex={-1}
+                    aria-selected={i === selected}
+                    onClick={() => selectItem(i)}
+                  >
+                    <div className="gtk-box gtk-box-layout horizontal">
+                      <GtkLabel
+                        label={item}
+                        xalign={0}
+                        ellipsize="end"
+                        maxWidthChars={20}
+                        widthChars={1}
+                        valign="center"
+                      />
+                      {CheckIcon && (
+                        <span className="gtk-image" style={{ opacity: i === selected ? 1 : 0 }}>
                           <CheckIcon size={16} />
                         </span>
                       )}
                     </div>
-                  ))}
-                </div>
+                  </div>
+                ))}
               </div>
             </div>
           </div>
         </div>
-      )}
+      </GtkPopover>
     </div>,
   );
 });
