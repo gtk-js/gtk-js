@@ -1,6 +1,5 @@
 import { gtkTest } from "../harness";
 
-// The web component has the same two levels as native AdwAvatar
-// (adw-avatar.c:467): the outer widget, which both sides extract, and the
-// `avatar` gizmo inside it that the SCSS colors (_avatar.scss:27-35).
+// Both sides extract the `avatar` gizmo inside AdwAvatar (adw-avatar.c:467),
+// the node the SCSS styles (_avatar.scss).
 gtkTest("avatar-small");

@@ -1,9 +1,12 @@
-import { gtkTest } from "../harness";
+import { expect } from "bun:test";
+import { compare, gtkTest } from "../harness";
 
-// The web component has the same two levels as native AdwAvatar
-// (adw-avatar.c:467): the outer widget, which both sides extract, and the
-// `avatar` gizmo inside it that the SCSS colors (_avatar.scss:27-35).
+// Both sides extract the `avatar` gizmo inside AdwAvatar (adw-avatar.c:467),
+// the node the SCSS styles (_avatar.scss).
 //
-// Empty text picks a random color on both sides (adw-avatar.c:137-139,
-// Math.random), but only the gizmo is colored, so the outer widgets match.
-gtkTest("avatar-default");
+// Filtered: color. Empty text picks a random palette color on both sides
+// (adw-avatar.c:137-139, Math.random), so it can't match deterministically.
+gtkTest("avatar-default", (native, web) => {
+  const { failures } = compare(native, web);
+  expect(failures.filter((f) => f.property !== "color")).toEqual([]);
+});

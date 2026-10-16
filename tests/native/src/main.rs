@@ -566,9 +566,9 @@ fn create_widget_for_case(name: &str) -> Option<(gtk::Widget, bool)> {
         "adw-view-switcher-default" => {
             widget_case!(cases::adw_view_switcher_default::AdwViewSwitcherDefault, false)
         }
-        "avatar-default" => widget_case!(cases::avatar_default::AvatarDefault, false),
-        "avatar-initials" => widget_case!(cases::avatar_initials::AvatarInitials, false),
-        "avatar-small" => widget_case!(cases::avatar_small::AvatarSmall, false),
+        "avatar-default" => widget_case!(cases::avatar_default::AvatarDefault, true),
+        "avatar-initials" => widget_case!(cases::avatar_initials::AvatarInitials, true),
+        "avatar-small" => widget_case!(cases::avatar_small::AvatarSmall, true),
         "banner-revealed" => widget_case!(cases::banner_revealed::BannerRevealed, false),
         "banner-with-button" => {
             widget_case!(cases::banner_with_button::BannerWithButton, false)
