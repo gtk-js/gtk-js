@@ -33,6 +33,18 @@ export interface GtkLabelProps extends HTMLAttributes<HTMLSpanElement>, GtkAlign
 }
 
 /**
+ * The text style of a label that wraps (GtkLabel:wrap). Pango keeps every
+ * space and line break ("pre-wrap"). With "word-char" or "char" wrapping, a
+ * word too long for a line breaks between characters, so the label's minimum
+ * width is a character or so rather than its longest word (gtk_label_measure()).
+ * `anywhere` counts those breaks in min-content, unlike `break-word`: a long
+ * path shrinks with its box instead of overflowing it.
+ */
+export function wrapStyle(mode: GtkWrapMode = "word"): React.CSSProperties {
+  return { whiteSpace: "pre-wrap", overflowWrap: mode === "word" ? "normal" : "anywhere" };
+}
+
+/**
  * GtkLabel — A widget that displays text.
  *
  * CSS node:
@@ -86,15 +98,10 @@ export const GtkLabel = forwardRef<HTMLSpanElement, GtkLabelProps>(function GtkL
     ...style,
   };
 
-  // Pango keeps every space and line break of the text: "pre" / "pre-wrap"
-  // rather than the collapsing "nowrap" / "normal".
-  if (!wrap) {
-    cssStyle.whiteSpace = "pre";
-  } else {
-    cssStyle.whiteSpace = "pre-wrap";
-    cssStyle.overflowWrap =
-      wrapMode === "char" ? "anywhere" : wrapMode === "word-char" ? "break-word" : "normal";
-  }
+  // Pango keeps every space and line break of the text: "pre" rather than the
+  // collapsing "nowrap".
+  if (!wrap) cssStyle.whiteSpace = "pre";
+  else Object.assign(cssStyle, wrapStyle(wrapMode));
 
   // `lines` only limits a wrapping, ellipsizing label, which wraps up to that
   // many lines. Otherwise an ellipsized paragraph is one line (Pango's default

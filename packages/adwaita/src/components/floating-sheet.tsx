@@ -99,6 +99,32 @@ export const FloatingSheet = forwardRef<HTMLDivElement, FloatingSheetProps>(func
 
   if (open && !mounted) setMounted(true);
 
+  // Like AdwDialogHost (and a dialog shadowed by another): presenting takes the
+  // focus from whatever had it, which gets it back when the dialog closes
+  // (last_focus). Read before the dialog's content can autofocus anything.
+  const lastFocus = useRef<Element | null>(null);
+  const wasOpen = useRef(false);
+  if (open && !wasOpen.current && typeof document !== "undefined") {
+    lastFocus.current = document.activeElement;
+  }
+  wasOpen.current = open;
+  useLayoutEffect(() => {
+    if (open) {
+      // gtk_widget_grab_focus (dialog): unless its content took the focus (an
+      // alert dialog's default response), the dialog has it, and Tab moves on
+      // into its content.
+      const sheet = sheetRef.current;
+      if (sheet && !sheet.contains(document.activeElement)) sheet.focus({ preventScroll: true });
+      return;
+    }
+    // Closing (not an effect cleanup, which also runs while still open).
+    const last = lastFocus.current;
+    lastFocus.current = null;
+    if (last instanceof HTMLElement && last.isConnected && !last.closest("[inert]")) {
+      last.focus({ preventScroll: true });
+    }
+  }, [open]);
+
   useLayoutEffect(() => {
     if (!mounted) return;
     const apply = (value: number) => {
@@ -226,6 +252,7 @@ export const FloatingSheet = forwardRef<HTMLDivElement, FloatingSheetProps>(func
           <div
             ref={sheetRef}
             className="gtk-sheet"
+            tabIndex={-1}
             style={{
               position: "relative",
               opacity: 0,
@@ -233,6 +260,7 @@ export const FloatingSheet = forwardRef<HTMLDivElement, FloatingSheetProps>(func
               // Within the padding (see sheetPadding()), like the allocation.
               maxWidth: "100%",
               maxHeight: "100%",
+              outline: "none",
               ...sheetStyle,
             }}
           >

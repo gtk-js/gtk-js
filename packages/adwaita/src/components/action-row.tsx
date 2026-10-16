@@ -1,4 +1,4 @@
-import { useListBoxRow } from "@gtk-js/gtk4";
+import { useListBoxRow, wrapStyle } from "@gtk-js/gtk4";
 import { forwardRef, type HTMLAttributes, type ReactNode } from "react";
 
 export interface AdwActionRowProps extends HTMLAttributes<HTMLDivElement> {
@@ -64,7 +64,7 @@ export const AdwActionRow = forwardRef<HTMLDivElement, AdwActionRowProps>(functi
   if (activatable) classes.push("activatable");
   if (className) classes.push(className);
 
-  // The labels wrap, and keep their spaces and line breaks like Pango does.
+  // The labels wrap word-char (adw-action-row.ui).
   const titleStyle: React.CSSProperties =
     titleLines > 0
       ? {
@@ -72,9 +72,9 @@ export const AdwActionRow = forwardRef<HTMLDivElement, AdwActionRowProps>(functi
           WebkitLineClamp: titleLines,
           WebkitBoxOrient: "vertical",
           overflow: "hidden",
-          whiteSpace: "pre-wrap",
+          ...wrapStyle("word-char"),
         }
-      : { whiteSpace: "pre-wrap" };
+      : wrapStyle("word-char");
 
   const subtitleStyle: React.CSSProperties =
     subtitleLines > 0
@@ -83,9 +83,9 @@ export const AdwActionRow = forwardRef<HTMLDivElement, AdwActionRowProps>(functi
           WebkitLineClamp: subtitleLines,
           WebkitBoxOrient: "vertical",
           overflow: "hidden",
-          whiteSpace: "pre-wrap",
+          ...wrapStyle("word-char"),
         }
-      : { whiteSpace: "pre-wrap" };
+      : wrapStyle("word-char");
 
   return placeRow(
     <div

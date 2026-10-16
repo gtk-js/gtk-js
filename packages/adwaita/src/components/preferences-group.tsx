@@ -1,4 +1,4 @@
-import { GtkListBoxRowContext, orderRows } from "@gtk-js/gtk4";
+import { GtkListBoxRowContext, orderRows, wrapStyle } from "@gtk-js/gtk4";
 import {
   forwardRef,
   type HTMLAttributes,
@@ -87,7 +87,12 @@ export const AdwPreferencesGroup = forwardRef<HTMLDivElement, AdwPreferencesGrou
               <div className="gtk-box gtk-box-layout vertical labels" style={{ flex: 1 }}>
                 {hasTitle && <span className="gtk-label heading h4">{title}</span>}
                 {hasDescription && (
-                  <span className="gtk-label body dimmed description">{description}</span>
+                  <span
+                    className="gtk-label body dimmed description"
+                    style={wrapStyle("word-char")}
+                  >
+                    {description}
+                  </span>
                 )}
               </div>
               <GtkListBoxRowContext.Provider value={null}>

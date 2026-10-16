@@ -43,10 +43,13 @@ export const GtkListBoxRow = forwardRef<HTMLDivElement, GtkListBoxRowProps>(func
   if (activatable) classes.push("activatable");
   if (className) classes.push(className);
 
+  // Rows can take focus (GtkListBoxRow is focusable), one Tab stop each, like
+  // GTK_LIST_TAB_ALL.
   return placeRow(
     <div
       ref={ref}
       role="listitem"
+      tabIndex={0}
       className={classes.join(" ")}
       {...alignAttrs(halign, valign, hexpand, vexpand)}
       data-selectable={selectable || undefined}
@@ -100,6 +103,7 @@ export const GtkListBox = forwardRef<HTMLDivElement, GtkListBoxProps>(function G
     hexpand,
     vexpand,
     className,
+    onKeyDown,
     ...rest
   },
   ref,
@@ -140,13 +144,9 @@ export const GtkListBox = forwardRef<HTMLDivElement, GtkListBoxProps>(function G
 
   const childCount = Children.count(children);
 
-  const handleRowClick = useCallback(
+  const selectRow = useCallback(
     (index: number) => {
-      if (selectionMode === "none" || unselectable.has(index)) {
-        if (activateOnSingleClick) onRowActivated?.(index);
-        return;
-      }
-
+      if (selectionMode === "none" || unselectable.has(index)) return;
       const next = new Set(selectedIndices);
       if (selectionMode === "multiple") {
         if (next.has(index)) next.delete(index);
@@ -157,18 +157,54 @@ export const GtkListBox = forwardRef<HTMLDivElement, GtkListBoxProps>(function G
       }
       if (!selectedRows) setSelectedIndices(next);
       onSelectedRowsChanged?.([...next]);
+    },
+    [selectionMode, onSelectedRowsChanged, selectedRows, selectedIndices, unselectable],
+  );
 
+  const handleRowClick = useCallback(
+    (index: number) => {
+      selectRow(index);
       if (activateOnSingleClick) onRowActivated?.(index);
     },
-    [
-      selectionMode,
-      activateOnSingleClick,
-      onRowActivated,
-      onSelectedRowsChanged,
-      selectedRows,
-      selectedIndices,
-      unselectable,
-    ],
+    [selectRow, activateOnSingleClick, onRowActivated],
+  );
+
+  // Keyboard navigation on a focused row (gtk_list_box_move_cursor()): the
+  // arrows, Home and End move to another row and select it, unless Ctrl is
+  // held. Enter and Space activate it (gtk_list_box_activate_cursor_row()).
+  const handleKeyDown = useCallback(
+    (e: React.KeyboardEvent<HTMLDivElement>) => {
+      onKeyDown?.(e);
+      if (e.defaultPrevented) return;
+      const rows = Array.from(e.currentTarget.children).filter(
+        (el): el is HTMLElement => el instanceof HTMLElement && el.classList.contains("gtk-row"),
+      );
+      const index = rows.indexOf(e.target as HTMLElement);
+      if (index < 0) return;
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        selectRow(index);
+        onRowActivated?.(index);
+        return;
+      }
+      const target =
+        e.key === "ArrowUp"
+          ? index - 1
+          : e.key === "ArrowDown"
+            ? index + 1
+            : e.key === "Home"
+              ? 0
+              : e.key === "End"
+                ? rows.length - 1
+                : null;
+      if (target === null) return;
+      e.preventDefault();
+      const row = rows[target];
+      if (!row) return;
+      row.focus();
+      if (!e.ctrlKey) selectRow(target);
+    },
+    [onKeyDown, selectRow, onRowActivated],
   );
 
   const handleRowDoubleClick = useCallback(
@@ -184,6 +220,7 @@ export const GtkListBox = forwardRef<HTMLDivElement, GtkListBoxProps>(function G
       role="list"
       className={classes.join(" ")}
       {...alignAttrs(halign, valign, hexpand, vexpand)}
+      onKeyDown={handleKeyDown}
       {...rest}
     >
       {/* Its rows are its own, not an enclosing preferences group's. */}

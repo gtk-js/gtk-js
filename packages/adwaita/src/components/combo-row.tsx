@@ -1,4 +1,4 @@
-import { useIcon, useListBoxRow } from "@gtk-js/gtk4";
+import { useIcon, useListBoxRow, wrapStyle } from "@gtk-js/gtk4";
 import {
   forwardRef,
   type HTMLAttributes,
@@ -119,8 +119,14 @@ export const AdwComboRow = forwardRef<HTMLDivElement, AdwComboRowProps>(function
           </div>
         )}
         <div className="gtk-box gtk-box-layout vertical title" style={{ flex: 1 }}>
-          <span className="gtk-label title">{title}</span>
-          {displaySubtitle && <span className="gtk-label subtitle">{displaySubtitle}</span>}
+          <span className="gtk-label title" style={wrapStyle("word-char")}>
+            {title}
+          </span>
+          {displaySubtitle && (
+            <span className="gtk-label subtitle" style={wrapStyle("word-char")}>
+              {displaySubtitle}
+            </span>
+          )}
         </div>
         {!useSubtitle && <span className="gtk-label">{items[selected] ?? ""}</span>}
         {ArrowIcon && (
