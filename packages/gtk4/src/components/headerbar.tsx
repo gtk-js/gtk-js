@@ -38,6 +38,13 @@ export interface GtkHeaderBarProps extends HTMLAttributes<HTMLDivElement>, GtkAl
   onWindowHandleDragStart?: (e: PointerEvent<HTMLDivElement>) => void;
 }
 
+/** The window controls' accessible labels (gtkwindowcontrols.c). */
+const controlLabels: Record<string, string> = {
+  close: "Close",
+  minimize: "Minimize",
+  maximize: "Maximize",
+};
+
 /** Maps decoration-layout button names to icon component PascalCase names. */
 const controlIconNames: Record<string, string> = {
   close: "WindowClose",
@@ -56,6 +63,7 @@ function WindowControlButton({ name, onClick }: { name: string; onClick?: () => 
       className={`gtk-button image-button ${name}`}
       type="button"
       tabIndex={-1}
+      aria-label={controlLabels[name]}
       onMouseDown={(e) => e.preventDefault()}
       onClick={onClick}
     >
