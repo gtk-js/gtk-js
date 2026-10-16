@@ -79,6 +79,13 @@ body:has(> :first-child:has([data-gtk-provider])) > :first-child {
   line-height: var(--gtk-line-height);
 }
 
+/* GtkText: one line of text, as tall as its layout in whole pixels
+   (gtk_text_measure()). The line box is what browsers fill when the text is
+   selected; GTK fills the same whole-pixel line. */
+:where([data-gtk-provider] input.gtk-text) {
+  line-height: round(up, 1lh, 1px);
+}
+
 /* Re-enable text selection for editable widgets */
 :where([data-gtk-provider] .gtk-text),
 :where([data-gtk-provider] input),
