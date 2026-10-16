@@ -62,9 +62,10 @@ export async function compileGtkCSS(scssPath: string, options?: CompileOptions):
   const result = spawnSync("sassc", ["-t", "expanded", scssPath], { maxBuffer: 256 * 1024 * 1024 });
 
   if (result.status !== 0) {
-    throw new Error(
-      `sassc compilation failed (exit ${result.status ?? result.error?.message}):\n${result.stderr?.toString()}`,
-    );
+    const reason =
+      result.error?.message ??
+      (result.signal != null ? `killed by ${result.signal}` : `exit ${result.status}`);
+    throw new Error(`sassc compilation failed (${reason}):\n${result.stderr?.toString()}`);
   }
 
   const rawCSS = result.stdout.toString();
