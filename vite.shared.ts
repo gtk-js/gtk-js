@@ -18,7 +18,8 @@ export function pack(): NonNullable<UserConfig["pack"]> {
     platform: "neutral",
     dts: true,
     plugins: [raw],
-    // The CSS build writes dist/*.css first; the bundle then inlines it.
-    clean: false,
+    // The CSS build writes dist/*.css first and the bundle inlines it, so only
+    // the bundle's own outputs are cleaned: stale ones would be published.
+    clean: ["dist/**/*.js", "dist/**/*.d.ts"],
   };
 }
