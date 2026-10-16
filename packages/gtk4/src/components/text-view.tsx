@@ -45,6 +45,10 @@ export interface GtkTextViewProps
  *   textview.view
  *     └── text
  *
+ * The text node, a <textarea>, holds the text, its margins and the selection,
+ * which themes style as `textview > text` and `textview text selection`. The
+ * ref is the textarea; className, style and the alignment are the widget's.
+ *
  * @see https://docs.gtk.org/gtk4/class.TextView.html
  */
 export const GtkTextView = forwardRef<HTMLTextAreaElement, GtkTextViewProps>(function GtkTextView(
@@ -90,7 +94,8 @@ export const GtkTextView = forwardRef<HTMLTextAreaElement, GtkTextViewProps>(fun
 
   const cssWrap = wrapMode === "none" ? "off" : wrapMode === "char" ? "hard" : "soft";
 
-  const cssStyle: React.CSSProperties = {
+  // The margins are the text's, inside the text node (gtk_text_view_set_left_margin()).
+  const textStyle: React.CSSProperties = {
     textAlign,
     paddingLeft: leftMargin,
     paddingRight: rightMargin,
@@ -99,7 +104,6 @@ export const GtkTextView = forwardRef<HTMLTextAreaElement, GtkTextViewProps>(fun
     textIndent: indent > 0 ? indent : undefined,
     caretColor: cursorVisible ? undefined : "transparent",
     resize: "none",
-    ...style,
   };
 
   const handleChange = useCallback(
@@ -129,18 +133,23 @@ export const GtkTextView = forwardRef<HTMLTextAreaElement, GtkTextViewProps>(fun
   );
 
   return (
-    <textarea
-      ref={ref}
+    <div
       className={classes.join(" ")}
-      readOnly={!editable}
-      wrap={cssWrap}
-      style={cssStyle}
-      disabled={disabled}
+      style={style}
       {...alignAttrs(halign, valign, hexpand, vexpand)}
       data-disabled={disabled || undefined}
-      onChange={handleChange}
-      onKeyDown={handleKeyDown}
-      {...rest}
-    />
+    >
+      <textarea
+        ref={ref}
+        className="gtk-text"
+        readOnly={!editable}
+        wrap={cssWrap}
+        style={textStyle}
+        disabled={disabled}
+        onChange={handleChange}
+        onKeyDown={handleKeyDown}
+        {...rest}
+      />
+    </div>
   );
 });

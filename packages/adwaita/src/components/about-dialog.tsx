@@ -259,13 +259,16 @@ function ReleaseNotes({ version, markup }: { version?: string; markup: string })
       );
     });
   }, [markup, version]);
+  // textview > text, as GtkTextView's nodes; the margins are the text's.
   return (
-    <div
-      className="gtk-textview body"
-      style={{ padding: "18px 12px", whiteSpace: "pre-wrap", overflowWrap: "anywhere" }}
-    >
-      {version && <div style={{ fontWeight: "bold" }}>{`Version ${version}`}</div>}
-      {sections}
+    <div className="gtk-textview body">
+      <div
+        className="gtk-text"
+        style={{ padding: "18px 12px", whiteSpace: "pre-wrap", overflowWrap: "anywhere" }}
+      >
+        {version && <div style={{ fontWeight: "bold" }}>{`Version ${version}`}</div>}
+        {sections}
+      </div>
     </div>
   );
 }
@@ -707,16 +710,18 @@ export const AdwAboutDialog = forwardRef<HTMLDivElement, AdwAboutDialogProps>(
                 style={{ height: "100%" }}
               >
                 <AdwClamp>
-                  <div
-                    className="gtk-textview body"
-                    style={{
-                      padding: "18px 12px",
-                      whiteSpace: "pre-wrap",
-                      overflowWrap: "anywhere",
-                      userSelect: "text",
-                    }}
-                  >
-                    {debugInfo}
+                  <div className="gtk-textview body">
+                    <div
+                      className="gtk-text"
+                      style={{
+                        padding: "18px 12px",
+                        whiteSpace: "pre-wrap",
+                        overflowWrap: "anywhere",
+                        userSelect: "text",
+                      }}
+                    >
+                      {debugInfo}
+                    </div>
                   </div>
                 </AdwClamp>
               </GtkScrolledWindow>
