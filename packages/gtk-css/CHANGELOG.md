@@ -1,5 +1,12 @@
 # @gtk-js/gtk-css
 
+## [0.1.7](https://github.com/gtk-js/gtk-js/compare/gtk-css-v0.1.6...gtk-css-v0.1.7) (2026-10-16)
+
+
+### Bug Fixes
+
+* draw text selection in the theme's colors ([#59](https://github.com/gtk-js/gtk-js/issues/59)) ([33b0a88](https://github.com/gtk-js/gtk-js/commit/33b0a88f3b074148be544277278803e8d5a055b0))
+
 ## [0.1.6](https://github.com/gtk-js/gtk-js/compare/gtk-css-v0.1.5...gtk-css-v0.1.6) (2026-10-15)
 
 

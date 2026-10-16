@@ -3,7 +3,7 @@
   "publishConfig": {
     "access": "public"
   },
-  "version": "0.1.6",
+  "version": "0.1.7",
   "type": "module",
   "main": "dist/index.js",
   "files": [
@@ -25,7 +25,7 @@
     "@gtk-js/icon-helpers": "0.1.6"
   },
   "devDependencies": {
-    "@gtk-js/gtk-css": "0.1.6",
+    "@gtk-js/gtk-css": "0.1.7",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3"
   },
