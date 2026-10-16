@@ -1,4 +1,4 @@
-import { useIcon, useListBoxRow } from "@gtk-js/gtk4";
+import { useIcon, useListBoxRow, wrapStyle } from "@gtk-js/gtk4";
 import React, {
   forwardRef,
   type HTMLAttributes,
@@ -96,8 +96,14 @@ export const AdwExpanderRow = forwardRef<HTMLDivElement, AdwExpanderRowProps>(
                   <div className="gtk-box gtk-box-layout horizontal prefixes">{prefixWidget}</div>
                 )}
                 <div className="gtk-box gtk-box-layout vertical title" style={{ flex: 1 }}>
-                  <span className="gtk-label title">{title}</span>
-                  {subtitle && <span className="gtk-label subtitle">{subtitle}</span>}
+                  <span className="gtk-label title" style={wrapStyle("word-char")}>
+                    {title}
+                  </span>
+                  {subtitle && (
+                    <span className="gtk-label subtitle" style={wrapStyle("word-char")}>
+                      {subtitle}
+                    </span>
+                  )}
                 </div>
                 {suffixWidget && (
                   <div className="gtk-box gtk-box-layout horizontal suffixes">{suffixWidget}</div>

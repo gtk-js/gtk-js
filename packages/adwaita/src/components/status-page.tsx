@@ -1,4 +1,4 @@
-import { GtkScrolledWindow, useIcon } from "@gtk-js/gtk4";
+import { GtkScrolledWindow, useIcon, wrapStyle } from "@gtk-js/gtk4";
 import { forwardRef, type HTMLAttributes, type ReactNode } from "react";
 import { AdwClamp } from "./clamp.tsx";
 
@@ -59,12 +59,12 @@ export const AdwStatusPage = forwardRef<HTMLDivElement, AdwStatusPageProps>(func
                   </span>
                 )}
                 {title && (
-                  <span className="gtk-label title" style={{ whiteSpace: "normal" }}>
+                  <span className="gtk-label title" style={wrapStyle("word-char")}>
                     {title}
                   </span>
                 )}
                 {description && (
-                  <span className="gtk-label body description" style={{ whiteSpace: "normal" }}>
+                  <span className="gtk-label body description" style={wrapStyle("word-char")}>
                     {description}
                   </span>
                 )}

@@ -199,6 +199,51 @@ const remapSelectors: Plugin = {
 };
 
 /**
+ * PostCSS plugin: GTK's `selection` node → the ::selection pseudo-element.
+ *
+ * GtkText and GtkLabel draw selected text through a `selection` child node
+ * that takes their state (gtk_text_state_flags_changed()), so
+ * `selection:focus-within` is the selection of a focused text. Pseudo-classes
+ * can't follow ::selection, so the state moves to the element holding the
+ * text: `text > selection:focus-within` → `text:focus-within::selection`.
+ *
+ * GTK draws the selection over the text, then the text again in the
+ * selection's color: a transparent color leaves the text as it is. Browsers
+ * draw the text over the selection in that color, so transparent would hide
+ * it; it's dropped.
+ */
+const remapSelectionNode: Plugin = {
+  postcssPlugin: "gtk-remap-selection-node",
+  Rule(rule) {
+    const mapped = rule.selectors.map(selectionPseudoElement);
+    if (mapped.every((m) => !m)) return;
+    const others = rule.selectors.filter((_, i) => !mapped[i]);
+    if (others.length > 0) rule.cloneBefore({ selectors: others });
+    rule.selectors = mapped.flatMap((m) => m ?? []);
+    rule.each((node) => {
+      if (node.type === "decl" && node.prop === "color" && node.value === "transparent") {
+        node.remove();
+      }
+    });
+  },
+};
+
+/** `text > selection:focus` → `text:focus::selection`; null for other selectors. */
+function selectionPseudoElement(selector: string): string[] | null {
+  const start = lastCompoundStart(selector);
+  const compound = selector.slice(start);
+  if (!/^selection(?![\w-])/.test(compound)) return null;
+  const state = compound.slice("selection".length);
+  const parent = selector.slice(0, start).trimEnd();
+  // The node is a child of the text...
+  if (!parent) return [`${state}::selection`];
+  if (parent.endsWith(">")) return [`${parent.slice(0, -1).trimEnd()}${state}::selection`];
+  if (/[+~]$/.test(parent)) return null;
+  // ...which is the ancestor, or a descendant of it.
+  return [`${parent}${state}::selection`, `${parent} *${state}::selection`];
+}
+
+/**
  * PostCSS plugin: Remap GTK-specific pseudo-classes to data attributes.
  */
 const remapPseudoClasses: Plugin = {
@@ -859,16 +904,18 @@ const resolveCurrentColor: Plugin = {
 
 /** The compound selector a selector matches, e.g. `switch:checked` in `row > switch:checked`. */
 function lastCompound(selector: string): string {
+  return selector.slice(lastCompoundStart(selector)).trim();
+}
+
+function lastCompoundStart(selector: string): number {
   let depth = 0;
   for (let i = selector.length - 1; i >= 0; i--) {
     const c = selector[i];
     if (c === ")" || c === "]") depth++;
     else if (c === "(" || c === "[") depth--;
-    else if (depth === 0 && (c === " " || c === ">" || c === "+" || c === "~")) {
-      return selector.slice(i + 1).trim();
-    }
+    else if (depth === 0 && (c === " " || c === ">" || c === "+" || c === "~")) return i + 1;
   }
-  return selector.trim();
+  return 0;
 }
 
 /** A compound selector without its pseudo-classes: the widget, whatever its state. */
@@ -921,6 +968,7 @@ const fixSwitchPadding: Plugin = {
 export function buildGtkToWeb(assetPlugin?: Plugin) {
   return postcss([
     remapSelectors,
+    remapSelectionNode,
     remapPseudoClasses,
     handleGtkProperties,
     fixGtkTransitionRefs,
