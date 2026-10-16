@@ -4,8 +4,10 @@
  * GNOME uses even minor versions for stable releases (e.g. 4.22.x, 1.8.x)
  * and odd minor versions for development (e.g. 4.21.x, 1.9.x).
  *
- * Usage: bun scripts/update-upstream.ts
+ * Usage: node scripts/update-upstream.ts
  */
+
+import { spawnSync } from "node:child_process";
 
 const submodules = [
   { name: "gtk", path: "upstream/gtk", remote: "https://github.com/GNOME/gtk.git" },
@@ -47,12 +49,11 @@ for (const sub of submodules) {
   console.log(`\n--- Updating ${sub.name} ---`);
 
   // Query tags from remote (fast, no local fetch needed)
-  const lsRemote = Bun.spawnSync({
-    cmd: ["git", "ls-remote", "--tags", sub.remote],
-    stdout: "pipe",
+  const lsRemote = spawnSync("git", ["ls-remote", "--tags", sub.remote], {
+    stdio: ["ignore", "pipe", "inherit"],
   });
 
-  if (lsRemote.exitCode !== 0) {
+  if (lsRemote.status !== 0) {
     console.error(`Failed to query tags for ${sub.name}`);
     process.exit(1);
   }
@@ -65,10 +66,9 @@ for (const sub of submodules) {
   }
 
   // Get current ref
-  const currentHead = Bun.spawnSync({
-    cmd: ["git", "describe", "--tags", "--always"],
+  const currentHead = spawnSync("git", ["describe", "--tags", "--always"], {
     cwd: sub.path,
-    stdout: "pipe",
+    stdio: ["ignore", "pipe", "inherit"],
   });
   const currentRef = currentHead.stdout.toString().trim();
 
@@ -80,27 +80,20 @@ for (const sub of submodules) {
   console.log(`${sub.name}: ${currentRef} → ${latestTag}`);
 
   // Fetch the specific tag (shallow)
-  const fetchTag = Bun.spawnSync({
-    cmd: ["git", "fetch", "--depth", "1", "origin", "tag", latestTag],
+  const fetchTag = spawnSync("git", ["fetch", "--depth", "1", "origin", "tag", latestTag], {
     cwd: sub.path,
-    stdout: "inherit",
-    stderr: "inherit",
+    stdio: "inherit",
   });
 
-  if (fetchTag.exitCode !== 0) {
+  if (fetchTag.status !== 0) {
     console.error(`Failed to fetch tag ${latestTag} for ${sub.name}`);
     process.exit(1);
   }
 
   // Checkout the tag
-  const checkout = Bun.spawnSync({
-    cmd: ["git", "checkout", latestTag],
-    cwd: sub.path,
-    stdout: "inherit",
-    stderr: "inherit",
-  });
+  const checkout = spawnSync("git", ["checkout", latestTag], { cwd: sub.path, stdio: "inherit" });
 
-  if (checkout.exitCode !== 0) {
+  if (checkout.status !== 0) {
     console.error(`Failed to checkout ${latestTag} for ${sub.name}`);
     process.exit(1);
   }

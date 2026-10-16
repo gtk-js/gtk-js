@@ -1,4 +1,4 @@
-import { expect } from "bun:test";
+import { expect } from "vite-plus/test";
 import { compare, gtkTest } from "../harness";
 
 // AdwHeaderBar shares the same CSS node name "headerbar" as GtkHeaderBar.

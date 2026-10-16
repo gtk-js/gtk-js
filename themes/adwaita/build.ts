@@ -1,5 +1,5 @@
 import { compileGtkCSS } from "@gtk-js/gtk-css/compile";
-import { mkdirSync } from "fs";
+import { mkdirSync, writeFileSync } from "fs";
 
 const scssPath = new URL("../../upstream/libadwaita/src/stylesheet/default.scss", import.meta.url)
   .pathname;
@@ -15,7 +15,7 @@ const variants = [
 
 for (const { name, scheme } of variants) {
   const css = await compileGtkCSS(scssPath, scheme ? { scheme } : undefined);
-  await Bun.write(`${outDir}${name}.css`, css);
+  writeFileSync(`${outDir}${name}.css`, css);
   process.stdout.write(`  ${name}: ${css.length}b\n`);
 }
 

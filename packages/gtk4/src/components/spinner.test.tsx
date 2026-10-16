@@ -1,6 +1,6 @@
-import { describe, expect, test } from "bun:test";
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 import { renderToStaticMarkup } from "react-dom/server";
+import { describe, expect, test } from "vite-plus/test";
 import { GtkProvider } from "../provider.tsx";
 import { GtkSpinner } from "./spinner.tsx";
 

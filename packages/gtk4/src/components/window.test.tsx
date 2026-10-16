@@ -1,5 +1,5 @@
-import { describe, expect, test } from "bun:test";
 import { renderToStaticMarkup } from "react-dom/server";
+import { describe, expect, test } from "vite-plus/test";
 import { GtkWindow } from "./window.tsx";
 
 describe("GtkWindow draggableRegions", () => {

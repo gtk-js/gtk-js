@@ -1,3 +1,4 @@
+import { spawnSync } from "child_process";
 import { readFileSync } from "fs";
 import { type Plugin } from "postcss";
 import { buildGtkToWeb, preprocess } from "./transform.ts";
@@ -58,15 +59,11 @@ function makeGtkAssetPlugin(assetMap: Map<string, string>): Plugin {
  */
 export async function compileGtkCSS(scssPath: string, options?: CompileOptions): Promise<string> {
   // Step 1: Compile SCSS → raw CSS using sassc (matches upstream)
-  const result = Bun.spawnSync({
-    cmd: ["sassc", "-t", "expanded", scssPath],
-    stdout: "pipe",
-    stderr: "pipe",
-  });
+  const result = spawnSync("sassc", ["-t", "expanded", scssPath], { maxBuffer: 256 * 1024 * 1024 });
 
-  if (result.exitCode !== 0) {
+  if (result.status !== 0) {
     throw new Error(
-      `sassc compilation failed (exit ${result.exitCode}):\n${result.stderr.toString()}`,
+      `sassc compilation failed (exit ${result.status ?? result.error?.message}):\n${result.stderr?.toString()}`,
     );
   }
 

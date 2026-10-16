@@ -1,4 +1,4 @@
-import { describe, expect, test } from "bun:test";
+import { describe, expect, test } from "vite-plus/test";
 import {
   DIALOG_SPRING,
   DIALOG_SPRING_EPSILON,

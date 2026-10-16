@@ -1,8 +1,8 @@
-import { expect, test } from "bun:test";
 import type { Browser } from "playwright";
+import { expect, test } from "vite-plus/test";
 
 function debugEnabled(): boolean {
-  return Bun.env.GTK_JS_TEST_DEBUG != null;
+  return process.env.GTK_JS_TEST_DEBUG != null;
 }
 
 function debugLog(scope: string, message: string): void {

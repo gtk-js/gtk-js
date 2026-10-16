@@ -1,4 +1,4 @@
-import { describe, expect, test } from "bun:test";
+import { describe, expect, test } from "vite-plus/test";
 import { gtkToWeb } from "./transform.ts";
 
 async function transform(css: string) {
@@ -123,7 +123,7 @@ describe("convertGtkColorFunctions", () => {
     });
 
     test("unexpected arg count throws", async () => {
-      expect(transform(".x { color: alpha(a, b, c); }")).rejects.toThrow();
+      await expect(transform(".x { color: alpha(a, b, c); }")).rejects.toThrow();
     });
   });
 
@@ -143,7 +143,7 @@ describe("convertGtkColorFunctions", () => {
     });
 
     test("unexpected arg count throws", async () => {
-      expect(transform(".x { color: mix(a, b); }")).rejects.toThrow();
+      await expect(transform(".x { color: mix(a, b); }")).rejects.toThrow();
     });
   });
 
@@ -181,11 +181,11 @@ describe("convertGtkColorFunctions", () => {
     });
 
     test("unexpected arg count throws", async () => {
-      expect(transform(".x { color: shade(a); }")).rejects.toThrow();
+      await expect(transform(".x { color: shade(a); }")).rejects.toThrow();
     });
 
     test("non-numeric factor throws", async () => {
-      expect(transform(".x { color: shade(#fff, abc); }")).rejects.toThrow();
+      await expect(transform(".x { color: shade(#fff, abc); }")).rejects.toThrow();
     });
   });
 });

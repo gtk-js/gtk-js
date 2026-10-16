@@ -5,9 +5,10 @@ RUN dnf install -y sassc unzip cargo xorg-x11-server-Xvfb \
     atk at-spi2-atk libXcomposite libXdamage libXrandr libX11 \
     nss nspr alsa-lib cups-libs libXScrnSaver pango
 
-RUN curl -fsSL https://bun.sh/install | bash
-ENV PATH="/root/.bun/bin:$PATH"
+ENV VP_HOME=/opt/vite-plus
+RUN curl -fsSL https://vite.plus | bash
+ENV PATH="/opt/vite-plus/bin:$PATH"
 
-RUN bunx playwright install chromium firefox
+RUN vp dlx playwright install chromium firefox
 
 WORKDIR /workspace

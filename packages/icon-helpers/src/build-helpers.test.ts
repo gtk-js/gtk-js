@@ -1,7 +1,7 @@
-import { afterAll, expect, test } from "bun:test";
 import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "fs";
 import { tmpdir } from "os";
 import { join, relative } from "path";
+import { afterAll, expect, test } from "vite-plus/test";
 import { buildIconComponents, findSvgFiles, missingIconSource } from "./build-helpers";
 
 const root = mkdtempSync(join(tmpdir(), "icon-helpers-"));

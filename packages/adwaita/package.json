@@ -18,7 +18,7 @@
     "./adwaita.css": "./dist/adwaita.css"
   },
   "scripts": {
-    "build": "bun build.ts && tsc -p tsconfig.build.json && NODE_ENV=production bun build src/index.ts --outdir dist --format esm --packages external"
+    "build": "node build.ts && vp pack"
   },
   "dependencies": {
     "@gtk-js/icons-adwaita": "0.1.6",

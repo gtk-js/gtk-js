@@ -4,12 +4,14 @@ Bringing the GTK4/Adwaita ecosystem to the web via React.
 
 ## Tooling
 
-Default to using Bun instead of Node.js.
+gtk-js uses [Vite+](https://viteplus.dev) (`vp`) on npm workspaces.
 
-- Use `bun <file>`, `bun test`, `bun install`, `bun run <script>`
-- Run `bun run check` (biome lint + tsc) and `bun run fix` (biome auto-fix) before committing.
-- Use `Bun.serve()` with HTML imports for dev servers. Don't use vite.
-- Bun's HMR does NOT detect changes to files imported with `{ type: "text" }`. The server must be fully restarted when modifying `.css` files imported this way.
+- `vp install` installs dependencies. `vp run <script>` runs a root script; `vp run -r <script>` runs it in every package, in dependency order.
+- `vp run build:packages` builds the published packages: `node build.ts` generates CSS or icons where a package has one, then `vp pack` (tsdown) bundles `src/index.ts` and its types into `dist/`.
+- `vp test` runs the tests (Vitest). See the `gtk-js-testing` skill.
+- Run `vp run check` (biome lint + tsc) and `vp run fix` (biome auto-fix) before committing.
+- Scripts (`build.ts`, `scripts/*.ts`) run on Node directly, which strips their types, so relative imports need explicit `.ts` extensions and TypeScript-only runtime syntax (enums, namespaces) can't be used.
+- CSS a component injects as text is imported with `?raw` (`import resetCSS from "./reset.css?raw"`). Vite inlines it in the dev server and tests, and `vp pack` in `dist/`.
 
 ## Architecture: Two Rendering Layers
 
@@ -95,7 +97,7 @@ Use the `gtk-js-testing` skill for all testing details: running tests, adding te
 ## Updating Upstream
 
 ```sh
-bun run update-upstream
+vp run update-upstream
 ```
 
 Queries latest stable tags (even minor versions per GNOME convention) and checks them out in each submodule.

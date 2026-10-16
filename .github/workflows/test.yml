@@ -23,18 +23,20 @@ jobs:
       - name: Install needed dependencies
         run: dnf install -y sassc unzip cargo
 
-      - uses: oven-sh/setup-bun@v2
+      - uses: voidzero-dev/setup-vp@v1.21.2
+        with:
+          run-install: false
 
       - name: Install dependencies
-        run: bun install
+        run: vp install
         env:
           HOME: /root
 
       - name: Build packages
-        run: bun run build:packages
+        run: vp run build:packages
 
       - name: Run tests
-        run: bun test --reporter=default --reporter=junit --reporter-outfile=test-results.xml
+        run: vp test --reporter=default --reporter=junit --outputFile.junit=test-results.xml
         env:
           HOME: /root
 

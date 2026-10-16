@@ -1,7 +1,8 @@
 // Unit tests — no Playwright/cargo preload needed.
-import { expect, test } from "bun:test";
+
 import { IconProvider } from "@gtk-js/gtk4";
 import { renderToStaticMarkup } from "react-dom/server";
+import { expect, test } from "vite-plus/test";
 import { AdwDialog } from "./dialog.tsx";
 import { AdwHeaderBar } from "./header-bar.tsx";
 import { AdwNavigationView } from "./navigation-view.tsx";

@@ -1,7 +1,8 @@
 // Unit tests — no Playwright/cargo preload needed.
-import { describe, expect, test } from "bun:test";
+
 import { GtkHeaderBar } from "@gtk-js/gtk4";
 import { renderToStaticMarkup } from "react-dom/server";
+import { describe, expect, test } from "vite-plus/test";
 import { AdwHeaderBar } from "./header-bar.tsx";
 
 describe("header bar window controls", () => {

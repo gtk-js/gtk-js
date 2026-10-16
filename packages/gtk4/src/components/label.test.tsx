@@ -1,6 +1,7 @@
 // Unit tests — no Playwright/cargo preload needed.
-import { describe, expect, test } from "bun:test";
+
 import { renderToStaticMarkup } from "react-dom/server";
+import { describe, expect, test } from "vite-plus/test";
 import { GtkLabel } from "./label.tsx";
 
 const styleOf = (html: string) => html.match(/class="gtk-label"[^>]*style="([^"]*)"/)?.[1] ?? "";

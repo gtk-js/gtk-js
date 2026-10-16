@@ -11,9 +11,9 @@ import {
 } from "react";
 import { trackExpand } from "./expand.ts";
 import { type IconMap, IconProvider } from "./icon-context.tsx";
-import layoutCSS from "./layouts/layout.css" with { type: "text" };
+import layoutCSS from "./layouts/layout.css?raw";
 import { weighGtkNodeClasses } from "./layouts/specificity.ts";
-import resetCSS from "./reset.css" with { type: "text" };
+import resetCSS from "./reset.css?raw";
 
 export interface GtkProviderProps {
   /** Theme instance. Call theme.getCSS() to get the CSS to inject. */

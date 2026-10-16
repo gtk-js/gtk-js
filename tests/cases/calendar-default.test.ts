@@ -1,4 +1,4 @@
-import { expect } from "bun:test";
+import { expect } from "vite-plus/test";
 import { compare, gtkTest, type WidgetSnapshot } from "../harness";
 
 function findSelectedDay(node: WidgetSnapshot): WidgetSnapshot | null {
