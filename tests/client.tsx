@@ -76,6 +76,12 @@ import { createRoot } from "react-dom/client";
 const caseName = window.location.pathname.slice(1);
 const isGallery = caseName === "gallery";
 
+// Native AdwAvatar cases extract the `avatar` gizmo (use_inner), the first
+// child of the outer widget, so the web side marks the same node.
+function avatarGizmoTarget(el: HTMLDivElement | null) {
+  el?.firstElementChild?.setAttribute("data-testid", "target");
+}
+
 /** An app component that renders a row, which AdwPreferencesGroup can't tell from its type. */
 function WrappedActionRow(props: { title: string; subtitle?: string }) {
   return <AdwActionRow {...props} />;
@@ -776,11 +782,11 @@ const cases: Record<string, () => React.ReactElement> = {
   ),
 
   // AdwAvatar cases
-  "avatar-default": () => <AdwAvatar size={48} data-testid="target" />,
+  "avatar-default": () => <AdwAvatar size={48} ref={avatarGizmoTarget} />,
   "avatar-initials": () => (
-    <AdwAvatar size={48} text="Jane Doe" showInitials data-testid="target" />
+    <AdwAvatar size={48} text="Jane Doe" showInitials ref={avatarGizmoTarget} />
   ),
-  "avatar-small": () => <AdwAvatar size={24} text="Alice" showInitials data-testid="target" />,
+  "avatar-small": () => <AdwAvatar size={24} text="Alice" showInitials ref={avatarGizmoTarget} />,
 
   // AdwBanner cases
   "banner-revealed": () => <AdwBanner title="This is a banner" revealed data-testid="target" />,
