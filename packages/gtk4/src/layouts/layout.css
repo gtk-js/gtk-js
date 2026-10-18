@@ -338,6 +338,18 @@
   text-align: center;
 }
 
+/* === AdwButtonRow === */
+/*
+ * Its box is centered (halign=center in adw-button-row.ui), and GTK gives it
+ * at most the row's width, where the title ellipsizes. A grid track from 0 to
+ * the box's natural width, centered in the row, does both, like AdwWindowTitle.
+ */
+.gtk-row.button {
+  display: grid;
+  grid-template-columns: minmax(0px, max-content);
+  justify-content: center;
+}
+
 /* === Scale (GtkRange / GtkScale) === */
 /*
  * GTK uses a custom layout manager (gtk_range_allocate_trough) for the trough.

@@ -863,12 +863,25 @@ const cases: Record<string, () => React.ReactElement> = {
   ),
   "button-row-start-icon": () => (
     <GtkListBox selectionMode="none">
-      <AdwButtonRow title="Delete" startIconName="edit-delete-symbolic" data-testid="target" />
+      <AdwButtonRow title="Delete" startIconName="EditDelete" data-testid="target" />
     </GtkListBox>
   ),
   "button-row-destructive": () => (
     <GtkListBox selectionMode="none">
       <AdwButtonRow title="Delete" className="destructive-action" data-testid="target" />
+    </GtkListBox>
+  ),
+  "button-row-long-title": () => (
+    <GtkListBox
+      selectionMode="none"
+      className="boxed-list"
+      style={{ width: 350 }}
+      data-testid="target"
+    >
+      <AdwButtonRow
+        title="A very long button row title that ellipsizes at the end"
+        startIconName="ListAdd"
+      />
     </GtkListBox>
   ),
 
@@ -921,6 +934,21 @@ const cases: Record<string, () => React.ReactElement> = {
   "adw-action-row-activatable": () => (
     <GtkListBox selectionMode="none" className="boxed-list" data-testid="target">
       <AdwActionRow title="Activatable Row" activatable />
+    </GtkListBox>
+  ),
+  "adw-action-row-icon": () => (
+    <GtkListBox selectionMode="none" className="boxed-list" data-testid="target">
+      <AdwActionRow title="Action Row" iconName="EditDelete" />
+    </GtkListBox>
+  ),
+  "adw-action-row-subtitle-only": () => (
+    <GtkListBox selectionMode="none" className="boxed-list" data-testid="target">
+      <AdwActionRow title="" subtitle="Only a subtitle" />
+    </GtkListBox>
+  ),
+  "adw-action-row-suffix-fill": () => (
+    <GtkListBox selectionMode="none" className="boxed-list" data-testid="target">
+      <AdwActionRow title="Action Row" suffixWidget={<GtkButton label="Action" />} />
     </GtkListBox>
   ),
 
@@ -991,6 +1019,13 @@ const cases: Record<string, () => React.ReactElement> = {
   "adw-preferences-row-default": () => (
     <GtkListBox selectionMode="none" className="boxed-list" data-testid="target">
       <AdwPreferencesRow title="Preferences Row" />
+    </GtkListBox>
+  ),
+  "adw-preferences-row-custom-child": () => (
+    <GtkListBox selectionMode="none" className="boxed-list" data-testid="target">
+      <AdwPreferencesRow title="Preferences Row">
+        <GtkLabel label="Custom child" style={{ margin: 12 }} />
+      </AdwPreferencesRow>
     </GtkListBox>
   ),
 
