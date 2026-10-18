@@ -308,6 +308,74 @@
   align-self: center;
 }
 
+/* === AdwBanner === */
+/* The revealer slides the banner down (transition-type slide-down in
+ * adw-banner.ui): while AdwBanner animates its height, the gizmo keeps its
+ * own and stays at the bottom edge, like gtk_revealer_size_allocate(). */
+.gtk-banner > .gtk-revealer {
+  display: grid;
+  align-content: unsafe end;
+}
+
+/* The gizmo's custom layout (measure_content() / allocate_content() in
+ * adw-banner.c), which AdwBanner picks in data-layout. The title is centered
+ * on the whole width unless the layout places it otherwise. */
+.gtk-banner > .gtk-revealer > .gtk-widget {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-items: center;
+  justify-items: center;
+}
+
+/* Side by side: the button at the end, BUTTON_HORZ_MIN_WIDTH (84px) wide or
+ * more, and the title across the whole width or HORZ_PADDING (6px) in. */
+.gtk-banner > .gtk-revealer > .gtk-widget:is([data-layout="center"], [data-layout="start"]) {
+  grid-template-columns: 6px minmax(0, 1fr) minmax(84px, max-content);
+}
+.gtk-banner > .gtk-revealer > .gtk-widget[data-layout="center"] > .gtk-label {
+  grid-area: 1 / 1 / 2 / -1;
+}
+.gtk-banner > .gtk-revealer > .gtk-widget[data-layout="start"] > .gtk-label {
+  grid-area: 1 / 2 / 2 / -1;
+  justify-self: start;
+}
+.gtk-banner
+  > .gtk-revealer
+  > .gtk-widget:is([data-layout="center"], [data-layout="start"])
+  > .gtk-button {
+  grid-area: 1 / 3;
+  justify-self: stretch;
+}
+
+/* Stacked: VERT_PADDING (6px), the title wrapping HORZ_PADDING from each side,
+ * VERT_SPACING (9px), the button, BUTTON_VERT_MIN_WIDTH (160px) wide or more,
+ * and 6px again. */
+.gtk-banner > .gtk-revealer > .gtk-widget[data-layout="stacked"] {
+  grid-template:
+    6px auto 9px auto 6px /
+    minmax(6px, 1fr) minmax(160px, max-content) minmax(6px, 1fr);
+}
+.gtk-banner > .gtk-revealer > .gtk-widget[data-layout="stacked"] > .gtk-label {
+  grid-area: 2 / 1 / 3 / -1;
+  max-width: calc(100% - 12px);
+}
+.gtk-banner > .gtk-revealer > .gtk-widget[data-layout="stacked"] > .gtk-button {
+  grid-area: 4 / 2;
+  justify-self: stretch;
+}
+
+/* Without a button: 6px around the title when it fits that way, otherwise it
+ * wraps 6px from each side, or across the whole width. */
+.gtk-banner > .gtk-revealer > .gtk-widget[data-layout="padded"] {
+  grid-template-rows: 6px auto 6px;
+}
+.gtk-banner > .gtk-revealer > .gtk-widget[data-layout="padded"] > .gtk-label {
+  grid-row: 2;
+}
+.gtk-banner > .gtk-revealer > .gtk-widget[data-layout="wrap"] > .gtk-label {
+  max-width: calc(100% - 12px);
+}
+
 /* === AdwWindowTitle === */
 /*
  * Its labels are single-line and ellipsize, and the title has width-chars=5

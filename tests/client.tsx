@@ -794,9 +794,35 @@ const cases: Record<string, () => React.ReactElement> = {
   "avatar-small": () => <AdwAvatar size={24} text="Alice" showInitials ref={avatarGizmoTarget} />,
 
   // AdwBanner cases
-  "banner-revealed": () => <AdwBanner title="This is a banner" revealed data-testid="target" />,
+  "banner-revealed": () => (
+    <AdwBanner title="This is a banner" revealed style={{ width: 200 }} data-testid="target" />
+  ),
+  "banner-start": () => (
+    <AdwBanner
+      title="You are offline"
+      buttonLabel="Retry"
+      revealed
+      style={{ width: 300 }}
+      data-testid="target"
+    />
+  ),
+  "banner-wide": () => (
+    <AdwBanner
+      title="You are offline"
+      buttonLabel="Retry"
+      revealed
+      style={{ width: 600 }}
+      data-testid="target"
+    />
+  ),
   "banner-with-button": () => (
-    <AdwBanner title="Update available" buttonLabel="Update" revealed data-testid="target" />
+    <AdwBanner
+      title="You are offline"
+      buttonLabel="Retry"
+      revealed
+      style={{ width: 200 }}
+      data-testid="target"
+    />
   ),
 
   // AdwStatusPage cases

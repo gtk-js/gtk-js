@@ -1,20 +1,62 @@
 import { expect } from "vite-plus/test";
-import { compare, gtkTest } from "../harness";
+import { gtkAssert } from "../assert";
+import { compare, findChild, gtkTest } from "../harness";
 
-// Filtered: font_weight, background_color — host/inner-node bleed artifacts.
+// Filtered on the banner root: font_weight, background_color, border_radius —
+// host/inner-node bleed.
 //
-// font_weight: the banner root CSS node (adw-banner.c:495, css_name="banner")
-// has no font-weight in SCSS. The bold weight comes from the inner title label
-// which has class .heading (_toolbars.scss has no font-weight on `banner`).
-// Native extraction reports the bold weight from the inner label on the root.
+// font_weight: the banner root (adw-banner.c:495, css_name="banner") has no
+// font-weight in SCSS. Bold comes from the inner .heading title label.
 //
-// background_color: per _toolbars.scss:238-240, background-color is set on
-// `banner > revealer > widget`, not on the `banner` root. The outer node is
-// transparent; native extraction captures the adw::Window host's white
-// background through it.
+// background_color: per _toolbars.scss:238-240, background-color is on
+// `banner > revealer > widget`, not the `banner` root. The outer node is
+// transparent; native extraction captures the widget's background through it.
+//
+// border_radius: the banner is at the adw::Window's corner and captures the
+// 9px CSD clip radius via GskRoundedClipNode (same artifact as
+// actionbar-default).
+//
+// The widget node (filtered the same way, its background compared below) has
+// the theme's padding and places the title and button like allocate_content()
+// in adw-banner.c. Without a button there are 6px (VERT_PADDING,
+// HORZ_PADDING) around the centered title.
+// The title can be 1px off: Pango rounds its width up to whole pixels.
+
 gtkTest("banner-revealed", (native, web) => {
   const { failures } = compare(native, web);
   expect(
-    failures.filter((f) => f.property !== "font_weight" && f.property !== "background_color"),
+    failures.filter(
+      (f) =>
+        f.property !== "font_weight" &&
+        f.property !== "background_color" &&
+        !f.property.startsWith("border_radius"),
+    ),
   ).toEqual([]);
+  gtkAssert.numbersEqual(native.width, web.width, "banner width");
+  gtkAssert.numbersEqual(native.height, web.height, "banner height");
+
+  const nativeWidget = findChild(native, "widget");
+  const webWidget = findChild(web, "widget");
+  expect(
+    compare(nativeWidget, webWidget).failures.filter(
+      (f) =>
+        f.property !== "font_weight" &&
+        f.property !== "background_color" &&
+        !f.property.startsWith("border_radius"),
+    ),
+  ).toEqual([]);
+  gtkAssert.colorsClose(
+    nativeWidget.background_color,
+    webWidget.background_color,
+    { tolerance: 2 / 255, reason: "gtk-css mixes color-mix(in srgb) in oklab (color-mix scope)" },
+    "widget background",
+  );
+
+  const nativeTitle = findChild(nativeWidget, "label");
+  const webTitle = findChild(webWidget, "label");
+  const rounding = { tolerance: 1, reason: "Pango rounds label widths up" };
+  gtkAssert.numbersClose(nativeTitle.width, webTitle.width, rounding, "title width");
+  gtkAssert.numbersClose(nativeTitle.x!, webTitle.x!, rounding, "title x");
+  gtkAssert.numbersEqual(nativeTitle.y!, webTitle.y!, "title y");
+  gtkAssert.numbersEqual(nativeTitle.height, webTitle.height, "title height");
 });
