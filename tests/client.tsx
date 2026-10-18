@@ -142,6 +142,18 @@ const cases: Record<string, () => React.ReactElement> = {
 
   // GtkCalendar cases
   "calendar-default": () => <GtkCalendar year={2024} month={0} day={15} data-testid="target" />,
+  "calendar-disabled": () => (
+    <GtkCalendar year={2024} month={0} day={15} disabled data-testid="target" />
+  ),
+  "calendar-marked": () => (
+    <GtkCalendar year={2024} month={0} day={15} markedDays={[5]} data-testid="target" />
+  ),
+  "calendar-no-day-names": () => (
+    <GtkCalendar year={2024} month={0} day={15} showDayNames={false} data-testid="target" />
+  ),
+  "calendar-week-numbers": () => (
+    <GtkCalendar year={2024} month={0} day={15} showWeekNumbers data-testid="target" />
+  ),
 
   // GtkCheckButton cases
   "check-button-default": () => <GtkCheckButton label="Checkbox" data-testid="target" />,
