@@ -4,6 +4,8 @@ pub mod adw_action_row_default;
 pub mod adw_action_row_with_subtitle;
 pub mod adw_breakpoint_bin_default;
 pub mod adw_combo_row_default;
+pub mod adw_combo_row_long_value;
+pub mod adw_combo_row_single_item;
 pub mod adw_entry_row_default;
 pub mod adw_entry_row_with_text;
 pub mod adw_expander_row_default;

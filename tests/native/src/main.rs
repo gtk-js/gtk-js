@@ -43,6 +43,8 @@ enum Command {
     AdwActionRowActivatable,
     AdwBreakpointBinDefault,
     AdwComboRowDefault,
+    AdwComboRowLongValue,
+    AdwComboRowSingleItem,
     AdwEntryRowDefault,
     AdwEntryRowWithText,
     AdwExpanderRowDefault,
@@ -278,6 +280,8 @@ impl Command {
             Self::AdwActionRowActivatable => Some("adw-action-row-activatable"),
             Self::AdwBreakpointBinDefault => Some("adw-breakpoint-bin-default"),
             Self::AdwComboRowDefault => Some("adw-combo-row-default"),
+            Self::AdwComboRowLongValue => Some("adw-combo-row-long-value"),
+            Self::AdwComboRowSingleItem => Some("adw-combo-row-single-item"),
             Self::AdwEntryRowDefault => Some("adw-entry-row-default"),
             Self::AdwEntryRowWithText => Some("adw-entry-row-with-text"),
             Self::AdwExpanderRowDefault => Some("adw-expander-row-default"),
@@ -493,6 +497,12 @@ fn create_widget_for_case(name: &str) -> Option<(gtk::Widget, bool)> {
         }
         "adw-combo-row-default" => {
             widget_case!(cases::adw_combo_row_default::AdwComboRowDefault, false)
+        }
+        "adw-combo-row-long-value" => {
+            widget_case!(cases::adw_combo_row_long_value::AdwComboRowLongValue, false)
+        }
+        "adw-combo-row-single-item" => {
+            widget_case!(cases::adw_combo_row_single_item::AdwComboRowSingleItem, false)
         }
         "adw-entry-row-default" => {
             widget_case!(cases::adw_entry_row_default::AdwEntryRowDefault, false)
@@ -1008,6 +1018,8 @@ fn is_known_case(name: &str) -> bool {
             | "adw-action-row-activatable"
             | "adw-breakpoint-bin-default"
             | "adw-combo-row-default"
+            | "adw-combo-row-long-value"
+            | "adw-combo-row-single-item"
             | "adw-entry-row-default"
             | "adw-entry-row-with-text"
             | "adw-expander-row-default"
