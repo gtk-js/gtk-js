@@ -192,6 +192,68 @@
   grid-area: 1 / 1;
 }
 
+/* === AdwCarousel === */
+/* Like adw_carousel_size_allocate(): every page gets the largest child's
+   natural size, up to the carousel's (all of it when a child sets hexpand /
+   vexpand), and the carousel's full size across. The pages share one cell,
+   centered, and move by --gtk-carousel-position times their size plus the
+   spacing, so the current page is centered and narrower pages show their
+   neighbours. Each page lays out its child like a bin. Clipped like GTK's
+   overflow hidden, which can't be scrolled: focusing a page off screen mustn't
+   scroll the carousel. */
+.gtk-carousel {
+  display: grid;
+  justify-content: center;
+  align-content: center;
+  overflow: clip;
+}
+
+.gtk-carousel.horizontal {
+  grid-template-columns: minmax(0, max-content);
+  grid-template-rows: minmax(0, 1fr);
+}
+
+.gtk-carousel.vertical {
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: minmax(0, max-content);
+}
+
+.gtk-carousel.horizontal:has(> * > [data-hexpand="true"]) {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.gtk-carousel.vertical:has(> * > [data-vexpand="true"]) {
+  grid-template-rows: minmax(0, 1fr);
+}
+
+.gtk-carousel > * {
+  grid-area: 1 / 1;
+  transform: translateX(
+    calc(
+      (var(--gtk-carousel-index) - var(--gtk-carousel-position)) *
+      (100% + var(--gtk-carousel-spacing))
+    )
+  );
+}
+
+.gtk-carousel.horizontal:dir(rtl) > * {
+  transform: translateX(
+    calc(
+      (var(--gtk-carousel-position) - var(--gtk-carousel-index)) *
+      (100% + var(--gtk-carousel-spacing))
+    )
+  );
+}
+
+.gtk-carousel.vertical > * {
+  transform: translateY(
+    calc(
+      (var(--gtk-carousel-index) - var(--gtk-carousel-position)) *
+      (100% + var(--gtk-carousel-spacing))
+    )
+  );
+}
+
 /* === CenterLayout === */
 /* True centering: center child is always centered relative to the full width,
    regardless of start/end sizes. Uses CSS grid with 1fr/auto/1fr columns. */

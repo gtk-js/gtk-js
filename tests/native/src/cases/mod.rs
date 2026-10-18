@@ -34,6 +34,8 @@ pub mod avatar_small;
 pub mod banner_revealed;
 pub mod banner_with_button;
 pub mod carousel_default;
+pub mod carousel_natural_pages;
+pub mod carousel_vertical;
 pub mod clamp_default;
 pub mod status_page_default;
 pub mod status_page_no_icon;
