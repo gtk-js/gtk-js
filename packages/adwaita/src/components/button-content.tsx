@@ -10,6 +10,8 @@ export interface AdwButtonContentProps extends HTMLAttributes<HTMLDivElement> {
   useUnderline?: boolean;
   /** Whether the label can ellipsize. Default: false. */
   canShrink?: boolean;
+  /** Whether the content is insensitive (GtkWidget:sensitive is false), as in an insensitive button. Default: false. */
+  disabled?: boolean;
 }
 
 /**
@@ -25,25 +27,36 @@ export interface AdwButtonContentProps extends HTMLAttributes<HTMLDivElement> {
  */
 export const AdwButtonContent = forwardRef<HTMLDivElement, AdwButtonContentProps>(
   function AdwButtonContent(
-    { label, iconName, useUnderline = false, canShrink = false, className, ...rest },
+    {
+      label,
+      iconName,
+      useUnderline = false,
+      canShrink = false,
+      disabled = false,
+      className,
+      ...rest
+    },
     ref,
   ) {
     const Icon = useIcon(iconName ?? "");
+    // GTK makes the children of an insensitive widget insensitive too.
+    const insensitive = disabled || undefined;
 
     const classes = ["gtk-buttoncontent", "gtk-bin-layout"];
     if (className) classes.push(className);
 
     return (
-      <div ref={ref} className={classes.join(" ")} {...rest}>
-        <div className="gtk-box gtk-box-layout horizontal">
+      <div ref={ref} className={classes.join(" ")} data-disabled={insensitive} {...rest}>
+        <div className="gtk-box gtk-box-layout horizontal" data-disabled={insensitive}>
           {Icon && (
-            <span className="gtk-image">
+            <span className="gtk-image" data-disabled={insensitive}>
               <Icon size={16} />
             </span>
           )}
           {label && (
             <span
               className="gtk-label"
+              data-disabled={insensitive}
               style={{
                 fontWeight: "bold",
                 ...(canShrink

@@ -52,6 +52,22 @@
   flex: 1;
 }
 
+/* A homogeneous AdwToggleGroup puts its toggles in a GtkSizeGroup
+ * (adw_toggle_group_set_homogeneous()): each is as large as the largest one,
+ * and they share any extra space equally. Equal fr tracks do both; the
+ * separators between them keep their own size. */
+.gtk-toggle-group[data-homogeneous] {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 1fr auto;
+}
+
+.gtk-toggle-group[data-homogeneous].vertical {
+  grid-auto-flow: row;
+  grid-auto-columns: auto;
+  grid-auto-rows: 1fr auto;
+}
+
 /* GtkWidget:hexpand / vexpand: the children that expand share the box's extra
  * space equally (gtk_box_layout_allocate()). Whether a child expands is
  * computed up the widget tree like gtk_widget_compute_expand() does it (see

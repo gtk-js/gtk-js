@@ -179,6 +179,8 @@ pub mod text_view_monospace;
 pub mod text_view_non_editable;
 pub mod text_view_scrolled;
 pub mod toggle_disabled;
+pub mod toggle_group_can_shrink;
+pub mod toggle_group_fill;
 pub mod toggle_group_homogeneous;
 pub mod toggle_group_icon;
 pub mod toggle_group_text_default;

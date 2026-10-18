@@ -888,8 +888,8 @@ const cases: Record<string, () => React.ReactElement> = {
     <AdwToggleGroup
       active={0}
       toggles={[
-        { name: "list", iconName: "view-list-symbolic" },
-        { name: "grid", iconName: "view-grid-symbolic" },
+        { name: "list", iconName: "ViewList" },
+        { name: "grid", iconName: "ViewGrid" },
       ]}
       data-testid="target"
     />
@@ -898,6 +898,7 @@ const cases: Record<string, () => React.ReactElement> = {
     <AdwToggleGroup
       active={1}
       homogeneous
+      canShrink={false}
       toggles={[
         { name: "a", label: "Short" },
         { name: "b", label: "Medium Text" },
@@ -905,6 +906,31 @@ const cases: Record<string, () => React.ReactElement> = {
       ]}
       data-testid="target"
     />
+  ),
+  "toggle-group-fill": () => (
+    <div style={{ width: 300 }}>
+      <AdwToggleGroup
+        active={1}
+        toggles={[
+          { name: "list", label: "List" },
+          { name: "grid", label: "Grid" },
+          { name: "compact", label: "Compact" },
+        ]}
+        data-testid="target"
+      />
+    </div>
+  ),
+  "toggle-group-can-shrink": () => (
+    <div style={{ width: 120 }}>
+      <AdwToggleGroup
+        active={0}
+        toggles={[
+          { name: "overview", label: "Overview" },
+          { name: "statistics", label: "Statistics" },
+        ]}
+        data-testid="target"
+      />
+    </div>
   ),
 
   // AdwActionRow cases
