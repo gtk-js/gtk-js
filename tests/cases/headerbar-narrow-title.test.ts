@@ -55,7 +55,10 @@ gtkTest("headerbar-narrow-title", (native, web) => {
   gtkAssert.numbersClose(
     place(native, (node) => node.css_name === "windowtitle").width,
     place(web, (node) => node.css_name === "windowtitle").width,
-    { tolerance: 1, reason: "the buttons' glyph widths" },
+    {
+      tolerance: 4,
+      reason: "the side buttons' label widths (Firefox lays them out ~3px wider); the bug was 12px",
+    },
     "title width",
   );
 });
