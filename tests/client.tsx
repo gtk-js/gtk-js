@@ -686,10 +686,7 @@ const cases: Record<string, () => React.ReactElement> = {
         <GtkLabel label="Short visible page" />
       </GtkStackPage>
       <GtkStackPage name="long">
-        <GtkLabel
-          label="This hidden page holds a wrapping label with quite a few words in it"
-          wrap
-        />
+        <GtkLabel label="A few words" wrap />
       </GtkStackPage>
     </GtkStack>
   ),

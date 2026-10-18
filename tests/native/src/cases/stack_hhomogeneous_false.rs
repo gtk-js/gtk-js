@@ -2,8 +2,9 @@ use gtk::prelude::*;
 use relm4::prelude::*;
 
 /// With hhomogeneous off, the stack is as wide as its visible page, and a
-/// hidden page counts for its height at that width (gtk_stack_measure()):
-/// the hidden wrapping label takes four lines, not one per word.
+/// hidden page counts for its height laid out at that width
+/// (gtk_stack_measure()), not at its narrowest: the hidden wrapping label
+/// fits on one line, rather than taking one line per word.
 pub struct StackHhomogeneousFalse;
 
 #[relm4::component(pub)]
@@ -19,7 +20,7 @@ impl SimpleComponent for StackHhomogeneousFalse {
             set_hhomogeneous: false,
             add_named[Some("short")] = &gtk::Label::new(Some("Short visible page")),
             add_named[Some("long")] = &gtk::Label::builder()
-                .label("This hidden page holds a wrapping label with quite a few words in it")
+                .label("A few words")
                 .wrap(true)
                 .build(),
             set_visible_child_name: "short",

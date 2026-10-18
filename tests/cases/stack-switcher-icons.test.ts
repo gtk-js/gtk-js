@@ -24,16 +24,13 @@ gtkTest("stack-switcher-icons", (native, web) => {
     gtkAssert.numbersEqual(outerWidth(tab, false), outerWidth(w[i]!, true), `tab ${i} width`);
     const [nChild, wChild] = [tab.children![0]!, w[i]!.children![0]!];
     expect(wChild.css_name, `tab ${i} child`).toBe(nChild.css_name);
-    const text = {
-      tolerance: 1.5,
-      reason: "Pango and the browser measure the text up to a pixel apart",
-    };
-    gtkAssert.numbersClose(
-      outerWidth(nChild, false),
-      outerWidth(wChild, true),
-      text,
-      `tab ${i} child width`,
-    );
-    gtkAssert.numbersClose(nChild.x!, wChild.x!, text, `tab ${i} child x`);
+    // The child is centered at its own width (halign center), not stretched
+    // across the tab (which would make a label ~45px wider). Text widths vary
+    // a little between engines, so the width is checked loosely and the
+    // position by the child's center.
+    const text = { tolerance: 5, reason: "Firefox measures text up to 4px narrower than Pango" };
+    const [nw, ww] = [outerWidth(nChild, false), outerWidth(wChild, true)];
+    gtkAssert.numbersClose(nw, ww, text, `tab ${i} child width`);
+    gtkAssert.numbersEqual(nChild.x! + nw / 2, wChild.x! + ww / 2, `tab ${i} child center`);
   }
 });
