@@ -89,6 +89,7 @@ pub mod entry_disabled;
 pub mod entry_flat;
 pub mod entry_placeholder;
 pub mod entry_primary_icon;
+pub mod entry_progress;
 pub mod expander_default;
 pub mod expander_expanded;
 pub mod flow_box_default;

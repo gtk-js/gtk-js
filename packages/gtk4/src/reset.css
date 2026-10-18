@@ -86,6 +86,13 @@ body:has(> :first-child:has([data-gtk-provider])) > :first-child {
   line-height: round(up, 1lh, 1px);
 }
 
+/* GtkText's placeholder is a plain label (gtk_text_set_placeholder_text()):
+   the text's color, unless the theme dims it. */
+:where([data-gtk-provider] .gtk-text)::placeholder {
+  color: inherit;
+  opacity: 1;
+}
+
 /* Re-enable text selection for editable widgets */
 :where([data-gtk-provider] .gtk-text),
 :where([data-gtk-provider] input),
@@ -218,15 +225,34 @@ body:has(> :first-child:has([data-gtk-provider])) > :first-child {
 
 /* GtkEntry / GtkSearchEntry: the entry's custom size_allocate lays out children
    (image.left, text, image.right) horizontally at the full widget height.
-   We replicate this with flexbox. The text node (input) fills remaining width. */
+   We replicate this with flexbox. The text node (input) fills remaining width;
+   its natural width is GtkText's NAT_ENTRY_WIDTH (gtk_text_measure()). */
 :where([data-gtk-provider] .gtk-entry) {
   display: flex;
-  align-items: center;
+  position: relative;
 }
 
 :where([data-gtk-provider] .gtk-entry > .gtk-text) {
   flex: 1;
   min-width: 0;
+  width: 150px;
+}
+
+/* GtkEntry's progress spans its content box at the bottom, under the text
+   (gtk_entry_size_allocate()); the entry's padding insets it to it. */
+:where([data-gtk-provider] .gtk-entry > .gtk-progress) {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding-right: inherit;
+  padding-bottom: inherit;
+  padding-left: inherit;
+}
+
+/* An insensitive entry's icons aren't picked: no hover, press or icon-press. */
+:where([data-gtk-provider] .gtk-entry[data-disabled] > .gtk-image) {
+  pointer-events: none;
 }
 
 /* GtkScrolledWindow — style the browser scrollbar to match Adwaita's overlay

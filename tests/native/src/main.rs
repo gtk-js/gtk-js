@@ -140,6 +140,7 @@ enum Command {
     EntryFlat,
     EntryPlaceholder,
     EntryPrimaryIcon,
+    EntryProgress,
     ImageDefault,
     ImageNormalIcons,
     ImageLargeIcons,
@@ -381,6 +382,7 @@ impl Command {
             Self::EntryFlat => Some("entry-flat"),
             Self::EntryPlaceholder => Some("entry-placeholder"),
             Self::EntryPrimaryIcon => Some("entry-primary-icon"),
+            Self::EntryProgress => Some("entry-progress"),
             Self::ImageDefault => Some("image-default"),
             Self::ImageNormalIcons => Some("image-normal-icons"),
             Self::ImageLargeIcons => Some("image-large-icons"),
@@ -754,6 +756,7 @@ fn create_widget_for_case(name: &str) -> Option<(gtk::Widget, bool)> {
         "entry-flat" => widget_case!(cases::entry_flat::EntryFlat, false),
         "entry-placeholder" => widget_case!(cases::entry_placeholder::EntryPlaceholder, false),
         "entry-primary-icon" => widget_case!(cases::entry_primary_icon::EntryPrimaryIcon, false),
+        "entry-progress" => widget_case!(cases::entry_progress::EntryProgress, false),
         "image-default" => widget_case!(cases::image_default::ImageDefault, false),
         "image-normal-icons" => widget_case!(cases::image_normal_icons::ImageNormalIcons, false),
         "image-large-icons" => widget_case!(cases::image_large_icons::ImageLargeIcons, false),
@@ -1109,6 +1112,7 @@ fn is_known_case(name: &str) -> bool {
             | "entry-flat"
             | "entry-placeholder"
             | "entry-primary-icon"
+            | "entry-progress"
             | "image-default"
             | "image-normal-icons"
             | "image-large-icons"
