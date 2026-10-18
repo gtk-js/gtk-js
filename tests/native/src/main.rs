@@ -149,6 +149,7 @@ enum Command {
     LabelDefault,
     LabelWrapWord,
     LabelWrapChar,
+    LabelWrapHeights,
     LabelEllipsize,
     LabelHeights,
     LabelJustifyCenter,
@@ -389,6 +390,7 @@ impl Command {
             Self::LabelDefault => Some("label-default"),
             Self::LabelWrapWord => Some("label-wrap-word"),
             Self::LabelWrapChar => Some("label-wrap-char"),
+            Self::LabelWrapHeights => Some("label-wrap-heights"),
             Self::LabelEllipsize => Some("label-ellipsize"),
             Self::LabelHeights => Some("label-heights"),
             Self::LabelJustifyCenter => Some("label-justify-center"),
@@ -762,6 +764,7 @@ fn create_widget_for_case(name: &str) -> Option<(gtk::Widget, bool)> {
         "label-default" => widget_case!(cases::label_default::LabelDefault, false),
         "label-wrap-word" => widget_case!(cases::label_wrap_word::LabelWrapWord, false),
         "label-wrap-char" => widget_case!(cases::label_wrap_char::LabelWrapChar, false),
+        "label-wrap-heights" => widget_case!(cases::label_wrap_heights::LabelWrapHeights, false),
         "label-ellipsize" => widget_case!(cases::label_ellipsize::LabelEllipsize, false),
         "label-heights" => widget_case!(cases::label_heights::LabelHeights, false),
         "label-justify-center" => {
@@ -1117,6 +1120,7 @@ fn is_known_case(name: &str) -> bool {
             | "label-default"
             | "label-wrap-word"
             | "label-wrap-char"
+            | "label-wrap-heights"
             | "label-ellipsize"
             | "label-heights"
             | "label-justify-center"

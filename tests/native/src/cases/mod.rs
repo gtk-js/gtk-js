@@ -110,6 +110,7 @@ pub mod label_heights;
 pub mod label_justify_center;
 pub mod label_width_chars;
 pub mod label_wrap_char;
+pub mod label_wrap_heights;
 pub mod label_wrap_word;
 pub mod label_xalign;
 pub mod levelbar_continuous_default;

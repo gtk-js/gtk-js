@@ -101,7 +101,13 @@ export const GtkLabel = forwardRef<HTMLSpanElement, GtkLabelProps>(function GtkL
   // Pango keeps every space and line break of the text: "pre" rather than the
   // collapsing "nowrap".
   if (!wrap) cssStyle.whiteSpace = "pre";
-  else Object.assign(cssStyle, wrapStyle(wrapMode));
+  else {
+    Object.assign(cssStyle, wrapStyle(wrapMode));
+    // GTK sizes a label in whole pixels (gtk_label_measure() takes the
+    // layout's pixel size): several lines of 20.5px make a 42px label, not a
+    // 41px one that leaves what follows on a fractional pixel.
+    cssStyle.height ??= WRAPPING_HEIGHT;
+  }
 
   // `lines` only limits a wrapping, ellipsizing label, which wraps up to that
   // many lines. Otherwise an ellipsized paragraph is one line (Pango's default
@@ -147,6 +153,9 @@ export const GtkLabel = forwardRef<HTMLSpanElement, GtkLabelProps>(function GtkL
 function flexAlign(align: number): "flex-start" | "center" | "flex-end" {
   return align < 0.25 ? "flex-start" : align > 0.75 ? "flex-end" : "center";
 }
+
+/** A wrapping label's height: its text's, rounded up to whole pixels. */
+const WRAPPING_HEIGHT = "calc-size(auto, round(up, size, 1px))";
 
 const ELLIPSIS_STYLE: React.CSSProperties = {
   display: "block",

@@ -272,6 +272,30 @@ const cases: Record<string, () => React.ReactElement> = {
       data-testid="target"
     />
   ),
+  "label-wrap-heights": () => (
+    <GtkBox
+      orientation="vertical"
+      halign="start"
+      valign="start"
+      style={{ width: 200 }}
+      data-testid="target"
+    >
+      <GtkLabel
+        label="Typeset is an app that doesn’t exist."
+        wrap
+        wrapMode="word-char"
+        xalign={0}
+        className="body"
+      />
+      <GtkLabel
+        label="Two lines of the default font in a wrapping label."
+        wrap
+        wrapMode="word-char"
+        xalign={0}
+      />
+      <GtkLabel label="After" xalign={0} />
+    </GtkBox>
+  ),
   "label-ellipsize": () => (
     <GtkLabel
       label="This is a very long label that should be ellipsized"
