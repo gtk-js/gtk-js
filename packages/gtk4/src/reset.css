@@ -175,9 +175,25 @@ body:has(> :first-child:has([data-gtk-provider])) > :first-child {
   justify-content: center;
 }
 
+/* So does the arrow next to a menu button's label, icon or child, which its box
+   stretches to the box's height (gtk_menu_button_set_label()). */
+:where([data-gtk-provider] .gtk-menubutton .gtk-box > .gtk-arrow) {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
 /* GtkImage is a widget with intrinsic sizing — needs a proper box model. Given
    more room than its icon, it draws the icon centered (gtk_image_snapshot()). */
 :where([data-gtk-provider] .gtk-image) {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* A button's arrow, a GtkBuiltinIcon like a menu button's, draws its icon
+   centered in its allocation too (gtk_builtin_icon_snapshot()). */
+:where([data-gtk-provider] .gtk-button > .gtk-arrow) {
   display: inline-flex;
   align-items: center;
   justify-content: center;

@@ -109,11 +109,16 @@ export const GtkLabel = forwardRef<HTMLSpanElement, GtkLabelProps>(function GtkL
   const lineLimit = wrap && ellipsize !== "none" && lines > 0;
   // The label is a flex container (so it can center its text vertically) and
   // text-overflow doesn't apply to flex containers: an ellipsizing label puts
-  // its text in a block that can shrink and draw the ellipsis.
+  // its text in a block that can shrink and draw the ellipsis. Its minimum
+  // width isn't the text's (gtk_label_measure()), so whatever it's in can
+  // shrink it: the label is a grid whose track goes from nothing up to the
+  // text instead.
   const ellipsizing = ellipsize !== "none" && !lineLimit;
   if (ellipsizing) {
     cssStyle.overflow = "hidden";
     cssStyle.whiteSpace = "pre";
+    cssStyle.display = "inline-grid";
+    cssStyle.gridTemplateColumns = "minmax(0, max-content)";
   }
 
   if (widthChars > 0) {

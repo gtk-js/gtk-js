@@ -172,6 +172,10 @@ enum Command {
     MenuButtonFlat,
     MenuButtonCircular,
     MenuButtonDisabled,
+    MenuButtonAlwaysShowArrow,
+    MenuButtonCircularBox,
+    MenuButtonDirectionNone,
+    MenuButtonLabelUp,
     PopoverDefault,
     PasswordEntryDefault,
     PasswordEntryDisabled,
@@ -412,6 +416,10 @@ impl Command {
             Self::MenuButtonFlat => Some("menu-button-flat"),
             Self::MenuButtonCircular => Some("menu-button-circular"),
             Self::MenuButtonDisabled => Some("menu-button-disabled"),
+            Self::MenuButtonAlwaysShowArrow => Some("menu-button-always-show-arrow"),
+            Self::MenuButtonCircularBox => Some("menu-button-circular-box"),
+            Self::MenuButtonDirectionNone => Some("menu-button-direction-none"),
+            Self::MenuButtonLabelUp => Some("menu-button-label-up"),
             Self::PopoverDefault => Some("popover-default"),
             Self::PasswordEntryDefault => Some("password-entry-default"),
             Self::PasswordEntryDisabled => Some("password-entry-disabled"),
@@ -817,6 +825,18 @@ fn create_widget_for_case(name: &str) -> Option<(gtk::Widget, bool)> {
         "menu-button-disabled" => {
             widget_case!(cases::menu_button_disabled::MenuButtonDisabled, true)
         }
+        "menu-button-always-show-arrow" => {
+            widget_case!(cases::menu_button_always_show_arrow::MenuButtonAlwaysShowArrow, false)
+        }
+        "menu-button-circular-box" => {
+            widget_case!(cases::menu_button_circular_box::MenuButtonCircularBox, false)
+        }
+        "menu-button-direction-none" => {
+            widget_case!(cases::menu_button_direction_none::MenuButtonDirectionNone, false)
+        }
+        "menu-button-label-up" => {
+            widget_case!(cases::menu_button_label_up::MenuButtonLabelUp, false)
+        }
         "password-entry-default" => {
             widget_case!(cases::password_entry_default::PasswordEntryDefault, false)
         }
@@ -1137,6 +1157,10 @@ fn is_known_case(name: &str) -> bool {
             | "menu-button-flat"
             | "menu-button-circular"
             | "menu-button-disabled"
+            | "menu-button-always-show-arrow"
+            | "menu-button-circular-box"
+            | "menu-button-direction-none"
+            | "menu-button-label-up"
             | "password-entry-default"
             | "password-entry-disabled"
             | "password-entry-peek-icon"
