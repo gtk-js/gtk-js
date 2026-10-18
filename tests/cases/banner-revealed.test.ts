@@ -54,9 +54,11 @@ gtkTest("banner-revealed", (native, web) => {
 
   const nativeTitle = findChild(nativeWidget, "label");
   const webTitle = findChild(webWidget, "label");
-  const rounding = { tolerance: 1, reason: "Pango rounds label widths up" };
-  gtkAssert.numbersClose(nativeTitle.width, webTitle.width, rounding, "title width");
-  gtkAssert.numbersClose(nativeTitle.x!, webTitle.x!, rounding, "title x");
+  // Pango rounds label widths up; Firefox's bold text is also up to ~4.7px narrower.
+  const textWidth = { tolerance: 5, reason: "label text widths (Firefox: up to ~4.7px narrower)" };
+  const textX = { tolerance: 3, reason: "a centered title moves by half its width difference" };
+  gtkAssert.numbersClose(nativeTitle.width, webTitle.width, textWidth, "title width");
+  gtkAssert.numbersClose(nativeTitle.x!, webTitle.x!, textX, "title x");
   gtkAssert.numbersEqual(nativeTitle.y!, webTitle.y!, "title y");
   gtkAssert.numbersEqual(nativeTitle.height, webTitle.height, "title height");
 });
