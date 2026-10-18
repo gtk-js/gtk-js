@@ -11,7 +11,7 @@ gtkTest("split-button-open", (native, web) => {
   gtkAssert.numbersClose(
     native.width,
     web.width,
-    { tolerance: 1, reason: "web label widths are fractional" },
+    { tolerance: 2, reason: "web label widths are fractional (Firefox: up to ~1.6px narrower)" },
     "width",
   );
   gtkAssert.numbersEqual(native.height, web.height, "height");

@@ -10,7 +10,7 @@ gtkTest("button-content-button", (native, web) => {
   gtkAssert.numbersClose(
     findChild(native, "box").x!,
     findChild(web, "box").x!,
-    { tolerance: 1, reason: "web label widths are fractional" },
+    { tolerance: 2, reason: "web label widths are fractional (Firefox: up to ~1.6px narrower)" },
     "box x",
   );
 });
