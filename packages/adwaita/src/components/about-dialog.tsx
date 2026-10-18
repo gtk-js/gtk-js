@@ -4,7 +4,6 @@ import {
   GtkImage,
   GtkScrolledWindow,
   GtkWindowTitle,
-  tooltipAttrs,
   useIcon,
   WindowControlsContext,
 } from "@gtk-js/gtk4";
@@ -557,7 +556,7 @@ export const AdwAboutDialog = forwardRef<HTMLDivElement, AdwAboutDialogProps>(
                   type="button"
                   className="gtk-button app-version"
                   style={{ alignSelf: "center" }}
-                  {...tooltipAttrs(copied ? "Copied to clipboard" : "Copy version")}
+                  title={copied ? "Copied to clipboard" : "Copy version"}
                   onClick={() => {
                     void navigator.clipboard?.writeText(version);
                     setCopied(true);
