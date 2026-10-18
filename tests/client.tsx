@@ -719,6 +719,13 @@ const cases: Record<string, () => React.ReactElement> = {
   ),
 
   // GtkListBox cases
+  "listbox-bare-labels": () => (
+    <GtkListBox selectionMode="none" data-testid="target">
+      <GtkLabel label="Row 1" />
+      <GtkLabel label="Row 2" />
+      <GtkLabel label="Row 3" />
+    </GtkListBox>
+  ),
   "listbox-default": () => (
     <GtkListBox selectionMode="none" data-testid="target">
       <GtkListBoxRow>
@@ -729,6 +736,19 @@ const cases: Record<string, () => React.ReactElement> = {
       </GtkListBoxRow>
       <GtkListBoxRow>
         <GtkLabel label="Row 3" />
+      </GtkListBoxRow>
+    </GtkListBox>
+  ),
+  "listbox-selection": () => (
+    <GtkListBox selectedRows={[2]} data-testid="target">
+      <GtkListBoxRow activatable={false}>
+        <GtkLabel label="Selectable" />
+      </GtkListBoxRow>
+      <GtkListBoxRow activatable={false} selectable={false}>
+        <GtkLabel label="Neither" />
+      </GtkListBoxRow>
+      <GtkListBoxRow>
+        <GtkLabel label="Selected" />
       </GtkListBoxRow>
     </GtkListBox>
   ),
