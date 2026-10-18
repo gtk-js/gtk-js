@@ -5,6 +5,7 @@ import React, {
   useCallback,
   useState,
 } from "react";
+import { useIcon } from "../icon-context.tsx";
 import { alignAttrs, type GtkAlignProps } from "../types.ts";
 
 export interface GtkToggleButtonProps
@@ -63,6 +64,7 @@ export const GtkToggleButton = forwardRef<HTMLButtonElement, GtkToggleButtonProp
     const active = isControlled ? controlledActive : internalActive;
     const [keyboardActivating, setKeyboardActivating] = useState(false);
 
+    const Icon = useIcon(iconName ?? "");
     const hasCustomChild = children != null;
     const hasLabel = !hasCustomChild && label != null;
     const hasIcon = !hasCustomChild && iconName != null;
@@ -118,7 +120,12 @@ export const GtkToggleButton = forwardRef<HTMLButtonElement, GtkToggleButtonProp
           children
         ) : (
           <>
-            {hasIcon && <span className="gtk-image" />}
+            {/* A GtkButton's image, as gtk_button_set_icon_name() makes it. */}
+            {hasIcon && (
+              <span className="gtk-image" data-valign="center">
+                {Icon && <Icon size={16} />}
+              </span>
+            )}
             {hasLabel && <span className="gtk-label">{label}</span>}
           </>
         )}
