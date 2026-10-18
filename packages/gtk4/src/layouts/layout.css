@@ -171,6 +171,16 @@
   align-self: center;
 }
 
+/* === AdwClamp === */
+/* adw_clamp_layout_allocate() centers the child at (size - child size) / 2,
+ * an integer division: AdwClamp gives an odd leftover pixel to this spacer,
+ * after the child (to its right, also in RTL), instead of splitting it. */
+.gtk-clamp::after {
+  content: "";
+  flex: 0 0 var(--gtk-clamp-remainder, 0px);
+  order: var(--gtk-clamp-remainder-order, 0);
+}
+
 /* === GtkActionBar ===
  * GtkActionBar defaults to halign=GTK_ALIGN_FILL in native GTK, meaning it
  * always fills the full width allocated by its parent. On the web we must

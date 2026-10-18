@@ -70,7 +70,7 @@ import {
   GtkToggleButton,
   GtkWindowTitle,
 } from "@gtk-js/adwaita";
-import { Fragment, type ReactElement, useLayoutEffect, useRef } from "react";
+import { Fragment, type ReactElement, useLayoutEffect, useRef, useState } from "react";
 import { createRoot } from "react-dom/client";
 
 const caseName = window.location.pathname.slice(1);
@@ -90,6 +90,33 @@ function textViewTarget(el: HTMLTextAreaElement | null) {
 /** An app component that renders a row, which AdwPreferencesGroup can't tell from its type. */
 function WrappedActionRow(props: { title: string; subtitle?: string }) {
   return <AdwActionRow {...props} />;
+}
+
+/** A breakpoint bin with a ref, whose breakpoints set its opacity like GtkWidget:opacity setters. */
+function BreakpointConditions() {
+  const ref = useRef<HTMLDivElement>(null);
+  const [opacity, setOpacity] = useState(1);
+  return (
+    <AdwBreakpointBin
+      ref={ref}
+      style={{ width: "450px", height: "100px", opacity }}
+      breakpoints={[
+        {
+          condition: { condition: "max-width: 400pt" },
+          onApply: () => setOpacity(0.5),
+          onUnapply: () => setOpacity(1),
+        },
+        {
+          condition: { condition: "(max-width: 300px) and (max-height: 100px)" },
+          onApply: () => setOpacity(0.2),
+          onUnapply: () => setOpacity(1),
+        },
+      ]}
+      data-testid="target"
+    >
+      <GtkLabel label="Breakpoint content" />
+    </AdwBreakpointBin>
+  );
 }
 
 /** Fixes its child's height when it mounts, like AdwDialog fixing its natural size when presented. */
@@ -817,6 +844,11 @@ const cases: Record<string, () => React.ReactElement> = {
   ),
 
   // AdwClamp cases
+  "clamp-child-min": () => (
+    <AdwClamp maximumSize={300} style={{ width: "801px" }} data-testid="target">
+      <GtkBox style={{ minWidth: "462px", minHeight: "20px" }} />
+    </AdwClamp>
+  ),
   "clamp-default": () => (
     <AdwClamp maximumSize={600} tighteningThreshold={400} data-testid="target">
       <GtkLabel label="Clamped content" />
@@ -1115,6 +1147,7 @@ const cases: Record<string, () => React.ReactElement> = {
   ),
 
   // AdwBreakpointBin cases
+  "adw-breakpoint-bin-conditions": () => <BreakpointConditions />,
   "adw-breakpoint-bin-default": () => (
     <AdwBreakpointBin style={{ width: "200px", height: "100px" }} data-testid="target">
       <GtkLabel label="Breakpoint content" />

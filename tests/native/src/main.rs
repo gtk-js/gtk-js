@@ -41,6 +41,7 @@ enum Command {
     AdwActionRowDefault,
     AdwActionRowWithSubtitle,
     AdwActionRowActivatable,
+    AdwBreakpointBinConditions,
     AdwBreakpointBinDefault,
     AdwComboRowDefault,
     AdwEntryRowDefault,
@@ -73,6 +74,7 @@ enum Command {
     BannerRevealed,
     BannerWithButton,
     CarouselDefault,
+    ClampChildMin,
     ClampDefault,
     StatusPageDefault,
     StatusPageNoIcon,
@@ -276,6 +278,7 @@ impl Command {
             Self::AdwActionRowDefault => Some("adw-action-row-default"),
             Self::AdwActionRowWithSubtitle => Some("adw-action-row-with-subtitle"),
             Self::AdwActionRowActivatable => Some("adw-action-row-activatable"),
+            Self::AdwBreakpointBinConditions => Some("adw-breakpoint-bin-conditions"),
             Self::AdwBreakpointBinDefault => Some("adw-breakpoint-bin-default"),
             Self::AdwComboRowDefault => Some("adw-combo-row-default"),
             Self::AdwEntryRowDefault => Some("adw-entry-row-default"),
@@ -308,6 +311,7 @@ impl Command {
             Self::BannerRevealed => Some("banner-revealed"),
             Self::BannerWithButton => Some("banner-with-button"),
             Self::CarouselDefault => Some("carousel-default"),
+            Self::ClampChildMin => Some("clamp-child-min"),
             Self::ClampDefault => Some("clamp-default"),
             Self::StatusPageDefault => Some("status-page-default"),
             Self::StatusPageNoIcon => Some("status-page-no-icon"),
@@ -488,6 +492,9 @@ fn create_widget_for_case(name: &str) -> Option<(gtk::Widget, bool)> {
         "adw-action-row-activatable" => {
             widget_case!(cases::adw_action_row_activatable::AdwActionRowActivatable, false)
         }
+        "adw-breakpoint-bin-conditions" => {
+            widget_case!(cases::adw_breakpoint_bin_conditions::AdwBreakpointBinConditions, false)
+        }
         "adw-breakpoint-bin-default" => {
             widget_case!(cases::adw_breakpoint_bin_default::AdwBreakpointBinDefault, false)
         }
@@ -574,6 +581,7 @@ fn create_widget_for_case(name: &str) -> Option<(gtk::Widget, bool)> {
             widget_case!(cases::banner_with_button::BannerWithButton, false)
         }
         "carousel-default" => widget_case!(cases::carousel_default::CarouselDefault, false),
+        "clamp-child-min" => widget_case!(cases::clamp_child_min::ClampChildMin, false),
         "clamp-default" => widget_case!(cases::clamp_default::ClampDefault, false),
         "status-page-default" => {
             widget_case!(cases::status_page_default::StatusPageDefault, false)
@@ -1006,6 +1014,7 @@ fn is_known_case(name: &str) -> bool {
             | "adw-action-row-default"
             | "adw-action-row-with-subtitle"
             | "adw-action-row-activatable"
+            | "adw-breakpoint-bin-conditions"
             | "adw-breakpoint-bin-default"
             | "adw-combo-row-default"
             | "adw-entry-row-default"
@@ -1038,6 +1047,7 @@ fn is_known_case(name: &str) -> bool {
             | "banner-revealed"
             | "banner-with-button"
             | "carousel-default"
+            | "clamp-child-min"
             | "clamp-default"
             | "status-page-default"
             | "status-page-no-icon"
