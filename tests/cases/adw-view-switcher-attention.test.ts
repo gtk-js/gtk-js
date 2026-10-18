@@ -40,7 +40,12 @@ gtkTest("adw-view-switcher-attention", (native, web) => {
         { tolerance: 1, reason: "CI's native libadwaita build places the mask 1px further left" },
         `button ${i} ${part} x`,
       );
-      gtkAssert.numbersEqual(np.y!, wp.y!, `button ${i} ${part} y`);
+      gtkAssert.numbersClose(
+        np.y!,
+        wp.y!,
+        { tolerance: 1, reason: "CI's native libadwaita places the mask 1px further up" },
+        `button ${i} ${part} y`,
+      );
       gtkAssert.numbersEqual(np.height, contentSize(wp).height, `button ${i} ${part} height`);
     }
   }
