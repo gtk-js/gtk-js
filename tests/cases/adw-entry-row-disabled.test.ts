@@ -19,8 +19,8 @@ gtkTest("adw-entry-row-disabled", (native, web) => {
   const { failures } = compare(native, web);
   expect(failures.filter((f) => f.property !== "opacity")).toEqual([]);
   expect(findChild(web, "text").opacity).toBeCloseTo(findChild(native, "text").opacity, 2);
-  expect(withClass(web, "edit-icon").opacity).toBeCloseTo(
-    withClass(native, "edit-icon").opacity,
-    2,
-  );
+  // `.edit-icon:disabled { opacity: $strong_disabled_opacity }` (30%) in
+  // libadwaita 1.8's _lists.scss; CI's older native libadwaita reports 0.8, so
+  // this checks the theme's value rather than the native snapshot.
+  expect(withClass(web, "edit-icon").opacity).toBeCloseTo(0.3, 2);
 });
