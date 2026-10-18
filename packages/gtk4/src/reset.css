@@ -106,6 +106,12 @@ body:has(> :first-child:has([data-gtk-provider])) > :first-child {
   outline: none;
 }
 
+/* A notebook takes the focus for its tabs; the theme draws the ring on the
+   current tab. */
+:where([data-gtk-provider] .gtk-notebook) {
+  outline: none;
+}
+
 :where([data-gtk-provider] input),
 :where([data-gtk-provider] textarea),
 :where([data-gtk-provider] select) {

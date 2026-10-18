@@ -192,6 +192,71 @@
   grid-area: 1 / 1;
 }
 
+/* === GtkNotebook === */
+/* A BoxLayout of the header (a GtkBox) and the stack, which expands
+   (gtk_notebook_init()). The stack holds every page, each in a wrapper that
+   leaves the page itself in the stack's cell; only the current one shows. */
+.gtk-notebook > .gtk-stack {
+  flex: 1 1 auto;
+}
+
+.gtk-notebook > .gtk-stack > * {
+  display: contents;
+}
+
+.gtk-notebook > .gtk-stack > * > * {
+  grid-area: 1 / 1;
+}
+
+.gtk-notebook > .gtk-stack > :not([data-current]) {
+  visibility: hidden;
+}
+
+/* The tabs gizmo lays the tabs out in a row, or a column for side tabs, at
+   their natural size (gtk_notebook_allocate_tabs()); a tab gives its label
+   all its space (allocate_tab()), and the label centers itself. */
+.gtk-notebook > .gtk-header > .gtk-tabs {
+  display: flex;
+}
+
+.gtk-notebook > .gtk-header.vertical > .gtk-tabs {
+  flex-direction: column;
+}
+
+.gtk-notebook > .gtk-header > .gtk-tabs > * {
+  flex: none;
+}
+
+.gtk-notebook > .gtk-header > .gtk-tabs > .gtk-tab {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* A dragged tab is drawn over the others (gtk_notebook_snapshot_tabs()). */
+.gtk-notebook > .gtk-header > .gtk-tabs > .gtk-tab.dnd {
+  z-index: 1;
+}
+
+/* Scrollable tabs can be smaller than all the tabs: then the arrows show, the
+   tabs that don't fit are hidden, and the shown ones share out the space left
+   (gtk_notebook_calculate_shown_tabs()). */
+.gtk-notebook > .gtk-header > .gtk-tabs[data-scrollable] {
+  position: relative;
+  overflow: clip;
+  min-width: 0;
+  min-height: 0;
+}
+
+.gtk-notebook > .gtk-header > .gtk-tabs[data-arrows] > .gtk-tab {
+  flex: 1 1 auto;
+}
+
+.gtk-notebook > .gtk-header > .gtk-tabs > .gtk-tab[data-child-hidden] {
+  position: absolute;
+  visibility: hidden;
+}
+
 /* === CenterLayout === */
 /* True centering: center child is always centered relative to the full width,
    regardless of start/end sizes. Uses CSS grid with 1fr/auto/1fr columns. */
