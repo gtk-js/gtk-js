@@ -218,6 +218,10 @@ enum Command {
     SwitchOnDefault,
     SwitchOffDisabled,
     SwitchOnDisabled,
+    SwitchOffTitle1,
+    SwitchOnPending,
+    SwitchOnRtl,
+    SwitchOnSmallSlider,
     TextViewDefault,
     TextViewDisabled,
     TextViewMonospace,
@@ -453,6 +457,10 @@ impl Command {
             Self::SwitchOnDefault => Some("switch-on-default"),
             Self::SwitchOffDisabled => Some("switch-off-disabled"),
             Self::SwitchOnDisabled => Some("switch-on-disabled"),
+            Self::SwitchOffTitle1 => Some("switch-off-title-1"),
+            Self::SwitchOnPending => Some("switch-on-pending"),
+            Self::SwitchOnRtl => Some("switch-on-rtl"),
+            Self::SwitchOnSmallSlider => Some("switch-on-small-slider"),
             Self::TextViewDefault => Some("text-view-default"),
             Self::TextViewDisabled => Some("text-view-disabled"),
             Self::TextViewMonospace => Some("text-view-monospace"),
@@ -951,6 +959,12 @@ fn create_widget_for_case(name: &str) -> Option<(gtk::Widget, bool)> {
         "switch-on-default" => widget_case!(cases::switch_on_default::SwitchOnDefault, false),
         "switch-off-disabled" => widget_case!(cases::switch_off_disabled::SwitchOffDisabled, false),
         "switch-on-disabled" => widget_case!(cases::switch_on_disabled::SwitchOnDisabled, false),
+        "switch-off-title-1" => widget_case!(cases::switch_off_title_1::SwitchOffTitle1, true),
+        "switch-on-pending" => widget_case!(cases::switch_on_pending::SwitchOnPending, false),
+        "switch-on-rtl" => widget_case!(cases::switch_on_rtl::SwitchOnRtl, false),
+        "switch-on-small-slider" => {
+            widget_case!(cases::switch_on_small_slider::SwitchOnSmallSlider, false)
+        }
         "text-view-default" => widget_case!(cases::text_view_default::TextViewDefault, false),
         "text-view-disabled" => widget_case!(cases::text_view_disabled::TextViewDisabled, false),
         "text-view-monospace" => widget_case!(cases::text_view_monospace::TextViewMonospace, false),
@@ -1177,6 +1191,10 @@ fn is_known_case(name: &str) -> bool {
             | "switch-on-default"
             | "switch-off-disabled"
             | "switch-on-disabled"
+            | "switch-off-title-1"
+            | "switch-on-pending"
+            | "switch-on-rtl"
+            | "switch-on-small-slider"
             | "text-view-default"
             | "text-view-disabled"
             | "text-view-monospace"

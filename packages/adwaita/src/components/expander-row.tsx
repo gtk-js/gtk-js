@@ -111,6 +111,7 @@ export const AdwExpanderRow = forwardRef<HTMLDivElement, AdwExpanderRowProps>(
                 {showEnableSwitch && (
                   <div
                     className="gtk-switch"
+                    data-active={enableExpansion || undefined}
                     data-checked={enableExpansion || undefined}
                     onClick={(e) => {
                       e.stopPropagation();

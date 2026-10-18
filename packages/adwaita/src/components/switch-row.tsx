@@ -66,6 +66,7 @@ export const AdwSwitchRow = forwardRef<HTMLDivElement, AdwSwitchRowProps>(functi
         <div className="gtk-box suffixes">
           <div
             className="gtk-switch"
+            data-active={active || undefined}
             data-checked={active || undefined}
             style={{ pointerEvents: "none" }}
           >
