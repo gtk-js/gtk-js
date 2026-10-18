@@ -48,6 +48,7 @@ enum Command {
     AdwExpanderRowDefault,
     AdwExpanderRowExpanded,
     AdwHeaderbarDefault,
+    AdwHeaderbarNarrowTitle,
     AdwHeaderbarWithTitle,
     AdwHeaderbarStartEnd,
     AdwNavigationViewDefault,
@@ -98,6 +99,7 @@ enum Command {
     FlowBoxDefault,
     FrameDefault,
     HeaderbarDefault,
+    HeaderbarNarrowTitle,
     HeaderbarStartEnd,
     HeaderbarWithTitle,
     FrameNoLabel,
@@ -283,6 +285,7 @@ impl Command {
             Self::AdwExpanderRowDefault => Some("adw-expander-row-default"),
             Self::AdwExpanderRowExpanded => Some("adw-expander-row-expanded"),
             Self::AdwHeaderbarDefault => Some("adw-headerbar-default"),
+            Self::AdwHeaderbarNarrowTitle => Some("adw-headerbar-narrow-title"),
             Self::AdwHeaderbarWithTitle => Some("adw-headerbar-with-title"),
             Self::AdwHeaderbarStartEnd => Some("adw-headerbar-start-end"),
             Self::AdwNavigationViewDefault => Some("adw-navigation-view-default"),
@@ -339,6 +342,7 @@ impl Command {
             Self::FlowBoxDefault => Some("flow-box-default"),
             Self::FrameDefault => Some("frame-default"),
             Self::HeaderbarDefault => Some("headerbar-default"),
+            Self::HeaderbarNarrowTitle => Some("headerbar-narrow-title"),
             Self::HeaderbarStartEnd => Some("headerbar-start-end"),
             Self::HeaderbarWithTitle => Some("headerbar-with-title"),
             Self::FrameNoLabel => Some("frame-no-label"),
@@ -509,6 +513,9 @@ fn create_widget_for_case(name: &str) -> Option<(gtk::Widget, bool)> {
         "adw-headerbar-default" => {
             widget_case!(cases::adw_headerbar_default::AdwHeaderbarDefault, false)
         }
+        "adw-headerbar-narrow-title" => {
+            widget_case!(cases::adw_headerbar_narrow_title::AdwHeaderbarNarrowTitle, false)
+        }
         "adw-headerbar-with-title" => {
             widget_case!(cases::adw_headerbar_with_title::AdwHeaderbarWithTitle, false)
         }
@@ -639,6 +646,9 @@ fn create_widget_for_case(name: &str) -> Option<(gtk::Widget, bool)> {
         "frame-default" => widget_case!(cases::frame_default::FrameDefault, false),
         "headerbar-default" => {
             widget_case!(cases::headerbar_default::HeaderbarDefault, false)
+        }
+        "headerbar-narrow-title" => {
+            widget_case!(cases::headerbar_narrow_title::HeaderbarNarrowTitle, false)
         }
         "headerbar-start-end" => {
             widget_case!(cases::headerbar_start_end::HeaderbarStartEnd, false)
@@ -1013,6 +1023,7 @@ fn is_known_case(name: &str) -> bool {
             | "adw-expander-row-default"
             | "adw-expander-row-expanded"
             | "adw-headerbar-default"
+            | "adw-headerbar-narrow-title"
             | "adw-headerbar-with-title"
             | "adw-headerbar-start-end"
             | "adw-navigation-view-default"
@@ -1065,6 +1076,7 @@ fn is_known_case(name: &str) -> bool {
             | "frame-default"
             | "frame-no-label"
             | "headerbar-default"
+            | "headerbar-narrow-title"
             | "headerbar-start-end"
             | "headerbar-with-title"
             | "grid-default"
