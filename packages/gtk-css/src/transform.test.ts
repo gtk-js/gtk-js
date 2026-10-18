@@ -63,6 +63,15 @@ describe("remapPseudoClasses", () => {
     expect(out).not.toContain(":checked");
   });
 
+  test(":active → also [data-active], once", async () => {
+    const out = await transform(
+      "splitbutton.flat:active { color: red; } button:not(:active):hover { color: blue; }",
+    );
+    expect(out).toContain(":where(.gtk-splitbutton):not(_).flat:is(:active, [data-active])");
+    expect(out).toContain(":not(:is(:active, [data-active])):hover");
+    expect(out).not.toContain(":is(:is(");
+  });
+
   test(":visited → [data-visited]", async () => {
     const out = await transform(".gtk-button.link:visited { color: blue; }");
     expect(out).toContain(".gtk-button.link[data-visited]");

@@ -270,6 +270,12 @@ const remapPseudoClasses: Plugin = {
     // :visited → [data-visited] (browsers restrict :visited styling; use data attribute)
     sel = sel.replace(/:visited/g, "[data-visited]");
 
+    // :active → also [data-active]: browsers only make an element active while
+    // it or a descendant is pressed, and GTK also sets the state itself (an
+    // AdwSplitButton while one of its buttons is keyboard-activating).
+    // (Idempotent, like :disabled below.)
+    sel = sel.replace(/(?<!:is\():active(?![\w-])/g, ":is(:active, [data-active])");
+
     // :disabled → also [data-disabled]: widgets rendered as <span>/<div> can't
     // be :disabled, while real <button>/<input> elements are (and carry no
     // data attribute), so match either.

@@ -116,6 +116,7 @@ enum Command {
     ButtonTextDestructive,
     ButtonIcon,
     ButtonCircular,
+    ButtonContentButton,
     ButtonContentIconLabel,
     ButtonContentLabelOnly,
     ButtonContentIconOnly,
@@ -214,6 +215,10 @@ enum Command {
     SplitButtonTextDefault,
     SplitButtonIcon,
     SplitButtonFlat,
+    SplitButtonOpen,
+    SplitButtonTall,
+    SplitButtonFill,
+    SplitButtonCanShrink,
     SwitchOffDefault,
     SwitchOnDefault,
     SwitchOffDisabled,
@@ -357,6 +362,7 @@ impl Command {
             Self::ButtonTextDestructive => Some("button-text-destructive"),
             Self::ButtonIcon => Some("button-icon"),
             Self::ButtonCircular => Some("button-circular"),
+            Self::ButtonContentButton => Some("button-content-button"),
             Self::ButtonContentIconLabel => Some("button-content-icon-label"),
             Self::ButtonContentLabelOnly => Some("button-content-label-only"),
             Self::ButtonContentIconOnly => Some("button-content-icon-only"),
@@ -449,6 +455,10 @@ impl Command {
             Self::SplitButtonTextDefault => Some("split-button-text-default"),
             Self::SplitButtonIcon => Some("split-button-icon"),
             Self::SplitButtonFlat => Some("split-button-flat"),
+            Self::SplitButtonOpen => Some("split-button-open"),
+            Self::SplitButtonTall => Some("split-button-tall"),
+            Self::SplitButtonFill => Some("split-button-fill"),
+            Self::SplitButtonCanShrink => Some("split-button-can-shrink"),
             Self::SwitchOffDefault => Some("switch-off-default"),
             Self::SwitchOnDefault => Some("switch-on-default"),
             Self::SwitchOffDisabled => Some("switch-off-disabled"),
@@ -683,6 +693,9 @@ fn create_widget_for_case(name: &str) -> Option<(gtk::Widget, bool)> {
         }
         "button-icon" => widget_case!(cases::button_icon::ButtonIcon, false),
         "button-circular" => widget_case!(cases::button_circular::ButtonCircular, false),
+        "button-content-button" => {
+            widget_case!(cases::button_content_button::ButtonContentButton, false)
+        }
         "button-content-icon-label" => {
             widget_case!(cases::button_content_icon_label::ButtonContentIconLabel, false)
         }
@@ -947,6 +960,18 @@ fn create_widget_for_case(name: &str) -> Option<(gtk::Widget, bool)> {
         "split-button-flat" => {
             widget_case!(cases::split_button_flat::SplitButtonFlat, false)
         }
+        "split-button-open" => {
+            widget_case!(cases::split_button_open::SplitButtonOpen, false)
+        }
+        "split-button-tall" => {
+            widget_case!(cases::split_button_tall::SplitButtonTall, false)
+        }
+        "split-button-fill" => {
+            widget_case!(cases::split_button_fill::SplitButtonFill, true)
+        }
+        "split-button-can-shrink" => {
+            widget_case!(cases::split_button_can_shrink::SplitButtonCanShrink, true)
+        }
         "switch-off-default" => widget_case!(cases::switch_off_default::SwitchOffDefault, false),
         "switch-on-default" => widget_case!(cases::switch_on_default::SwitchOnDefault, false),
         "switch-off-disabled" => widget_case!(cases::switch_off_disabled::SwitchOffDisabled, false),
@@ -1085,6 +1110,7 @@ fn is_known_case(name: &str) -> bool {
             | "button-text-destructive"
             | "button-icon"
             | "button-circular"
+            | "button-content-button"
             | "button-content-icon-label"
             | "button-content-label-only"
             | "button-content-icon-only"
@@ -1173,6 +1199,10 @@ fn is_known_case(name: &str) -> bool {
             | "split-button-text-default"
             | "split-button-icon"
             | "split-button-flat"
+            | "split-button-open"
+            | "split-button-tall"
+            | "split-button-fill"
+            | "split-button-can-shrink"
             | "switch-off-default"
             | "switch-on-default"
             | "switch-off-disabled"

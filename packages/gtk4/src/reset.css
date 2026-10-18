@@ -183,6 +183,14 @@ body:has(> :first-child:has([data-gtk-provider])) > :first-child {
   justify-content: center;
 }
 
+/* A button's arrow, a GtkBuiltinIcon like a menu button's, draws its icon
+   centered in its allocation too (gtk_builtin_icon_snapshot()). */
+:where([data-gtk-provider] .gtk-button > .gtk-arrow) {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
 /* GtkLabel: inline text that vertically centers when stretched by a parent box.
    In native GTK, GtkLabel defaults to valign=CENTER. Widget sizes are whole
    pixels: a line of text is at least one line height rounded up, as in

@@ -55,6 +55,12 @@ export interface GtkMenuButtonProps
   primary?: boolean;
   /** Disables the button. */
   disabled?: boolean;
+  /**
+   * @internal The menu button of an AdwSplitButton: its button has no
+   * .image-button (update_style_classes() in adw-split-button.c), and the
+   * theme draws its arrow.none as pan-down.
+   */
+  splitButton?: boolean;
 }
 
 const arrowIconMap: Record<GtkArrowType, string> = {
@@ -92,6 +98,7 @@ export const GtkMenuButton = forwardRef<HTMLDivElement, GtkMenuButtonProps>(func
     canShrink = false,
     primary = false,
     disabled,
+    splitButton = false,
     halign,
     valign,
     hexpand,
@@ -123,7 +130,9 @@ export const GtkMenuButton = forwardRef<HTMLDivElement, GtkMenuButtonProps>(func
     setOpen(false);
   }, [setOpen]);
 
-  const ArrowIcon = useIcon(arrowIconMap[direction] ?? "PanDown");
+  const ArrowIcon = useIcon(
+    splitButton && direction === "none" ? "PanDown" : (arrowIconMap[direction] ?? "PanDown"),
+  );
   const ContentIcon = useIcon(iconName ?? "");
 
   const hasCustomChild = children != null;
@@ -137,7 +146,7 @@ export const GtkMenuButton = forwardRef<HTMLDivElement, GtkMenuButtonProps>(func
 
   const btnClasses = ["gtk-button", "toggle"];
   if (!hasFrame) btnClasses.push("flat");
-  if (arrowOnly || hasIcon) btnClasses.push("image-button");
+  if ((arrowOnly || hasIcon) && !splitButton) btnClasses.push("image-button");
   if (hasLabel) btnClasses.push("text-button");
   if (showArrow && !arrowOnly) btnClasses.push("arrow-button");
   if (open) btnClasses.push("has-open-popup");
@@ -183,7 +192,8 @@ export const GtkMenuButton = forwardRef<HTMLDivElement, GtkMenuButtonProps>(func
         aria-haspopup="true"
         aria-expanded={open}
         data-checked={open || undefined}
-        disabled={disabled}
+        // Without a popover there's nothing to open (update_sensitivity()).
+        disabled={disabled || !hasPopover}
         onClick={toggle}
       >
         {hasCustomChild ? (
