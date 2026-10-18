@@ -47,6 +47,7 @@ enum Command {
     AdwEntryRowWithText,
     AdwExpanderRowDefault,
     AdwExpanderRowExpanded,
+    AdwExpanderRowWidgets,
     AdwHeaderbarDefault,
     AdwHeaderbarWithTitle,
     AdwHeaderbarStartEnd,
@@ -282,6 +283,7 @@ impl Command {
             Self::AdwEntryRowWithText => Some("adw-entry-row-with-text"),
             Self::AdwExpanderRowDefault => Some("adw-expander-row-default"),
             Self::AdwExpanderRowExpanded => Some("adw-expander-row-expanded"),
+            Self::AdwExpanderRowWidgets => Some("adw-expander-row-widgets"),
             Self::AdwHeaderbarDefault => Some("adw-headerbar-default"),
             Self::AdwHeaderbarWithTitle => Some("adw-headerbar-with-title"),
             Self::AdwHeaderbarStartEnd => Some("adw-headerbar-start-end"),
@@ -505,6 +507,9 @@ fn create_widget_for_case(name: &str) -> Option<(gtk::Widget, bool)> {
         }
         "adw-expander-row-expanded" => {
             widget_case!(cases::adw_expander_row_expanded::AdwExpanderRowExpanded, false)
+        }
+        "adw-expander-row-widgets" => {
+            widget_case!(cases::adw_expander_row_widgets::AdwExpanderRowWidgets, true)
         }
         "adw-headerbar-default" => {
             widget_case!(cases::adw_headerbar_default::AdwHeaderbarDefault, false)
@@ -1012,6 +1017,7 @@ fn is_known_case(name: &str) -> bool {
             | "adw-entry-row-with-text"
             | "adw-expander-row-default"
             | "adw-expander-row-expanded"
+            | "adw-expander-row-widgets"
             | "adw-headerbar-default"
             | "adw-headerbar-with-title"
             | "adw-headerbar-start-end"
