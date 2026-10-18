@@ -181,6 +181,70 @@
   width: 100%;
 }
 
+/* === GtkFlowBox === */
+/* GtkFlowBox lays its children out like gtk_flow_box_size_allocate(): in
+ * aligned columns (rows when vertical) of the sizes it computes
+ * (--gtk-flowbox-tracks), each line as high as its largest child (vertical
+ * lines: --gtk-flowbox-lines), in a flow box sized like its request
+ * (gtk_flow_box_measure()), which containment keeps from depending on the
+ * current layout. Until then (server rendering), the children just wrap. */
+.gtk-flowbox {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.gtk-flowbox.vertical {
+  flex-direction: column;
+}
+
+.gtk-flowbox[data-measured] {
+  display: grid;
+  grid-template-columns: var(--gtk-flowbox-tracks);
+  grid-auto-rows: auto;
+  contain: inline-size;
+  contain-intrinsic-inline-size: var(--gtk-flowbox-natural-size);
+  min-width: var(--gtk-flowbox-minimum-size);
+}
+
+.gtk-flowbox.vertical[data-measured] {
+  grid-auto-flow: column;
+  grid-template-rows: var(--gtk-flowbox-tracks);
+  grid-template-columns: var(--gtk-flowbox-lines);
+  contain: size;
+  contain-intrinsic-size: var(--gtk-flowbox-lines-natural-size) var(--gtk-flowbox-natural-size);
+  min-width: var(--gtk-flowbox-lines-minimum-size);
+  min-height: var(--gtk-flowbox-minimum-size);
+}
+
+/* Homogeneous lines all get the largest one's size. */
+.gtk-flowbox.horizontal[data-measured][data-homogeneous] {
+  grid-auto-rows: 1fr;
+}
+
+.gtk-flowbox > [data-halign="start"] {
+  justify-self: start;
+}
+.gtk-flowbox > [data-halign="end"] {
+  justify-self: end;
+}
+.gtk-flowbox > [data-halign="center"] {
+  justify-self: center;
+}
+.gtk-flowbox > [data-valign="start"] {
+  align-self: start;
+}
+.gtk-flowbox > [data-valign="end"] {
+  align-self: end;
+}
+.gtk-flowbox > [data-valign="center"] {
+  align-self: center;
+}
+
+/* Insensitive children get no pointer input, so no hover either. */
+.gtk-flowbox > .gtk-flowboxchild[data-disabled] {
+  pointer-events: none;
+}
+
 /* === GtkStack === */
 /* All pages share one cell, like gtk_stack_size_allocate(): the visible page,
    and the hidden ones a homogeneous stack is sized by. */

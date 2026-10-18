@@ -102,6 +102,10 @@ function SizedOnMount({ children }: { children: ReactElement }) {
   return <div ref={ref}>{children}</div>;
 }
 
+/** What the flow-box-behavior case's flow boxes report, for its test to read. */
+const flowBoxEvents: string[] = [];
+(window as unknown as { flowBoxEvents: string[] }).flowBoxEvents = flowBoxEvents;
+
 const cases: Record<string, () => React.ReactElement> = {
   // halign/valign alignment cases
   "button-valign-center-hbox": () => (
@@ -582,6 +586,53 @@ const cases: Record<string, () => React.ReactElement> = {
   ),
 
   // GtkFlowBox cases
+  "flow-box-aligned": () => (
+    <GtkFlowBox
+      selectionMode="none"
+      minChildrenPerLine={3}
+      maxChildrenPerLine={3}
+      valign="start"
+      style={{ width: 300 }}
+      data-testid="target"
+    >
+      {["A", "Bravo", "Charlie charlie", "D", "Echo", "Foxtrot", "G"].map((label) => (
+        <GtkFlowBoxChild key={label}>
+          <GtkLabel label={label} />
+        </GtkFlowBoxChild>
+      ))}
+    </GtkFlowBox>
+  ),
+  "flow-box-behavior": () => (
+    <GtkBox orientation="vertical" spacing={12}>
+      <GtkEntry />
+      <GtkFlowBox
+        id="flow-box-single"
+        minChildrenPerLine={3}
+        maxChildrenPerLine={3}
+        onChildActivated={(i) => flowBoxEvents.push(`activated ${i}`)}
+      >
+        {[0, 1, 2, 3, 4, 5].map((i) => (
+          <GtkLabel key={i} label={`C${i}`} />
+        ))}
+      </GtkFlowBox>
+      <GtkFlowBox
+        id="flow-box-multiple"
+        selectionMode="multiple"
+        activateOnSingleClick={false}
+        onChildActivated={(i) => flowBoxEvents.push(`activated ${i}`)}
+        onSelectedChildrenChanged={(s) => flowBoxEvents.push(`selected [${s}]`)}
+      >
+        <GtkLabel label="M0" />
+        <GtkLabel label="M1" />
+        <GtkLabel label="M2" />
+        <GtkLabel label="M3" />
+        <GtkButton label="M4" onClicked={() => flowBoxEvents.push("button clicked")} />
+        <GtkFlowBoxChild disabled>
+          <GtkLabel label="M5" />
+        </GtkFlowBoxChild>
+      </GtkFlowBox>
+    </GtkBox>
+  ),
   "flow-box-default": () => (
     <GtkFlowBox selectionMode="none" data-testid="target">
       <GtkFlowBoxChild>
@@ -595,6 +646,37 @@ const cases: Record<string, () => React.ReactElement> = {
       </GtkFlowBoxChild>
       <GtkFlowBoxChild>
         <GtkLabel label="Four" />
+      </GtkFlowBoxChild>
+    </GtkFlowBox>
+  ),
+  "flow-box-homogeneous": () => (
+    <GtkFlowBox
+      selectionMode="none"
+      homogeneous
+      maxChildrenPerLine={3}
+      columnSpacing={6}
+      rowSpacing={6}
+      valign="start"
+      style={{ width: 300 }}
+      data-testid="target"
+    >
+      {["A", "Bravo", "Charlie charlie", "D", "Echo"].map((label) => (
+        <GtkFlowBoxChild key={label}>
+          <GtkLabel label={label} />
+        </GtkFlowBoxChild>
+      ))}
+    </GtkFlowBox>
+  ),
+  "flow-box-selected": () => (
+    <GtkFlowBox valign="start" halign="start" selectedChildren={[1]} data-testid="target">
+      <GtkFlowBoxChild>
+        <GtkLabel label="One" />
+      </GtkFlowBoxChild>
+      <GtkFlowBoxChild>
+        <GtkLabel label="Two" />
+      </GtkFlowBoxChild>
+      <GtkFlowBoxChild>
+        <GtkLabel label="Three" />
       </GtkFlowBoxChild>
     </GtkFlowBox>
   ),
