@@ -194,8 +194,12 @@ enum Command {
     ScaleDefault,
     ScrolledWindowDefault,
     ScrolledWindowFrame,
+    StackChildAlign,
     StackDefault,
+    StackHhomogeneousFalse,
     StackHomogeneous,
+    StackSwitcherExpand,
+    StackSwitcherIcons,
     SearchEntryDefault,
     SearchEntryDisabled,
     SearchbarDefault,
@@ -429,8 +433,12 @@ impl Command {
             Self::ScaleDefault => Some("scale-default"),
             Self::ScrolledWindowDefault => Some("scrolled-window-default"),
             Self::ScrolledWindowFrame => Some("scrolled-window-frame"),
+            Self::StackChildAlign => Some("stack-child-align"),
             Self::StackDefault => Some("stack-default"),
+            Self::StackHhomogeneousFalse => Some("stack-hhomogeneous-false"),
             Self::StackHomogeneous => Some("stack-homogeneous"),
+            Self::StackSwitcherExpand => Some("stack-switcher-expand"),
+            Self::StackSwitcherIcons => Some("stack-switcher-icons"),
             Self::SearchEntryDefault => Some("search-entry-default"),
             Self::SearchEntryDisabled => Some("search-entry-disabled"),
             Self::SearchbarDefault => Some("searchbar-default"),
@@ -881,8 +889,18 @@ fn create_widget_for_case(name: &str) -> Option<(gtk::Widget, bool)> {
         "scrolled-window-frame" => {
             widget_case!(cases::scrolled_window_frame::ScrolledWindowFrame, false)
         }
+        "stack-child-align" => widget_case!(cases::stack_child_align::StackChildAlign, false),
         "stack-default" => widget_case!(cases::stack_default::StackDefault, false),
+        "stack-hhomogeneous-false" => {
+            widget_case!(cases::stack_hhomogeneous_false::StackHhomogeneousFalse, false)
+        }
         "stack-homogeneous" => widget_case!(cases::stack_homogeneous::StackHomogeneous, false),
+        "stack-switcher-expand" => {
+            widget_case!(cases::stack_switcher_expand::StackSwitcherExpand, false)
+        }
+        "stack-switcher-icons" => {
+            widget_case!(cases::stack_switcher_icons::StackSwitcherIcons, false)
+        }
         "search-entry-default" => {
             widget_case!(cases::search_entry_default::SearchEntryDefault, false)
         }
@@ -1153,8 +1171,12 @@ fn is_known_case(name: &str) -> bool {
             | "scale-default"
             | "scrolled-window-default"
             | "scrolled-window-frame"
+            | "stack-child-align"
             | "stack-default"
+            | "stack-hhomogeneous-false"
             | "stack-homogeneous"
+            | "stack-switcher-expand"
+            | "stack-switcher-icons"
             | "search-entry-default"
             | "search-entry-disabled"
             | "searchbar-default"

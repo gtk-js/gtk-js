@@ -151,23 +151,24 @@
   justify-content: center;
 }
 
-/* -- Widget alignment in BinLayout (grid): both axes independent -- */
-:is(.gtk-bin-layout, .gtk-button:not(.image-text-button)) > [data-halign="start"] {
+/* -- Widget alignment in BinLayout (grid): both axes independent --
+ * A GtkStack's pages get the whole stack too (gtk_stack_size_allocate()). */
+:is(.gtk-bin-layout, .gtk-stack, .gtk-button:not(.image-text-button)) > [data-halign="start"] {
   justify-self: start;
 }
-:is(.gtk-bin-layout, .gtk-button:not(.image-text-button)) > [data-halign="end"] {
+:is(.gtk-bin-layout, .gtk-stack, .gtk-button:not(.image-text-button)) > [data-halign="end"] {
   justify-self: end;
 }
-:is(.gtk-bin-layout, .gtk-button:not(.image-text-button)) > [data-halign="center"] {
+:is(.gtk-bin-layout, .gtk-stack, .gtk-button:not(.image-text-button)) > [data-halign="center"] {
   justify-self: center;
 }
-:is(.gtk-bin-layout, .gtk-button:not(.image-text-button)) > [data-valign="start"] {
+:is(.gtk-bin-layout, .gtk-stack, .gtk-button:not(.image-text-button)) > [data-valign="start"] {
   align-self: start;
 }
-:is(.gtk-bin-layout, .gtk-button:not(.image-text-button)) > [data-valign="end"] {
+:is(.gtk-bin-layout, .gtk-stack, .gtk-button:not(.image-text-button)) > [data-valign="end"] {
   align-self: end;
 }
-:is(.gtk-bin-layout, .gtk-button:not(.image-text-button)) > [data-valign="center"] {
+:is(.gtk-bin-layout, .gtk-stack, .gtk-button:not(.image-text-button)) > [data-valign="center"] {
   align-self: center;
 }
 
@@ -183,13 +184,66 @@
 
 /* === GtkStack === */
 /* All pages share one cell, like gtk_stack_size_allocate(): the visible page,
-   and the hidden ones a homogeneous stack is sized by. */
+   the hidden ones a homogeneous stack is sized by, and the one a transition
+   leaves. */
 .gtk-stack {
   display: grid;
 }
 
 .gtk-stack > * {
   grid-area: 1 / 1;
+}
+
+/* GtkStack keeps its hidden pages (gtk_widget_set_child_visible()), so their
+   state lives on: they stay laid out but unseen. Along an axis that isn't
+   homogeneous they add nothing to the stack's size, yet are laid out at it,
+   as gtk_stack_measure() measures them for the stack's size. Pages that
+   aren't visible at all (GtkStackPage:visible) take no space. */
+.gtk-stack > [data-stack-hidden]:not([data-stack-leaving]) {
+  visibility: hidden;
+}
+
+.gtk-stack[data-hhomogeneous="false"] > [data-stack-hidden] {
+  width: 0;
+  min-width: 100%;
+  contain: paint;
+}
+
+.gtk-stack[data-vhomogeneous="false"] > [data-stack-hidden] {
+  height: 0;
+  min-height: 100%;
+  contain: paint;
+}
+
+.gtk-stack[data-hhomogeneous="false"][data-vhomogeneous="false"]
+  > [data-stack-hidden]:not([data-stack-leaving]),
+.gtk-stack > [hidden] {
+  display: none;
+}
+
+/* GTK clips the stack while a transition runs (gtk_stack_start_transition()),
+   and draws the pages into it on their own (a crossfade blends only them). */
+.gtk-stack[data-transition-running] {
+  overflow: clip;
+  isolation: isolate;
+}
+
+/* === GtkStackSwitcher === */
+/* A BoxLayout whose buttons all expand (add_child()): GtkBoxLayout gives each
+   one its natural size, which counts the theme's min-width (100px for a text
+   button), and shares out the rest equally. A growing flex item would grow
+   from the width of its text instead, so the buttons are auto grid tracks,
+   which start from their min-width and share the rest equally too. */
+.gtk-stackswitcher {
+  display: grid;
+  grid-auto-flow: column;
+  column-gap: var(--gtk-border-spacing-x);
+}
+
+.gtk-stackswitcher.vertical {
+  grid-auto-flow: row;
+  column-gap: 0;
+  row-gap: var(--gtk-border-spacing-y);
 }
 
 /* === CenterLayout === */
