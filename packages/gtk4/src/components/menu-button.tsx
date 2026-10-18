@@ -10,6 +10,7 @@ import {
   useState,
 } from "react";
 import { useIcon } from "../icon-context.tsx";
+import { tooltipAttrs } from "../tooltip.tsx";
 import {
   alignAttrs,
   type GtkAlignProps,
@@ -178,7 +179,7 @@ export const GtkMenuButton = forwardRef<HTMLDivElement, GtkMenuButtonProps>(func
       <button
         ref={buttonRef}
         type="button"
-        title={tooltipText}
+        {...tooltipAttrs(tooltipText)}
         className={btnClasses.join(" ")}
         aria-haspopup="true"
         aria-expanded={open}

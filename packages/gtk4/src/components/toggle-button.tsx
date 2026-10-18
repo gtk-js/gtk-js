@@ -5,6 +5,7 @@ import React, {
   useCallback,
   useState,
 } from "react";
+import { tooltipAttrs } from "../tooltip.tsx";
 import { alignAttrs, type GtkAlignProps } from "../types.ts";
 
 export interface GtkToggleButtonProps
@@ -105,7 +106,7 @@ export const GtkToggleButton = forwardRef<HTMLButtonElement, GtkToggleButtonProp
       <button
         ref={ref}
         className={classes.join(" ")}
-        title={tooltipText}
+        {...tooltipAttrs(tooltipText)}
         aria-pressed={active}
         {...alignAttrs(halign, valign, hexpand, vexpand)}
         data-checked={active || undefined}

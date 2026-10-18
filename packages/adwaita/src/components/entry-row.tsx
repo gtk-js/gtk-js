@@ -1,4 +1,4 @@
-import { type GtkInputPurpose, useIcon, useListBoxRow } from "@gtk-js/gtk4";
+import { type GtkInputPurpose, tooltipAttrs, useIcon, useListBoxRow } from "@gtk-js/gtk4";
 import React, {
   forwardRef,
   type HTMLAttributes,
@@ -118,7 +118,7 @@ export const AdwEntryRow = forwardRef<HTMLDivElement, AdwEntryRowProps>(function
     <div
       ref={ref}
       className={classes.join(" ")}
-      title={tooltipText}
+      {...tooltipAttrs(tooltipText)}
       onClick={() => inputRef.current?.focus()}
       {...rest}
     >
