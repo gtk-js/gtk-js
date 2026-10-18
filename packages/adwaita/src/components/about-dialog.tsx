@@ -520,8 +520,9 @@ export const AdwAboutDialog = forwardRef<HTMLDivElement, AdwAboutDialogProps>(
       <GtkScrolledWindow
         className="main-page"
         hscrollbarPolicy="never"
+        propagateNaturalHeight
         style={{ height: "100%" }}
-        onScroll={(e) => setMainScrolled(e.currentTarget.scrollTop > 0)}
+        onScroll={(e) => setMainScrolled((e.target as HTMLElement).scrollTop > 0)}
       >
         <div className="gtk-viewport">
           <AdwClamp>

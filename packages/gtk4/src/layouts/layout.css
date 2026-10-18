@@ -171,6 +171,14 @@
   align-self: center;
 }
 
+/* GtkViewport: a scrolled window's child that doesn't scroll itself is put in a
+ * viewport, which scrolls it and allocates it at least its minimum size and at
+ * least the visible area (gtk_viewport_size_allocate()). */
+.gtk-scrolledwindow > .gtk-viewport.gtk-bin-layout {
+  grid-template-columns: minmax(min-content, 1fr);
+  grid-template-rows: minmax(min-content, 1fr);
+}
+
 /* === GtkActionBar ===
  * GtkActionBar defaults to halign=GTK_ALIGN_FILL in native GTK, meaning it
  * always fills the full width allocated by its parent. On the web we must
@@ -422,6 +430,30 @@
   left: 0;
   margin-left: -8px;
   margin-right: -8px;
+}
+
+/* === GtkScrollbar === */
+/* The range expands in the scrollbar's box (gtk_scrollbar_init() sets it
+ * hexpand and vexpand) and its trough fills it (gtk_range_size_allocate()).
+ * The trough is as thick as the slider, which stays in flow across it; along
+ * the trough, JS sizes the slider and offsets it with position: relative
+ * (gtk_range_compute_slider_position()), so its length doesn't size the
+ * trough. */
+.gtk-scrollbar > .gtk-range {
+  display: flex;
+  flex: 1;
+}
+
+.gtk-scrollbar.vertical > .gtk-range {
+  flex-direction: column;
+}
+
+.gtk-scrollbar > .gtk-range > .gtk-trough {
+  flex: 1 1 0;
+}
+
+.gtk-scrollbar > .gtk-range > .gtk-trough > .gtk-slider {
+  position: relative;
 }
 
 /* === GtkSwitch === */
