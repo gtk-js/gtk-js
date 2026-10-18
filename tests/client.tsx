@@ -930,6 +930,22 @@ const cases: Record<string, () => React.ReactElement> = {
       <AdwEntryRow title="Entry Row" />
     </GtkListBox>
   ),
+  "adw-entry-row-disabled": () => (
+    <GtkListBox selectionMode="none" className="boxed-list" data-testid="target">
+      <AdwEntryRow title="Entry Row" text="Hello World" disabled />
+    </GtkListBox>
+  ),
+  // As wide as the native list (the window's minimum width).
+  "adw-entry-row-long-title": () => (
+    <GtkListBox
+      selectionMode="none"
+      className="boxed-list"
+      style={{ width: 350 }}
+      data-testid="target"
+    >
+      <AdwEntryRow title="A very long entry row title that cannot possibly fit in the row at all" />
+    </GtkListBox>
+  ),
   "adw-entry-row-with-text": () => (
     <GtkListBox selectionMode="none" className="boxed-list" data-testid="target">
       <AdwEntryRow title="Entry Row" text="Hello World" />

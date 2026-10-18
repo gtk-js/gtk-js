@@ -3,7 +3,10 @@ import { forwardRef, useState } from "react";
 import { AdwEntryRow, type AdwEntryRowProps } from "./entry-row.tsx";
 
 export interface AdwPasswordEntryRowProps
-  extends Omit<AdwEntryRowProps, "inputPurpose" | "visibility" | "editableSuffix"> {}
+  extends Omit<
+    AdwEntryRowProps,
+    "inputPurpose" | "visibility" | "indicator" | "indicatorTooltip"
+  > {}
 
 /**
  * AdwPasswordEntryRow — An AdwEntryRow tailored for entering secrets.
@@ -39,13 +42,9 @@ export const AdwPasswordEntryRow = forwardRef<HTMLDivElement, AdwPasswordEntryRo
           setCapsLock(e.getModifierState("CapsLock"));
           onEntryKeyDown?.(e);
         }}
-        editableSuffix={
-          capsLock && !visible && CapsLockIcon ? (
-            <span className="gtk-image caps-lock-indicator">
-              <CapsLockIcon size={16} />
-            </span>
-          ) : undefined
-        }
+        // adw_entry_row_set_indicator_*(): the row shows it while editing.
+        indicator={capsLock && !visible && CapsLockIcon ? <CapsLockIcon size={16} /> : undefined}
+        indicatorTooltip="Caps Lock is on"
         suffixWidget={
           <>
             {PeekIcon && (
@@ -67,6 +66,16 @@ export const AdwPasswordEntryRow = forwardRef<HTMLDivElement, AdwPasswordEntryRo
           </>
         }
         {...rest}
+        // gdk_device_get_caps_lock_state(): browsers tell it with each key and
+        // press, so read it when the row is focused with either too.
+        onKeyUp={(e) => {
+          setCapsLock(e.getModifierState("CapsLock"));
+          rest.onKeyUp?.(e);
+        }}
+        onMouseDown={(e) => {
+          setCapsLock(e.getModifierState("CapsLock"));
+          rest.onMouseDown?.(e);
+        }}
       />
     );
   },

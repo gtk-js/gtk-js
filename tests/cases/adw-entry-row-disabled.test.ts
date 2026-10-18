@@ -1,0 +1,26 @@
+import { expect } from "vite-plus/test";
+import { compare, findChild, gtkTest, type WidgetSnapshot } from "../harness";
+
+/** The first node with a CSS class, breadth-first. */
+function withClass(tree: WidgetSnapshot, cssClass: string): WidgetSnapshot {
+  const queue = [...(tree.children ?? [])];
+  while (queue.length > 0) {
+    const node = queue.shift()!;
+    if (node.css_classes?.includes(cssClass)) return node;
+    queue.push(...(node.children ?? []));
+  }
+  throw new Error(`No node with class "${cssClass}"`);
+}
+
+// Filtered: opacity — the root takes the first opacity it finds below it
+// (here the edit icon's), see adw-entry-row-default. The text and the edit
+// icon are dimmed as row.entry:disabled in _lists.scss does.
+gtkTest("adw-entry-row-disabled", (native, web) => {
+  const { failures } = compare(native, web);
+  expect(failures.filter((f) => f.property !== "opacity")).toEqual([]);
+  expect(findChild(web, "text").opacity).toBeCloseTo(findChild(native, "text").opacity, 2);
+  expect(withClass(web, "edit-icon").opacity).toBeCloseTo(
+    withClass(native, "edit-icon").opacity,
+    2,
+  );
+});

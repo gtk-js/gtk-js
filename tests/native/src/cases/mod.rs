@@ -5,6 +5,8 @@ pub mod adw_action_row_with_subtitle;
 pub mod adw_breakpoint_bin_default;
 pub mod adw_combo_row_default;
 pub mod adw_entry_row_default;
+pub mod adw_entry_row_disabled;
+pub mod adw_entry_row_long_title;
 pub mod adw_entry_row_with_text;
 pub mod adw_expander_row_default;
 pub mod adw_expander_row_expanded;
