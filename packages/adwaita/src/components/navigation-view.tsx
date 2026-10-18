@@ -13,7 +13,7 @@ import React, {
   useState,
 } from "react";
 import { animateSpring, NAVIGATION_SPRING, type SpringAnimationHandle } from "../spring.ts";
-import { SwipeTracker } from "../swipe-tracker.ts";
+import { SwipeController } from "../swipe-tracker.ts";
 import { HeaderBarTitleContext } from "./header-bar-title.ts";
 
 export interface AdwNavigationPageProps {
@@ -494,7 +494,7 @@ export const AdwNavigationView = forwardRef<HTMLDivElement, AdwNavigationViewPro
       let back = false;
       // The page the swipe moves, while it follows the swipe.
       let swiped: string | null = null;
-      const tracker: SwipeTracker = new SwipeTracker(root, {
+      const tracker: SwipeController = new SwipeController(root, {
         getDistance: () => root.clientWidth,
         // adw_navigation_view_get_snap_points()
         getSnapPoints: () => {

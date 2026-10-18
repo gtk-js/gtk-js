@@ -1,7 +1,8 @@
 /**
- * A port of AdwSwipeTracker: turns touchscreen drags and touchpad scrolling
- * over a widget into swipe progress, for AdwNavigationView (and AdwCarousel,
- * AdwOverlaySplitView).
+ * A port of AdwSwipeTracker, for AdwNavigationView and AdwCarousel (and
+ * AdwOverlaySplitView): SwipeTracker is its progress math, and
+ * SwipeController turns a widget's touchscreen drags and touchpad scrolling
+ * into swipes with it.
  *
  * Progress is in units of the swipeable's distance, with snap points such as
  * -1 (back), 0 and 1 (forward). Touch drags start after 16 px and follow the
@@ -12,8 +13,9 @@
  * @see upstream/libadwaita/src/adw-swipe-tracker.c
  */
 
-const TOUCHPAD_BASE_DISTANCE_H = 400;
-const TOUCHPAD_BASE_DISTANCE_V = 300;
+/** How far (px) a touchpad scrolls to swipe one snap point, horizontally and vertically. */
+export const TOUCHPAD_BASE_DISTANCE_H = 400;
+export const TOUCHPAD_BASE_DISTANCE_V = 300;
 const EVENT_HISTORY_THRESHOLD_MS = 150;
 const VELOCITY_THRESHOLD_TOUCH = 0.3;
 const VELOCITY_THRESHOLD_TOUCHPAD = 0.6;
@@ -21,7 +23,8 @@ const DECELERATION_TOUCH = 0.998;
 const DECELERATION_TOUCHPAD = 0.997;
 const VELOCITY_CURVE_THRESHOLD = 2;
 const DECELERATION_PARABOLA_MULTIPLIER = 0.35;
-const DRAG_THRESHOLD_DISTANCE = 16;
+/** How far (px) a drag goes before it becomes a swipe. */
+export const DRAG_THRESHOLD_DISTANCE = 16;
 const EPSILON = 0.005;
 const OVERSHOOT_DISTANCE_MULTIPLIER = 0.1;
 /** WheelEvent.DOM_DELTA_PIXEL */
@@ -54,15 +57,18 @@ export interface Swipeable {
 const State = { None: 0, Pending: 1, Scrolling: 2, Rejected: 3 } as const;
 type State = (typeof State)[keyof typeof State];
 
-/** Touches a tracker has claimed, so enclosing trackers let go of them. */
-const claimed = new Map<number, SwipeTracker>();
+/** Touches a controller has claimed, so enclosing ones let go of them. */
+const claimed = new Map<number, SwipeController>();
 
-const approx = (a: number, b: number) => Math.abs(a - b) <= Number.EPSILON;
+const approx = (a: number, b: number) => Math.abs(a - b) < Number.EPSILON;
+
+/** The snap point at `index`; the snap point list is never empty. */
+const at = (points: number[], index: number) => points[index] ?? 0;
 
 function findClosestPoint(points: number[], pos: number): number {
   let min = 0;
   for (let i = 1; i < points.length; i++)
-    if (Math.abs(points[i]! - pos) < Math.abs(points[min]! - pos)) min = i;
+    if (Math.abs(at(points, i) - pos) < Math.abs(at(points, min) - pos)) min = i;
   return min;
 }
 
@@ -74,29 +80,188 @@ function findPreviousPoint(points: number[], pos: number): number {
   return points.findLastIndex((p) => approx(p, pos) || p < pos);
 }
 
+/** get_bounds(): a swipe from `pos` reaches the snap points next to it. */
+export function getBounds(points: number[], pos: number): [number, number] {
+  const closest = findClosestPoint(points, pos);
+  let prev = closest;
+  let next = closest;
+  if (Math.abs(at(points, closest) - pos) >= EPSILON) {
+    prev = findPreviousPoint(points, pos);
+    next = findNextPoint(points, pos);
+  }
+  return [at(points, Math.max(prev - 1, 0)), at(points, Math.min(next + 1, points.length - 1))];
+}
+
+/**
+ * The progress math of AdwSwipeTracker: a swipe moves between the snap
+ * points, no further than the ones next to where it started unless long
+ * swipes are allowed, and ends on the snap point its velocity points to.
+ * Past the first or last snap point it stops, or resists when overshooting
+ * is allowed.
+ */
 export class SwipeTracker {
+  /** The swipeable's snap points, ascending (adw_swipeable_get_snap_points()). */
+  points: number[] = [0];
+  allowLongSwipes = false;
+  lowerOvershoot = false;
+  upperOvershoot = false;
+  /** Pixels per unit of progress, for the overshoot's resistance. */
+  distance = 1;
+  initialProgress = 0;
+  progress = 0;
+  private history: { delta: number; time: number }[] = [];
+
+  /** gesture_prepare(): a swipe starts from `progress`. */
+  prepare(progress: number): void {
+    this.initialProgress = progress;
+    this.progress = progress;
+  }
+
+  /** append_to_history(): the pointer moved `delta` px at `time` (ms). */
+  record(delta: number, time: number): void {
+    this.trim(time);
+    this.history.push({ delta, time });
+  }
+
+  /** gesture_update(): moves by `delta` snap points and returns the progress. */
+  update(delta: number): number {
+    const [lower, upper] = this.bounds();
+    let progress = this.progress + delta;
+    this.progress = progress;
+    if (progress < lower) {
+      if (this.lowerOvershoot) progress = lower - this.adjustForOvershoot(lower - progress);
+      else progress = this.progress = lower;
+    }
+    if (progress > upper) {
+      if (this.upperOvershoot) progress = upper + this.adjustForOvershoot(progress - upper);
+      else progress = this.progress = upper;
+    }
+    return progress;
+  }
+
+  /**
+   * gesture_end(): the velocity (px/ms) the swipe ends with and the snap point
+   * it goes to. A cancelled swipe goes to `cancelProgress`, or else back to
+   * the closest snap point, like adw_carousel_get_cancel_progress().
+   */
+  end(
+    time: number,
+    isTouchpad: boolean,
+    cancelled = false,
+    cancelProgress?: number,
+  ): { velocity: number; to: number } {
+    this.trim(time);
+    const velocity = this.velocity();
+    const to = cancelled
+      ? (cancelProgress ?? at(this.points, findClosestPoint(this.points, this.progress)))
+      : this.endProgress(velocity, isTouchpad);
+    this.reset();
+    return { velocity, to };
+  }
+
+  /** reset() */
+  reset(): void {
+    this.initialProgress = 0;
+    this.progress = 0;
+    this.history = [];
+  }
+
+  private trim(time: number): void {
+    const first = this.history.findIndex((r) => r.time >= time - EVENT_HISTORY_THRESHOLD_MS);
+    this.history.splice(0, first < 0 ? this.history.length : first);
+  }
+
+  private bounds(): [number, number] {
+    if (this.allowLongSwipes) return [at(this.points, 0), at(this.points, this.points.length - 1)];
+    return getBounds(this.points, this.initialProgress);
+  }
+
+  private adjustForOvershoot(amount: number) {
+    const d = this.distance * OVERSHOOT_DISTANCE_MULTIPLIER;
+    return (1 - 1 / (1 + amount * d)) / d;
+  }
+
+  /** calculate_velocity() */
+  private velocity(): number {
+    const [first, ...rest] = this.history;
+    const last = rest[rest.length - 1];
+    if (!first || !last || first.time === last.time) return 0;
+    let total = 0;
+    for (const record of rest) total += record.delta;
+    let velocity = total / (last.time - first.time);
+    const [lower, upper] = this.bounds();
+    if (this.progress <= lower && velocity < 0) velocity = 0;
+    if (this.progress >= upper && velocity > 0) velocity = 0;
+    return velocity;
+  }
+
+  /** get_end_progress() */
+  private endProgress(velocity: number, isTouchpad: boolean): number {
+    const points = this.points;
+    const [lower, upper] = this.bounds();
+    const clamp = (pos: number) => Math.min(Math.max(pos, lower), upper);
+    const speed = Math.abs(velocity);
+
+    if (speed < (isTouchpad ? VELOCITY_THRESHOLD_TOUCHPAD : VELOCITY_THRESHOLD_TOUCH))
+      return clamp(at(points, findClosestPoint(points, this.progress)));
+
+    // Project where the swipe would decelerate to.
+    const decel = isTouchpad ? DECELERATION_TOUCHPAD : DECELERATION_TOUCH;
+    const slope = decel / (1 - decel) / 1000;
+    let pos: number;
+    if (speed > VELOCITY_CURVE_THRESHOLD) {
+      const c = slope / 2 / DECELERATION_PARABOLA_MULTIPLIER;
+      const x = speed - VELOCITY_CURVE_THRESHOLD + c;
+      pos =
+        DECELERATION_PARABOLA_MULTIPLIER * x * x -
+        DECELERATION_PARABOLA_MULTIPLIER * c * c +
+        slope * VELOCITY_CURVE_THRESHOLD;
+    } else {
+      pos = speed * slope;
+    }
+    pos = clamp(pos * Math.sign(velocity) + this.progress);
+
+    // find_point_for_projection(): a fling always leaves the snap point it started from.
+    const initial = findClosestPoint(points, this.initialProgress);
+    const prev = findPreviousPoint(points, pos);
+    const next = findNextPoint(points, pos);
+    if ((velocity > 0 ? prev : next) === initial) return at(points, velocity > 0 ? next : prev);
+    return at(points, findClosestPoint(points, pos));
+  }
+}
+
+/**
+ * AdwSwipeTracker's input handling for a widget: touchscreen drags (and
+ * mouse drags when allowed) and touchpad scrolling, reported to the
+ * swipeable through its prepare / begin / update / end callbacks.
+ */
+export class SwipeController {
   orientation: "horizontal" | "vertical" = "horizontal";
   /** Swaps the directions, for RTL (adw_swipe_tracker_set_reversed()). */
   reversed = false;
   allowMouseDrag = false;
-  allowLongSwipes = false;
-  lowerOvershoot = false;
-  upperOvershoot = false;
+  /** The progress math; its overshoot and long-swipe flags apply. */
+  readonly tracker = new SwipeTracker();
 
   private readonly widget: HTMLElement;
   private readonly swipeable: Swipeable;
   private state: State = State.None;
-  private initialProgress = 0;
-  private progress = 0;
   private cancelled = false;
   private prevOffset = 0;
-  private history: { delta: number; time: number }[] = [];
   private pointer: { id: number; x: number; y: number } | null = null;
   private scrollEnd: { timer: ReturnType<typeof setTimeout>; time: number } | null = null;
 
   constructor(widget: HTMLElement, swipeable: Swipeable) {
     this.widget = widget;
     this.swipeable = swipeable;
+  }
+
+  get upperOvershoot() {
+    return this.tracker.upperOvershoot;
+  }
+
+  set upperOvershoot(value: boolean) {
+    this.tracker.upperOvershoot = value;
   }
 
   /** Starts listening to the widget's input; returns the cleanup. */
@@ -119,60 +284,29 @@ export class SwipeTracker {
     };
   }
 
+  private get progress() {
+    return this.tracker.progress;
+  }
+
+  /** The swipeable's current snap points and distance. */
+  private sync(): number[] {
+    const points = this.swipeable.getSnapPoints();
+    this.tracker.points = points;
+    this.tracker.distance = this.swipeable.getDistance();
+    return points;
+  }
+
   private reset() {
     this.state = State.None;
     this.prevOffset = 0;
-    this.initialProgress = 0;
-    this.progress = 0;
-    this.history = [];
     this.cancelled = false;
-  }
-
-  private bounds(): [number, number] {
-    const points = this.swipeable.getSnapPoints();
-    if (this.allowLongSwipes) return [points[0]!, points[points.length - 1]!];
-    // get_bounds()
-    const closest = findClosestPoint(points, this.initialProgress);
-    let prev: number;
-    let next: number;
-    if (Math.abs(points[closest]! - this.initialProgress) < EPSILON) {
-      prev = next = closest;
-    } else {
-      prev = findPreviousPoint(points, this.initialProgress);
-      next = findNextPoint(points, this.initialProgress);
-    }
-    return [points[Math.max(prev - 1, 0)]!, points[Math.min(next + 1, points.length - 1)]!];
-  }
-
-  private adjustForOvershoot(amount: number) {
-    const d = this.swipeable.getDistance() * OVERSHOOT_DISTANCE_MULTIPLIER;
-    return (1 - 1 / (1 + amount * d)) / d;
-  }
-
-  private appendToHistory(delta: number, time: number) {
-    // trim_history()
-    this.history = this.history.filter((r) => r.time >= time - EVENT_HISTORY_THRESHOLD_MS);
-    this.history.push({ delta, time });
-  }
-
-  private calculateVelocity(): number {
-    const first = this.history[0];
-    const last = this.history[this.history.length - 1];
-    if (!first || !last || first.time === last.time) return 0;
-    let total = 0;
-    for (const r of this.history.slice(1)) total += r.delta;
-    let velocity = total / (last.time - first.time);
-    const [lower, upper] = this.bounds();
-    if (this.progress <= lower && velocity < 0) velocity = 0;
-    if (this.progress >= upper && velocity > 0) velocity = 0;
-    return velocity;
+    this.tracker.reset();
   }
 
   private gesturePrepare(direction: SwipeDirection) {
     if (this.state !== State.None) return;
     this.swipeable.prepare?.(direction);
-    this.initialProgress = this.swipeable.getProgress();
-    this.progress = this.initialProgress;
+    this.tracker.prepare(this.swipeable.getProgress());
     this.state = State.Pending;
   }
 
@@ -184,58 +318,15 @@ export class SwipeTracker {
 
   private gestureUpdate(delta: number) {
     if (this.state !== State.Scrolling) return;
-    const [lower, upper] = this.bounds();
-    let progress = this.progress + delta;
-    this.progress = progress;
-    if (progress < lower) {
-      if (this.lowerOvershoot) progress = lower - this.adjustForOvershoot(lower - progress);
-      else progress = this.progress = lower;
-    }
-    if (progress > upper) {
-      if (this.upperOvershoot) progress = upper + this.adjustForOvershoot(progress - upper);
-      else progress = this.progress = upper;
-    }
-    this.swipeable.updateSwipe?.(progress);
-  }
-
-  private getEndProgress(velocity: number, isTouchpad: boolean): number {
-    if (this.cancelled) return this.swipeable.getCancelProgress();
-    const points = this.swipeable.getSnapPoints();
-    const [lower, upper] = this.bounds();
-    const clamp = (pos: number) => Math.min(Math.max(pos, lower), upper);
-
-    if (Math.abs(velocity) < (isTouchpad ? VELOCITY_THRESHOLD_TOUCHPAD : VELOCITY_THRESHOLD_TOUCH))
-      return clamp(points[findClosestPoint(points, this.progress)]!);
-
-    // Project where the swipe would decelerate to.
-    const decel = isTouchpad ? DECELERATION_TOUCHPAD : DECELERATION_TOUCH;
-    const slope = decel / (1 - decel) / 1000;
-    let pos: number;
-    if (Math.abs(velocity) > VELOCITY_CURVE_THRESHOLD) {
-      const c = slope / 2 / DECELERATION_PARABOLA_MULTIPLIER;
-      const x = Math.abs(velocity) - VELOCITY_CURVE_THRESHOLD + c;
-      pos =
-        DECELERATION_PARABOLA_MULTIPLIER * x * x -
-        DECELERATION_PARABOLA_MULTIPLIER * c * c +
-        slope * VELOCITY_CURVE_THRESHOLD;
-    } else {
-      pos = Math.abs(velocity) * slope;
-    }
-    pos = clamp(pos * Math.sign(velocity) + this.progress);
-
-    // find_point_for_projection()
-    const initial = findClosestPoint(points, this.initialProgress);
-    const prev = findPreviousPoint(points, pos);
-    const next = findNextPoint(points, pos);
-    if ((velocity > 0 ? prev : next) === initial) return points[velocity > 0 ? next : prev]!;
-    return points[findClosestPoint(points, pos)]!;
+    this.sync();
+    this.swipeable.updateSwipe?.(this.tracker.update(delta));
   }
 
   private gestureEnd(time: number, isTouchpad: boolean) {
     if (this.state === State.None) return;
-    this.history = this.history.filter((r) => r.time >= time - EVENT_HISTORY_THRESHOLD_MS);
-    const velocity = this.calculateVelocity();
-    const to = this.getEndProgress(velocity, isTouchpad);
+    this.sync();
+    const cancelProgress = this.swipeable.getCancelProgress();
+    const { velocity, to } = this.tracker.end(time, isTouchpad, this.cancelled, cancelProgress);
     this.swipeable.endSwipe?.(velocity, to);
     this.reset();
   }
@@ -299,7 +390,7 @@ export class SwipeTracker {
     const offsetVertical = Math.abs(offsetY) > Math.abs(offsetX);
     const time = e.timeStamp;
 
-    this.appendToHistory(delta, time);
+    this.tracker.record(delta, time);
 
     if (this.state === State.None) {
       if (vertical !== offsetVertical) {
@@ -312,9 +403,9 @@ export class SwipeTracker {
     if (this.state === State.Pending) {
       const distance = Math.hypot(offsetX, offsetY);
       if (distance >= DRAG_THRESHOLD_DISTANCE) {
-        const points = this.swipeable.getSnapPoints();
-        const first = points[0]!;
-        const last = points[points.length - 1]!;
+        const points = this.sync();
+        const first = at(points, 0);
+        const last = at(points, points.length - 1);
         const overshootingLower =
           offset < 0 && (approx(this.progress, first) || this.progress < first);
         const overshootingUpper =
@@ -322,8 +413,8 @@ export class SwipeTracker {
         if (
           vertical !== offsetVertical ||
           approx(first, last) ||
-          (!this.lowerOvershoot && overshootingLower) ||
-          (!this.upperOvershoot && overshootingUpper)
+          (!this.tracker.lowerOvershoot && overshootingLower) ||
+          (!this.tracker.upperOvershoot && overshootingUpper)
         ) {
           this.deny(time);
           return;
@@ -383,17 +474,17 @@ export class SwipeTracker {
     }
 
     if (this.state === State.Pending) {
-      const points = this.swipeable.getSnapPoints();
-      const first = points[0]!;
-      const last = points[points.length - 1]!;
-      this.appendToHistory(delta, time);
+      const points = this.sync();
+      const first = at(points, 0);
+      const last = at(points, points.length - 1);
+      this.tracker.record(delta, time);
       const overshootingLower =
         delta < 0 && (approx(this.progress, first) || this.progress < first);
       const overshootingUpper = delta > 0 && (approx(this.progress, last) || this.progress > last);
       if (
         approx(first, last) ||
-        (!this.lowerOvershoot && overshootingLower) ||
-        (!this.upperOvershoot && overshootingUpper)
+        (!this.tracker.lowerOvershoot && overshootingLower) ||
+        (!this.tracker.upperOvershoot && overshootingUpper)
       ) {
         this.gestureCancel(time, true);
         // Until the scrolling stops, like a sequence GTK denied.
@@ -404,7 +495,7 @@ export class SwipeTracker {
     }
 
     if (this.state === State.Scrolling) {
-      this.appendToHistory(delta, time);
+      this.tracker.record(delta, time);
       this.gestureUpdate(delta / distance);
       // GDK_EVENT_STOP: no page scrolling or browser back gesture, and no
       // enclosing swipeable.
