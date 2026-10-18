@@ -717,6 +717,15 @@ const cases: Record<string, () => React.ReactElement> = {
   "dropdown-default": () => (
     <GtkDropDown items={["Option 1", "Option 2", "Option 3"]} selected={0} data-testid="target" />
   ),
+  "dropdown-fill": () => (
+    <GtkDropDown
+      items={["Option 1", "Option 2", "Option 3"]}
+      selected={0}
+      halign="start"
+      style={{ width: 300 }}
+      data-testid="target"
+    />
+  ),
 
   // GtkListBox cases
   "listbox-default": () => (
