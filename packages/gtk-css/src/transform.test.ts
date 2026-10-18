@@ -249,6 +249,39 @@ describe("initial fonts", () => {
   });
 });
 
+describe("check and radio indicators", () => {
+  test("a recolored -gtk-icon-source is kept for layout.css to paint", async () => {
+    const out = await transform(
+      'check:checked { -gtk-icon-source: -gtk-recolor(url("assets/check-symbolic.svg")); } check { -gtk-icon-source: none; }',
+    );
+    expect(out).toContain('--gtk-icon-source: url("assets/check-symbolic.svg")');
+    expect(out).toContain("--gtk-icon-source: none");
+    expect(out).not.toContain("-gtk-recolor");
+  });
+
+  test("icon theme icons are left to the components", async () => {
+    const out = await transform(
+      "expander { -gtk-icon-source: -gtk-icontheme('pan-end-symbolic'); } spinner { -gtk-icon-source: -gtk-icontheme('process-working-symbolic'); }",
+    );
+    expect(out).not.toContain("icon-source");
+  });
+
+  test("they're hovered and pressed with their check button", async () => {
+    const out = await transform(
+      "check:not(:checked):hover, radio:checked:active { color: red; } button:hover check { color: blue; }",
+    );
+    expect(out).toContain(
+      ":where(.gtk-check):not(_):not([data-checked]):is(:hover, :where(.gtk-checkbutton:hover > *))",
+    );
+    expect(out).toContain(
+      ":where(.gtk-radio):not(_)[data-checked]:is(:active, :where(.gtk-checkbutton:active > *))",
+    );
+    // Only the indicator's own state is mirrored, once.
+    expect(out).toContain(":where(.gtk-button):not(_):hover :where(.gtk-check):not(_) {");
+    expect(out).not.toContain(":is(:hover, :is(");
+  });
+});
+
 describe(":disabled", () => {
   test("matches native :disabled elements and [data-disabled] ones", async () => {
     const out = await transform(
