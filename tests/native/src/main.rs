@@ -66,7 +66,10 @@ enum Command {
     AdwSwitchRowActive,
     AdwToolbarViewDefault,
     AdwToolbarViewWithBottom,
+    AdwViewSwitcherAttention,
+    AdwViewSwitcherBar,
     AdwViewSwitcherDefault,
+    AdwViewSwitcherNarrow,
     AvatarDefault,
     AvatarInitials,
     AvatarSmall,
@@ -301,7 +304,10 @@ impl Command {
             Self::AdwSwitchRowActive => Some("adw-switch-row-active"),
             Self::AdwToolbarViewDefault => Some("adw-toolbar-view-default"),
             Self::AdwToolbarViewWithBottom => Some("adw-toolbar-view-with-bottom"),
+            Self::AdwViewSwitcherAttention => Some("adw-view-switcher-attention"),
+            Self::AdwViewSwitcherBar => Some("adw-view-switcher-bar"),
             Self::AdwViewSwitcherDefault => Some("adw-view-switcher-default"),
+            Self::AdwViewSwitcherNarrow => Some("adw-view-switcher-narrow"),
             Self::AvatarDefault => Some("avatar-default"),
             Self::AvatarInitials => Some("avatar-initials"),
             Self::AvatarSmall => Some("avatar-small"),
@@ -563,8 +569,17 @@ fn create_widget_for_case(name: &str) -> Option<(gtk::Widget, bool)> {
         "adw-toolbar-view-with-bottom" => {
             widget_case!(cases::adw_toolbar_view_with_bottom::AdwToolbarViewWithBottom, false)
         }
+        "adw-view-switcher-attention" => {
+            widget_case!(cases::adw_view_switcher_attention::AdwViewSwitcherAttention, false)
+        }
+        "adw-view-switcher-bar" => {
+            widget_case!(cases::adw_view_switcher_bar::AdwViewSwitcherBar, false)
+        }
         "adw-view-switcher-default" => {
             widget_case!(cases::adw_view_switcher_default::AdwViewSwitcherDefault, false)
+        }
+        "adw-view-switcher-narrow" => {
+            widget_case!(cases::adw_view_switcher_narrow::AdwViewSwitcherNarrow, false)
         }
         "avatar-default" => widget_case!(cases::avatar_default::AvatarDefault, true),
         "avatar-initials" => widget_case!(cases::avatar_initials::AvatarInitials, true),
@@ -1031,7 +1046,10 @@ fn is_known_case(name: &str) -> bool {
             | "adw-switch-row-active"
             | "adw-toolbar-view-default"
             | "adw-toolbar-view-with-bottom"
+            | "adw-view-switcher-attention"
+            | "adw-view-switcher-bar"
             | "adw-view-switcher-default"
+            | "adw-view-switcher-narrow"
             | "avatar-default"
             | "avatar-initials"
             | "avatar-small"

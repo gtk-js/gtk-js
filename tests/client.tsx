@@ -26,6 +26,7 @@ import {
   AdwToggleGroup,
   AdwToolbarView,
   AdwViewSwitcher,
+  AdwViewSwitcherBar,
   GtkActionBar,
   GtkBox,
   GtkButton,
@@ -1102,14 +1103,54 @@ const cases: Record<string, () => React.ReactElement> = {
   ),
 
   // AdwViewSwitcher cases
+  "adw-view-switcher-attention": () => (
+    <AdwViewSwitcher
+      pages={[
+        { name: "home", title: "Home", iconName: "GoHome" },
+        { name: "mail", title: "Mail", iconName: "MailUnread", needsAttention: true },
+        {
+          name: "chat",
+          title: "Chat",
+          iconName: "UserAvailable",
+          badgeNumber: 5,
+          needsAttention: true,
+        },
+      ]}
+      policy="wide"
+      data-testid="target"
+    />
+  ),
+  "adw-view-switcher-bar": () => (
+    <AdwViewSwitcherBar
+      reveal
+      pages={[
+        { name: "home", title: "Home", iconName: "GoHome" },
+        { name: "search", title: "Search", iconName: "SystemSearch" },
+        { name: "settings", title: "Settings", iconName: "PreferencesSystem" },
+      ]}
+      style={{ width: 400 }}
+      data-testid="target"
+    />
+  ),
   "adw-view-switcher-default": () => (
     <AdwViewSwitcher
       pages={[
-        { name: "page1", title: "Page 1", iconName: "open-menu-symbolic" },
-        { name: "page2", title: "Page 2", iconName: "open-menu-symbolic" },
+        { name: "page1", title: "Page 1", iconName: "OpenMenu" },
+        { name: "page2", title: "Page 2", iconName: "OpenMenu" },
       ]}
       activePageName="page1"
       policy="wide"
+      data-testid="target"
+    />
+  ),
+  "adw-view-switcher-narrow": () => (
+    <AdwViewSwitcher
+      pages={[
+        { name: "home", title: "Home", iconName: "GoHome" },
+        { name: "search", title: "Search", iconName: "SystemSearch" },
+        { name: "other", title: "Other" },
+      ]}
+      policy="narrow"
       data-testid="target"
     />
   ),
