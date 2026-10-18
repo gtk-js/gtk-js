@@ -1122,6 +1122,23 @@ const cases: Record<string, () => React.ReactElement> = {
   ),
 
   // AdwNavigationView cases
+  "adw-navigation-view-back-button": () => (
+    <AdwNavigationView
+      pages={["Home", "Details"].map((title) => ({
+        tag: title.toLowerCase(),
+        title,
+        children: (
+          <AdwToolbarView
+            topBars={<AdwHeaderBar showStartTitleButtons={false} showEndTitleButtons={false} />}
+            content={<GtkLabel label={title} />}
+          />
+        ),
+      }))}
+      stack={["home", "details"]}
+      style={{ width: "300px", height: "200px" }}
+      data-testid="target"
+    />
+  ),
   "adw-navigation-view-default": () => (
     <AdwNavigationView
       pages={[{ tag: "home", title: "Home", children: <GtkLabel label="Home Page" /> }]}

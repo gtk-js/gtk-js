@@ -1,8 +1,8 @@
 import { GtkLabel, useIcon, useWindowControls } from "@gtk-js/gtk4";
 import { forwardRef, type HTMLAttributes, type ReactNode, useCallback } from "react";
 import type { AdwCenteringPolicy } from "../types.ts";
+import { AdwBackButton } from "./back-button.tsx";
 import { useHeaderBarTitle } from "./header-bar-title.ts";
-import { useNavigation } from "./navigation-view.tsx";
 
 export interface AdwHeaderBarProps extends HTMLAttributes<HTMLDivElement> {
   titleWidget?: ReactNode;
@@ -104,11 +104,9 @@ export const AdwHeaderBar = forwardRef<HTMLDivElement, AdwHeaderBarProps>(functi
   },
   ref,
 ) {
-  const BackIcon = useIcon("GoPrevious");
   const controls = useWindowControls();
   const decorationLayout =
     decorationLayoutProp ?? controls?.decorationLayout ?? "appmenu:minimize,maximize,close";
-  const nav = useNavigation();
   // AdwHeaderBar and GtkWindowHandle are GtkBinLayout widgets: the window
   // handle and its center box get the bar's full height (adw-header-bar.c).
   const classes = ["gtk-headerbar", "gtk-bin-layout"];
@@ -155,20 +153,7 @@ export const AdwHeaderBar = forwardRef<HTMLDivElement, AdwHeaderBarProps>(functi
         >
           <div className="gtk-box gtk-box-layout horizontal start gtk-center-layout-start">
             {showStartTitleButtons && <WindowControls side="start" layout={decorationLayout} />}
-            {showBackButton && nav.canPop && BackIcon && (
-              <button
-                className="gtk-button image-button back flat"
-                type="button"
-                aria-label="Back"
-                title={nav.previousTitle || "Back"}
-                onClick={() => nav.pop()}
-                onPointerDown={(e) => e.stopPropagation()}
-              >
-                <span className="gtk-image">
-                  <BackIcon size={16} />
-                </span>
-              </button>
-            )}
+            {showBackButton && <AdwBackButton />}
             {start}
           </div>
           <div className="gtk-center-layout-center">{showTitle && title}</div>
