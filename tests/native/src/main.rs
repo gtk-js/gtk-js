@@ -100,6 +100,7 @@ enum Command {
     HeaderbarDefault,
     HeaderbarStartEnd,
     HeaderbarWithTitle,
+    HeaderbarWindowTitle,
     FrameNoLabel,
     GridDefault,
     OverlayDefault,
@@ -230,6 +231,7 @@ enum Command {
     ToggleGroupTextDefault,
     ToggleGroupIcon,
     ToggleGroupHomogeneous,
+    WindowChildValignCenter,
     WindowTitleTextDefault,
     WindowTitleWithSubtitle,
     WindowTitleLongText,
@@ -341,6 +343,7 @@ impl Command {
             Self::HeaderbarDefault => Some("headerbar-default"),
             Self::HeaderbarStartEnd => Some("headerbar-start-end"),
             Self::HeaderbarWithTitle => Some("headerbar-with-title"),
+            Self::HeaderbarWindowTitle => Some("headerbar-window-title"),
             Self::FrameNoLabel => Some("frame-no-label"),
             Self::GridDefault => Some("grid-default"),
             Self::OverlayDefault => Some("overlay-default"),
@@ -465,6 +468,7 @@ impl Command {
             Self::ToggleGroupTextDefault => Some("toggle-group-text-default"),
             Self::ToggleGroupIcon => Some("toggle-group-icon"),
             Self::ToggleGroupHomogeneous => Some("toggle-group-homogeneous"),
+            Self::WindowChildValignCenter => Some("window-child-valign-center"),
             Self::WindowTitleTextDefault => Some("window-title-text-default"),
             Self::WindowTitleWithSubtitle => Some("window-title-with-subtitle"),
             Self::WindowTitleLongText => Some("window-title-long-text"),
@@ -645,6 +649,9 @@ fn create_widget_for_case(name: &str) -> Option<(gtk::Widget, bool)> {
         }
         "headerbar-with-title" => {
             widget_case!(cases::headerbar_with_title::HeaderbarWithTitle, false)
+        }
+        "headerbar-window-title" => {
+            widget_case!(cases::headerbar_window_title::HeaderbarWindowTitle, false)
         }
         "frame-no-label" => widget_case!(cases::frame_no_label::FrameNoLabel, false),
         "grid-default" => widget_case!(cases::grid_default::GridDefault, false),
@@ -971,6 +978,9 @@ fn create_widget_for_case(name: &str) -> Option<(gtk::Widget, bool)> {
         "toggle-group-homogeneous" => {
             widget_case!(cases::toggle_group_homogeneous::ToggleGroupHomogeneous, false)
         }
+        "window-child-valign-center" => {
+            widget_case!(cases::window_child_valign_center::WindowChildValignCenter, false)
+        }
         "window-title-text-default" => {
             widget_case!(
                 cases::window_title_text_default::WindowTitleTextDefault,
@@ -1067,6 +1077,7 @@ fn is_known_case(name: &str) -> bool {
             | "headerbar-default"
             | "headerbar-start-end"
             | "headerbar-with-title"
+            | "headerbar-window-title"
             | "grid-default"
             | "listbox-default"
             | "listbox-separators"
@@ -1189,6 +1200,7 @@ fn is_known_case(name: &str) -> bool {
             | "toggle-group-text-default"
             | "toggle-group-icon"
             | "toggle-group-homogeneous"
+            | "window-child-valign-center"
             | "window-title-text-default"
             | "window-title-with-subtitle"
             | "window-title-long-text"
