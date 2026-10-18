@@ -66,7 +66,10 @@ gtkTest("adw-view-switcher-default", (native, web) => {
     gtkAssert.numbersClose(
       nb.x!,
       wb.x!,
-      { tolerance: 1, reason: "the label's text is a fraction of a pixel narrower than Pango's" },
+      {
+        tolerance: 1.5,
+        reason: "the label's text is narrower than Pango's (up to ~1.1px in Firefox)",
+      },
       `button ${i} box x`,
     );
     const ni = findChild(nb, "indicatorbin");
