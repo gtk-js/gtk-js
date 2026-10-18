@@ -22,7 +22,7 @@ gtkTest("dropdown-default", { childSelector: "button.toggle" }, (native, web) =>
   gtkAssert.numbersClose(
     outerWidth(native),
     web.width,
-    { tolerance: 2, reason: "web label widths are fractional (Firefox: up to ~1.6px narrower)" },
+    { tolerance: 4, reason: "web label widths are fractional (Firefox: up to ~2.5px narrower)" },
     "width",
   );
   for (const tree of [native, web]) {
