@@ -648,7 +648,7 @@ function convertShade(content: string): string {
     return `rgb(${r}, ${g}, ${b})`;
   }
 
-  // Dynamic color: approximate with color-mix (uses srgb; fixColorMixGamut converts to oklab later)
+  // Dynamic color: approximate with color-mix
   if (factor >= 1) {
     // Lighten: mix with white. shade(c, 1.2) ≈ 20% toward white
     const pct = Math.round((1 - 1 / factor) * 100);
@@ -710,7 +710,12 @@ function replaceColorFunction(
  * - mix(color1, color2, factor) → color-mix()
  * - shade(color, factor) → pre-computed rgb() or color-mix()
  *
- * Must run BEFORE fixColorMixGamut (which converts color-mix srgb→oklab).
+ * Mixes stay in sRGB, like the theme's own color-mix(in srgb, …): GTK
+ * interpolates premultiplied sRGB without gamut mapping (apply_mix(),
+ * gtk_css_color_interpolate()), and so do browsers. Another space changes
+ * mixes of two opaque colors: 15% white into black is 38 in sRGB, 11 in oklab.
+ * Only channels below 0 of out-of-gamut colors can differ (GTK's apply_gamma()
+ * is linear there, CSS mirrors the curve), and both paint those as 0.
  */
 const convertGtkColorFunctions: Plugin = {
   postcssPlugin: "gtk-convert-color-functions",
@@ -745,7 +750,7 @@ const convertGtkColorFunctions: Plugin = {
  */
 const OVERLAY = "--gtk-background-overlay";
 const TINT = "--gtk-background-tint";
-const TINT_COLOR = `color-mix(in oklab, currentColor var(${TINT}), transparent)`;
+const TINT_COLOR = `color-mix(in srgb, currentColor var(${TINT}), transparent)`;
 const OVERLAY_IMAGE = `linear-gradient(var(${OVERLAY}), var(${OVERLAY})), linear-gradient(${TINT_COLOR}, ${TINT_COLOR})`;
 
 /** The opacity of an overlay that is currentColor at an opacity, like `10%`. */
@@ -897,31 +902,6 @@ const removeGtkAssetFunctions: Plugin = {
 };
 
 /**
- * PostCSS plugin: Rewrite color-mix(in srgb, ...) to color-mix(in oklab, ...).
- *
- * GTK's CSS engine does NOT apply gamut mapping when converting colors to sRGB
- * for color-mix interpolation:
- *   https://gitlab.gnome.org/GNOME/gtk/-/blob/5957885ec/gtk/gtkcsscolor.c#L659
- *   (FIXME comment: "Gamut mapping goes here")
- *
- * Browsers per CSS spec DO gamut-map, which clamps out-of-sRGB-gamut values
- * (e.g. negative green from oklab-derived destructive colors). This produces
- * visibly different results for wide-gamut colors like the destructive red.
- *
- * Switching the interpolation space to oklab avoids the issue: oklab values are
- * always in-gamut, so no gamut mapping is triggered, matching GTK's behavior.
- */
-const COLOR_MIX_SRGB_RE = /color-mix\(in srgb\b/g;
-const fixColorMixGamut: Plugin = {
-  postcssPlugin: "gtk-fix-color-mix-gamut",
-  Declaration(decl) {
-    if (decl.value.includes("color-mix(in srgb")) {
-      decl.value = decl.value.replace(COLOR_MIX_SRGB_RE, "color-mix(in oklab");
-    }
-  },
-};
-
-/**
  * PostCSS plugin: Resolve currentColor like GTK, so transitions start from the
  * color the widget had.
  *
@@ -1066,7 +1046,6 @@ export function buildGtkToWeb(assetPlugin?: Plugin) {
     convertGtkColorFunctions,
     replaceImageFunction,
     transitionBackgroundOverlay,
-    fixColorMixGamut,
     resolveCurrentColor,
     removeGtkRecolor,
     assetPlugin ?? removeGtkAssetFunctions,
