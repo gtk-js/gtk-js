@@ -113,6 +113,32 @@ function useServerRender() {
   );
 }
 
+/** How long transitions stay off while the theme switches, AdwStyleManager's SWITCH_DURATION. */
+const SWITCH_DURATION = 250;
+
+const SWITCHING_ID = "gtk-js-switching";
+const SWITCHING_CSS =
+  "[data-gtk-provider], [data-gtk-provider] *, [data-gtk-provider] *::before, [data-gtk-provider] *::after { transition: none !important; }";
+
+let switchTimer: ReturnType<typeof setTimeout> | undefined;
+
+/**
+ * Turns transitions off for a moment while the stylesheet changes, like
+ * update_stylesheet() in adw-style-manager.c: widgets switch to the new theme,
+ * color scheme or accent at once instead of fading between the two.
+ */
+export function suppressTransitions() {
+  let style = document.getElementById(SWITCHING_ID);
+  if (!style) {
+    style = document.createElement("style");
+    style.id = SWITCHING_ID;
+    style.textContent = SWITCHING_CSS;
+    document.head.appendChild(style);
+  }
+  clearTimeout(switchTimer);
+  switchTimer = setTimeout(() => style.remove(), SWITCH_DURATION);
+}
+
 const ThemeContext = createContext<GtkTheme | undefined>(undefined);
 /** The provider's `style`, for GtkProviderBoundary. */
 const ProviderStyleContext = createContext<CSSProperties | undefined>(undefined);
@@ -174,6 +200,8 @@ export function GtkProvider({
   // Inject theme CSS inline
   useInsertionEffect(() => {
     if (!resolvedCSSText) return;
+    // A new theme, color scheme or accent: switch to it without fading.
+    suppressTransitions();
 
     const existing = document.getElementById(THEME_ID);
     if (existing) {
