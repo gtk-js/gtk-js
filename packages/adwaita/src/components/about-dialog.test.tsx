@@ -51,7 +51,16 @@ describe("AdwAboutDialog main page", () => {
       />,
     );
     expect(html).toContain("Other Apps by Someone");
-    expect(html).toContain('title="appstream:org.example.Other"');
+    expect(html).toContain('data-gtk-tooltip="appstream:org.example.Other"');
     expect(html).toContain("Does other things");
+  });
+
+  test("confirms a copied version with a toast, not a tooltip", () => {
+    const html = renderToStaticMarkup(
+      <AdwAboutDialog applicationName="App" version="1.2" visible />,
+    );
+    // adw-about-dialog.ui: toast_overlay > navigation_view; the version button has no tooltip.
+    expect(html).toMatch(/class="gtk-toastoverlay"[^>]*><div[^>]*class="gtk-navigation-view /);
+    expect(html).toMatch(/<button type="button" class="gtk-button app-version" style="[^"]*">/);
   });
 });

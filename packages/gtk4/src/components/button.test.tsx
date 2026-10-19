@@ -42,13 +42,14 @@ describe("style classes", () => {
 });
 
 describe("tooltipText", () => {
-  test("is the button's tooltip", () => {
-    expect(renderToStaticMarkup(<GtkButton label="Add" tooltipText="Add a folder" />)).toContain(
-      'title="Add a folder"',
-    );
+  test("is the button's tooltip and accessible description, not a browser tooltip", () => {
+    const html = renderToStaticMarkup(<GtkButton label="Add" tooltipText="Add a folder" />);
+    expect(html).toContain('data-gtk-tooltip="Add a folder"');
+    expect(html).toContain('aria-description="Add a folder"');
+    expect(html).not.toContain("title=");
     expect(
       renderToStaticMarkup(<GtkToggleButton label="Bold" tooltipText="Bold text" />),
-    ).toContain('title="Bold text"');
+    ).toContain('data-gtk-tooltip="Bold text"');
   });
 });
 

@@ -1,5 +1,5 @@
 import type { GtkArrowType } from "@gtk-js/gtk4";
-import { useIcon } from "@gtk-js/gtk4";
+import { tooltipAttrs, useIcon } from "@gtk-js/gtk4";
 import { forwardRef, type HTMLAttributes, type ReactNode, useState } from "react";
 
 export interface AdwSplitButtonProps extends Omit<HTMLAttributes<HTMLDivElement>, "popover"> {
@@ -86,7 +86,7 @@ export const AdwSplitButton = forwardRef<HTMLDivElement, AdwSplitButtonProps>(
           <button
             type="button"
             className={`gtk-button toggle ${menuOpen ? "has-open-popup" : ""}`}
-            title={dropdownTooltip}
+            {...tooltipAttrs(dropdownTooltip)}
             aria-haspopup="true"
             aria-expanded={menuOpen}
             data-checked={menuOpen || undefined}
