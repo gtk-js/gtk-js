@@ -218,11 +218,13 @@ enum Command {
     SwitchOnDefault,
     SwitchOffDisabled,
     SwitchOnDisabled,
+    TextViewContentHeight,
     TextViewDefault,
     TextViewDisabled,
     TextViewMonospace,
     TextViewNonEditable,
     TextViewScrolled,
+    TextViewScrolledLong,
     ToggleTextDefault,
     ToggleTextChecked,
     ToggleTextFlat,
@@ -453,11 +455,13 @@ impl Command {
             Self::SwitchOnDefault => Some("switch-on-default"),
             Self::SwitchOffDisabled => Some("switch-off-disabled"),
             Self::SwitchOnDisabled => Some("switch-on-disabled"),
+            Self::TextViewContentHeight => Some("text-view-content-height"),
             Self::TextViewDefault => Some("text-view-default"),
             Self::TextViewDisabled => Some("text-view-disabled"),
             Self::TextViewMonospace => Some("text-view-monospace"),
             Self::TextViewNonEditable => Some("text-view-non-editable"),
             Self::TextViewScrolled => Some("text-view-scrolled"),
+            Self::TextViewScrolledLong => Some("text-view-scrolled-long"),
             Self::ToggleTextDefault => Some("toggle-text-default"),
             Self::ToggleTextChecked => Some("toggle-text-checked"),
             Self::ToggleTextFlat => Some("toggle-text-flat"),
@@ -951,6 +955,9 @@ fn create_widget_for_case(name: &str) -> Option<(gtk::Widget, bool)> {
         "switch-on-default" => widget_case!(cases::switch_on_default::SwitchOnDefault, false),
         "switch-off-disabled" => widget_case!(cases::switch_off_disabled::SwitchOffDisabled, false),
         "switch-on-disabled" => widget_case!(cases::switch_on_disabled::SwitchOnDisabled, false),
+        "text-view-content-height" => {
+            widget_case!(cases::text_view_content_height::TextViewContentHeight, false)
+        }
         "text-view-default" => widget_case!(cases::text_view_default::TextViewDefault, false),
         "text-view-disabled" => widget_case!(cases::text_view_disabled::TextViewDisabled, false),
         "text-view-monospace" => widget_case!(cases::text_view_monospace::TextViewMonospace, false),
@@ -958,6 +965,9 @@ fn create_widget_for_case(name: &str) -> Option<(gtk::Widget, bool)> {
             widget_case!(cases::text_view_non_editable::TextViewNonEditable, false)
         }
         "text-view-scrolled" => widget_case!(cases::text_view_scrolled::TextViewScrolled, false),
+        "text-view-scrolled-long" => {
+            widget_case!(cases::text_view_scrolled_long::TextViewScrolledLong, false)
+        }
         "toggle-text-default" => widget_case!(cases::toggle_text_default::ToggleTextDefault, false),
         "toggle-text-checked" => widget_case!(cases::toggle_text_checked::ToggleTextChecked, false),
         "toggle-text-flat" => widget_case!(cases::toggle_text_flat::ToggleTextFlat, false),
@@ -1177,11 +1187,13 @@ fn is_known_case(name: &str) -> bool {
             | "switch-on-default"
             | "switch-off-disabled"
             | "switch-on-disabled"
+            | "text-view-content-height"
             | "text-view-default"
             | "text-view-disabled"
             | "text-view-monospace"
             | "text-view-non-editable"
             | "text-view-scrolled"
+            | "text-view-scrolled-long"
             | "toggle-text-default"
             | "toggle-text-checked"
             | "toggle-text-flat"

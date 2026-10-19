@@ -207,13 +207,55 @@ body:has(> :first-child:has([data-gtk-provider])) > :first-child {
   display: inline-grid;
 }
 
-/* GtkTextView in a GtkScrolledWindow: a text view scrolls its own text
-   (GtkScrollable), so the scrolled window allocates it the whole viewport
-   (gtk_scrolled_window_allocate_child). A <textarea> keeps its intrinsic
-   `cols` and `rows` size; a one-cell grid stretches it in both directions. */
+/* It's as tall as its text and as wide as its margins (gtk_text_view_measure()),
+   not the size a <textarea> takes from `rows` and `cols`; text-view.tsx
+   measures it where `field-sizing` isn't supported. The text never scrolls
+   itself: a GtkScrolledWindow scrolls it. Its lines are whole pixels tall, as
+   GtkTextLayout's are. The indent is each paragraph's where `each-line` is
+   supported (gtk_text_view_set_indent()). */
+:where([data-gtk-provider] .gtk-textview > .gtk-text) {
+  line-height: round(up, 1lh, 1px);
+  field-sizing: content;
+  contain: inline-size;
+  overflow: hidden;
+  text-indent: var(--gtk-textview-indent, 0);
+}
+
+@supports (text-indent: 1px each-line) {
+  :where([data-gtk-provider] .gtk-textview > .gtk-text) {
+    text-indent: var(--gtk-textview-indent, 0) each-line;
+  }
+}
+
+/* Typing hides the pointer until it moves (gtk_text_view_obscure_mouse_cursor()). */
+:where([data-gtk-provider] .gtk-textview[data-cursor-obscured] > .gtk-text) {
+  cursor: none;
+}
+
+/* GtkTextView in a GtkScrolledWindow: the scrolled window allocates it at
+   least the whole viewport (gtk_scrolled_window_allocate_child) and scrolls
+   when its text is taller, or wider when it doesn't wrap (the adjustments'
+   upper, gtk_text_view_set_vadjustment_values()). The undershoot is drawn
+   over it, in the same cell. */
 :where([data-gtk-provider] .gtk-scrolledwindow:has(> .gtk-textview)) {
   display: grid;
-  grid-template: minmax(0, 1fr) / minmax(0, 1fr);
+  grid-template: minmax(max-content, 1fr) / minmax(0, 1fr);
+}
+
+:where([data-gtk-provider] .gtk-scrolledwindow:has(> .gtk-textview > .gtk-text[wrap="off"])) {
+  grid-template-columns: minmax(max-content, 1fr);
+}
+
+:where([data-gtk-provider] .gtk-scrolledwindow > .gtk-textview > .gtk-text[wrap="off"]) {
+  contain: none;
+}
+
+:where([data-gtk-provider] .gtk-scrolledwindow:has(> .gtk-textview) > .gtk-undershoot) {
+  grid-area: 1 / 1;
+}
+
+:where([data-gtk-provider] .gtk-scrolledwindow:has(> .gtk-textview) > .gtk-undershoot.bottom) {
+  align-self: end;
 }
 
 /* GtkEntry / GtkSearchEntry: the entry's custom size_allocate lays out children

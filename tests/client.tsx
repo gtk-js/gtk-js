@@ -384,6 +384,11 @@ const cases: Record<string, () => React.ReactElement> = {
   "switch-on-disabled": () => <GtkSwitch active disabled data-testid="target" />,
 
   // GtkTextView cases
+  "text-view-content-height": () => (
+    <GtkBox orientation="vertical" style={{ width: "100px" }} data-testid="target">
+      <GtkTextView defaultValue={"1\n2\n3"} />
+    </GtkBox>
+  ),
   "text-view-default": () => <GtkTextView ref={textViewTarget} />,
   "text-view-monospace": () => <GtkTextView monospace ref={textViewTarget} />,
   "text-view-non-editable": () => <GtkTextView editable={false} ref={textViewTarget} />,
@@ -391,6 +396,13 @@ const cases: Record<string, () => React.ReactElement> = {
   "text-view-scrolled": () => (
     <GtkScrolledWindow hasFrame style={{ width: "200px", height: "100px" }} data-testid="target">
       <GtkTextView />
+    </GtkScrolledWindow>
+  ),
+  "text-view-scrolled-long": () => (
+    <GtkScrolledWindow hasFrame style={{ width: "200px", height: "100px" }} data-testid="target">
+      <GtkTextView
+        defaultValue={Array.from({ length: 30 }, (_, i) => `Line ${i + 1}`).join("\n")}
+      />
     </GtkScrolledWindow>
   ),
 
