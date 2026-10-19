@@ -270,6 +270,18 @@ const cases: Record<string, () => React.ReactElement> = {
   "button-pill": () => <GtkButton label="Button" className="pill" data-testid="target" />,
   "button-disabled": () => <GtkButton label="Button" disabled data-testid="target" />,
 
+  // Cursors (web-only, tests/cases/cursor-default.test.ts)
+  "cursor-default": () => (
+    <GtkBox orientation="vertical" spacing={6}>
+      <GtkLabel id="cursor-label" label="Label" />
+      <GtkButton id="cursor-button" label="Button" />
+      <GtkEntry id="cursor-entry" text="Entry" />
+      <GtkEntry id="cursor-entry-disabled" text="Disabled" disabled />
+      <GtkLinkButton id="cursor-link" uri="https://example.com" label="Link" />
+      <GtkTextView id="cursor-text-view" />
+    </GtkBox>
+  ),
+
   // GtkCalendar cases
   "calendar-default": () => <GtkCalendar year={2024} month={0} day={15} data-testid="target" />,
   "calendar-disabled": () => (
