@@ -95,6 +95,22 @@ body:has(> :first-child:has([data-gtk-provider])) > :first-child {
   user-select: text;
 }
 
+/* GtkText masks hidden text with U+25CF (BLACK CIRCLE) from its own font
+   (find_invisible_char() in gtktext.c); browsers mask with U+2022, about half
+   its size. This font draws both as Cantarell's black circle, at its size and
+   advance, so masked text looks native while the input stays a password field.
+   Anything else (a placeholder) is in the GTK font. */
+@font-face {
+  font-family: "gtk-js invisible char";
+  src: url("data:font/ttf;base64,AAEAAAAKAIAAAwAgT1MvMoTV6lMAAAEoAAAAYGNtYXArjhrRAAABkAAAADxnbHlmXwdQTgAAAdQAAAA6aGVhZC+WhyQAAACsAAAANmhoZWEGZgITAAAA5AAAACRobXR4BIMAWAAAAYgAAAAIbG9jYQAdAAAAAAHMAAAABm1heHAABAASAAABCAAAACBuYW1llue/jwAAAhAAAACKcG9zdM94ac8AAAKcAAAALQABAAAAAQAARMCLEF8PPPUAAQPoAAAAAOb5occAAAAA5vmhxwBZAGwCNgJKAAAAAwACAAAAAAAAAAEAAAPX/ycAAAKPAFgAWgI1AAEAAAAAAAAAAAAAAAAAAAACAAEAAAACABAAAQAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAwJCAZAABQAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAAgAAAAAAAAAAAAPz8/PwAAICIlzwLj/ycAAAPXANkAAAAAAAAAAAAAAAAAAAAgAAAB9AAAAo8AWAAAAAIAAAADAAAAFAADAAEAAAAUAAQAKAAAAAYABAABAAIgIiXP//8AACAiJc///9/f2jIAAQAAAAAAAAAAAAAAHQAAAAEAWQBsAjYCSgAPAAABNCcmIyIHBhUUFxYzMjc2AjZGRmJjRkZGRmJjRkYBW2NGRkZGY2NGRkZGAAAAAAAABAA2AAEAAAAAAAEAFQAAAAEAAAAAAAIABwAVAAMAAQQJAAEAKgAcAAMAAQQJAAIADgBGZ3RrLWpzIGludmlzaWJsZSBjaGFyUmVndWxhcgBnAHQAawAtAGoAcwAgAGkAbgB2AGkAcwBpAGIAbABlACAAYwBoAGEAcgBSAGUAZwB1AGwAYQByAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAABAgZjaXJjbGUAAAA=")
+    format("truetype");
+  unicode-range: U+2022, U+25CF;
+}
+
+:where([data-gtk-provider] input[type="password"]) {
+  font-family: "gtk-js invisible char", var(--gtk-font-family);
+}
+
 :where([data-gtk-provider] button) {
   appearance: none;
   cursor: default;
@@ -191,11 +207,12 @@ body:has(> :first-child:has([data-gtk-provider])) > :first-child {
   justify-content: center;
 }
 
-/* GtkLabel: inline text that vertically centers when stretched by a parent box.
+/* GtkLabel (and a progress bar's text, a GtkLabel named "text"): inline text
+   that vertically centers when stretched by a parent box.
    In native GTK, GtkLabel defaults to valign=CENTER. Widget sizes are whole
    pixels: a line of text is at least one line height rounded up, as in
    gtk_label_measure(). */
-:where([data-gtk-provider] .gtk-label) {
+:where([data-gtk-provider] .gtk-label, [data-gtk-provider] .gtk-progressbar > .gtk-text) {
   display: inline-flex;
   align-items: center;
   min-height: round(up, 1lh, 1px);

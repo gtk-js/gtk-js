@@ -941,33 +941,6 @@ function compoundKey(compound: string): string {
 }
 
 /**
- * PostCSS plugin: Convert .gtk-switch padding to transparent border.
- *
- * In native GTK, padding on the switch reduces the child allocation — the slider
- * knob is inset from the track edge. With CSS absolute positioning (used in
- * layout.css), the containing block is the padding edge (inside border, outside
- * padding), so padding does NOT shrink the space for absolutely-positioned children.
- *
- * Border DOES shrink it: the containing block for position:absolute is the
- * padding edge, which is inside the border. So converting padding to transparent
- * border achieves the same visual inset while correctly constraining the slider.
- */
-const fixSwitchPadding: Plugin = {
-  postcssPlugin: "gtk-fix-switch-padding",
-  Declaration(decl) {
-    if (decl.prop !== "padding") return;
-    if (!decl.parent || decl.parent.type !== "rule") return;
-    const rule = decl.parent;
-    if (!rule.selector.includes(".gtk-switch")) return;
-    if (rule.selector.includes(">")) return;
-
-    // Replace padding with transparent border of the same width
-    decl.prop = "border";
-    decl.value = `${decl.value} solid transparent`;
-  },
-};
-
-/**
  * The complete GTK → web CSS PostCSS transformation pipeline.
  * Pass a custom asset plugin to replace -gtk-scaled() with embedded data URIs.
  */
@@ -985,7 +958,6 @@ export function buildGtkToWeb(assetPlugin?: Plugin) {
     resolveCurrentColor,
     removeGtkRecolor,
     assetPlugin ?? removeGtkAssetFunctions,
-    fixSwitchPadding,
   ]);
 }
 

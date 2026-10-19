@@ -1,4 +1,4 @@
-import { useListBoxRow, wrapStyle } from "@gtk-js/gtk4";
+import { tooltipAttrs, useListBoxRow, wrapStyle } from "@gtk-js/gtk4";
 import { forwardRef, type HTMLAttributes, type ReactNode } from "react";
 
 export interface AdwActionRowProps extends HTMLAttributes<HTMLDivElement> {
@@ -92,7 +92,7 @@ export const AdwActionRow = forwardRef<HTMLDivElement, AdwActionRowProps>(functi
       ref={ref}
       role="listitem"
       className={classes.join(" ")}
-      title={tooltipText}
+      {...tooltipAttrs(tooltipText)}
       // Activatable rows are focusable and activate with Enter/Space, like GtkListBoxRow.
       tabIndex={activatable ? 0 : undefined}
       onClick={(e) => {

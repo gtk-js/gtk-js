@@ -13,6 +13,7 @@ import {
   type ReactNode,
   useCallback,
   useMemo,
+  useRef,
   useState,
 } from "react";
 import { AdwActionRow } from "./action-row.tsx";
@@ -21,6 +22,7 @@ import { FloatingSheet } from "./floating-sheet.tsx";
 import { AdwHeaderBar } from "./header-bar.tsx";
 import { AdwNavigationView } from "./navigation-view.tsx";
 import { AdwPreferencesGroup } from "./preferences-group.tsx";
+import { AdwToastOverlay, type AdwToastOverlayRef } from "./toast-overlay.tsx";
 import { AdwToolbarView } from "./toolbar-view.tsx";
 
 /** A titled list of people, for the Credits and Acknowledgements pages. */
@@ -465,10 +467,17 @@ export const AdwAboutDialog = forwardRef<HTMLDivElement, AdwAboutDialogProps>(
   ) {
     const AppIcon = useIcon(applicationIcon ?? "");
     const [stack, setStack] = useState<string[]>(["main"]);
-    const [copied, setCopied] = useState(false);
+    const toasts = useRef<AdwToastOverlayRef>(null);
     const [mainScrolled, setMainScrolled] = useState(false);
 
     const close = useCallback(() => onClosed?.(), [onClosed]);
+    // copy_property_cb(): the version or the debugging information, confirmed by a toast.
+    const copy = (text: string | undefined) => {
+      if (!text) return;
+      void navigator.clipboard
+        ?.writeText(text)
+        .then(() => toasts.current?.addToast({ title: "Copied to clipboard" }));
+    };
     const open = useCallback(
       (url: string) => (onOpenUrl ? onOpenUrl(url) : window.open(url, "_blank", "noopener")),
       [onOpenUrl],
@@ -556,11 +565,7 @@ export const AdwAboutDialog = forwardRef<HTMLDivElement, AdwAboutDialogProps>(
                   type="button"
                   className="gtk-button app-version"
                   style={{ alignSelf: "center" }}
-                  title={copied ? "Copied to clipboard" : "Copy version"}
-                  onClick={() => {
-                    void navigator.clipboard?.writeText(version);
-                    setCopied(true);
-                  }}
+                  onClick={() => copy(version)}
                 >
                   <span className="gtk-label">{version}</span>
                 </button>
@@ -728,12 +733,7 @@ export const AdwAboutDialog = forwardRef<HTMLDivElement, AdwAboutDialogProps>(
             }
             bottomBars={
               <GtkActionBar
-                start={
-                  <GtkButton
-                    label="Copy Text"
-                    onClicked={() => void navigator.clipboard?.writeText(debugInfo ?? "")}
-                  />
-                }
+                start={<GtkButton label="Copy Text" onClicked={() => copy(debugInfo)} />}
                 end={
                   <GtkButton
                     label="Save As…"
@@ -832,12 +832,18 @@ export const AdwAboutDialog = forwardRef<HTMLDivElement, AdwAboutDialogProps>(
         {...rest}
       >
         <WindowControlsContext.Provider value={controls}>
-          <AdwNavigationView
-            pages={pages}
-            stack={stack}
-            onStackChange={setStack}
-            style={{ flex: "1 1 auto", minHeight: 0 }}
-          />
+          {/* toast_overlay > navigation_view, as in adw-about-dialog.ui */}
+          <AdwToastOverlay
+            toastRef={toasts}
+            style={{ flex: "1 1 auto", minHeight: 0, display: "flex", flexDirection: "column" }}
+          >
+            <AdwNavigationView
+              pages={pages}
+              stack={stack}
+              onStackChange={setStack}
+              style={{ flex: "1 1 auto", minHeight: 0 }}
+            />
+          </AdwToastOverlay>
         </WindowControlsContext.Provider>
       </FloatingSheet>
     );
