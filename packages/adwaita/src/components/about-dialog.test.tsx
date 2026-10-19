@@ -54,7 +54,7 @@ describe("AdwAboutDialog main page", () => {
     );
     // adw-about-dialog.ui: toast_overlay > navigation_view, and version_button
     // (can-shrink, no tooltip).
-    expect(html).toMatch(/class="gtk-toastoverlay"[^>]*><div[^>]*class="gtk-navigation-view /);
+    expect(html).toMatch(/class="gtk-toastoverlay[^"]*"[^>]*><div[^>]*class="gtk-navigation-view /);
     const button = html.match(/<button[^>]*class="gtk-button text-button app-version"[^>]*>/);
     expect(button?.[0]).not.toContain("title=");
     expect(button?.[0]).not.toContain("data-gtk-tooltip");

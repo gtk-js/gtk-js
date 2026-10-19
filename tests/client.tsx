@@ -22,7 +22,9 @@ import {
   AdwSplitButton,
   AdwStatusPage,
   AdwSwitchRow,
+  type AdwToast,
   AdwToastOverlay,
+  type AdwToastOverlayRef,
   AdwToggleGroup,
   AdwToolbarView,
   AdwViewSwitcher,
@@ -73,7 +75,7 @@ import {
   GtkWindow,
   GtkWindowTitle,
 } from "@gtk-js/adwaita";
-import { Fragment, type ReactElement, useLayoutEffect, useRef, useState } from "react";
+import { Fragment, type ReactElement, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { createRoot } from "react-dom/client";
 
 const caseName = window.location.pathname.slice(1);
@@ -225,6 +227,41 @@ function SizedOnMount({ children }: { children: ReactElement }) {
 /** What the flow-box-behavior case's flow boxes report, for its test to read. */
 const flowBoxEvents: string[] = [];
 (window as unknown as { flowBoxEvents: string[] }).flowBoxEvents = flowBoxEvents;
+
+/**
+ * A 300px AdwToastOverlay showing `toast`, added when it mounts. The native
+ * cases add it before the overlay is mapped, so it doesn't slide in: this one
+ * becomes the target once its slide-in is over.
+ */
+function ToastOverlayShowing({ toast }: { toast: AdwToast }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const toastRef = useRef<AdwToastOverlayRef>(null);
+  const [shown, setShown] = useState(false);
+  useEffect(() => {
+    toastRef.current?.addToast(toast);
+    requestAnimationFrame(() => {
+      const animations = ref.current?.getAnimations({ subtree: true }) ?? [];
+      Promise.all(animations.map((a) => a.finished)).then(() => setShown(true));
+    });
+  }, [toast]);
+  return (
+    <AdwToastOverlay
+      ref={ref}
+      toastRef={toastRef}
+      style={{ width: 300 }}
+      data-testid={shown ? "target" : undefined}
+    >
+      <GtkLabel label="Content under toasts" valign="start" />
+    </AdwToastOverlay>
+  );
+}
+
+const TOAST_HELLO: AdwToast = { title: "Hello!", timeout: 0 };
+const TOAST_LONG: AdwToast = {
+  title:
+    "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt",
+  timeout: 0,
+};
 
 const cases: Record<string, () => React.ReactElement> = {
   // halign/valign alignment cases
@@ -1622,6 +1659,8 @@ const cases: Record<string, () => React.ReactElement> = {
       <GtkLabel label="Content under toasts" />
     </AdwToastOverlay>
   ),
+  "toast-overlay-hello": () => <ToastOverlayShowing toast={TOAST_HELLO} />,
+  "toast-overlay-narrow": () => <ToastOverlayShowing toast={TOAST_LONG} />,
 
   // AdwButtonContent cases
   "button-content-button": () => (
