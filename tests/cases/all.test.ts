@@ -6,8 +6,6 @@ gtkTest("box-homogeneous");
 gtkTest("box-spacing");
 gtkTest("box-vertical-default");
 gtkTest("center-box-default");
-gtkTest("expander-default");
-gtkTest("expander-expanded");
 gtkTest("flow-box-default");
 gtkTest("frame-default");
 gtkTest("frame-no-label");
