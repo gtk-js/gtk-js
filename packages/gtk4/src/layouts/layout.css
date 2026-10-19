@@ -178,9 +178,34 @@
 .gtk-overlay {
   display: grid;
   grid-template: 1fr / 1fr;
+  position: relative;
 }
 .gtk-overlay > .gtk-overlay-child {
   display: contents;
+}
+/* Only the child and the overlays with measure size the overlay
+ * (gtk_overlay_layout_measure()). Any other overlay gets a layer over the
+ * overlay's area instead: it takes MAX (min, MIN (width, nat)) there and can
+ * overflow it, unless clip-overlay clips it (gtk_overlay_snapshot_child()).
+ * An axis it fills keeps 1fr, so it never gets less than its minimum. */
+.gtk-overlay > .gtk-overlay-child[data-expand-ignored]:not([data-measure]) {
+  display: grid;
+  grid-template: 1fr / 1fr;
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.gtk-overlay > .gtk-overlay-child[data-expand-ignored]:not([data-measure]):has(> [data-halign]) {
+  grid-template-columns: minmax(0, 1fr);
+}
+.gtk-overlay > .gtk-overlay-child[data-expand-ignored]:not([data-measure]):has(> [data-valign]) {
+  grid-template-rows: minmax(0, 1fr);
+}
+.gtk-overlay > .gtk-overlay-child[data-expand-ignored]:not([data-measure]) > * {
+  pointer-events: auto;
+}
+.gtk-overlay > .gtk-overlay-child[data-clip-overlay] {
+  overflow: clip;
 }
 .gtk-overlay > :not(.gtk-overlay-child),
 .gtk-overlay > .gtk-overlay-child > * {

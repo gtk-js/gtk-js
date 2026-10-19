@@ -21,4 +21,26 @@ describe("GtkOverlay", () => {
       /<div class="gtk-overlay-child" data-expand-ignored=""><span class="gtk-label" data-halign="end" data-valign="end"/,
     );
   });
+
+  test("marks the overlays with measure or clip-overlay set", () => {
+    const html = renderToStaticMarkup(
+      <GtkOverlay
+        child={<GtkLabel label="Main" />}
+        overlays={[
+          <GtkLabel key="plain" label="Plain" />,
+          { child: <GtkLabel label="Measured" />, measure: true },
+          { child: <GtkLabel label="Clipped" />, clipOverlay: true },
+        ]}
+      />,
+    );
+    const wrappers = html.match(/<div class="gtk-overlay-child"[^>]*>/g);
+    expect(wrappers).toEqual([
+      '<div class="gtk-overlay-child">',
+      '<div class="gtk-overlay-child" data-expand-ignored="">',
+      '<div class="gtk-overlay-child" data-expand-ignored="" data-measure="">',
+      '<div class="gtk-overlay-child" data-expand-ignored="" data-clip-overlay="">',
+    ]);
+    expect(html).toContain("Measured");
+    expect(html).toContain("Clipped");
+  });
 });

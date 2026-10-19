@@ -130,6 +130,7 @@ pub mod menu_button_icon;
 pub mod menu_button_text_default;
 pub mod notebook_default;
 pub mod overlay_default;
+pub mod overlay_measure;
 pub mod paned_horizontal;
 pub mod paned_vertical;
 pub mod password_entry_default;

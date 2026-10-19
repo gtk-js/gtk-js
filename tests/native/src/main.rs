@@ -103,6 +103,7 @@ enum Command {
     FrameNoLabel,
     GridDefault,
     OverlayDefault,
+    OverlayMeasure,
     PanedHorizontal,
     PanedVertical,
     ButtonValignCenterHbox,
@@ -344,6 +345,7 @@ impl Command {
             Self::FrameNoLabel => Some("frame-no-label"),
             Self::GridDefault => Some("grid-default"),
             Self::OverlayDefault => Some("overlay-default"),
+            Self::OverlayMeasure => Some("overlay-measure"),
             Self::PanedHorizontal => Some("paned-horizontal"),
             Self::PanedVertical => Some("paned-vertical"),
             Self::ButtonValignCenterHbox => Some("button-valign-center-hbox"),
@@ -652,6 +654,7 @@ fn create_widget_for_case(name: &str) -> Option<(gtk::Widget, bool)> {
         "listbox-separators" => widget_case!(cases::listbox_separators::ListboxSeparators, false),
         "notebook-default" => widget_case!(cases::notebook_default::NotebookDefault, false),
         "overlay-default" => widget_case!(cases::overlay_default::OverlayDefault, false),
+        "overlay-measure" => widget_case!(cases::overlay_measure::OverlayMeasure, false),
         "paned-horizontal" => widget_case!(cases::paned_horizontal::PanedHorizontal, false),
         "paned-vertical" => widget_case!(cases::paned_vertical::PanedVertical, false),
         "popover-default" => widget_case!(cases::popover_default::PopoverDefault, false),
@@ -1072,6 +1075,7 @@ fn is_known_case(name: &str) -> bool {
             | "listbox-separators"
             | "notebook-default"
             | "overlay-default"
+            | "overlay-measure"
             | "paned-horizontal"
             | "paned-vertical"
             | "popover-default"
