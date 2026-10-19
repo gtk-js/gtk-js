@@ -122,11 +122,13 @@ body:has(> :first-child:has([data-gtk-provider])) > :first-child {
    titlebar takes its natural height and the content div (flex:1) fills the rest.
    In native GTK the window manager supplies the size constraint; on the web the
    container must provide a bounded height (e.g. html/body at 100%).
-   @see upstream/gtk/gtk/gtkwindow.c — _gtk_window_set_allocation */
+   @see upstream/gtk/gtk/gtkwindow.c — _gtk_window_set_allocation
+   Dialogs hosted in the window (WindowElementContext) cover it, not the page. */
 :where([data-gtk-provider] .gtk-window.csd) {
   display: flex;
   flex-direction: column;
   overflow: clip;
+  position: relative;
 }
 
 /* GtkWindow draggableRegions: GtkWindowHandle moves the window. Hosts that move

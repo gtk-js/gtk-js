@@ -50,6 +50,7 @@ enum Command {
     AdwHeaderbarDefault,
     AdwHeaderbarWithTitle,
     AdwHeaderbarStartEnd,
+    AdwHeaderbarStrictCentering,
     AdwNavigationViewDefault,
     AdwNavigationViewScrolled,
     AdwOverlaySplitViewDefault,
@@ -65,6 +66,7 @@ enum Command {
     AdwSwitchRowDefault,
     AdwSwitchRowActive,
     AdwToolbarViewDefault,
+    AdwToolbarViewExtendTwoBars,
     AdwToolbarViewWithBottom,
     AdwViewSwitcherDefault,
     AvatarDefault,
@@ -287,6 +289,7 @@ impl Command {
             Self::AdwHeaderbarDefault => Some("adw-headerbar-default"),
             Self::AdwHeaderbarWithTitle => Some("adw-headerbar-with-title"),
             Self::AdwHeaderbarStartEnd => Some("adw-headerbar-start-end"),
+            Self::AdwHeaderbarStrictCentering => Some("adw-headerbar-strict-centering"),
             Self::AdwNavigationViewDefault => Some("adw-navigation-view-default"),
             Self::AdwNavigationViewScrolled => Some("adw-navigation-view-scrolled"),
             Self::AdwOverlaySplitViewDefault => Some("adw-overlay-split-view-default"),
@@ -302,6 +305,7 @@ impl Command {
             Self::AdwSwitchRowDefault => Some("adw-switch-row-default"),
             Self::AdwSwitchRowActive => Some("adw-switch-row-active"),
             Self::AdwToolbarViewDefault => Some("adw-toolbar-view-default"),
+            Self::AdwToolbarViewExtendTwoBars => Some("adw-toolbar-view-extend-two-bars"),
             Self::AdwToolbarViewWithBottom => Some("adw-toolbar-view-with-bottom"),
             Self::AdwViewSwitcherDefault => Some("adw-view-switcher-default"),
             Self::AvatarDefault => Some("avatar-default"),
@@ -519,6 +523,9 @@ fn create_widget_for_case(name: &str) -> Option<(gtk::Widget, bool)> {
         "adw-headerbar-start-end" => {
             widget_case!(cases::adw_headerbar_start_end::AdwHeaderbarStartEnd, false)
         }
+        "adw-headerbar-strict-centering" => {
+            widget_case!(cases::adw_headerbar_strict_centering::AdwHeaderbarStrictCentering, false)
+        }
         "adw-navigation-view-default" => {
             widget_case!(cases::adw_navigation_view_default::AdwNavigationViewDefault, false)
         }
@@ -563,6 +570,9 @@ fn create_widget_for_case(name: &str) -> Option<(gtk::Widget, bool)> {
         }
         "adw-toolbar-view-default" => {
             widget_case!(cases::adw_toolbar_view_default::AdwToolbarViewDefault, false)
+        }
+        "adw-toolbar-view-extend-two-bars" => {
+            widget_case!(cases::adw_toolbar_view_extend_two_bars::AdwToolbarViewExtendTwoBars, false)
         }
         "adw-toolbar-view-with-bottom" => {
             widget_case!(cases::adw_toolbar_view_with_bottom::AdwToolbarViewWithBottom, false)
@@ -1025,6 +1035,7 @@ fn is_known_case(name: &str) -> bool {
             | "adw-headerbar-default"
             | "adw-headerbar-with-title"
             | "adw-headerbar-start-end"
+            | "adw-headerbar-strict-centering"
             | "adw-navigation-view-default"
             | "adw-navigation-view-scrolled"
             | "adw-overlay-split-view-default"
@@ -1040,6 +1051,7 @@ fn is_known_case(name: &str) -> bool {
             | "adw-switch-row-default"
             | "adw-switch-row-active"
             | "adw-toolbar-view-default"
+            | "adw-toolbar-view-extend-two-bars"
             | "adw-toolbar-view-with-bottom"
             | "adw-view-switcher-default"
             | "avatar-default"
