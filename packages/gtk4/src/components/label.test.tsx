@@ -130,4 +130,11 @@ describe("GtkLabel", () => {
     expect(warn).toHaveBeenCalledTimes(4);
     warn.mockRestore();
   });
+
+  test("an ellipsizing label's minimum is the ellipsis or width-chars, its natural width the text", () => {
+    const style = (props: object) =>
+      styleOf(renderToStaticMarkup(<GtkLabel label="text" ellipsize="end" {...props} />));
+    expect(style({})).toContain("grid-template-columns:minmax(1em, max-content)");
+    expect(style({ widthChars: 5 })).toContain("minmax(max(1em, 5ch), max-content)");
+  });
 });

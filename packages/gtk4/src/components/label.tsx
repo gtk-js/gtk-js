@@ -168,6 +168,12 @@ export const GtkLabel = forwardRef<HTMLSpanElement, GtkLabelProps>(function GtkL
   if (ellipsizing) {
     cssStyle.overflow = "hidden";
     cssStyle.whiteSpace = "pre";
+    // Its minimum width is the ellipsis alone (about 1em), or width-chars if
+    // wider, and its natural width the whole text (get_static_size()): a
+    // one-column grid whose track goes from that minimum up to the text.
+    // xalign and yalign place the track as they place the flex label's text.
+    cssStyle.display = "inline-grid";
+    cssStyle.gridTemplateColumns = `minmax(${widthChars > 0 ? `max(1em, ${widthChars}ch)` : "1em"}, max-content)`;
   }
 
   if (widthChars > 0) {

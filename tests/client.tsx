@@ -285,6 +285,18 @@ const cases: Record<string, () => React.ReactElement> = {
       data-testid="target"
     />
   ),
+  "label-ellipsize-min-width": () => (
+    <GtkBox orientation="vertical" halign="start" valign="start" data-testid="target">
+      <GtkBox halign="start" style={{ width: "min-content" }}>
+        <GtkLabel label="A fairly long ellipsizing label" ellipsize="end" />
+        <GtkLabel label="Fixed" />
+      </GtkBox>
+      <GtkBox halign="start" style={{ width: "min-content" }}>
+        <GtkLabel label="A fairly long ellipsizing label" ellipsize="end" widthChars={5} />
+        <GtkLabel label="Fixed" />
+      </GtkBox>
+    </GtkBox>
+  ),
   "label-heights": () => (
     <GtkBox orientation="vertical" halign="start" valign="start" data-testid="target">
       <GtkLabel label="Label" />
