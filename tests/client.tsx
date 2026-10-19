@@ -476,12 +476,35 @@ const cases: Record<string, () => React.ReactElement> = {
   ),
 
   // GtkCenterBox cases
+  "center-box-baseline-bottom": () => (
+    <GtkCenterBox
+      halign="start"
+      valign="start"
+      style={{ width: 240, height: 60 }}
+      baselinePosition="bottom"
+      startWidget={<GtkLabel label="Bottom" valign="baseline-center" />}
+      endWidget={<GtkButton label="Baseline" valign="baseline-center" />}
+      data-testid="target"
+    />
+  ),
   "center-box-default": () => (
     <GtkCenterBox
       style={{ width: "300px" }}
       startWidget={<GtkLabel label="Start" />}
       centerWidget={<GtkLabel label="Center" />}
       endWidget={<GtkLabel label="End" />}
+      data-testid="target"
+    />
+  ),
+  // GTK's height request includes the button's 5px vertical padding.
+  "center-box-fill-expand": () => (
+    <GtkCenterBox
+      halign="start"
+      valign="start"
+      style={{ width: 360 }}
+      startWidget={<GtkButton label="Start" hexpand />}
+      centerWidget={<GtkButton label="Tall" style={{ minHeight: 60 }} />}
+      endWidget={<GtkButton label="End" valign="start" />}
       data-testid="target"
     />
   ),
@@ -769,6 +792,14 @@ const cases: Record<string, () => React.ReactElement> = {
     <GtkActionBar
       start={<GtkButton label="Action" />}
       end={<GtkButton label="Done" />}
+      data-testid="target"
+    />
+  ),
+  "actionbar-hexpand": () => (
+    <GtkActionBar
+      style={{ width: 360 }}
+      start={<GtkButton label="Start" hexpand />}
+      end={<GtkButton label="End" />}
       data-testid="target"
     />
   ),

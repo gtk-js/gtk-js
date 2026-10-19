@@ -1,4 +1,5 @@
 pub mod actionbar_default;
+pub mod actionbar_hexpand;
 pub mod adw_action_row_activatable;
 pub mod adw_action_row_default;
 pub mod adw_action_row_with_subtitle;
@@ -64,7 +65,9 @@ pub mod button_text_suggested;
 pub mod button_valign_center_hbox;
 pub mod button_valign_end_hbox;
 pub mod calendar_default;
+pub mod center_box_baseline_bottom;
 pub mod center_box_default;
+pub mod center_box_fill_expand;
 pub mod center_box_toolbar_center_end_narrow;
 pub mod center_box_toolbar_center_only;
 pub mod center_box_toolbar_start_center_narrow;

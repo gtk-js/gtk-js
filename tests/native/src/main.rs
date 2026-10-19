@@ -38,6 +38,7 @@ enum Command {
         port_file: Option<PathBuf>,
     },
     ActionbarDefault,
+    ActionbarHexpand,
     AdwActionRowDefault,
     AdwActionRowWithSubtitle,
     AdwActionRowActivatable,
@@ -84,7 +85,9 @@ enum Command {
     BoxHexpand,
     BoxHexpandComputed,
     BoxHomogeneous,
+    CenterBoxBaselineBottom,
     CenterBoxDefault,
+    CenterBoxFillExpand,
     CenterBoxToolbarCenterEndNarrow,
     CenterBoxToolbarCenterOnly,
     CenterBoxToolbarStartCenterNarrow,
@@ -273,6 +276,7 @@ impl Command {
         match self {
             Self::Serve { .. } => None,
             Self::ActionbarDefault => Some("actionbar-default"),
+            Self::ActionbarHexpand => Some("actionbar-hexpand"),
             Self::AdwActionRowDefault => Some("adw-action-row-default"),
             Self::AdwActionRowWithSubtitle => Some("adw-action-row-with-subtitle"),
             Self::AdwActionRowActivatable => Some("adw-action-row-activatable"),
@@ -319,7 +323,9 @@ impl Command {
             Self::BoxHomogeneous => Some("box-homogeneous"),
             Self::BoxHexpand => Some("box-hexpand"),
             Self::BoxHexpandComputed => Some("box-hexpand-computed"),
+            Self::CenterBoxBaselineBottom => Some("center-box-baseline-bottom"),
             Self::CenterBoxDefault => Some("center-box-default"),
+            Self::CenterBoxFillExpand => Some("center-box-fill-expand"),
             Self::CenterBoxToolbarCenterEndNarrow => Some("center-box-toolbar-center-end-narrow"),
             Self::CenterBoxToolbarCenterOnly => Some("center-box-toolbar-center-only"),
             Self::CenterBoxToolbarStartCenterNarrow => {
@@ -479,6 +485,9 @@ fn create_widget_for_case(name: &str) -> Option<(gtk::Widget, bool)> {
         "actionbar-default" => {
             widget_case!(cases::actionbar_default::ActionbarDefault, false)
         }
+        "actionbar-hexpand" => {
+            widget_case!(cases::actionbar_hexpand::ActionbarHexpand, false)
+        }
         "adw-action-row-default" => {
             widget_case!(cases::adw_action_row_default::AdwActionRowDefault, false)
         }
@@ -599,7 +608,14 @@ fn create_widget_for_case(name: &str) -> Option<(gtk::Widget, bool)> {
         "box-hexpand-computed" => {
             widget_case!(cases::box_hexpand_computed::BoxHexpandComputed, false)
         }
+        "center-box-baseline-bottom" => widget_case!(
+            cases::center_box_baseline_bottom::CenterBoxBaselineBottom,
+            false
+        ),
         "center-box-default" => widget_case!(cases::center_box_default::CenterBoxDefault, false),
+        "center-box-fill-expand" => {
+            widget_case!(cases::center_box_fill_expand::CenterBoxFillExpand, false)
+        }
         "center-box-toolbar-center-end-narrow" => widget_case!(
             cases::center_box_toolbar_center_end_narrow::CenterBoxToolbarCenterEndNarrow,
             false
@@ -1003,6 +1019,7 @@ fn is_known_case(name: &str) -> bool {
     matches!(
         name,
         "actionbar-default"
+            | "actionbar-hexpand"
             | "adw-action-row-default"
             | "adw-action-row-with-subtitle"
             | "adw-action-row-activatable"
@@ -1049,7 +1066,9 @@ fn is_known_case(name: &str) -> bool {
             | "box-homogeneous"
             | "box-hexpand"
             | "box-hexpand-computed"
+            | "center-box-baseline-bottom"
             | "center-box-default"
+            | "center-box-fill-expand"
             | "center-box-toolbar-center-end-narrow"
             | "center-box-toolbar-center-only"
             | "center-box-toolbar-start-center-narrow"
