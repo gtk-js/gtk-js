@@ -1,4 +1,4 @@
-import { GtkSwitch, useListBoxRow, wrapStyle } from "@gtk-js/gtk4";
+import { GtkSwitch, tooltipAttrs, useListBoxRow, wrapStyle } from "@gtk-js/gtk4";
 import {
   forwardRef,
   type HTMLAttributes,
@@ -121,7 +121,7 @@ export const AdwSwitchRow = forwardRef<HTMLDivElement, AdwSwitchRowProps>(functi
       aria-disabled={insensitive}
       data-disabled={insensitive}
       className={classes.join(" ")}
-      title={tooltipText}
+      {...tooltipAttrs(tooltipText)}
       // The row takes the focus, and Enter/Space activate it (GtkWindow's
       // activate-focus binding).
       tabIndex={disabled ? undefined : 0}

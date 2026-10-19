@@ -50,7 +50,7 @@ test("it takes AdwActionRow's prefixes, suffixes, lines and tooltip, the switch 
       <i id="child" />
     </AdwSwitchRow>,
   );
-  expect(tag(html, "gtk-row activatable")).toMatch(/title="Wireless"/);
+  expect(tag(html, "gtk-row activatable")).toMatch(/data-gtk-tooltip="Wireless"/);
   expect(html).toContain(
     '<div class="gtk-box gtk-box-layout horizontal prefixes"><i id="prefix"></i></div>',
   );
