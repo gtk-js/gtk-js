@@ -77,6 +77,10 @@ body:has(> :first-child:has([data-gtk-provider])) > :first-child {
   font-family: var(--gtk-font-family);
   font-size: var(--gtk-font-size);
   line-height: var(--gtk-line-height);
+  /* GTK shows the default arrow unless a widget sets a cursor
+     (gtk_widget_set_cursor_from_name()). Set once here and inherited, so
+     the cursors widgets and links set still reach their descendants. */
+  cursor: default;
 }
 
 /* GtkText: one line of text, as tall as its layout in whole pixels
@@ -93,6 +97,17 @@ body:has(> :first-child:has([data-gtk-provider])) > :first-child {
 :where([data-gtk-provider] [contenteditable="true"]) {
   -webkit-user-select: text;
   user-select: text;
+}
+
+/* GtkText and GtkTextView show the text cursor (set_text_cursor(),
+   gtk_text_view_init()); insensitive ones aren't picked
+   (gtk_widget_can_be_picked()), so the arrow shows through. */
+:where([data-gtk-provider] :is(.gtk-text, .gtk-textview, [contenteditable="true"])) {
+  cursor: text;
+}
+
+:where([data-gtk-provider] :is(:disabled, [data-disabled], [data-disabled] *)) {
+  cursor: default;
 }
 
 :where([data-gtk-provider] button) {
