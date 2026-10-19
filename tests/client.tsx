@@ -175,6 +175,15 @@ const cases: Record<string, () => React.ReactElement> = {
     <GtkCheckButton label="Checkbox" active disabled data-testid="target" />
   ),
   "check-button-no-label": () => <GtkCheckButton data-testid="target" />,
+  "check-button-custom-child": () => (
+    <GtkCheckButton data-testid="target">
+      <GtkBox orientation="vertical">
+        <GtkLabel label="Title line" xalign={0} />
+        <GtkLabel label="Second line of text" xalign={0} />
+      </GtkBox>
+    </GtkCheckButton>
+  ),
+  "check-button-empty-label": () => <GtkCheckButton label="" data-testid="target" />,
   "radio-button-default": () => <GtkCheckButton label="Radio" group="test" data-testid="target" />,
   "radio-button-checked": () => (
     <GtkCheckButton label="Radio" group="test" active data-testid="target" />
