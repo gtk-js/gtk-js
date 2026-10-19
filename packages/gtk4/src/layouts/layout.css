@@ -339,6 +339,18 @@
 }
 
 /* === Scale (GtkRange / GtkScale) === */
+/* GtkProgressBar: a vertical box layout whatever its orientation, with the
+ * text above the trough. A horizontal bar's trough fills the width, a vertical
+ * one's the height (gtk_progress_bar_set_orientation()). */
+.gtk-progressbar {
+  display: flex;
+  flex-direction: column;
+}
+.gtk-progressbar.vertical > .gtk-trough {
+  flex-grow: 1;
+  align-self: center;
+}
+
 /*
  * GTK uses a custom layout manager (gtk_range_allocate_trough) for the trough.
  * Key facts from the C source (gtkrange.c, gtk_range_compute_slider_position):

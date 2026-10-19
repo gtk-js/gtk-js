@@ -61,3 +61,15 @@ describe("GtkListBoxRow focus", () => {
     expect(html.match(/tabindex="0"/g)).toHaveLength(2);
   });
 });
+
+describe("GtkListBoxRow", () => {
+  test("shows tooltipText as a GTK tooltip", () => {
+    const html = renderToStaticMarkup(
+      <GtkListBox>
+        <GtkListBoxRow tooltipText="Documents">A</GtkListBoxRow>
+      </GtkListBox>,
+    );
+    expect(html).toContain('data-gtk-tooltip="Documents"');
+    expect(html).toContain('aria-description="Documents"');
+  });
+});
