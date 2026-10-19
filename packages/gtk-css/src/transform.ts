@@ -962,11 +962,39 @@ const fixSwitchPadding: Plugin = {
 };
 
 /**
- * The complete GTK → web CSS PostCSS transformation pipeline.
- * Pass a custom asset plugin to replace -gtk-scaled() with embedded data URIs.
+ * PostCSS plugin: Resolve `@media (prefers-color-scheme: …)` blocks for a
+ * single-scheme build.
+ *
+ * Besides its dark `@define-color`s (see preprocess()), libadwaita sets plain
+ * custom properties in `@media (prefers-color-scheme: dark)` blocks, e.g.
+ * `--active-toggle-bg-color`. GTK matches them against the provider's
+ * prefers-color-scheme, which AdwStyleManager sets from its own scheme
+ * (update_stylesheet()), not the OS's. So a stylesheet built for one scheme
+ * applies that scheme's blocks unconditionally and drops the others'.
  */
-export function buildGtkToWeb(assetPlugin?: Plugin) {
+function forceColorScheme(scheme: "light" | "dark"): Plugin {
+  return {
+    postcssPlugin: "gtk-force-color-scheme",
+    Once(root) {
+      root.walkAtRules("media", (atRule) => {
+        if (!atRule.params.includes("prefers-color-scheme")) return;
+        const m = atRule.params.match(/^\(\s*prefers-color-scheme:\s*(light|dark)\s*\)$/);
+        if (!m) throw new Error(`Unsupported color scheme media query: @media ${atRule.params}`);
+        if (m[1] === scheme) atRule.replaceWith(atRule.nodes ?? []);
+        else atRule.remove();
+      });
+    },
+  };
+}
+
+/**
+ * The complete GTK → web CSS PostCSS transformation pipeline.
+ * Pass a custom asset plugin to replace -gtk-scaled() with embedded data URIs,
+ * and a scheme to build a stylesheet for that color scheme only.
+ */
+export function buildGtkToWeb(assetPlugin?: Plugin, scheme?: "light" | "dark") {
   return postcss([
+    ...(scheme ? [forceColorScheme(scheme)] : []),
     remapSelectors,
     remapSelectionNode,
     remapPseudoClasses,
