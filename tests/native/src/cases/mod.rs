@@ -35,6 +35,7 @@ pub mod banner_revealed;
 pub mod banner_with_button;
 pub mod carousel_default;
 pub mod clamp_default;
+pub mod clamp_sizes;
 pub mod status_page_default;
 pub mod status_page_no_icon;
 pub mod toast_overlay_default;

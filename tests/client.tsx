@@ -72,6 +72,7 @@ import {
 } from "@gtk-js/adwaita";
 import { Fragment, type ReactElement, useLayoutEffect, useRef } from "react";
 import { createRoot } from "react-dom/client";
+import { renderToStaticMarkup } from "react-dom/server";
 
 const caseName = window.location.pathname.slice(1);
 const isGallery = caseName === "gallery";
@@ -821,6 +822,23 @@ const cases: Record<string, () => React.ReactElement> = {
     <AdwClamp maximumSize={600} tighteningThreshold={400} data-testid="target">
       <GtkLabel label="Clamped content" />
     </AdwClamp>
+  ),
+  // The server's markup, with no effects run: the child's size comes from CSS.
+  "clamp-sizes": () => (
+    <div
+      style={{ display: "contents" }}
+      dangerouslySetInnerHTML={{
+        __html: renderToStaticMarkup(
+          <GtkBox orientation="vertical" data-testid="target">
+            {[300, 500, 700, 1200].map((width) => (
+              <AdwClamp key={width} style={{ width }}>
+                <GtkLabel label="Clamped" style={{ margin: "0 12px" }} />
+              </AdwClamp>
+            ))}
+          </GtkBox>,
+        ),
+      }}
+    />
   ),
 
   // AdwCarousel cases

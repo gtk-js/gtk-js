@@ -58,8 +58,9 @@ export function clampChildSize(
  *
  * Like AdwClampLayout, the child (the clamp's direct child, so theme
  * selectors such as `clamp > box` match) is allocated the eased size from
- * clampChildSize() along the clamp's orientation, including its margins, and
- * gets the `.small`, `.medium` or `.large` style class.
+ * clampChildSize() along the clamp's orientation, including its margins (in
+ * CSS, see layout.css), and gets the `.small`, `.medium` or `.large` style
+ * class.
  *
  * CSS node:
  *   clamp
@@ -89,36 +90,23 @@ export const AdwClamp = forwardRef<HTMLDivElement, AdwClampProps>(function AdwCl
   const sizeClassRef = useRef<string | null>(null);
   const horizontal = orientation === "horizontal";
 
+  const lower = Math.min(toPx(tighteningThreshold, unit), toPx(maximumSize, unit));
+  const range = Math.max(0, toPx(maximumSize, unit) - lower);
+
+  // The child's size is CSS (layout.css), so it's right before hydration too;
+  // only the style classes need its allocation, which CSS can't give a class.
   const allocate = useCallback(() => {
     const clamp = containerRef.current;
-    const child = clamp?.firstElementChild as HTMLElement | null | undefined;
+    const child = clamp?.firstElementChild;
     if (!clamp || !child) return;
     const cs = getComputedStyle(clamp);
     const available = horizontal
       ? clamp.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight)
       : clamp.clientHeight - parseFloat(cs.paddingTop) - parseFloat(cs.paddingBottom);
-    const { size, sizeClass } = clampChildSize(
-      available,
-      toPx(maximumSize, unit),
-      toPx(tighteningThreshold, unit),
-    );
-    // GTK allocations include the child's margins (and, being content-box
-    // here, its border and padding): subtract them to get the CSS size.
-    const ccs = getComputedStyle(child);
-    const extra = (a: string, b: string) =>
-      ["margin", "border", "padding"].reduce(
-        (sum, box) =>
-          sum +
-          parseFloat(ccs.getPropertyValue(`${box}-${a}${box === "border" ? "-width" : ""}`)) +
-          parseFloat(ccs.getPropertyValue(`${box}-${b}${box === "border" ? "-width" : ""}`)),
-        0,
-      );
-    const cssSize = `${Math.max(0, size - (horizontal ? extra("left", "right") : extra("top", "bottom")))}px`;
-    if (horizontal) child.style.width = cssSize;
-    else child.style.height = cssSize;
+    const { sizeClass } = clampChildSize(available, lower + range, lower);
     sizeClassRef.current = sizeClass;
     applySizeClass(child, sizeClass);
-  }, [horizontal, maximumSize, tighteningThreshold, unit]);
+  }, [horizontal, lower, range]);
 
   // Children can change on any render.
   useLayoutEffect(allocate);
@@ -160,6 +148,7 @@ export const AdwClamp = forwardRef<HTMLDivElement, AdwClampProps>(function AdwCl
     alignItems: "stretch",
     minWidth: 0,
     minHeight: 0,
+    ...({ "--adw-clamp-lower": `${lower}px`, "--adw-clamp-range": `${range}px` } as CSSProperties),
     ...style,
   };
 

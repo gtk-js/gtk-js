@@ -308,6 +308,60 @@
   align-self: center;
 }
 
+/* === AdwClamp === */
+/*
+ * child_size_from_clamp() in adw-clamp-layout.c: up to the tightening
+ * threshold the child gets the whole width (100%); from there it approaches
+ * the maximum size on an ease-out cubic curve, reaching it at
+ * lower + 3 × range, floored to a pixel. The curve is concave, so it is the
+ * min() of its chords: 16 of them, denser where it bends most, each raised by
+ * half its error. At the default sizes that's within 0.15px of the curve, so
+ * at most 1px off once floored. AdwClamp sets --adw-clamp-lower (the
+ * threshold, at most the maximum size) and --adw-clamp-range (maximum − lower).
+ */
+.gtk-clamp {
+  --adw-clamp-over: calc(100% - var(--adw-clamp-lower));
+  /* biome-ignore format: one chord a line */
+  --adw-clamp-size: round(
+    down,
+    min(
+      100%,
+      calc(var(--adw-clamp-lower) + var(--adw-clamp-range)),
+      calc(var(--adw-clamp-lower) + var(--adw-clamp-over) * 0.9585 + var(--adw-clamp-range) * 0.0006),
+      calc(var(--adw-clamp-lower) + var(--adw-clamp-over) * 0.8769 + var(--adw-clamp-range) * 0.0109),
+      calc(var(--adw-clamp-lower) + var(--adw-clamp-over) * 0.7972 + var(--adw-clamp-range) * 0.0313),
+      calc(var(--adw-clamp-lower) + var(--adw-clamp-over) * 0.7195 + var(--adw-clamp-range) * 0.0615),
+      calc(var(--adw-clamp-lower) + var(--adw-clamp-over) * 0.6437 + var(--adw-clamp-range) * 0.1011),
+      calc(var(--adw-clamp-lower) + var(--adw-clamp-over) * 0.5702 + var(--adw-clamp-range) * 0.1499),
+      calc(var(--adw-clamp-lower) + var(--adw-clamp-over) * 0.4989 + var(--adw-clamp-range) * 0.2074),
+      calc(var(--adw-clamp-lower) + var(--adw-clamp-over) * 0.4301 + var(--adw-clamp-range) * 0.2731),
+      calc(var(--adw-clamp-lower) + var(--adw-clamp-over) * 0.3640 + var(--adw-clamp-range) * 0.3466),
+      calc(var(--adw-clamp-lower) + var(--adw-clamp-over) * 0.3008 + var(--adw-clamp-range) * 0.4270),
+      calc(var(--adw-clamp-lower) + var(--adw-clamp-over) * 0.2407 + var(--adw-clamp-range) * 0.5135),
+      calc(var(--adw-clamp-lower) + var(--adw-clamp-over) * 0.1841 + var(--adw-clamp-range) * 0.6050),
+      calc(var(--adw-clamp-lower) + var(--adw-clamp-over) * 0.1316 + var(--adw-clamp-range) * 0.7000),
+      calc(var(--adw-clamp-lower) + var(--adw-clamp-over) * 0.0839 + var(--adw-clamp-range) * 0.7962),
+      calc(var(--adw-clamp-lower) + var(--adw-clamp-over) * 0.0422 + var(--adw-clamp-range) * 0.8900),
+      calc(var(--adw-clamp-lower) + var(--adw-clamp-over) * 0.0083 + var(--adw-clamp-range) * 0.9759)
+    ),
+    1px
+  );
+}
+
+/* The child's allocation includes its margins (adw_clamp_layout_allocate()):
+   the pseudo-elements take the rest, half on each side (100% resolves against
+   the clamp here), and the child grows into the middle, never below its
+   minimum size. */
+.gtk-clamp::before,
+.gtk-clamp::after {
+  content: "";
+  flex: 0 1 calc((100% - var(--adw-clamp-size)) / 2);
+}
+
+.gtk-clamp > * {
+  flex: 1 1 0;
+}
+
 /* === AdwWindowTitle === */
 /*
  * Its labels are single-line and ellipsize, and the title has width-chars=5
