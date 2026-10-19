@@ -189,7 +189,7 @@ export function ShowcasePage() {
   );
 
   return (
-    <GtkProvider theme={committedTheme} icons={icons}>
+    <GtkProvider theme={committedTheme} icons={icons} hideUntilReady={false}>
       {/* .background paints the window colors, as a GtkWindow does (gtk_window_init());
           the provider's own background stays transparent. */}
       <div
@@ -308,6 +308,7 @@ export function ShowcasePage() {
                   <GtkProvider
                     theme={committedTheme}
                     icons={icons}
+                    hideUntilReady={false}
                     style={{ position: "fixed", inset: 0, zIndex: 9999 }}
                   >
                     <div
