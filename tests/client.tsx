@@ -44,6 +44,7 @@ import {
   GtkFlowBoxChild,
   GtkFrame,
   GtkGrid,
+  type GtkGridChildProps,
   GtkHeaderBar,
   GtkImage,
   GtkLabel,
@@ -135,6 +136,11 @@ function PasswordEntryBehavior() {
       </GtkWindow>
     </GtkBox>
   );
+}
+
+/** GtkGrid placement, which GtkGrid reads from (and strips off) its children's props. */
+function gridChild(placement: GtkGridChildProps) {
+  return placement;
 }
 
 /** An app component that renders a row, which AdwPreferencesGroup can't tell from its type. */
@@ -1100,11 +1106,34 @@ const cases: Record<string, () => React.ReactElement> = {
 
   // GtkGrid cases
   "grid-default": () => (
-    <GtkGrid columnHomogeneous style={{ gridTemplateColumns: "1fr 1fr" }} data-testid="target">
-      <GtkLabel label="TL" />
-      <GtkLabel label="TR" />
-      <GtkLabel label="BL" />
-      <GtkLabel label="BR" />
+    <GtkGrid columnHomogeneous data-testid="target">
+      <GtkLabel label="TL" {...gridChild({ column: 0, row: 0 })} />
+      <GtkLabel label="TR" {...gridChild({ column: 1, row: 0 })} />
+      <GtkLabel label="BL" {...gridChild({ column: 0, row: 1 })} />
+      <GtkLabel label="BR" {...gridChild({ column: 1, row: 1 })} />
+    </GtkGrid>
+  ),
+  "grid-hexpand": () => (
+    <GtkGrid halign="start" columnSpacing={6} style={{ width: 360 }} data-testid="target">
+      <GtkButton label="a" {...gridChild({ column: 0, row: 0 })} />
+      <GtkButton {...gridChild({ column: 1, row: 0 })}>
+        <GtkLabel label="b" hexpand />
+      </GtkButton>
+      <GtkButton label="c" {...gridChild({ column: 2, row: 0 })} />
+    </GtkGrid>
+  ),
+  "grid-span": () => (
+    <GtkGrid
+      halign="start"
+      columnSpacing={8}
+      rowSpacing={8}
+      columnHomogeneous
+      style={{ width: 360 }}
+      data-testid="target"
+    >
+      <GtkButton label="1" {...gridChild({ column: 0, row: 0 })} />
+      <GtkButton label="2" halign="end" {...gridChild({ column: 1, row: 0 })} />
+      <GtkButton label="3" {...gridChild({ column: 0, row: 1, columnSpan: 2 })} />
     </GtkGrid>
   ),
 
