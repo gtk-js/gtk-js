@@ -286,6 +286,8 @@ enum Command {
     ToggleGroupTextDefault,
     ToggleGroupIcon,
     ToggleGroupHomogeneous,
+    ToggleGroupFill,
+    ToggleGroupCanShrink,
     WindowTitleTextDefault,
     WindowTitleWithSubtitle,
     WindowTitleLongText,
@@ -577,6 +579,8 @@ impl Command {
             Self::ToggleGroupTextDefault => Some("toggle-group-text-default"),
             Self::ToggleGroupIcon => Some("toggle-group-icon"),
             Self::ToggleGroupHomogeneous => Some("toggle-group-homogeneous"),
+            Self::ToggleGroupFill => Some("toggle-group-fill"),
+            Self::ToggleGroupCanShrink => Some("toggle-group-can-shrink"),
             Self::WindowTitleTextDefault => Some("window-title-text-default"),
             Self::WindowTitleWithSubtitle => Some("window-title-with-subtitle"),
             Self::WindowTitleLongText => Some("window-title-long-text"),
@@ -1212,13 +1216,19 @@ fn create_widget_for_case(name: &str) -> Option<(gtk::Widget, bool)> {
         }
         "toggle-grouped" => widget_case!(cases::toggle_grouped::ToggleGrouped, false),
         "toggle-group-text-default" => {
-            widget_case!(cases::toggle_group_text_default::ToggleGroupTextDefault, false)
+            widget_case!(cases::toggle_group_text_default::ToggleGroupTextDefault, true)
         }
         "toggle-group-icon" => {
-            widget_case!(cases::toggle_group_icon::ToggleGroupIcon, false)
+            widget_case!(cases::toggle_group_icon::ToggleGroupIcon, true)
         }
         "toggle-group-homogeneous" => {
-            widget_case!(cases::toggle_group_homogeneous::ToggleGroupHomogeneous, false)
+            widget_case!(cases::toggle_group_homogeneous::ToggleGroupHomogeneous, true)
+        }
+        "toggle-group-fill" => {
+            widget_case!(cases::toggle_group_fill::ToggleGroupFill, true)
+        }
+        "toggle-group-can-shrink" => {
+            widget_case!(cases::toggle_group_can_shrink::ToggleGroupCanShrink, true)
         }
         "window-title-text-default" => {
             widget_case!(
@@ -1494,6 +1504,8 @@ fn is_known_case(name: &str) -> bool {
             | "toggle-group-text-default"
             | "toggle-group-icon"
             | "toggle-group-homogeneous"
+            | "toggle-group-fill"
+            | "toggle-group-can-shrink"
             | "window-title-text-default"
             | "window-title-with-subtitle"
             | "window-title-long-text"

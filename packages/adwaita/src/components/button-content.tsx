@@ -11,6 +11,8 @@ export interface AdwButtonContentProps extends HTMLAttributes<HTMLDivElement> {
   useUnderline?: boolean;
   /** Whether the label can ellipsize. Default: false. */
   canShrink?: boolean;
+  /** Whether the content is insensitive (GtkWidget:sensitive is false), as in an insensitive button. Default: false. */
+  disabled?: boolean;
 }
 
 /**
@@ -34,12 +36,15 @@ export const AdwButtonContent = Object.assign(
       iconName = "",
       useUnderline = false,
       canShrink = false,
+      disabled = false,
       className,
       style,
       ...rest
     },
     ref,
   ) {
+    // GTK makes the children of an insensitive widget insensitive too.
+    const insensitive = disabled || undefined;
     const classes = ["gtk-buttoncontent", "gtk-bin-layout"];
     if (className) classes.push(className);
 
@@ -48,6 +53,7 @@ export const AdwButtonContent = Object.assign(
         ref={ref}
         role="group"
         className={classes.join(" ")}
+        data-disabled={insensitive}
         // An ellipsizing label lets it shrink, to the width it's given.
         style={canShrink ? { minWidth: 0, ...style } : style}
         {...rest}
@@ -55,14 +61,20 @@ export const AdwButtonContent = Object.assign(
         <div
           className="gtk-box gtk-box-layout horizontal"
           data-halign="center"
+          data-disabled={insensitive}
           style={canShrink ? { minWidth: 0, maxWidth: "100%" } : undefined}
         >
           {/* An empty name shows image-missing (adw_button_content_set_icon_name()). */}
-          <GtkImage iconName={iconName || "MissingIcon"} valign="center" />
+          <GtkImage
+            iconName={iconName || "MissingIcon"}
+            valign="center"
+            data-disabled={insensitive}
+          />
           {label && (
             <GtkLabel
               label={useUnderline ? stripMnemonic(label) : label}
               ellipsize={canShrink ? "end" : "none"}
+              data-disabled={insensitive}
             />
           )}
         </div>
