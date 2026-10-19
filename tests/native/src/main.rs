@@ -102,6 +102,8 @@ enum Command {
     HeaderbarWithTitle,
     FrameNoLabel,
     GridDefault,
+    GridHexpand,
+    GridSpan,
     OverlayDefault,
     PanedHorizontal,
     PanedVertical,
@@ -343,6 +345,8 @@ impl Command {
             Self::HeaderbarWithTitle => Some("headerbar-with-title"),
             Self::FrameNoLabel => Some("frame-no-label"),
             Self::GridDefault => Some("grid-default"),
+            Self::GridHexpand => Some("grid-hexpand"),
+            Self::GridSpan => Some("grid-span"),
             Self::OverlayDefault => Some("overlay-default"),
             Self::PanedHorizontal => Some("paned-horizontal"),
             Self::PanedVertical => Some("paned-vertical"),
@@ -648,6 +652,8 @@ fn create_widget_for_case(name: &str) -> Option<(gtk::Widget, bool)> {
         }
         "frame-no-label" => widget_case!(cases::frame_no_label::FrameNoLabel, false),
         "grid-default" => widget_case!(cases::grid_default::GridDefault, false),
+        "grid-hexpand" => widget_case!(cases::grid_hexpand::GridHexpand, false),
+        "grid-span" => widget_case!(cases::grid_span::GridSpan, false),
         "listbox-default" => widget_case!(cases::listbox_default::ListboxDefault, false),
         "listbox-separators" => widget_case!(cases::listbox_separators::ListboxSeparators, false),
         "notebook-default" => widget_case!(cases::notebook_default::NotebookDefault, false),
@@ -1068,6 +1074,8 @@ fn is_known_case(name: &str) -> bool {
             | "headerbar-start-end"
             | "headerbar-with-title"
             | "grid-default"
+            | "grid-hexpand"
+            | "grid-span"
             | "listbox-default"
             | "listbox-separators"
             | "notebook-default"

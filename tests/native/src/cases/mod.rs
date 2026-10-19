@@ -95,6 +95,8 @@ pub mod flow_box_default;
 pub mod frame_default;
 pub mod frame_no_label;
 pub mod grid_default;
+pub mod grid_hexpand;
+pub mod grid_span;
 pub mod headerbar_default;
 pub mod headerbar_start_end;
 pub mod headerbar_with_title;

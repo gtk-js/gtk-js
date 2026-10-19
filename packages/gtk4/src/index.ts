@@ -26,7 +26,7 @@ export type { GtkFlowBoxChildProps, GtkFlowBoxProps } from "./components/flow-bo
 export { GtkFlowBox, GtkFlowBoxChild } from "./components/flow-box.tsx";
 export type { GtkFrameProps } from "./components/frame.tsx";
 export { GtkFrame } from "./components/frame.tsx";
-export type { GtkGridProps } from "./components/grid.tsx";
+export type { GtkGridChildProps, GtkGridProps } from "./components/grid.tsx";
 export { GtkGrid } from "./components/grid.tsx";
 export type { GtkHeaderBarProps } from "./components/headerbar.tsx";
 export { GtkHeaderBar } from "./components/headerbar.tsx";
