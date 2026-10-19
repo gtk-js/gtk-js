@@ -12,6 +12,7 @@ import {
   AdwEntryRow,
   AdwExpanderRow,
   AdwHeaderBar,
+  AdwNavigationSplitView,
   AdwNavigationView,
   AdwOverlaySplitView,
   AdwPasswordEntryRow,
@@ -69,8 +70,9 @@ import {
   GtkTextView,
   GtkToggleButton,
   GtkWindowTitle,
+  useNavigation,
 } from "@gtk-js/adwaita";
-import { Fragment, type ReactElement, useLayoutEffect, useRef } from "react";
+import { Fragment, type ReactElement, useCallback, useLayoutEffect, useRef, useState } from "react";
 import { createRoot } from "react-dom/client";
 
 const caseName = window.location.pathname.slice(1);
@@ -100,6 +102,54 @@ function SizedOnMount({ children }: { children: ReactElement }) {
     if (child instanceof HTMLElement) child.style.height = `${child.offsetHeight}px`;
   }, []);
   return <div ref={ref}>{children}</div>;
+}
+
+/** The split view pages of the AdwNavigationSplitView cases, the content with a bottom bar. */
+function splitViewPage(tag: "sidebar" | "content", extra?: ReactElement) {
+  const title = tag === "sidebar" ? "Sidebar" : "Content";
+  return {
+    tag,
+    title,
+    children: (
+      <AdwToolbarView
+        topBars={<AdwHeaderBar decorationLayout="close:close" />}
+        content={
+          <>
+            <GtkLabel label={title} />
+            {extra}
+          </>
+        }
+        bottomBars={
+          tag === "content" ? <GtkActionBar start={<GtkLabel label="Bottom bar" />} /> : undefined
+        }
+      />
+    ),
+  };
+}
+
+/** Pushes the content page when it mounts, like a sidebar row activated by the user. */
+function PushContentOnMount({ onPushed }: { onPushed: () => void }) {
+  const nav = useNavigation();
+  useLayoutEffect(() => {
+    nav.push("content");
+    onPushed();
+  }, [nav, onPushed]);
+  return null;
+}
+
+/** Pushes the content from the sidebar while uncollapsed, then collapses the split view. */
+function SplitViewPushThenCollapse() {
+  const [collapsed, setCollapsed] = useState(false);
+  const collapse = useCallback(() => setCollapsed(true), []);
+  return (
+    <AdwNavigationSplitView
+      collapsed={collapsed}
+      sidebar={splitViewPage("sidebar", <PushContentOnMount onPushed={collapse} />)}
+      content={splitViewPage("content")}
+      style={{ width: "400px", height: "240px" }}
+      data-testid="target"
+    />
+  );
 }
 
 const cases: Record<string, () => React.ReactElement> = {
@@ -1119,6 +1169,17 @@ const cases: Record<string, () => React.ReactElement> = {
     <AdwBreakpointBin style={{ width: "200px", height: "100px" }} data-testid="target">
       <GtkLabel label="Breakpoint content" />
     </AdwBreakpointBin>
+  ),
+
+  // AdwNavigationSplitView cases
+  "adw-navigation-split-view-collapsed-content": () => <SplitViewPushThenCollapse />,
+  "adw-navigation-split-view-toolbar": () => (
+    <AdwNavigationSplitView
+      sidebar={splitViewPage("sidebar")}
+      content={splitViewPage("content")}
+      style={{ width: "1002px", height: "300px" }}
+      data-testid="target"
+    />
   ),
 
   // AdwNavigationView cases

@@ -50,6 +50,8 @@ enum Command {
     AdwHeaderbarDefault,
     AdwHeaderbarWithTitle,
     AdwHeaderbarStartEnd,
+    AdwNavigationSplitViewCollapsedContent,
+    AdwNavigationSplitViewToolbar,
     AdwNavigationViewDefault,
     AdwNavigationViewScrolled,
     AdwOverlaySplitViewDefault,
@@ -285,6 +287,10 @@ impl Command {
             Self::AdwHeaderbarDefault => Some("adw-headerbar-default"),
             Self::AdwHeaderbarWithTitle => Some("adw-headerbar-with-title"),
             Self::AdwHeaderbarStartEnd => Some("adw-headerbar-start-end"),
+            Self::AdwNavigationSplitViewCollapsedContent => {
+                Some("adw-navigation-split-view-collapsed-content")
+            }
+            Self::AdwNavigationSplitViewToolbar => Some("adw-navigation-split-view-toolbar"),
             Self::AdwNavigationViewDefault => Some("adw-navigation-view-default"),
             Self::AdwNavigationViewScrolled => Some("adw-navigation-view-scrolled"),
             Self::AdwOverlaySplitViewDefault => Some("adw-overlay-split-view-default"),
@@ -514,6 +520,13 @@ fn create_widget_for_case(name: &str) -> Option<(gtk::Widget, bool)> {
         }
         "adw-headerbar-start-end" => {
             widget_case!(cases::adw_headerbar_start_end::AdwHeaderbarStartEnd, false)
+        }
+        "adw-navigation-split-view-collapsed-content" => widget_case!(
+            cases::adw_navigation_split_view_collapsed_content::AdwNavigationSplitViewCollapsedContent,
+            false
+        ),
+        "adw-navigation-split-view-toolbar" => {
+            widget_case!(cases::adw_navigation_split_view_toolbar::AdwNavigationSplitViewToolbar, false)
         }
         "adw-navigation-view-default" => {
             widget_case!(cases::adw_navigation_view_default::AdwNavigationViewDefault, false)
@@ -1015,6 +1028,8 @@ fn is_known_case(name: &str) -> bool {
             | "adw-headerbar-default"
             | "adw-headerbar-with-title"
             | "adw-headerbar-start-end"
+            | "adw-navigation-split-view-collapsed-content"
+            | "adw-navigation-split-view-toolbar"
             | "adw-navigation-view-default"
             | "adw-navigation-view-scrolled"
             | "adw-overlay-split-view-default"

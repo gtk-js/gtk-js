@@ -3,6 +3,7 @@ import { forwardRef, type HTMLAttributes, type ReactNode, useCallback } from "re
 import type { AdwCenteringPolicy } from "../types.ts";
 import { useHeaderBarTitle } from "./header-bar-title.ts";
 import { useNavigation } from "./navigation-view.tsx";
+import { useSplitViewTitleButtons } from "./split-view-title-buttons.ts";
 
 export interface AdwHeaderBarProps extends HTMLAttributes<HTMLDivElement> {
   titleWidget?: ReactNode;
@@ -90,8 +91,8 @@ function WindowControls({ side, layout }: { side: "start" | "end"; layout: strin
 export const AdwHeaderBar = forwardRef<HTMLDivElement, AdwHeaderBarProps>(function AdwHeaderBar(
   {
     titleWidget,
-    showStartTitleButtons = true,
-    showEndTitleButtons = true,
+    showStartTitleButtons: showStartTitleButtonsProp = true,
+    showEndTitleButtons: showEndTitleButtonsProp = true,
     showBackButton = true,
     showTitle = true,
     decorationLayout: decorationLayoutProp,
@@ -117,6 +118,11 @@ export const AdwHeaderBar = forwardRef<HTMLDivElement, AdwHeaderBarProps>(functi
   // Without a title widget, the title of the page or dialog it's in, like
   // construct_title_label() and update_title().
   const contextTitle = useHeaderBarTitle();
+
+  // Enclosing split views hide the buttons facing their other pane.
+  const splitViews = useSplitViewTitleButtons();
+  const showStartTitleButtons = showStartTitleButtonsProp && !splitViews.hideStart;
+  const showEndTitleButtons = showEndTitleButtonsProp && !splitViews.hideEnd;
   const title =
     titleWidget ??
     children ??
