@@ -148,6 +148,13 @@ body:has(> :first-child:has([data-gtk-provider])) > :first-child {
   outline: none;
 }
 
+/* GtkSearchEntry draws its own clear icon: no browser cancel button. */
+:where([data-gtk-provider] input)::-webkit-search-cancel-button,
+:where([data-gtk-provider] input)::-webkit-search-decoration {
+  appearance: none;
+  display: none;
+}
+
 :where([data-gtk-provider] svg) {
   display: block;
 }
