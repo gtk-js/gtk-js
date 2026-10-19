@@ -8,7 +8,7 @@ describe("GtkSwitch", () => {
     // accessible CHECKED state, gtk_switch_set_state() hasn't set :checked yet.
     const html = renderToStaticMarkup(<GtkSwitch active state={false} />);
     expect(html).toContain('aria-checked="true"');
-    expect(html).toContain("data-active");
+    expect(html).toContain("data-switch-active");
     expect(html).not.toContain("data-checked");
 
     expect(renderToStaticMarkup(<GtkSwitch active={false} state />)).toMatch(
@@ -18,7 +18,7 @@ describe("GtkSwitch", () => {
 
   test("state follows active by default", () => {
     const html = renderToStaticMarkup(<GtkSwitch active />);
-    expect(html).toContain("data-active");
+    expect(html).toContain("data-switch-active");
     expect(html).toContain("data-checked");
   });
 
