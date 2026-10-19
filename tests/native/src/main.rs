@@ -43,10 +43,13 @@ enum Command {
     AdwActionRowActivatable,
     AdwBreakpointBinDefault,
     AdwComboRowDefault,
+    AdwComboRowLongValue,
+    AdwComboRowSingleItem,
     AdwEntryRowDefault,
     AdwEntryRowWithText,
     AdwExpanderRowDefault,
     AdwExpanderRowExpanded,
+    AdwExpanderRowWidgets,
     AdwHeaderbarDefault,
     AdwHeaderbarWithTitle,
     AdwHeaderbarStartEnd,
@@ -64,6 +67,7 @@ enum Command {
     AdwSpinRowDefault,
     AdwSwitchRowDefault,
     AdwSwitchRowActive,
+    AdwSwitchRowPrefixSuffix,
     AdwToolbarViewDefault,
     AdwToolbarViewWithBottom,
     AdwViewSwitcherDefault,
@@ -222,6 +226,10 @@ enum Command {
     SwitchOnDefault,
     SwitchOffDisabled,
     SwitchOnDisabled,
+    SwitchOffTitle1,
+    SwitchOnPending,
+    SwitchOnRtl,
+    SwitchOnSmallSlider,
     TextViewDefault,
     TextViewDisabled,
     TextViewMonospace,
@@ -282,10 +290,13 @@ impl Command {
             Self::AdwActionRowActivatable => Some("adw-action-row-activatable"),
             Self::AdwBreakpointBinDefault => Some("adw-breakpoint-bin-default"),
             Self::AdwComboRowDefault => Some("adw-combo-row-default"),
+            Self::AdwComboRowLongValue => Some("adw-combo-row-long-value"),
+            Self::AdwComboRowSingleItem => Some("adw-combo-row-single-item"),
             Self::AdwEntryRowDefault => Some("adw-entry-row-default"),
             Self::AdwEntryRowWithText => Some("adw-entry-row-with-text"),
             Self::AdwExpanderRowDefault => Some("adw-expander-row-default"),
             Self::AdwExpanderRowExpanded => Some("adw-expander-row-expanded"),
+            Self::AdwExpanderRowWidgets => Some("adw-expander-row-widgets"),
             Self::AdwHeaderbarDefault => Some("adw-headerbar-default"),
             Self::AdwHeaderbarWithTitle => Some("adw-headerbar-with-title"),
             Self::AdwHeaderbarStartEnd => Some("adw-headerbar-start-end"),
@@ -303,6 +314,7 @@ impl Command {
             Self::AdwSpinRowDefault => Some("adw-spin-row-default"),
             Self::AdwSwitchRowDefault => Some("adw-switch-row-default"),
             Self::AdwSwitchRowActive => Some("adw-switch-row-active"),
+            Self::AdwSwitchRowPrefixSuffix => Some("adw-switch-row-prefix-suffix"),
             Self::AdwToolbarViewDefault => Some("adw-toolbar-view-default"),
             Self::AdwToolbarViewWithBottom => Some("adw-toolbar-view-with-bottom"),
             Self::AdwViewSwitcherDefault => Some("adw-view-switcher-default"),
@@ -461,6 +473,10 @@ impl Command {
             Self::SwitchOnDefault => Some("switch-on-default"),
             Self::SwitchOffDisabled => Some("switch-off-disabled"),
             Self::SwitchOnDisabled => Some("switch-on-disabled"),
+            Self::SwitchOffTitle1 => Some("switch-off-title-1"),
+            Self::SwitchOnPending => Some("switch-on-pending"),
+            Self::SwitchOnRtl => Some("switch-on-rtl"),
+            Self::SwitchOnSmallSlider => Some("switch-on-small-slider"),
             Self::TextViewDefault => Some("text-view-default"),
             Self::TextViewDisabled => Some("text-view-disabled"),
             Self::TextViewMonospace => Some("text-view-monospace"),
@@ -502,6 +518,12 @@ fn create_widget_for_case(name: &str) -> Option<(gtk::Widget, bool)> {
         "adw-combo-row-default" => {
             widget_case!(cases::adw_combo_row_default::AdwComboRowDefault, false)
         }
+        "adw-combo-row-long-value" => {
+            widget_case!(cases::adw_combo_row_long_value::AdwComboRowLongValue, false)
+        }
+        "adw-combo-row-single-item" => {
+            widget_case!(cases::adw_combo_row_single_item::AdwComboRowSingleItem, false)
+        }
         "adw-entry-row-default" => {
             widget_case!(cases::adw_entry_row_default::AdwEntryRowDefault, false)
         }
@@ -513,6 +535,9 @@ fn create_widget_for_case(name: &str) -> Option<(gtk::Widget, bool)> {
         }
         "adw-expander-row-expanded" => {
             widget_case!(cases::adw_expander_row_expanded::AdwExpanderRowExpanded, false)
+        }
+        "adw-expander-row-widgets" => {
+            widget_case!(cases::adw_expander_row_widgets::AdwExpanderRowWidgets, true)
         }
         "adw-headerbar-default" => {
             widget_case!(cases::adw_headerbar_default::AdwHeaderbarDefault, false)
@@ -564,6 +589,9 @@ fn create_widget_for_case(name: &str) -> Option<(gtk::Widget, bool)> {
         }
         "adw-switch-row-active" => {
             widget_case!(cases::adw_switch_row_active::AdwSwitchRowActive, false)
+        }
+        "adw-switch-row-prefix-suffix" => {
+            widget_case!(cases::adw_switch_row_prefix_suffix::AdwSwitchRowPrefixSuffix, false)
         }
         "adw-toolbar-view-default" => {
             widget_case!(cases::adw_toolbar_view_default::AdwToolbarViewDefault, false)
@@ -969,6 +997,12 @@ fn create_widget_for_case(name: &str) -> Option<(gtk::Widget, bool)> {
         "switch-on-default" => widget_case!(cases::switch_on_default::SwitchOnDefault, false),
         "switch-off-disabled" => widget_case!(cases::switch_off_disabled::SwitchOffDisabled, false),
         "switch-on-disabled" => widget_case!(cases::switch_on_disabled::SwitchOnDisabled, false),
+        "switch-off-title-1" => widget_case!(cases::switch_off_title_1::SwitchOffTitle1, true),
+        "switch-on-pending" => widget_case!(cases::switch_on_pending::SwitchOnPending, false),
+        "switch-on-rtl" => widget_case!(cases::switch_on_rtl::SwitchOnRtl, false),
+        "switch-on-small-slider" => {
+            widget_case!(cases::switch_on_small_slider::SwitchOnSmallSlider, false)
+        }
         "text-view-default" => widget_case!(cases::text_view_default::TextViewDefault, false),
         "text-view-disabled" => widget_case!(cases::text_view_disabled::TextViewDisabled, false),
         "text-view-monospace" => widget_case!(cases::text_view_monospace::TextViewMonospace, false),
@@ -1026,10 +1060,13 @@ fn is_known_case(name: &str) -> bool {
             | "adw-action-row-activatable"
             | "adw-breakpoint-bin-default"
             | "adw-combo-row-default"
+            | "adw-combo-row-long-value"
+            | "adw-combo-row-single-item"
             | "adw-entry-row-default"
             | "adw-entry-row-with-text"
             | "adw-expander-row-default"
             | "adw-expander-row-expanded"
+            | "adw-expander-row-widgets"
             | "adw-headerbar-default"
             | "adw-headerbar-with-title"
             | "adw-headerbar-start-end"
@@ -1047,6 +1084,7 @@ fn is_known_case(name: &str) -> bool {
             | "adw-spin-row-default"
             | "adw-switch-row-default"
             | "adw-switch-row-active"
+            | "adw-switch-row-prefix-suffix"
             | "adw-toolbar-view-default"
             | "adw-toolbar-view-with-bottom"
             | "adw-view-switcher-default"
@@ -1199,6 +1237,10 @@ fn is_known_case(name: &str) -> bool {
             | "switch-on-default"
             | "switch-off-disabled"
             | "switch-on-disabled"
+            | "switch-off-title-1"
+            | "switch-on-pending"
+            | "switch-on-rtl"
+            | "switch-on-small-slider"
             | "text-view-default"
             | "text-view-disabled"
             | "text-view-monospace"

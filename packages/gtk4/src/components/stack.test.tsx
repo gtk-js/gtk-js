@@ -86,7 +86,7 @@ describe("GtkStackSwitcher", () => {
     expect(buttons[0]).toContain('<span class="gtk-label" data-halign="center"');
     expect(buttons[0]).not.toContain("title=");
     expect(buttons[1]).toMatch(/class="gtk-button toggle image-button"/);
-    expect(buttons[1]).toContain('title="Find"');
+    expect(buttons[1]).toContain('data-gtk-tooltip="Find"');
     expect(buttons[1]).toContain('aria-label="Find"');
     expect(buttons[1]).toContain('<span class="gtk-image" data-halign="center"><svg></svg></span>');
   });
