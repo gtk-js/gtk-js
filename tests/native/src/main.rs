@@ -104,6 +104,8 @@ enum Command {
     GridDefault,
     OverlayDefault,
     PanedHorizontal,
+    PanedMinSize,
+    PanedPosition,
     PanedVertical,
     ButtonValignCenterHbox,
     ButtonValignEndHbox,
@@ -345,6 +347,8 @@ impl Command {
             Self::GridDefault => Some("grid-default"),
             Self::OverlayDefault => Some("overlay-default"),
             Self::PanedHorizontal => Some("paned-horizontal"),
+            Self::PanedMinSize => Some("paned-min-size"),
+            Self::PanedPosition => Some("paned-position"),
             Self::PanedVertical => Some("paned-vertical"),
             Self::ButtonValignCenterHbox => Some("button-valign-center-hbox"),
             Self::ButtonValignEndHbox => Some("button-valign-end-hbox"),
@@ -653,6 +657,8 @@ fn create_widget_for_case(name: &str) -> Option<(gtk::Widget, bool)> {
         "notebook-default" => widget_case!(cases::notebook_default::NotebookDefault, false),
         "overlay-default" => widget_case!(cases::overlay_default::OverlayDefault, false),
         "paned-horizontal" => widget_case!(cases::paned_horizontal::PanedHorizontal, false),
+        "paned-min-size" => widget_case!(cases::paned_min_size::PanedMinSize, false),
+        "paned-position" => widget_case!(cases::paned_position::PanedPosition, false),
         "paned-vertical" => widget_case!(cases::paned_vertical::PanedVertical, false),
         "popover-default" => widget_case!(cases::popover_default::PopoverDefault, false),
         "button-valign-center-hbox" => {
@@ -1073,6 +1079,8 @@ fn is_known_case(name: &str) -> bool {
             | "notebook-default"
             | "overlay-default"
             | "paned-horizontal"
+            | "paned-min-size"
+            | "paned-position"
             | "paned-vertical"
             | "popover-default"
             | "button-valign-center-hbox"

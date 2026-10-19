@@ -609,6 +609,69 @@ const cases: Record<string, () => React.ReactElement> = {
       data-testid="target"
     />
   ),
+  "paned-min-size": () => {
+    const frame = (label: string) => (
+      <GtkFrame>
+        <GtkLabel label={label} />
+      </GtkFrame>
+    );
+    const buttons = (
+      <GtkBox spacing={6}>
+        <GtkButton label="One" />
+        <GtkButton label="Two" />
+        <GtkButton label="Three" />
+      </GtkBox>
+    );
+    const size = { width: 400, height: 48 };
+    return (
+      <GtkBox orientation="vertical" data-testid="target">
+        <GtkPaned
+          style={size}
+          position={150}
+          shrinkStartChild={false}
+          startChild={buttons}
+          endChild={frame("End")}
+        />
+        <GtkPaned style={size} position={60} startChild={buttons} endChild={frame("End")} />
+        <GtkPaned
+          style={size}
+          position={150}
+          resizeEndChild={false}
+          startChild={frame("Start")}
+          endChild={frame("End")}
+        />
+      </GtkBox>
+    );
+  },
+  "paned-position": () => {
+    const frame = (label: string) => (
+      <GtkFrame>
+        <GtkLabel label={label} />
+      </GtkFrame>
+    );
+    return (
+      <GtkBox orientation="vertical" data-testid="target">
+        <GtkPaned
+          style={{ width: 400, height: 80 }}
+          position={150}
+          startChild={frame("Start")}
+          endChild={frame("End")}
+        />
+        <GtkPaned
+          orientation="vertical"
+          style={{ width: 400, height: 200 }}
+          position={60}
+          startChild={frame("Top")}
+          endChild={frame("Bottom")}
+        />
+        <GtkPaned
+          style={{ width: 400, height: 48 }}
+          position={150}
+          startChild={frame("Only child")}
+        />
+      </GtkBox>
+    );
+  },
   "paned-vertical": () => (
     <GtkPaned
       orientation="vertical"
