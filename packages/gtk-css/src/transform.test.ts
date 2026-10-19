@@ -272,6 +272,28 @@ describe("border-spacing", () => {
   });
 });
 
+describe("border shorthands", () => {
+  test("no width → GTK's initial width 0, not medium", async () => {
+    const out = await transform(
+      "a { border: none; } b { border-bottom: none; } c { border: hidden; } d { border-top: solid red; }",
+    );
+    expect(out).toContain("border: 0 none;");
+    expect(out).toContain("border-bottom: 0 none;");
+    expect(out).toContain("border: 0 hidden;");
+    expect(out).toContain("border-top: 0 solid red;");
+  });
+
+  test("a width, var() or a CSS-wide keyword stays as written", async () => {
+    const out = await transform(
+      "a { border: 1px solid alpha(black, 0.1); } b { border-left: 0 none; } c { border: var(--b); } d { border-right: inherit; }",
+    );
+    expect(out).toContain("border: 1px solid");
+    expect(out).toContain("border-left: 0 none;");
+    expect(out).toContain("border: var(--b);");
+    expect(out).toContain("border-right: inherit;");
+  });
+});
+
 describe("initial fonts", () => {
   test("font: initial → the GTK default font", async () => {
     const out = await transform("popover.background { font: initial; }");

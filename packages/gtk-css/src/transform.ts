@@ -303,6 +303,14 @@ const remapPseudoClasses: Plugin = {
   },
 };
 
+/** Whether a border shorthand's value sets a width (or may, through var()). */
+function hasBorderWidth(value: string): boolean {
+  if (/var\(|^\s*(inherit|initial|unset|revert|revert-layer)\s*$/i.test(value)) return true;
+  return postcss.list
+    .space(value)
+    .some((part) => /^([+-]?\.?\d|calc\(|min\(|max\(|clamp\(|thin$|medium$|thick$)/i.test(part));
+}
+
 /**
  * PostCSS plugin: A check button's check or radio is hovered and pressed with
  * the button.
@@ -355,6 +363,14 @@ const handleGtkProperties: Plugin = {
       decl.cloneBefore({ prop: "--gtk-border-spacing-y", value: y });
       decl.remove();
       return;
+    }
+
+    // A border shorthand without a width (`border: none`, `border-bottom: none`,
+    // `border: solid`) sets it to the initial value, 0 in GTK (parse_border()
+    // in gtkcssshorthandpropertyimpl.c) but `medium` (3px) in browsers, which
+    // shows once a later rule sets only a style. Spell out GTK's 0.
+    if (/^border(-(top|right|bottom|left))?$/.test(decl.prop) && !hasBorderWidth(decl.value)) {
+      decl.value = `0 ${decl.value}`;
     }
 
     // `initial` fonts are GtkSettings:gtk-font-name in GTK (e.g. popovers use
