@@ -926,6 +926,25 @@ const cases: Record<string, () => React.ReactElement> = {
       <GtkLabel label="Page 3" />
     </AdwCarousel>
   ),
+  "carousel-natural-pages": () => (
+    <AdwCarousel spacing={12} style={{ width: 300, height: 100 }} data-testid="target">
+      <GtkBox orientation="vertical" style={{ minWidth: 100 }} />
+      <GtkBox orientation="vertical" style={{ minWidth: 80 }} />
+      <GtkBox orientation="vertical" style={{ minWidth: 60 }} />
+    </AdwCarousel>
+  ),
+  "carousel-vertical": () => (
+    <AdwCarousel
+      orientation="vertical"
+      spacing={12}
+      style={{ width: 240, height: 100 }}
+      data-testid="target"
+    >
+      <GtkLabel label="Page 1" vexpand />
+      <GtkLabel label="Page 2" vexpand />
+      <GtkLabel label="Page 3" vexpand />
+    </AdwCarousel>
+  ),
 
   // AdwToastOverlay cases
   "toast-overlay-default": () => (
