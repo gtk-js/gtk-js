@@ -6,10 +6,10 @@ import { buildGtkToWeb, preprocess } from "./transform.ts";
 export interface CompileOptions {
   /**
    * Filter output to a single color scheme.
-   * - "light": strip dark media queries and [data-color-scheme="dark"] rules
+   * - "light": strip dark media queries
    * - "dark": use dark color values as base, unwrap dark media queries, strip
-   *   light ones and all [data-color-scheme] rules
-   * - omit: emit both (current behavior — @media + [data-color-scheme] overrides)
+   *   light ones
+   * - omit: emit both, the dark values behind `@media (prefers-color-scheme: dark)`
    */
   scheme?: "light" | "dark";
   /**
