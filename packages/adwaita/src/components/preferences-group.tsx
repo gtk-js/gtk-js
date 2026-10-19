@@ -1,13 +1,5 @@
-import { GtkListBoxRowContext, orderRows, wrapStyle } from "@gtk-js/gtk4";
-import {
-  forwardRef,
-  type HTMLAttributes,
-  type ReactNode,
-  useLayoutEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import { GtkListBoxRowContext, useRowContainer, wrapStyle } from "@gtk-js/gtk4";
+import { forwardRef, type HTMLAttributes, type ReactNode, useRef } from "react";
 
 export interface AdwPreferencesGroupProps extends HTMLAttributes<HTMLDivElement> {
   title?: string;
@@ -41,35 +33,21 @@ export const AdwPreferencesGroup = forwardRef<HTMLDivElement, AdwPreferencesGrou
     const singleLine = hasTitle && !hasDescription;
 
     // Like adw_preferences_group_add(): rows go in the list and other widgets
-    // below it. Every child is rendered below the list, and a row portals itself
-    // into the list (useListBoxRow), so no child moves when it turns out to be a
-    // row, or stops being one.
+    // below it. On the client every child is rendered below the list, and a
+    // row portals itself into the list (useListBoxRow), so no child moves when
+    // it turns out to be a row, or stops being one. The list exists from the
+    // first render, so a parent that measures the group when it mounts, like a
+    // dialog fixing its natural size, sees the rows in it.
     //
-    // The list exists from the first render, so the rows portal into it in the
-    // group's first commit: a parent that measures the group when it mounts,
-    // like a dialog fixing its natural size, sees them. React doesn't render
-    // the list; the group puts it first in its box. None on the server.
-    const [list] = useState(() =>
-      typeof document === "undefined" ? null : document.createElement("div"),
-    );
-    const container = useMemo(() => ({ list }), [list]);
+    // A server render can't portal: there the children render in the list, so
+    // the rows are in place before and after hydration (useRowContainer).
     const boxRef = useRef<HTMLDivElement>(null);
-    useLayoutEffect(() => {
-      const box = boxRef.current;
-      if (!list || !box) return;
-      // GTK hides the list while it has no rows: see .gtk-preferencesgroup-list.
-      list.setAttribute("role", "list");
-      box.prepend(list);
-      const stopOrdering = orderRows(list, box);
-      return () => {
-        stopOrdering();
-        list.remove();
-      };
-    }, [list]);
-    useLayoutEffect(() => {
-      if (list)
-        list.className = `gtk-list gtk-preferencesgroup-list ${separateRows ? "boxed-list-separate" : "boxed-list"}`;
-    }, [list, separateRows]);
+    const listRef = useRef<HTMLDivElement>(null);
+    const listClass = `gtk-list gtk-preferencesgroup-list ${separateRows ? "boxed-list-separate" : "boxed-list"}`;
+    const { container, rendersList } = useRowContainer(boxRef, listRef, listClass);
+    const rows = (
+      <GtkListBoxRowContext.Provider value={container}>{children}</GtkListBoxRowContext.Provider>
+    );
 
     const classes = ["gtk-preferencesgroup"];
     if (className) classes.push(className);
@@ -101,9 +79,13 @@ export const AdwPreferencesGroup = forwardRef<HTMLDivElement, AdwPreferencesGrou
             </div>
           )}
           <div ref={boxRef} className="gtk-box gtk-box-layout vertical">
-            <GtkListBoxRowContext.Provider value={container}>
-              {children}
-            </GtkListBoxRowContext.Provider>
+            {/* GTK hides the list while it has no rows: see .gtk-preferencesgroup-list. */}
+            {rendersList && (
+              <div ref={listRef} role="list" className={listClass}>
+                {!container.list && rows}
+              </div>
+            )}
+            {container.list && rows}
           </div>
         </div>
       </div>

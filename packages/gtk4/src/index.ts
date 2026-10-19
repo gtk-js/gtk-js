@@ -111,6 +111,7 @@ export {
   type GtkRowContainer,
   orderRows,
   useListBoxRow,
+  useRowContainer,
 } from "./list-box-row-context.tsx";
 export type { GtkProviderProps } from "./provider.tsx";
 export { GtkProvider, useGtkTheme } from "./provider.tsx";
