@@ -204,6 +204,11 @@
 .gtk-overlay > .gtk-overlay-child[data-expand-ignored]:not([data-measure]) > * {
   pointer-events: auto;
 }
+/* Overlays draw in the order they were added, measured or not
+ * (gtk_overlay_snapshot()): a measured one stacks like the positioned layers. */
+.gtk-overlay > .gtk-overlay-child[data-measure] > * {
+  z-index: 0;
+}
 .gtk-overlay > .gtk-overlay-child[data-clip-overlay] {
   overflow: clip;
 }

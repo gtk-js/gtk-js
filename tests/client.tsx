@@ -662,7 +662,7 @@ const cases: Record<string, () => React.ReactElement> = {
         <GtkOverlay
           halign="start"
           child={<GtkButton label="Main" />}
-          overlays={[{ child: label("start", "start"), measure: true }]}
+          overlays={[label("start", "start"), { child: label("start", "start"), measure: true }]}
         />
       </GtkBox>
     );

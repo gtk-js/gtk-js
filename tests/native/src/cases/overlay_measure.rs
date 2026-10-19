@@ -39,9 +39,11 @@ impl SimpleComponent for OverlayMeasure {
         unmeasured.set_clip_overlay(&end, true);
         root.append(&unmeasured);
 
-        // An overlay with measure sizes the overlay like the child.
+        // An overlay with measure sizes the overlay like the child, and draws
+        // over the overlay added before it.
         let measured = gtk::Overlay::builder().halign(gtk::Align::Start).build();
         measured.set_child(Some(&gtk::Button::with_label("Main")));
+        measured.add_overlay(&label(gtk::Align::Start, gtk::Align::Start));
         let overlay = label(gtk::Align::Start, gtk::Align::Start);
         measured.add_overlay(&overlay);
         measured.set_measure_overlay(&overlay, true);

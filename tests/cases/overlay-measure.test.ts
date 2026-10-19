@@ -1,4 +1,4 @@
-import { expect } from "vite-plus/test";
+import { expect, test } from "vite-plus/test";
 import { compare, findChild, gtkTest, type WidgetSnapshot } from "../harness";
 
 // The overlay's own children, looking through the web side's wrappers.
@@ -34,7 +34,7 @@ gtkTest("overlay-measure", (native, web) => {
     expect(end!.y! + end!.height).toBeCloseTo(unmeasured.height, 0);
 
     const measured = findChild(box, "overlay", 1);
-    const [, label] = children(measured);
+    const [, , label] = children(measured);
     expect(measured.width).toBeCloseTo(label!.width, 0);
   }
 
@@ -43,5 +43,21 @@ gtkTest("overlay-measure", (native, web) => {
     expect(
       Math.abs(findChild(web, "overlay", index).width - findChild(native, "overlay", index).width),
     ).toBeLessThan(5);
+  }
+});
+
+// The measured overlay was added after the other one, so it draws over it
+// (gtk_overlay_snapshot() draws the children in order).
+test("overlay-measure: overlays stack in the order they were added", async () => {
+  for (const page of Object.values(globalThis.__testPages)) {
+    const hit = await page
+      .locator(`[data-case="overlay-measure"] [data-testid='target'] > .gtk-overlay:nth-child(2)`)
+      .evaluate((overlay) => {
+        overlay.scrollIntoView();
+        const rect = overlay.getBoundingClientRect();
+        const top = document.elementFromPoint(rect.left + 4, rect.top + 4);
+        return top?.closest(".gtk-overlay-child")?.hasAttribute("data-measure");
+      });
+    expect(hit).toBe(true);
   }
 });
