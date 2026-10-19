@@ -1,4 +1,4 @@
-import { GtkLabel, useIcon, useWindowControls } from "@gtk-js/gtk4";
+import { GtkLabel, tooltipAttrs, useIcon, useWindowControls } from "@gtk-js/gtk4";
 import { forwardRef, type HTMLAttributes, type ReactNode, useCallback } from "react";
 import type { AdwCenteringPolicy } from "../types.ts";
 import { useHeaderBarTitle } from "./header-bar-title.ts";
@@ -180,7 +180,7 @@ export const AdwHeaderBar = forwardRef<HTMLDivElement, AdwHeaderBarProps>(functi
                   className="gtk-button image-button back flat"
                   type="button"
                   aria-label="Back"
-                  title={nav.previousTitle || "Back"}
+                  {...tooltipAttrs(nav.previousTitle || "Back")}
                   onClick={() => nav.pop()}
                   onPointerDown={(e) => e.stopPropagation()}
                 >

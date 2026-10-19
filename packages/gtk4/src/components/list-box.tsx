@@ -7,6 +7,7 @@ import React, {
   useState,
 } from "react";
 import { GtkListBoxRowContext, useListBoxRow } from "../list-box-row-context.tsx";
+import { tooltipAttrs } from "../tooltip.tsx";
 import { alignAttrs, type GtkAlignProps, type GtkSelectionMode } from "../types.ts";
 
 export interface GtkListBoxRowProps extends HTMLAttributes<HTMLDivElement>, GtkAlignProps {
@@ -14,6 +15,8 @@ export interface GtkListBoxRowProps extends HTMLAttributes<HTMLDivElement>, GtkA
   activatable?: boolean;
   /** Whether the row can be selected. Default: true. */
   selectable?: boolean;
+  /** Tooltip shown when hovering the row (GtkWidget:tooltip-text). */
+  tooltipText?: string;
   children?: ReactNode;
 }
 
@@ -28,6 +31,7 @@ export const GtkListBoxRow = forwardRef<HTMLDivElement, GtkListBoxRowProps>(func
   {
     activatable = true,
     selectable = true,
+    tooltipText,
     children,
     halign,
     valign,
@@ -53,6 +57,7 @@ export const GtkListBoxRow = forwardRef<HTMLDivElement, GtkListBoxRowProps>(func
       className={classes.join(" ")}
       {...alignAttrs(halign, valign, hexpand, vexpand)}
       data-selectable={selectable || undefined}
+      {...tooltipAttrs(tooltipText)}
       {...rest}
     >
       {children}
