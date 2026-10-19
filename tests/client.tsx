@@ -241,6 +241,11 @@ const cases: Record<string, () => React.ReactElement> = {
 
   // GtkImage cases
   "image-default": () => <GtkImage data-testid="target" />,
+  "image-inherit-in-large-icons": () => (
+    <GtkBox className="large-icons" halign="start" valign="start" data-testid="target">
+      <GtkImage iconName="open-menu-symbolic" />
+    </GtkBox>
+  ),
   "image-normal-icons": () => (
     <GtkImage iconName="open-menu-symbolic" iconSize="normal" data-testid="target" />
   ),
@@ -290,6 +295,11 @@ const cases: Record<string, () => React.ReactElement> = {
     </GtkBox>
   ),
   "label-justify-center": () => <GtkLabel label="Centered" justify="center" data-testid="target" />,
+  "label-max-width-chars-fill": () => (
+    <GtkBox orientation="vertical" halign="start" style={{ width: 400 }} data-testid="target">
+      <GtkLabel label="The quick brown fox jumps over the lazy dog" wrap maxWidthChars={10} />
+    </GtkBox>
+  ),
   "label-width-chars": () => <GtkLabel label="Hi" widthChars={20} data-testid="target" />,
   "label-xalign": () => <GtkLabel label="Aligned" xalign={0} data-testid="target" />,
   "label-disabled": () => <GtkLabel label="Label" disabled data-testid="target" />,

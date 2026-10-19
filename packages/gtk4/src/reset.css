@@ -191,6 +191,8 @@ body:has(> :first-child:has([data-gtk-provider])) > :first-child {
   display: inline-flex;
   align-items: center;
   min-height: round(up, 1lh, 1px);
+  /* A selectable label takes the focus, but GTK draws no focus ring on it. */
+  outline: none;
 }
 
 /* GtkViewport: a scrolled window's child that doesn't scroll itself is put in a

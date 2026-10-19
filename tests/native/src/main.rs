@@ -141,6 +141,7 @@ enum Command {
     EntryPlaceholder,
     EntryPrimaryIcon,
     ImageDefault,
+    ImageInheritInLargeIcons,
     ImageNormalIcons,
     ImageLargeIcons,
     #[clap(name = "image-pixel-size-24")]
@@ -152,6 +153,7 @@ enum Command {
     LabelEllipsize,
     LabelHeights,
     LabelJustifyCenter,
+    LabelMaxWidthCharsFill,
     LabelWidthChars,
     LabelXalign,
     LabelDisabled,
@@ -382,6 +384,7 @@ impl Command {
             Self::EntryPlaceholder => Some("entry-placeholder"),
             Self::EntryPrimaryIcon => Some("entry-primary-icon"),
             Self::ImageDefault => Some("image-default"),
+            Self::ImageInheritInLargeIcons => Some("image-inherit-in-large-icons"),
             Self::ImageNormalIcons => Some("image-normal-icons"),
             Self::ImageLargeIcons => Some("image-large-icons"),
             Self::ImagePixelSize24 => Some("image-pixel-size-24"),
@@ -392,6 +395,7 @@ impl Command {
             Self::LabelEllipsize => Some("label-ellipsize"),
             Self::LabelHeights => Some("label-heights"),
             Self::LabelJustifyCenter => Some("label-justify-center"),
+            Self::LabelMaxWidthCharsFill => Some("label-max-width-chars-fill"),
             Self::LabelWidthChars => Some("label-width-chars"),
             Self::LabelXalign => Some("label-xalign"),
             Self::LabelDisabled => Some("label-disabled"),
@@ -755,6 +759,9 @@ fn create_widget_for_case(name: &str) -> Option<(gtk::Widget, bool)> {
         "entry-placeholder" => widget_case!(cases::entry_placeholder::EntryPlaceholder, false),
         "entry-primary-icon" => widget_case!(cases::entry_primary_icon::EntryPrimaryIcon, false),
         "image-default" => widget_case!(cases::image_default::ImageDefault, false),
+        "image-inherit-in-large-icons" => {
+            widget_case!(cases::image_inherit_in_large_icons::ImageInheritInLargeIcons, false)
+        }
         "image-normal-icons" => widget_case!(cases::image_normal_icons::ImageNormalIcons, false),
         "image-large-icons" => widget_case!(cases::image_large_icons::ImageLargeIcons, false),
         "image-pixel-size-24" => widget_case!(cases::image_pixel_size_24::ImagePixelSize24, false),
@@ -766,6 +773,9 @@ fn create_widget_for_case(name: &str) -> Option<(gtk::Widget, bool)> {
         "label-heights" => widget_case!(cases::label_heights::LabelHeights, false),
         "label-justify-center" => {
             widget_case!(cases::label_justify_center::LabelJustifyCenter, false)
+        }
+        "label-max-width-chars-fill" => {
+            widget_case!(cases::label_max_width_chars_fill::LabelMaxWidthCharsFill, false)
         }
         "label-width-chars" => widget_case!(cases::label_width_chars::LabelWidthChars, false),
         "label-xalign" => widget_case!(cases::label_xalign::LabelXalign, false),
@@ -1110,6 +1120,7 @@ fn is_known_case(name: &str) -> bool {
             | "entry-placeholder"
             | "entry-primary-icon"
             | "image-default"
+            | "image-inherit-in-large-icons"
             | "image-normal-icons"
             | "image-large-icons"
             | "image-pixel-size-24"
@@ -1120,6 +1131,7 @@ fn is_known_case(name: &str) -> bool {
             | "label-ellipsize"
             | "label-heights"
             | "label-justify-center"
+            | "label-max-width-chars-fill"
             | "label-width-chars"
             | "label-xalign"
             | "label-disabled"
