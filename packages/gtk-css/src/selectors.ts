@@ -159,6 +159,8 @@ export const INTERNAL_SELECTORS: Record<string, string> = {
   marks: ".gtk-marks",
   mark: ".gtk-mark",
   indicator: ".gtk-indicator",
+  // AdwIndicatorBin's mask (cut out of its child under the indicator).
+  mask: ".gtk-mask",
   value: ".gtk-value",
   arrow: ".gtk-arrow",
   contents: ".gtk-contents",

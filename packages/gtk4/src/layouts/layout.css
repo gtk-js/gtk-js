@@ -462,6 +462,41 @@
   text-align: center;
 }
 
+/* === AdwViewSwitcher === */
+/* adw_view_switcher_button_measure() makes a button's content at least 120px
+ * (wide) or 100px (narrow) wide (MIN_NAT_BUTTON_WIDTH_*). That is only its
+ * natural width, so GTK can still squeeze it to its minimum; here it is never
+ * narrower. */
+.gtk-viewswitcher.wide > .gtk-button > .gtk-stack {
+  min-width: 120px;
+}
+
+.gtk-viewswitcher.narrow > .gtk-button > .gtk-stack {
+  min-width: 100px;
+}
+
+/* -- AdwIndicatorBin --
+ * indicator-bin.tsx places the mask and the indicator over the child's corner
+ * like adw_indicator_bin_size_allocate(). adw_indicator_bin_snapshot() draws
+ * neither without a badge or needs-attention, and then only uses the mask to
+ * cut the child out (the shape indicator-bin.tsx gives --gtk-indicator-mask). */
+.gtk-indicatorbin {
+  position: relative;
+}
+
+.gtk-indicatorbin > :is(.gtk-mask, .gtk-indicator) {
+  position: absolute;
+}
+
+.gtk-indicatorbin > .gtk-mask,
+.gtk-indicatorbin:not(.needs-attention, .badge) > .gtk-indicator {
+  visibility: hidden;
+}
+
+.gtk-indicatorbin:is(.needs-attention, .badge) > :not(.gtk-mask, .gtk-indicator) {
+  mask: var(--gtk-indicator-mask) no-repeat;
+}
+
 /* === Scale (GtkRange / GtkScale) === */
 /* GtkProgressBar: a vertical box layout whatever its orientation, with the
  * text above the trough. A horizontal bar's trough fills the width, a vertical
