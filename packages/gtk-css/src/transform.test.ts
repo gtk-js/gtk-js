@@ -113,7 +113,7 @@ describe("convertGtkColorFunctions", () => {
 
     test("currentColor → color-mix()", async () => {
       const out = await transform(".x { color: alpha(currentColor, 0.06); }");
-      expect(out).toContain("color-mix(in oklab, currentColor 6%, transparent)");
+      expect(out).toContain("color-mix(in srgb, currentColor 6%, transparent)");
       expect(out).not.toContain("alpha(");
     });
 
@@ -137,13 +137,13 @@ describe("convertGtkColorFunctions", () => {
         ".x { box-shadow: inset 0 0 0 1px alpha(currentColor, 0.04), inset 0 1px alpha(currentColor, 0.05); }",
       );
       expect(out).not.toContain("alpha(");
-      expect(out).toContain("color-mix(in oklab, currentColor 4%, transparent)");
-      expect(out).toContain("color-mix(in oklab, currentColor 5%, transparent)");
+      expect(out).toContain("color-mix(in srgb, currentColor 4%, transparent)");
+      expect(out).toContain("color-mix(in srgb, currentColor 5%, transparent)");
     });
 
     test("rgba() arg → color-mix()", async () => {
       const out = await transform(".x { color: alpha(rgba(0, 0, 0, 0.08), 0.75); }");
-      expect(out).toContain("color-mix(in oklab, rgba(0, 0, 0, 0.08) 75%, transparent)");
+      expect(out).toContain("color-mix(in srgb, rgba(0, 0, 0, 0.08) 75%, transparent)");
       expect(out).not.toContain("alpha(");
     });
 
@@ -161,7 +161,7 @@ describe("convertGtkColorFunctions", () => {
   describe("mix()", () => {
     test("two hex colors → color-mix()", async () => {
       const out = await transform(".x { color: mix(#FFFFFF, #0860F2, 0.75); }");
-      expect(out).toContain("color-mix(in oklab, #0860F2 75%, #FFFFFF)");
+      expect(out).toContain("color-mix(in srgb, #0860F2 75%, #FFFFFF)");
       expect(out).not.toMatch(/(?<!color-)mix\(/);
     });
 
@@ -169,13 +169,24 @@ describe("convertGtkColorFunctions", () => {
       const out = await transform(
         ".x { background-color: mix(#FFFFFF, rgba(0, 0, 0, 0.87), 0.15); }",
       );
-      expect(out).toContain("color-mix(in oklab, rgba(0, 0, 0, 0.87) 15%, #FFFFFF)");
+      expect(out).toContain("color-mix(in srgb, rgba(0, 0, 0, 0.87) 15%, #FFFFFF)");
       expect(out).not.toMatch(/(?<!color-)mix\(/);
     });
 
     test("unexpected arg count throws", async () => {
       await expect(transform(".x { color: mix(a, b); }")).rejects.toThrow();
     });
+  });
+
+  test("color-mix() stays in sRGB, like GTK's interpolation", async () => {
+    // _buttons.scss: .osd:hover and %opaque_button mix two opaque colors.
+    const out = await transform(
+      ".x { background-color: color-mix(in srgb, black 55.25%, currentColor 9.75%); } .y { background-image: image(color-mix(in srgb, white 15%, black)); color: mix(black, white, 0.5); }",
+    );
+    expect(out).toContain("color-mix(in srgb, black 55.25%, currentColor 9.75%)");
+    expect(out).toContain("--gtk-background-overlay: color-mix(in srgb, white 15%, black)");
+    expect(out).toContain("color: color-mix(in srgb, white 50%, black)");
+    expect(out).not.toContain("oklab");
   });
 
   describe("shade()", () => {
@@ -201,13 +212,13 @@ describe("convertGtkColorFunctions", () => {
 
     test("dynamic color lighten → color-mix with white", async () => {
       const out = await transform(".x { color: shade(var(--c), 1.2); }");
-      expect(out).toContain("color-mix(in oklab, var(--c), white");
+      expect(out).toContain("color-mix(in srgb, var(--c), white");
       expect(out).not.toContain("shade(");
     });
 
     test("dynamic color darken → color-mix with black", async () => {
       const out = await transform(".x { color: shade(var(--c), 0.8); }");
-      expect(out).toContain("color-mix(in oklab, var(--c), black");
+      expect(out).toContain("color-mix(in srgb, var(--c), black");
       expect(out).not.toContain("shade(");
     });
 
@@ -267,7 +278,7 @@ describe("currentColor", () => {
       "switch { background-color: alpha(currentColor, 0.15); transition: background 200ms; } switch:checked { color: var(--accent-fg-color); background-color: var(--accent-bg-color); }",
     );
     expect(out).toContain(
-      "background-color: color-mix(in oklab, var(--gtk-current-color, currentColor) 15%, transparent)",
+      "background-color: color-mix(in srgb, var(--gtk-current-color, currentColor) 15%, transparent)",
     );
     expect(out).toMatch(
       /color: var\(--accent-fg-color\);\s*--gtk-current-color: var\(--accent-fg-color\)/,
@@ -281,10 +292,10 @@ describe("currentColor", () => {
       "row:hover { background-color: alpha(currentColor, 0.03); } row.error { color: red; } row:hover { background-image: image(alpha(currentColor, 0.1)); }",
     );
     // Follows a color set by app CSS, overlays included.
-    expect(out).toContain("background-color: color-mix(in oklab, currentColor 3%, transparent)");
+    expect(out).toContain("background-color: color-mix(in srgb, currentColor 3%, transparent)");
     expect(out).toContain("--gtk-background-overlay: transparent; --gtk-background-tint: 10%");
     expect(out).toContain(
-      "color-mix(in oklab, currentColor var(--gtk-background-tint), transparent)",
+      "color-mix(in srgb, currentColor var(--gtk-background-tint), transparent)",
     );
   });
 
@@ -293,7 +304,7 @@ describe("currentColor", () => {
       "menubutton > button:checked { color: inherit; } button.opaque:hover, menubutton > button:hover { background-image: image(alpha(currentColor, 0.1)); }",
     );
     expect(out).toMatch(
-      /> :where\(.gtk-button\):not\(_\):hover \{ --gtk-background-overlay: color-mix\(in oklab, var\(--gtk-current-color, currentColor\) 10%/,
+      /> :where\(.gtk-button\):not\(_\):hover \{ --gtk-background-overlay: color-mix\(in srgb, var\(--gtk-current-color, currentColor\) 10%/,
     );
     expect(out).toMatch(
       /:where\(.gtk-button\):not\(_\).opaque:hover \{ --gtk-background-overlay: transparent; --gtk-background-tint: 10%/,
@@ -305,7 +316,7 @@ describe("currentColor", () => {
       "switch { transition: background 200ms; } switch:checked { color: white; } switch:checked:hover { background-image: image(alpha(currentColor, 0.1)); }",
     );
     expect(out).toContain(
-      "--gtk-background-overlay: color-mix(in oklab, var(--gtk-current-color, currentColor) 10%, transparent); --gtk-background-tint: 0%",
+      "--gtk-background-overlay: color-mix(in srgb, var(--gtk-current-color, currentColor) 10%, transparent); --gtk-background-tint: 0%",
     );
   });
 
@@ -313,7 +324,7 @@ describe("currentColor", () => {
     const out = await transform(
       ".dim { color: alpha(currentColor, 0.55); } .plain { color: inherit !important; }",
     );
-    expect(out).toContain("color: color-mix(in oklab, currentColor 55%, transparent)");
+    expect(out).toContain("color: color-mix(in srgb, currentColor 55%, transparent)");
     expect(out).toContain("--gtk-current-color: initial");
     expect(out).toContain("--gtk-current-color: inherit !important");
   });
@@ -328,7 +339,7 @@ describe("background-image overlays", () => {
     expect(out).toContain("--gtk-background-overlay: transparent; --gtk-background-tint: 10%");
     expect(out).toContain("--gtk-background-overlay: rgb(0 0 6 / 20%); --gtk-background-tint: 0%");
     expect(out).toContain(
-      "background-image: linear-gradient(var(--gtk-background-overlay), var(--gtk-background-overlay)), linear-gradient(color-mix(in oklab, currentColor var(--gtk-background-tint), transparent), color-mix(in oklab, currentColor var(--gtk-background-tint), transparent))",
+      "background-image: linear-gradient(var(--gtk-background-overlay), var(--gtk-background-overlay)), linear-gradient(color-mix(in srgb, currentColor var(--gtk-background-tint), transparent), color-mix(in srgb, currentColor var(--gtk-background-tint), transparent))",
     );
     expect(out).toContain(
       "transition: background 200ms ease-out, box-shadow 200ms ease-out, --gtk-background-overlay 200ms ease-out, --gtk-background-tint 200ms ease-out",
