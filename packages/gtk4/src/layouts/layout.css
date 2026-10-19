@@ -725,6 +725,18 @@
   mask: var(--gtk-indicator-mask) no-repeat;
 }
 
+/* === AdwButtonRow === */
+/*
+ * Its box is centered (halign=center in adw-button-row.ui), and GTK gives it
+ * at most the row's width, where the title ellipsizes. A grid track from 0 to
+ * the box's natural width, centered in the row, does both, like AdwWindowTitle.
+ */
+.gtk-row.button {
+  display: grid;
+  grid-template-columns: minmax(0px, max-content);
+  justify-content: center;
+}
+
 /* === Scale (GtkRange / GtkScale) === */
 /* GtkProgressBar: a vertical box layout whatever its orientation, with the
  * text above the trough. A horizontal bar's trough fills the width, a vertical
