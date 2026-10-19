@@ -126,14 +126,14 @@
  * it gets at the box's width (gtk_widget_adjust_size_allocation() measures a
  * height-for-width widget's width for its allocated height): its
  * max-width-chars still sets the box's natural width, but the label is as wide
- * as its text up to the box. GtkLabel sets --gtk-label-width-for-height, a
- * calc-size(), on such labels; browsers without it keep them at
- * max-width-chars. */
-.gtk-box-layout.vertical > .gtk-label[data-halign][style*="--gtk-label-width-for-height"] {
+ * as its text up to the box. GtkLabel marks such labels data-width-for-height
+ * and sets --gtk-label-width-for-height, a calc-size(), on them; browsers
+ * without calc-size() keep them at max-width-chars. */
+.gtk-box-layout.vertical > .gtk-label[data-halign][data-width-for-height] {
   max-width: var(--gtk-max-width-chars);
   min-width: var(--gtk-label-width-for-height);
 }
-.gtk-box-layout.vertical > .gtk-label[data-halign][style*="--gtk-label-width-for-height"] > * {
+.gtk-box-layout.vertical > .gtk-label[data-halign][data-width-for-height] > * {
   --gtk-max-width-chars: none;
 }
 

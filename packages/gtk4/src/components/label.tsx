@@ -244,6 +244,7 @@ export const GtkLabel = forwardRef<HTMLSpanElement, GtkLabelProps>(function GtkL
       {...alignAttrs(halign, valign, hexpand, vexpand)}
       aria-disabled={disabled || undefined}
       data-disabled={disabled || undefined}
+      data-width-for-height={(maxWidthChars > 0 && wrap) || undefined}
       tabIndex={focusable ? 0 : undefined}
       style={cssStyle}
       onMouseDown={(e) => {
