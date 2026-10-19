@@ -62,6 +62,8 @@ export type {
 export { GtkModelButton, GtkPopoverMenu, usePopoverClose } from "./components/popover-menu.tsx";
 export type { GtkProgressBarProps } from "./components/progress-bar.tsx";
 export { GtkProgressBar } from "./components/progress-bar.tsx";
+export type { GtkRevealerProps, GtkRevealerTransitionType } from "./components/revealer.tsx";
+export { GtkRevealer } from "./components/revealer.tsx";
 export type { GtkScaleMark, GtkScaleProps } from "./components/scale.tsx";
 export { GtkScale } from "./components/scale.tsx";
 export type { GtkScrollbarProps } from "./components/scrollbar.tsx";

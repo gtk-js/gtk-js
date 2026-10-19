@@ -8,6 +8,7 @@ pub mod adw_entry_row_default;
 pub mod adw_entry_row_with_text;
 pub mod adw_expander_row_default;
 pub mod adw_expander_row_expanded;
+pub mod adw_expander_row_widgets;
 pub mod adw_headerbar_default;
 pub mod adw_headerbar_start_end;
 pub mod adw_headerbar_with_title;
