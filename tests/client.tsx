@@ -830,6 +830,18 @@ const cases: Record<string, () => React.ReactElement> = {
 
   // GtkHeaderBar cases
   "headerbar-default": () => <GtkHeaderBar showWindowControls={false} data-testid="target" />,
+  // The native case fills the test window, which AdwWindow's minimum size makes
+  // 352px wide for the bar (its -1px margins included).
+  "headerbar-narrow-title": () => (
+    <GtkHeaderBar
+      showWindowControls={false}
+      start={<GtkButton label="Start" />}
+      end={<GtkButton label="End" />}
+      titleWidget={<GtkWindowTitle title="A Very Long Window Title Here" />}
+      style={{ width: 352 }}
+      data-testid="target"
+    />
+  ),
   "headerbar-with-title": () => (
     <GtkHeaderBar
       showWindowControls={false}
@@ -1181,6 +1193,19 @@ const cases: Record<string, () => React.ReactElement> = {
       showStartTitleButtons={false}
       showEndTitleButtons={false}
       showBackButton={false}
+      data-testid="target"
+    />
+  ),
+  // The native case fills the test window, which AdwWindow's minimum size makes
+  // 352px wide for the bar (its -1px margins included).
+  "adw-headerbar-narrow-title": () => (
+    <AdwHeaderBar
+      showStartTitleButtons={false}
+      showEndTitleButtons={false}
+      showBackButton={false}
+      end={<GtkButton label="End" />}
+      titleWidget={<GtkWindowTitle title="A Very Long Window Title That Goes On" />}
+      style={{ width: 352 }}
       data-testid="target"
     />
   ),
