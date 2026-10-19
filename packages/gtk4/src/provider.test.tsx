@@ -31,6 +31,30 @@ test("hideUntilReady={false} renders the content ready, with the app's style", (
   expect(html).not.toContain("noscript");
 });
 
+test("server HTML has the reset, layout and theme CSS, once per document", () => {
+  const html = renderToStaticMarkup(
+    <>
+      <GtkProvider cssText="label { color: red; }">One</GtkProvider>
+      <GtkProvider cssText="label { color: red; }">Two</GtkProvider>
+    </>,
+  );
+  const styles = html.match(/<style data-precedence="[^"]*" data-href="[^"]*">/g);
+  expect(styles).toEqual([
+    '<style data-precedence="gtk-js-reset" data-href="gtk-js-reset">',
+    '<style data-precedence="gtk-js-theme" data-href="gtk-js-theme">',
+  ]);
+  expect(html).toContain('data-href="gtk-js-theme">label { color: red; }</style>');
+  // Before the content, so it's styled when it first paints.
+  expect(html.indexOf("gtk-js-theme")).toBeLessThan(html.indexOf("data-gtk-provider"));
+});
+
+test("server HTML links a cssHref theme", () => {
+  const html = renderToStaticMarkup(<GtkProvider cssHref="/theme.css">Hello</GtkProvider>);
+  expect(html).toContain(
+    '<link rel="stylesheet" href="/theme.css" data-precedence="gtk-js-theme"/>',
+  );
+});
+
 /** A stand-in for a theme <link> or <style> element. */
 function element(localName: string, sheet: object | null = null) {
   return Object.assign(new EventTarget(), { localName, sheet }) as unknown as Element;
