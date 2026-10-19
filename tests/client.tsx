@@ -113,6 +113,42 @@ function OpenSplitButton() {
   );
 }
 
+/**
+ * Clicks the buttons of its child box in `order`, one event at a time, then
+ * marks the box as the target.
+ */
+function ClickedInOrder({ order, children }: { order: number[]; children: ReactElement }) {
+  const ref = useRef<HTMLDivElement>(null);
+  useLayoutEffect(() => {
+    const box = ref.current?.firstElementChild;
+    const clicks = [...order];
+    const next = () => {
+      const index = clicks.shift();
+      if (index === undefined) box?.setAttribute("data-testid", "target");
+      else {
+        (box?.children[index] as HTMLElement | undefined)?.click();
+        setTimeout(next);
+      }
+    };
+    setTimeout(next);
+  }, [order]);
+  return <div ref={ref}>{children}</div>;
+}
+
+/** Three grouped toggle buttons; One, Two and Two again are clicked. */
+function ToggleGrouped() {
+  const one = useRef<HTMLButtonElement>(null);
+  return (
+    <ClickedInOrder order={[0, 1, 1]}>
+      <GtkBox className="linked">
+        <GtkToggleButton ref={one} label="One" />
+        <GtkToggleButton group={one} label="Two" />
+        <GtkToggleButton group={one} label="Three" />
+      </GtkBox>
+    </ClickedInOrder>
+  );
+}
+
 /** Fixes its child's height when it mounts, like AdwDialog fixing its natural size when presented. */
 function SizedOnMount({ children }: { children: ReactElement }) {
   const ref = useRef<HTMLDivElement>(null);
@@ -160,7 +196,13 @@ const cases: Record<string, () => React.ReactElement> = {
   ),
   "button-icon": () => <GtkButton iconName="OpenMenu" data-testid="target" />,
   "button-circular": () => (
-    <GtkButton iconName="open-menu-symbolic" className="circular" data-testid="target" />
+    <GtkButton iconName="OpenMenu" className="circular" data-testid="target" />
+  ),
+  "button-icon-label": () => <GtkButton iconName="OpenMenu" label="Open" data-testid="target" />,
+  "button-can-shrink": () => (
+    <div style={{ width: 120, display: "flex", flexDirection: "column" }}>
+      <GtkButton label="A very long button label here" canShrink data-testid="target" />
+    </div>
   ),
   "button-pill": () => <GtkButton label="Button" className="pill" data-testid="target" />,
   "button-disabled": () => <GtkButton label="Button" disabled data-testid="target" />,
@@ -499,6 +541,13 @@ const cases: Record<string, () => React.ReactElement> = {
     <GtkToggleButton label="Toggle" hasFrame={false} data-testid="target" />
   ),
   "toggle-disabled": () => <GtkToggleButton label="Toggle" disabled data-testid="target" />,
+  "toggle-icon": () => <GtkToggleButton iconName="OpenMenu" data-testid="target" />,
+  "toggle-label-child": () => (
+    <GtkToggleButton data-testid="target">
+      <GtkLabel label="Child label" />
+    </GtkToggleButton>
+  ),
+  "toggle-grouped": () => <ToggleGrouped />,
 
   // GtkWindowTitle cases
   "window-title-text-default": () => <GtkWindowTitle title="Window Title" data-testid="target" />,

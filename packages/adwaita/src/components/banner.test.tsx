@@ -25,7 +25,7 @@ describe("AdwBanner nodes", () => {
       <AdwBanner title="Metered connection" buttonLabel="_Network Settings" revealed />,
     );
     expect(html).toContain(
-      '<button class="gtk-button text-button" data-valign="center" type="button">',
+      '<button type="button" class="gtk-button text-button" data-valign="center">',
     );
     expect(html).not.toContain("_Network");
     expect(html).toMatch(/>N<\/span>etwork Settings</);

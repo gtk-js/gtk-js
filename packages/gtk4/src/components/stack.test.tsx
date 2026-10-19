@@ -82,10 +82,10 @@ describe("GtkStackSwitcher", () => {
 
   test("tabs are a label or an icon, centered, and only for visible pages with either", () => {
     expect(buttons).toHaveLength(2);
-    expect(buttons[0]).toMatch(/class="gtk-button toggle text-button needs-attention"/);
+    expect(buttons[0]).toMatch(/class="gtk-button text-button toggle needs-attention"/);
     expect(buttons[0]).toContain('<span class="gtk-label" data-halign="center"');
     expect(buttons[0]).not.toContain("title=");
-    expect(buttons[1]).toMatch(/class="gtk-button toggle image-button"/);
+    expect(buttons[1]).toMatch(/class="gtk-button image-button toggle"/);
     expect(buttons[1]).toContain('data-gtk-tooltip="Find"');
     expect(buttons[1]).toContain('aria-label="Find"');
     expect(buttons[1]).toContain('<span class="gtk-image" data-halign="center"><svg></svg></span>');

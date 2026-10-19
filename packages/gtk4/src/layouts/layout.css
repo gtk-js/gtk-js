@@ -156,17 +156,15 @@
 /* Single-cell grid overlay. Used by GtkHeaderBar (outer), GtkWindowHandle, etc.
  * GtkButton and the widgets built on it lay out their one child with it too
  * (gtk_button_class_init()), so a button node uses it without the class: an
- * image child fills the button and centers its icon, like gtk_image_snapshot().
- * gtk-js's icon-and-label buttons (.image-text-button) have two children and
- * stay inline. */
-:is(.gtk-bin-layout, .gtk-button:not(.image-text-button)) {
+ * image child fills the button and centers its icon, like gtk_image_snapshot(). */
+:is(.gtk-bin-layout, .gtk-button) {
   display: grid;
   grid-template-columns: 1fr;
   grid-template-rows: 1fr;
 }
 
 /* Buttons stay inline-level, as <button> is. */
-.gtk-button:not(.image-text-button) {
+.gtk-button {
   display: inline-grid;
 }
 
@@ -176,35 +174,35 @@
   display: inline-grid;
 }
 
-:is(.gtk-bin-layout, .gtk-button:not(.image-text-button)) > * {
+:is(.gtk-bin-layout, .gtk-button) > * {
   grid-column: 1;
   grid-row: 1;
 }
 
 /* A button's label is centered: GtkLabel's default xalign is 0.5, which labels
  * don't otherwise apply. */
-.gtk-button:not(.image-text-button) > .gtk-label {
+.gtk-button > .gtk-label {
   justify-content: center;
 }
 
 /* -- Widget alignment in BinLayout (grid): both axes independent --
  * A GtkStack's pages get the whole stack too (gtk_stack_size_allocate()). */
-:is(.gtk-bin-layout, .gtk-stack, .gtk-button:not(.image-text-button)) > [data-halign="start"] {
+:is(.gtk-bin-layout, .gtk-stack, .gtk-button) > [data-halign="start"] {
   justify-self: start;
 }
-:is(.gtk-bin-layout, .gtk-stack, .gtk-button:not(.image-text-button)) > [data-halign="end"] {
+:is(.gtk-bin-layout, .gtk-stack, .gtk-button) > [data-halign="end"] {
   justify-self: end;
 }
-:is(.gtk-bin-layout, .gtk-stack, .gtk-button:not(.image-text-button)) > [data-halign="center"] {
+:is(.gtk-bin-layout, .gtk-stack, .gtk-button) > [data-halign="center"] {
   justify-self: center;
 }
-:is(.gtk-bin-layout, .gtk-stack, .gtk-button:not(.image-text-button)) > [data-valign="start"] {
+:is(.gtk-bin-layout, .gtk-stack, .gtk-button) > [data-valign="start"] {
   align-self: start;
 }
-:is(.gtk-bin-layout, .gtk-stack, .gtk-button:not(.image-text-button)) > [data-valign="end"] {
+:is(.gtk-bin-layout, .gtk-stack, .gtk-button) > [data-valign="end"] {
   align-self: end;
 }
-:is(.gtk-bin-layout, .gtk-stack, .gtk-button:not(.image-text-button)) > [data-valign="center"] {
+:is(.gtk-bin-layout, .gtk-stack, .gtk-button) > [data-valign="center"] {
   align-self: center;
 }
 
