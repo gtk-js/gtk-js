@@ -1,4 +1,4 @@
-import { type GtkInputPurpose, useIcon, useListBoxRow } from "@gtk-js/gtk4";
+import { type GtkInputPurpose, tooltipAttrs, useIcon, useListBoxRow } from "@gtk-js/gtk4";
 import React, {
   forwardRef,
   type HTMLAttributes,
@@ -118,7 +118,7 @@ export const AdwEntryRow = forwardRef<HTMLDivElement, AdwEntryRowProps>(function
     <div
       ref={ref}
       className={classes.join(" ")}
-      title={tooltipText}
+      {...tooltipAttrs(tooltipText)}
       onClick={() => inputRef.current?.focus()}
       {...rest}
     >
@@ -155,7 +155,8 @@ export const AdwEntryRow = forwardRef<HTMLDivElement, AdwEntryRowProps>(function
             <input
               ref={inputRef}
               className="gtk-text"
-              type={inputPurpose === "password" || !visibility ? "password" : "text"}
+              // GtkText:visibility alone hides the text; input-purpose only hints input methods.
+              type={visibility ? "text" : "password"}
               autoFocus={autoFocus}
               spellCheck={
                 inputPurpose === "free-form" || inputPurpose === "name" ? undefined : false
