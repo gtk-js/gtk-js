@@ -984,6 +984,25 @@ const cases: Record<string, () => React.ReactElement> = {
       <AdwComboRow title="Combo Row" items={["Option 1", "Option 2", "Option 3"]} selected={0} />
     </GtkListBox>
   ),
+  "adw-combo-row-long-value": () => (
+    <GtkListBox
+      selectionMode="none"
+      className="boxed-list"
+      style={{ width: 360 }}
+      data-testid="target"
+    >
+      <AdwComboRow
+        title="Appearance"
+        items={["Automatic (follow the system setting when possible)", "Light", "Dark"]}
+        selected={0}
+      />
+    </GtkListBox>
+  ),
+  "adw-combo-row-single-item": () => (
+    <GtkListBox selectionMode="none" className="boxed-list" data-testid="target">
+      <AdwComboRow title="Combo Row" items={["Only"]} selected={0} />
+    </GtkListBox>
+  ),
 
   // AdwSwitchRow cases
   "adw-switch-row-default": () => (
