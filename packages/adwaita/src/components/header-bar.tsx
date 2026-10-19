@@ -1,5 +1,5 @@
-import { GtkLabel, useIcon, useWindowControls } from "@gtk-js/gtk4";
-import { forwardRef, type HTMLAttributes, type ReactNode, useCallback } from "react";
+import { GtkLabel, useCenterLayout, useIcon, useWindowControls } from "@gtk-js/gtk4";
+import { forwardRef, type HTMLAttributes, type ReactNode, useCallback, useRef } from "react";
 import type { AdwCenteringPolicy } from "../types.ts";
 import { useHeaderBarTitle } from "./header-bar-title.ts";
 import { useNavigation } from "./navigation-view.tsx";
@@ -113,6 +113,8 @@ export const AdwHeaderBar = forwardRef<HTMLDivElement, AdwHeaderBarProps>(functi
   // handle and its center box get the bar's full height (adw-header-bar.c).
   const classes = ["gtk-headerbar", "gtk-bin-layout"];
   if (className) classes.push(className);
+  const centerBoxRef = useRef<HTMLDivElement>(null);
+  useCenterLayout(centerBoxRef);
 
   // Without a title widget, the title of the page or dialog it's in, like
   // construct_title_label() and update_title().
@@ -146,12 +148,15 @@ export const AdwHeaderBar = forwardRef<HTMLDivElement, AdwHeaderBarProps>(functi
   return (
     <div ref={ref} className={classes.join(" ")} {...rest}>
       <div className="gtk-windowhandle gtk-bin-layout" onPointerDown={handleDrag}>
-        {/* The start and end boxes always exist, as in AdwHeaderBar. */}
+        {/* The start and end boxes always exist, and the center box has
+            shrink-center-last FALSE, as in adw_header_bar_init(). */}
         <div
+          ref={centerBoxRef}
           className="gtk-box gtk-center-layout"
           data-start=""
           data-center={showTitle && title ? "" : undefined}
           data-end=""
+          data-shrink-center-last="false"
         >
           <div className="gtk-box gtk-box-layout horizontal start gtk-center-layout-start">
             {showStartTitleButtons && <WindowControls side="start" layout={decorationLayout} />}

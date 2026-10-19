@@ -106,6 +106,7 @@ export { GtkBinLayout } from "./layouts/bin-layout.tsx";
 export type { GtkBoxLayoutProps } from "./layouts/box-layout.tsx";
 // Layout managers
 export { GtkBoxLayout } from "./layouts/box-layout.tsx";
+export { useCenterLayout } from "./layouts/center-allocation.ts";
 export type { GtkCenterLayoutProps } from "./layouts/center-layout.tsx";
 export { GtkCenterLayout } from "./layouts/center-layout.tsx";
 export {

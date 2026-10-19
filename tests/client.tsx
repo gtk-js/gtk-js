@@ -496,6 +496,17 @@ const cases: Record<string, () => React.ReactElement> = {
       data-testid="target"
     />
   ),
+  "center-box-expand-center": () => (
+    <GtkCenterBox
+      halign="start"
+      valign="start"
+      style={{ width: 480 }}
+      startWidget={<GtkButton label="Open" />}
+      centerWidget={<GtkEntry hexpand />}
+      endWidget={<GtkButton label="Save and Close" />}
+      data-testid="target"
+    />
+  ),
   // GTK's height request includes the button's 5px vertical padding.
   "center-box-fill-expand": () => (
     <GtkCenterBox
@@ -1080,6 +1091,19 @@ const cases: Record<string, () => React.ReactElement> = {
       showStartTitleButtons={false}
       showEndTitleButtons={false}
       showBackButton={false}
+      data-testid="target"
+    />
+  ),
+  // The native header bar is held at 302px by an AdwClamp of 300px.
+  "adw-headerbar-narrow-sides": () => (
+    <AdwHeaderBar
+      style={{ width: 302 }}
+      showStartTitleButtons={false}
+      showEndTitleButtons={false}
+      showBackButton={false}
+      titleWidget={<GtkWindowTitle title="Document Title" />}
+      start={<GtkWindowTitle title="A long start title" />}
+      end={<GtkWindowTitle title="Another long end title" />}
       data-testid="target"
     />
   ),

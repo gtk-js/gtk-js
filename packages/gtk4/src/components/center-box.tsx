@@ -1,4 +1,11 @@
-import { forwardRef, type HTMLAttributes, type ReactNode } from "react";
+import {
+  forwardRef,
+  type HTMLAttributes,
+  type ReactNode,
+  useImperativeHandle,
+  useRef,
+} from "react";
+import { useCenterLayout } from "../layouts/center-allocation.ts";
 import {
   alignAttrs,
   centerSlotAttrs,
@@ -61,9 +68,13 @@ export const GtkCenterBox = forwardRef<HTMLDivElement, GtkCenterBoxProps>(functi
   if (orientation === "vertical") classes.push("vertical");
   if (className) classes.push(className);
 
+  const boxRef = useRef<HTMLDivElement>(null);
+  useImperativeHandle(ref, () => boxRef.current!, []);
+  useCenterLayout(boxRef);
+
   return (
     <div
-      ref={ref}
+      ref={boxRef}
       className={classes.join(" ")}
       {...alignAttrs(halign, valign, hexpand, vexpand)}
       {...centerSlotAttrs(startWidget, centerWidget, endWidget)}

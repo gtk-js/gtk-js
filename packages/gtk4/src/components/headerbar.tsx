@@ -1,5 +1,6 @@
-import { forwardRef, type HTMLAttributes, type PointerEvent, type ReactNode } from "react";
+import { forwardRef, type HTMLAttributes, type PointerEvent, type ReactNode, useRef } from "react";
 import { useIcon } from "../icon-context.tsx";
+import { useCenterLayout } from "../layouts/center-allocation.ts";
 import { alignAttrs, centerSlotAttrs, type GtkAlignProps } from "../types.ts";
 
 export interface GtkHeaderBarProps extends HTMLAttributes<HTMLDivElement>, GtkAlignProps {
@@ -154,6 +155,9 @@ export const GtkHeaderBar = forwardRef<HTMLDivElement, GtkHeaderBarProps>(functi
   const classes = ["gtk-headerbar", "gtk-bin-layout"];
   if (className) classes.push(className);
 
+  const centerBoxRef = useRef<HTMLDivElement>(null);
+  useCenterLayout(centerBoxRef);
+
   return (
     <div
       ref={ref}
@@ -164,6 +168,7 @@ export const GtkHeaderBar = forwardRef<HTMLDivElement, GtkHeaderBarProps>(functi
       <div className="gtk-windowhandle gtk-bin-layout" onPointerDown={onWindowHandleDragStart}>
         {/* The start and end boxes always exist, as in GtkHeaderBar. */}
         <div
+          ref={centerBoxRef}
           className="gtk-box gtk-center-layout"
           {...centerSlotAttrs(true, titleWidget ?? children, true)}
         >

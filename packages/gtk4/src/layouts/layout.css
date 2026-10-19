@@ -325,9 +325,9 @@
   justify-self: end;
 }
 
-/* An expanding center child isn't stretched: its size depends on the larger
-   side child's (size - 2 × (max(start, end) + spacing)), which a grid track
-   can't follow. */
+/* An expanding center child gets size - 2 × (max(start, end) + spacing), which
+   a grid track can't follow: that is allocated in JS (below). Until then it
+   fills its natural-size track. */
 .gtk-center-layout:not(.vertical) > [data-computed-hexpand]:not([class*="gtk-center-layout-"]) {
   justify-self: stretch;
 }
@@ -457,8 +457,8 @@
 }
 
 /* shrink-center-last=FALSE: the side children keep their natural size while
-   the center child shrinks (gtk_center_layout_distribute()). They don't shrink
-   below it after the center child's minimum either, unlike GTK. */
+   the center child shrinks (gtk_center_layout_distribute()). They shrink below
+   it after the center child's minimum once allocated in JS (below). */
 .gtk-center-layout:not(.vertical)[data-shrink-center-last="false"] {
   grid-template-columns:
     minmax(max-content, 1fr) var(--gtk-center-gap-start) minmax(min-content, max-content)
@@ -470,6 +470,71 @@
     minmax(max-content, 1fr) var(--gtk-center-gap-start) minmax(min-content, max-content)
     var(--gtk-center-gap-end)
     minmax(max-content, 1fr);
+}
+
+/* Layouts allocated in JS (center-allocation.ts): an expanding center child,
+   or shrink-center-last FALSE. Their tracks and children's lines replace the
+   ones above, which stay as the server-rendered and first layout. */
+.gtk-center-layout[data-allocated]:not([data-measuring]):not(.vertical) {
+  grid-template-columns: var(--gtk-center-tracks) !important;
+}
+.gtk-center-layout[data-allocated]:not([data-measuring]).vertical {
+  grid-template-rows: var(--gtk-center-tracks) !important;
+}
+.gtk-center-layout[data-allocated]:not([data-measuring]):not(.vertical)
+  > :is(.gtk-center-layout-start, [data-start] > :first-child:not([class*="gtk-center-layout-"])) {
+  grid-column: var(--gtk-center-start);
+}
+.gtk-center-layout[data-allocated]:not([data-measuring]):not(.vertical)
+  > :is(
+    .gtk-center-layout-center,
+    [data-center][data-start] > :nth-child(2):not([class*="gtk-center-layout-"]),
+    [data-center]:not([data-start]) > :first-child:not([class*="gtk-center-layout-"])
+  ) {
+  grid-column: var(--gtk-center-center);
+}
+.gtk-center-layout[data-allocated]:not([data-measuring]):not(.vertical)
+  > :is(.gtk-center-layout-end, [data-end] > :last-child:not([class*="gtk-center-layout-"])) {
+  grid-column: var(--gtk-center-end);
+}
+/* Overlapping children share the row instead of being auto-placed below. */
+.gtk-center-layout[data-allocated]:not([data-measuring]):not(.vertical)
+> :not([data-valign^="baseline"]) {
+  grid-row: 1 / -1;
+}
+.gtk-center-layout[data-allocated]:not([data-measuring]).vertical > * {
+  grid-column: 1 / -1;
+}
+.gtk-center-layout[data-allocated]:not([data-measuring]).vertical
+  > :is(.gtk-center-layout-start, [data-start] > :first-child:not([class*="gtk-center-layout-"])) {
+  grid-row: var(--gtk-center-start);
+}
+.gtk-center-layout[data-allocated]:not([data-measuring]).vertical
+  > :is(
+    .gtk-center-layout-center,
+    [data-center][data-start] > :nth-child(2):not([class*="gtk-center-layout-"]),
+    [data-center]:not([data-start]) > :first-child:not([class*="gtk-center-layout-"])
+  ) {
+  grid-row: var(--gtk-center-center);
+}
+.gtk-center-layout[data-allocated]:not([data-measuring]).vertical
+  > :is(.gtk-center-layout-end, [data-end] > :last-child:not([class*="gtk-center-layout-"])) {
+  grid-row: var(--gtk-center-end);
+}
+
+/* While measuring: the children's minimum, then natural sizes, in tracks 1, 3
+   and 5. */
+.gtk-center-layout[data-measuring="min"]:not(.vertical) {
+  grid-template-columns: min-content 0px min-content 0px min-content !important;
+}
+.gtk-center-layout[data-measuring="max"]:not(.vertical) {
+  grid-template-columns: max-content 0px max-content 0px max-content !important;
+}
+.gtk-center-layout[data-measuring="min"].vertical {
+  grid-template-rows: min-content 0px min-content 0px min-content !important;
+}
+.gtk-center-layout[data-measuring="max"].vertical {
+  grid-template-rows: max-content 0px max-content 0px max-content !important;
 }
 
 .gtk-center-layout-start {

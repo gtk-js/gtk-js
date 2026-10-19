@@ -49,6 +49,7 @@ enum Command {
     AdwExpanderRowDefault,
     AdwExpanderRowExpanded,
     AdwHeaderbarDefault,
+    AdwHeaderbarNarrowSides,
     AdwHeaderbarWithTitle,
     AdwHeaderbarStartEnd,
     AdwNavigationViewDefault,
@@ -87,6 +88,7 @@ enum Command {
     BoxHomogeneous,
     CenterBoxBaselineBottom,
     CenterBoxDefault,
+    CenterBoxExpandCenter,
     CenterBoxFillExpand,
     CenterBoxToolbarCenterEndNarrow,
     CenterBoxToolbarCenterOnly,
@@ -287,6 +289,7 @@ impl Command {
             Self::AdwExpanderRowDefault => Some("adw-expander-row-default"),
             Self::AdwExpanderRowExpanded => Some("adw-expander-row-expanded"),
             Self::AdwHeaderbarDefault => Some("adw-headerbar-default"),
+            Self::AdwHeaderbarNarrowSides => Some("adw-headerbar-narrow-sides"),
             Self::AdwHeaderbarWithTitle => Some("adw-headerbar-with-title"),
             Self::AdwHeaderbarStartEnd => Some("adw-headerbar-start-end"),
             Self::AdwNavigationViewDefault => Some("adw-navigation-view-default"),
@@ -325,6 +328,7 @@ impl Command {
             Self::BoxHexpandComputed => Some("box-hexpand-computed"),
             Self::CenterBoxBaselineBottom => Some("center-box-baseline-bottom"),
             Self::CenterBoxDefault => Some("center-box-default"),
+            Self::CenterBoxExpandCenter => Some("center-box-expand-center"),
             Self::CenterBoxFillExpand => Some("center-box-fill-expand"),
             Self::CenterBoxToolbarCenterEndNarrow => Some("center-box-toolbar-center-end-narrow"),
             Self::CenterBoxToolbarCenterOnly => Some("center-box-toolbar-center-only"),
@@ -518,6 +522,9 @@ fn create_widget_for_case(name: &str) -> Option<(gtk::Widget, bool)> {
         "adw-headerbar-default" => {
             widget_case!(cases::adw_headerbar_default::AdwHeaderbarDefault, false)
         }
+        "adw-headerbar-narrow-sides" => {
+            widget_case!(cases::adw_headerbar_narrow_sides::AdwHeaderbarNarrowSides, true)
+        }
         "adw-headerbar-with-title" => {
             widget_case!(cases::adw_headerbar_with_title::AdwHeaderbarWithTitle, false)
         }
@@ -613,6 +620,9 @@ fn create_widget_for_case(name: &str) -> Option<(gtk::Widget, bool)> {
             false
         ),
         "center-box-default" => widget_case!(cases::center_box_default::CenterBoxDefault, false),
+        "center-box-expand-center" => {
+            widget_case!(cases::center_box_expand_center::CenterBoxExpandCenter, false)
+        }
         "center-box-fill-expand" => {
             widget_case!(cases::center_box_fill_expand::CenterBoxFillExpand, false)
         }
@@ -1030,6 +1040,7 @@ fn is_known_case(name: &str) -> bool {
             | "adw-expander-row-default"
             | "adw-expander-row-expanded"
             | "adw-headerbar-default"
+            | "adw-headerbar-narrow-sides"
             | "adw-headerbar-with-title"
             | "adw-headerbar-start-end"
             | "adw-navigation-view-default"
@@ -1068,6 +1079,7 @@ fn is_known_case(name: &str) -> bool {
             | "box-hexpand-computed"
             | "center-box-baseline-bottom"
             | "center-box-default"
+            | "center-box-expand-center"
             | "center-box-fill-expand"
             | "center-box-toolbar-center-end-narrow"
             | "center-box-toolbar-center-only"
