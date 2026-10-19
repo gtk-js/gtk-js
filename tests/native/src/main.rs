@@ -153,7 +153,9 @@ enum Command {
     LabelEllipsize,
     LabelHeights,
     LabelJustifyCenter,
+    LabelLink,
     LabelMaxWidthCharsFill,
+    LabelMaxWidthCharsStart,
     LabelWidthChars,
     LabelXalign,
     LabelDisabled,
@@ -395,7 +397,9 @@ impl Command {
             Self::LabelEllipsize => Some("label-ellipsize"),
             Self::LabelHeights => Some("label-heights"),
             Self::LabelJustifyCenter => Some("label-justify-center"),
+            Self::LabelLink => Some("label-link"),
             Self::LabelMaxWidthCharsFill => Some("label-max-width-chars-fill"),
+            Self::LabelMaxWidthCharsStart => Some("label-max-width-chars-start"),
             Self::LabelWidthChars => Some("label-width-chars"),
             Self::LabelXalign => Some("label-xalign"),
             Self::LabelDisabled => Some("label-disabled"),
@@ -774,8 +778,12 @@ fn create_widget_for_case(name: &str) -> Option<(gtk::Widget, bool)> {
         "label-justify-center" => {
             widget_case!(cases::label_justify_center::LabelJustifyCenter, false)
         }
+        "label-link" => widget_case!(cases::label_link::LabelLink, false),
         "label-max-width-chars-fill" => {
             widget_case!(cases::label_max_width_chars_fill::LabelMaxWidthCharsFill, false)
+        }
+        "label-max-width-chars-start" => {
+            widget_case!(cases::label_max_width_chars_start::LabelMaxWidthCharsStart, false)
         }
         "label-width-chars" => widget_case!(cases::label_width_chars::LabelWidthChars, false),
         "label-xalign" => widget_case!(cases::label_xalign::LabelXalign, false),
@@ -1131,7 +1139,9 @@ fn is_known_case(name: &str) -> bool {
             | "label-ellipsize"
             | "label-heights"
             | "label-justify-center"
+            | "label-link"
             | "label-max-width-chars-fill"
+            | "label-max-width-chars-start"
             | "label-width-chars"
             | "label-xalign"
             | "label-disabled"

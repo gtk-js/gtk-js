@@ -122,6 +122,21 @@
   align-self: center;
 }
 
+/* A wrapping label that doesn't fill a vertical box is measured for the height
+ * it gets at the box's width (gtk_widget_adjust_size_allocation() measures a
+ * height-for-width widget's width for its allocated height): its
+ * max-width-chars still sets the box's natural width, but the label is as wide
+ * as its text up to the box. GtkLabel sets --gtk-label-width-for-height, a
+ * calc-size(), on such labels; browsers without it keep them at
+ * max-width-chars. */
+.gtk-box-layout.vertical > .gtk-label[data-halign][style*="--gtk-label-width-for-height"] {
+  max-width: var(--gtk-max-width-chars);
+  min-width: var(--gtk-label-width-for-height);
+}
+.gtk-box-layout.vertical > .gtk-label[data-halign][style*="--gtk-label-width-for-height"] > * {
+  --gtk-max-width-chars: none;
+}
+
 /* === BinLayout === */
 /* Single-cell grid overlay. Used by GtkHeaderBar (outer), GtkWindowHandle, etc.
  * GtkButton and the widgets built on it lay out their one child with it too

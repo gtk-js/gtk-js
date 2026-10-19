@@ -295,9 +295,29 @@ const cases: Record<string, () => React.ReactElement> = {
     </GtkBox>
   ),
   "label-justify-center": () => <GtkLabel label="Centered" justify="center" data-testid="target" />,
+  "label-link": () => (
+    <GtkLabel
+      label={'Visit <a href="https://gnome.org">GNOME</a>'}
+      useMarkup
+      halign="start"
+      valign="start"
+      data-testid="target"
+    />
+  ),
   "label-max-width-chars-fill": () => (
     <GtkBox orientation="vertical" halign="start" style={{ width: 400 }} data-testid="target">
       <GtkLabel label="The quick brown fox jumps over the lazy dog" wrap maxWidthChars={10} />
+    </GtkBox>
+  ),
+  "label-max-width-chars-start": () => (
+    <GtkBox orientation="vertical" halign="start" valign="start" data-testid="target">
+      <GtkLabel label="The quick brown fox jumps over the lazy dog" wrap halign="start" />
+      <GtkLabel
+        label="The quick brown fox jumps over the lazy dog"
+        wrap
+        maxWidthChars={10}
+        halign="start"
+      />
     </GtkBox>
   ),
   "label-width-chars": () => <GtkLabel label="Hi" widthChars={20} data-testid="target" />,

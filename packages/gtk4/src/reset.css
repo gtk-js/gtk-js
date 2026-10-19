@@ -193,6 +193,15 @@ body:has(> :first-child:has([data-gtk-provider])) > :first-child {
   min-height: round(up, 1lh, 1px);
   /* A selectable label takes the focus, but GTK draws no focus ring on it. */
   outline: none;
+  --gtk-label-color: var(--gtk-current-color, currentColor);
+}
+
+/* GtkLabel draws a link's text in the link's color but with the label's
+   alpha: GTK's Pango renderer takes a foreground color's alpha from the
+   label's color (get_color() in gskpango.c), 80% in light Adwaita. The mask
+   is on the text, not the link node, which keeps its focus ring. */
+:where([data-gtk-provider] .gtk-label .gtk-link > span) {
+  mask-image: linear-gradient(var(--gtk-label-color), var(--gtk-label-color));
 }
 
 /* GtkViewport: a scrolled window's child that doesn't scroll itself is put in a

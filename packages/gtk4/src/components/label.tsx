@@ -197,7 +197,7 @@ export const GtkLabel = forwardRef<HTMLSpanElement, GtkLabelProps>(function GtkL
           setVisited((uris) => (uris.has(link.uri) ? uris : new Set(uris).add(link.uri)));
         }}
       >
-        {children}
+        <span>{children}</span>
       </a>
     ));
     // A label with links has the .link class (gtk_label_set_markup_internal()).
@@ -212,14 +212,19 @@ export const GtkLabel = forwardRef<HTMLSpanElement, GtkLabelProps>(function GtkL
   // (get_default_widths()). The text's block has that width as its max-width,
   // and a min-width of 100% (nothing while the label is measured) so it still
   // fills a wider label: GTK lays the text out at the label's allocation.
+  // A wrapping label's width can also follow from its height, at the width
+  // its parent allocates (layout.css uses it where GTK does).
   if (maxWidthChars > 0) {
+    const vars = cssStyle as Record<string, string>;
+    vars["--gtk-max-width-chars"] = `${Math.max(widthChars, maxWidthChars)}ch`;
+    if (wrap) vars["--gtk-label-width-for-height"] = "calc-size(max-content, min(size, 100%))";
     content = (
       <span
         style={{
           display: "flex",
           justifyContent: cssStyle.justifyContent,
           minWidth: "100%",
-          maxWidth: `${Math.max(widthChars, maxWidthChars)}ch`,
+          maxWidth: "var(--gtk-max-width-chars)",
           ...(lineLimit && lineClamp(lines)),
         }}
       >

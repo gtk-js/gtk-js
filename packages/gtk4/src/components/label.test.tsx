@@ -59,8 +59,15 @@ describe("GtkLabel", () => {
 
   test("maxWidthChars sets the natural width, not a cap on the allocation", () => {
     const html = renderToStaticMarkup(<GtkLabel label="text" wrap maxWidthChars={10} />);
-    expect(styleOf(html)).not.toContain("max-width");
-    expect(html).toContain("min-width:100%;max-width:10ch");
+    expect(styleOf(html)).toContain("--gtk-max-width-chars:10ch");
+    expect(styleOf(html)).not.toMatch(/(^|;)max-width/);
+    expect(html).toContain("min-width:100%;max-width:var(--gtk-max-width-chars)");
+    // A wrapping label's width also follows from its height (layout.css).
+    expect(styleOf(html)).toContain("--gtk-label-width-for-height:calc-size(");
+    const ellipsized = renderToStaticMarkup(
+      <GtkLabel label="t" ellipsize="end" maxWidthChars={10} />,
+    );
+    expect(styleOf(ellipsized)).not.toContain("--gtk-label-width-for-height");
   });
 
   test("a selectable label takes the focus and shows the text cursor", () => {
@@ -93,7 +100,7 @@ describe("GtkLabel", () => {
     );
     expect(html).toContain('class="gtk-label link"');
     expect(html).toContain(
-      '<a class="gtk-link x" href="https://gnome.org?a=1&amp;b=2" target="_blank" rel="noopener noreferrer" title="Site" style="cursor:pointer"><span style="font-weight:bold">GNOME</span></a>',
+      '<a class="gtk-link x" href="https://gnome.org?a=1&amp;b=2" target="_blank" rel="noopener noreferrer" title="Site" style="cursor:pointer"><span><span style="font-weight:bold">GNOME</span></span></a>',
     );
     expect(html).toContain('<span style="font-weight:bold"> now</span>');
     expect(renderToStaticMarkup(<GtkLabel label="<b>bold</b>" />)).toContain("&lt;b&gt;");
@@ -105,7 +112,7 @@ describe("GtkLabel", () => {
     );
     expect(html).toContain('<a class="gtk-link" target="_blank"');
     expect(html).not.toContain("href=");
-    expect(html).toContain('data-disabled="true">GNOME</a>');
+    expect(html).toContain('data-disabled="true"><span>GNOME</span></a>');
   });
 
   test("invalid markup shows nothing, with a warning", () => {
