@@ -23,5 +23,9 @@ const icons = {
 };
 
 export function GtkProviders({ children }: { children: ReactNode }) {
-  return <AdwaitaProvider icons={icons}>{children}</AdwaitaProvider>;
+  return (
+    <AdwaitaProvider icons={icons} hideUntilReady={false}>
+      {children}
+    </AdwaitaProvider>
+  );
 }

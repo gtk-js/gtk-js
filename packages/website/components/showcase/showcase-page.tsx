@@ -186,6 +186,7 @@ export function ShowcasePage() {
     <GtkProvider
       theme={committedTheme}
       icons={icons}
+      hideUntilReady={false}
       style={{ minHeight: "100vh", transition: "background-color 700ms ease" }}
     >
       <div
@@ -300,6 +301,7 @@ export function ShowcasePage() {
                 <GtkProvider
                   theme={committedTheme}
                   icons={icons}
+                  hideUntilReady={false}
                   style={{ position: "fixed", inset: 0, zIndex: 9999 }}
                 >
                   <div

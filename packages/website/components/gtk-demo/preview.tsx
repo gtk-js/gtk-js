@@ -18,7 +18,7 @@ export function Preview({ source, children }: PreviewProps) {
 
   return (
     <div className="my-4 rounded-lg overflow-hidden border border-fd-border">
-      <GtkProvider theme={state.theme} icons={state.icons}>
+      <GtkProvider theme={state.theme} icons={state.icons} hideUntilReady={false}>
         {/* Tab bar */}
         <div
           style={{
