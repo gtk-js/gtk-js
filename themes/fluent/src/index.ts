@@ -1,4 +1,4 @@
-import { GtkTheme, resolveColorScheme } from "@gtk-js/gtk-css";
+import { GtkTheme, resolveColorScheme, type SystemColorScheme } from "@gtk-js/gtk-css";
 import dark_circular_default from "../dist/dark_circular_default.css?raw";
 import dark_circular_round from "../dist/dark_circular_round.css?raw";
 import dark_square_default from "../dist/dark_square_default.css?raw";
@@ -64,8 +64,8 @@ export class FluentTheme extends GtkTheme {
     this.accentColor = accentColor;
   }
 
-  getCSS() {
-    const scheme = resolveColorScheme(this.colorScheme);
+  getCSS(systemScheme?: SystemColorScheme) {
+    const scheme = resolveColorScheme(this.colorScheme, systemScheme);
     const key = `${scheme}_${this.titlebutton}_${this.window}` as keyof typeof CSS_MAP;
     const base = CSS_MAP[key];
     return base + `\n[data-gtk-provider] { --fluent-accent: ${this.accentColor}; }\n`;

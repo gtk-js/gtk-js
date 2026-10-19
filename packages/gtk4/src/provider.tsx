@@ -1,4 +1,4 @@
-import { type GtkTheme } from "@gtk-js/gtk-css";
+import { type GtkTheme, type SystemColorScheme } from "@gtk-js/gtk-css";
 import * as defaultIcons from "@gtk-js/icons-gtk4";
 import {
   type CSSProperties,
@@ -8,6 +8,7 @@ import {
   useInsertionEffect,
   useLayoutEffect,
   useMemo,
+  useSyncExternalStore,
 } from "react";
 import { trackExpand } from "./expand.ts";
 import { type IconMap, IconProvider } from "./icon-context.tsx";
@@ -58,6 +59,51 @@ export function suppressTransitions() {
   switchTimer = setTimeout(() => style.remove(), SWITCH_DURATION);
 }
 
+/**
+ * Puts the theme CSS in <head>, or replaces the CSS there, and returns what removes
+ * the element it added.
+ */
+export function insertThemeCSS(cssText: string) {
+  // A new theme, color scheme or accent, or the system's scheme changed: switch
+  // to it without fading.
+  suppressTransitions();
+
+  const id = "gtk-js-theme";
+  const existing = document.getElementById(id);
+  if (existing) {
+    // Only when it changed: parsing a theme takes a while.
+    if (existing.textContent !== cssText) existing.textContent = cssText;
+    return;
+  }
+
+  const style = document.createElement("style");
+  style.id = id;
+  style.textContent = cssText;
+  document.head.appendChild(style);
+
+  return () => {
+    style.remove();
+  };
+}
+
+const DARK_QUERY = "(prefers-color-scheme: dark)";
+
+/** Calls `onChange` when the system switches between light and dark. */
+export function subscribeSystemScheme(onChange: () => void) {
+  const query = globalThis.matchMedia?.(DARK_QUERY);
+  query?.addEventListener("change", onChange);
+  return () => query?.removeEventListener("change", onChange);
+}
+
+/** The system's color scheme, like adw_settings_get_color_scheme(). */
+export function getSystemScheme(): SystemColorScheme | undefined {
+  const query = globalThis.matchMedia?.(DARK_QUERY);
+  return query && (query.matches ? "dark" : "light");
+}
+
+/** Unknown on the server, and while hydrating its HTML. */
+const getServerSystemScheme = () => undefined;
+
 const ThemeContext = createContext<GtkTheme | undefined>(undefined);
 
 export function useGtkTheme() {
@@ -91,8 +137,18 @@ export function GtkProvider({
     [icons],
   );
 
-  // Resolve theme CSS — theme takes priority, then cssText, then cssHref
-  const resolvedCSSText = theme ? theme.getCSS() : cssText;
+  // Followed like AdwStyleManager follows the system setting: an "auto" theme gets
+  // the new scheme's CSS, which the insertion effect swaps in without transitions.
+  const systemScheme = useSyncExternalStore(
+    subscribeSystemScheme,
+    getSystemScheme,
+    getServerSystemScheme,
+  );
+
+  // Resolve theme CSS — theme takes priority, then cssText, then cssHref.
+  // Only when an input changes: themes are immutable, and their CSS is large.
+  const themeCSS = useMemo(() => theme?.getCSS(systemScheme), [theme, systemScheme]);
+  const resolvedCSSText = theme ? themeCSS : cssText;
 
   // Inject reset + layout CSS
   useInsertionEffect(() => {
@@ -111,25 +167,7 @@ export function GtkProvider({
 
   // Inject theme CSS inline
   useInsertionEffect(() => {
-    if (!resolvedCSSText) return;
-    // A new theme, color scheme or accent: switch to it without fading.
-    suppressTransitions();
-
-    const id = "gtk-js-theme";
-    const existing = document.getElementById(id);
-    if (existing) {
-      existing.textContent = resolvedCSSText;
-      return;
-    }
-
-    const style = document.createElement("style");
-    style.id = id;
-    style.textContent = resolvedCSSText;
-    document.head.appendChild(style);
-
-    return () => {
-      style.remove();
-    };
+    if (resolvedCSSText) return insertThemeCSS(resolvedCSSText);
   }, [resolvedCSSText]);
 
   // Inject theme stylesheet via <link> (fallback when no cssText/theme provided)

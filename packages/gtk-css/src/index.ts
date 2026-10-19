@@ -1,1 +1,1 @@
-export { GtkTheme, resolveColorScheme } from "./theme.ts";
+export { GtkTheme, resolveColorScheme, type SystemColorScheme } from "./theme.ts";
