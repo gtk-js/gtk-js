@@ -154,10 +154,32 @@ body:has(> :first-child:has([data-gtk-provider])) > :first-child {
   app-region: drag;
 }
 
+/* The widgets that claim presses with a gesture of their own, as in
+   window-handle.tsx's CLAIMS_PRESS. */
 :where(
     [data-draggable-regions]
       .gtk-windowhandle
-      :is(button, input, textarea, select, a[href], [role="button"], .gtk-menubutton, .gtk-entry)
+      :is(
+        a[href],
+        button,
+        input,
+        select,
+        textarea,
+        [contenteditable="true"],
+        [role="button"],
+        [role="checkbox"],
+        [role="radio"],
+        [role="slider"],
+        [role="spinbutton"],
+        [role="switch"],
+        [role="tab"],
+        .gtk-checkbutton,
+        .gtk-entry,
+        .gtk-menubutton,
+        .gtk-scale,
+        .gtk-spinbutton,
+        .gtk-switch
+      )
   ) {
   -webkit-app-region: no-drag;
   app-region: no-drag;

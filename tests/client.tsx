@@ -70,6 +70,7 @@ import {
   GtkSwitch,
   GtkTextView,
   GtkToggleButton,
+  GtkWindow,
   GtkWindowTitle,
 } from "@gtk-js/adwaita";
 import { Fragment, type ReactElement, useLayoutEffect, useRef, useState } from "react";
@@ -575,6 +576,17 @@ const cases: Record<string, () => React.ReactElement> = {
     </GtkToggleButton>
   ),
   "toggle-grouped": () => <ToggleGrouped />,
+
+  // GtkWindow cases
+  "window-child-valign-center": () => (
+    <GtkWindow
+      style={{ width: 200, height: 100 }}
+      // The content area the window's child gets.
+      ref={(el) => el?.lastElementChild?.setAttribute("data-testid", "target")}
+    >
+      <GtkLabel label="Content" valign="center" />
+    </GtkWindow>
+  ),
 
   // GtkWindowTitle cases
   "window-title-text-default": () => <GtkWindowTitle title="Window Title" data-testid="target" />,
@@ -1099,6 +1111,12 @@ const cases: Record<string, () => React.ReactElement> = {
       end={<GtkButton label="End" />}
       data-testid="target"
     />
+  ),
+
+  "headerbar-window-title": () => (
+    <GtkWindow title="My App">
+      <GtkHeaderBar showWindowControls={false} data-testid="target" />
+    </GtkWindow>
   ),
 
   // GtkActionBar cases
