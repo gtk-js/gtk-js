@@ -4,11 +4,13 @@ import {
   type CSSProperties,
   createContext,
   type ReactNode,
+  version as reactVersion,
   useContext,
   useInsertionEffect,
   useLayoutEffect,
   useMemo,
   useState,
+  useSyncExternalStore,
 } from "react";
 import { trackExpand } from "./expand.ts";
 import { type IconMap, IconProvider } from "./icon-context.tsx";
@@ -33,8 +35,9 @@ export interface GtkProviderProps {
   /**
    * Keep the content laid out but invisible until it's ready: the theme CSS has
    * loaded and layout computed in JS (expand) has run. Server-rendered HTML paints
-   * before hydration without either; a client render is ready before its first
-   * paint, so it's never held back unless a `cssHref` stylesheet is still loading.
+   * before hydration without expand (and with React 18, without the theme CSS); a
+   * client render is ready before its first paint, so it's never held back unless
+   * a `cssHref` stylesheet is still loading.
    * Default: true.
    */
   hideUntilReady?: boolean;
@@ -75,6 +78,38 @@ export function whenStylesheetLoaded(
   return cancel;
 }
 
+/**
+ * React 19 hoists `<style href precedence>` and `<link rel="stylesheet" precedence>`
+ * into <head>, server HTML included, and renders each href once per document.
+ * React 18 renders them in place, so there the CSS is only injected on the client.
+ */
+const HOISTS_STYLESHEETS = Number.parseInt(reactVersion, 10) >= 19;
+
+const RESET_ID = "gtk-js-reset";
+const THEME_ID = "gtk-js-theme";
+const BASE_CSS = resetCSS + "\n" + weighGtkNodeClasses(layoutCSS);
+
+/**
+ * Takes over the server-rendered element for `id`, if there is one. Each has a
+ * precedence of its own: React merges the styles that share one into one element.
+ */
+function adoptStylesheet(id: string): HTMLElement | null {
+  const element = document.querySelector<HTMLElement>(`[data-precedence="${id}"]`);
+  if (element) element.id = id;
+  return element;
+}
+
+const subscribeNever = () => () => {};
+
+/** True when rendering on the server or hydrating its HTML, false in client renders. */
+function useServerRender() {
+  return useSyncExternalStore(
+    subscribeNever,
+    () => false,
+    () => true,
+  );
+}
+
 const ThemeContext = createContext<GtkTheme | undefined>(undefined);
 
 export function useGtkTheme() {
@@ -104,6 +139,7 @@ export function GtkProvider({
   children,
 }: GtkProviderProps) {
   const [ready, setReady] = useState(!hideUntilReady);
+  const serverRender = useServerRender();
 
   // GTK looks an icon up in the theme, then in its own resources.
   const iconMap = useMemo(
@@ -114,15 +150,16 @@ export function GtkProvider({
   // Resolve theme CSS — theme takes priority, then cssText, then cssHref
   const resolvedCSSText = theme ? theme.getCSS() : cssText;
 
-  // Inject reset + layout CSS
+  // Inject reset + layout CSS, or take over the server-rendered copy.
   useInsertionEffect(() => {
-    const id = "gtk-js-reset";
-    if (document.getElementById(id)) return;
+    if (document.getElementById(RESET_ID)) return;
 
-    const style = document.createElement("style");
-    style.id = id;
-    style.textContent = resetCSS + "\n" + weighGtkNodeClasses(layoutCSS);
-    document.head.appendChild(style);
+    const style = adoptStylesheet(RESET_ID) ?? document.createElement("style");
+    if (!style.id) {
+      style.id = RESET_ID;
+      style.textContent = BASE_CSS;
+      document.head.appendChild(style);
+    }
 
     return () => {
       style.remove();
@@ -133,17 +170,19 @@ export function GtkProvider({
   useInsertionEffect(() => {
     if (!resolvedCSSText) return;
 
-    const id = "gtk-js-theme";
-    const existing = document.getElementById(id);
+    const existing = document.getElementById(THEME_ID);
     if (existing) {
-      existing.textContent = resolvedCSSText;
+      // Only when it changed: parsing a theme takes a while.
+      if (existing.textContent !== resolvedCSSText) existing.textContent = resolvedCSSText;
       return;
     }
 
-    const style = document.createElement("style");
-    style.id = id;
-    style.textContent = resolvedCSSText;
-    document.head.appendChild(style);
+    const style = adoptStylesheet(THEME_ID) ?? document.createElement("style");
+    if (style.textContent !== resolvedCSSText) style.textContent = resolvedCSSText;
+    if (!style.id) {
+      style.id = THEME_ID;
+      document.head.appendChild(style);
+    }
 
     return () => {
       style.remove();
@@ -154,14 +193,15 @@ export function GtkProvider({
   useInsertionEffect(() => {
     if (resolvedCSSText || !cssHref) return;
 
-    const id = "gtk-js-theme";
-    if (document.getElementById(id)) return;
+    if (document.getElementById(THEME_ID)) return;
 
-    const link = document.createElement("link");
-    link.id = id;
-    link.rel = "stylesheet";
-    link.href = cssHref;
-    document.head.appendChild(link);
+    const link = adoptStylesheet(THEME_ID) ?? document.createElement("link");
+    if (!link.id) {
+      link.id = THEME_ID;
+      (link as HTMLLinkElement).rel = "stylesheet";
+      (link as HTMLLinkElement).href = cssHref;
+      document.head.appendChild(link);
+    }
 
     return () => {
       link.remove();
@@ -175,12 +215,28 @@ export function GtkProvider({
   // paint: a state update from a layout effect renders synchronously.
   useLayoutEffect(() => {
     if (ready) return;
-    return whenStylesheetLoaded(document.getElementById("gtk-js-theme"), () => setReady(true));
+    return whenStylesheetLoaded(document.getElementById(THEME_ID), () => setReady(true));
   }, [ready]);
 
   return (
     <ThemeContext.Provider value={theme}>
       <IconProvider value={iconMap}>
+        {/* The CSS in the server HTML, so it's styled at first paint. Rendered while
+            hydrating too, to match; the effects above then take the elements over. */}
+        {HOISTS_STYLESHEETS && serverRender && (
+          <>
+            <style href={RESET_ID} precedence={RESET_ID}>
+              {BASE_CSS}
+            </style>
+            {resolvedCSSText ? (
+              <style href={THEME_ID} precedence={THEME_ID}>
+                {resolvedCSSText}
+              </style>
+            ) : (
+              cssHref && <link rel="stylesheet" href={cssHref} precedence={THEME_ID} />
+            )}
+          </>
+        )}
         {!ready && (
           <noscript>
             <style>{NOSCRIPT_CSS}</style>
