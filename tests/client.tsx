@@ -65,6 +65,7 @@ import {
   GtkSpinner,
   GtkStack,
   GtkStackPage,
+  GtkStackSwitcher,
   GtkSwitch,
   GtkTextView,
   GtkToggleButton,
@@ -382,6 +383,34 @@ const cases: Record<string, () => React.ReactElement> = {
   "switch-on-default": () => <GtkSwitch active data-testid="target" />,
   "switch-off-disabled": () => <GtkSwitch disabled data-testid="target" />,
   "switch-on-disabled": () => <GtkSwitch active disabled data-testid="target" />,
+  "switch-off-title-1": () => (
+    <GtkBox className="title-1" halign="center" valign="center">
+      <GtkSwitch data-testid="target" />
+    </GtkBox>
+  ),
+  "switch-on-pending": () => (
+    <GtkSwitch active state={false} halign="center" valign="center" data-testid="target" />
+  ),
+  "switch-on-rtl": () => (
+    <div dir="rtl">
+      <GtkSwitch active halign="center" valign="center" data-testid="target" />
+    </div>
+  ),
+  "switch-on-small-slider": () => (
+    <>
+      <style>{`
+        .gtk-switch.small-slider { min-width: 22px; padding: 0; }
+        .gtk-switch.small-slider > .gtk-slider { min-width: 12px; min-height: 12px; margin: 5px; }
+      `}</style>
+      <GtkSwitch
+        active
+        className="small-slider"
+        halign="center"
+        valign="center"
+        data-testid="target"
+      />
+    </>
+  ),
 
   // GtkTextView cases
   "text-view-default": () => <GtkTextView ref={textViewTarget} />,
@@ -662,6 +691,13 @@ const cases: Record<string, () => React.ReactElement> = {
   ),
 
   // GtkStack cases
+  "stack-child-align": () => (
+    <GtkStack style={{ minWidth: 300, minHeight: 80 }} data-testid="target">
+      <GtkStackPage name="page">
+        <GtkButton label="Centered" halign="center" valign="center" />
+      </GtkStackPage>
+    </GtkStack>
+  ),
   "stack-default": () => (
     <GtkStack visibleChildName="page1" data-testid="target">
       <GtkStackPage name="page1" title="Page 1">
@@ -669,6 +705,16 @@ const cases: Record<string, () => React.ReactElement> = {
       </GtkStackPage>
       <GtkStackPage name="page2" title="Page 2">
         <GtkLabel label="Second" />
+      </GtkStackPage>
+    </GtkStack>
+  ),
+  "stack-hhomogeneous-false": () => (
+    <GtkStack visibleChildName="short" hhomogeneous={false} data-testid="target">
+      <GtkStackPage name="short">
+        <GtkLabel label="Short visible page" />
+      </GtkStackPage>
+      <GtkStackPage name="long">
+        <GtkLabel label="A few words" wrap />
       </GtkStackPage>
     </GtkStack>
   ),
@@ -684,6 +730,42 @@ const cases: Record<string, () => React.ReactElement> = {
       </GtkStack>
       <GtkLabel label="A much longer page" />
     </GtkBox>
+  ),
+  "stack-switcher-expand": () => (
+    <GtkBox orientation="vertical" spacing={8} style={{ minWidth: 500 }} data-testid="target">
+      <GtkStackSwitcher
+        pages={[
+          { name: "page1", title: "First" },
+          { name: "page2", title: "Second" },
+          { name: "page3", title: "Third" },
+        ]}
+        activePageName="page1"
+      />
+      <GtkStack visibleChildName="page1">
+        <GtkStackPage name="page1">
+          <GtkLabel label="One" />
+        </GtkStackPage>
+        <GtkStackPage name="page2">
+          <GtkLabel label="Two" />
+        </GtkStackPage>
+        <GtkStackPage name="page3">
+          <GtkLabel label="Three" />
+        </GtkStackPage>
+      </GtkStack>
+    </GtkBox>
+  ),
+  "stack-switcher-icons": () => (
+    <GtkStackSwitcher
+      halign="start"
+      pages={[
+        { name: "open", title: "Open", iconName: "DocumentOpen" },
+        { name: "find", iconName: "EditFind" },
+        { name: "text", title: "Attention", needsAttention: true },
+        { name: "untitled" },
+      ]}
+      activePageName="open"
+      data-testid="target"
+    />
   ),
 
   // GtkNotebook cases
@@ -748,6 +830,18 @@ const cases: Record<string, () => React.ReactElement> = {
 
   // GtkHeaderBar cases
   "headerbar-default": () => <GtkHeaderBar showWindowControls={false} data-testid="target" />,
+  // The native case fills the test window, which AdwWindow's minimum size makes
+  // 352px wide for the bar (its -1px margins included).
+  "headerbar-narrow-title": () => (
+    <GtkHeaderBar
+      showWindowControls={false}
+      start={<GtkButton label="Start" />}
+      end={<GtkButton label="End" />}
+      titleWidget={<GtkWindowTitle title="A Very Long Window Title Here" />}
+      style={{ width: 352 }}
+      data-testid="target"
+    />
+  ),
   "headerbar-with-title": () => (
     <GtkHeaderBar
       showWindowControls={false}
@@ -956,6 +1050,25 @@ const cases: Record<string, () => React.ReactElement> = {
       <AdwComboRow title="Combo Row" items={["Option 1", "Option 2", "Option 3"]} selected={0} />
     </GtkListBox>
   ),
+  "adw-combo-row-long-value": () => (
+    <GtkListBox
+      selectionMode="none"
+      className="boxed-list"
+      style={{ width: 360 }}
+      data-testid="target"
+    >
+      <AdwComboRow
+        title="Appearance"
+        items={["Automatic (follow the system setting when possible)", "Light", "Dark"]}
+        selected={0}
+      />
+    </GtkListBox>
+  ),
+  "adw-combo-row-single-item": () => (
+    <GtkListBox selectionMode="none" className="boxed-list" data-testid="target">
+      <AdwComboRow title="Combo Row" items={["Only"]} selected={0} />
+    </GtkListBox>
+  ),
 
   // AdwSwitchRow cases
   "adw-switch-row-default": () => (
@@ -966,6 +1079,15 @@ const cases: Record<string, () => React.ReactElement> = {
   "adw-switch-row-active": () => (
     <GtkListBox selectionMode="none" className="boxed-list" data-testid="target">
       <AdwSwitchRow title="Switch Row" active />
+    </GtkListBox>
+  ),
+  "adw-switch-row-prefix-suffix": () => (
+    <GtkListBox selectionMode="none" className="boxed-list" data-testid="target">
+      <AdwSwitchRow
+        title="Switch Row"
+        prefixWidget={<GtkImage iconName="AirplaneMode" />}
+        suffixWidget={<GtkButton iconName="DocumentEdit" className="flat" valign="center" />}
+      />
     </GtkListBox>
   ),
 
@@ -985,6 +1107,28 @@ const cases: Record<string, () => React.ReactElement> = {
         <AdwActionRow title="Child Row 2" />
       </AdwExpanderRow>
     </GtkListBox>
+  ),
+  "adw-expander-row-widgets": () => (
+    <div style={{ width: 360 }}>
+      <GtkListBox selectionMode="none" className="boxed-list" data-testid="target">
+        <AdwExpanderRow
+          title="A very long expander row title that should be ellipsized after one line"
+          subtitle="A very long subtitle that should also be ellipsized after one line"
+          titleLines={1}
+          subtitleLines={1}
+          showEnableSwitch
+          prefixWidget={
+            <>
+              <GtkImage iconName="EditFind" />
+              <GtkImage iconName="EditFind" />
+            </>
+          }
+          suffixWidget={<GtkButton iconName="EditDelete" className="flat" valign="center" />}
+        >
+          <AdwActionRow title="Child Row" />
+        </AdwExpanderRow>
+      </GtkListBox>
+    </div>
   ),
 
   // AdwPreferencesRow cases
@@ -1049,6 +1193,19 @@ const cases: Record<string, () => React.ReactElement> = {
       showStartTitleButtons={false}
       showEndTitleButtons={false}
       showBackButton={false}
+      data-testid="target"
+    />
+  ),
+  // The native case fills the test window, which AdwWindow's minimum size makes
+  // 352px wide for the bar (its -1px margins included).
+  "adw-headerbar-narrow-title": () => (
+    <AdwHeaderBar
+      showStartTitleButtons={false}
+      showEndTitleButtons={false}
+      showBackButton={false}
+      end={<GtkButton label="End" />}
+      titleWidget={<GtkWindowTitle title="A Very Long Window Title That Goes On" />}
+      style={{ width: 352 }}
       data-testid="target"
     />
   ),
