@@ -229,6 +229,39 @@ body:has(> :first-child:has([data-gtk-provider])) > :first-child {
   min-width: 0;
 }
 
+/* Insensitive widgets are never picked (gtk_widget_can_be_picked()), so the
+   icons of a disabled entry get no :hover/:active and no clicks. */
+:where([data-gtk-provider] .gtk-entry[data-disabled] > .gtk-image) {
+  pointer-events: none;
+}
+
+/* GtkPasswordEntry measures only its text (gtk_password_entry_measure()), and
+   its size_allocate() takes the visible icons, each after the entry's
+   border-spacing, out of the text's width: showing an icon doesn't widen the
+   entry. The text's natural width is GtkText's NAT_ENTRY_WIDTH, 150px. The
+   registered --gtk-border-spacing-x isn't inherited, so pass it on. */
+:where([data-gtk-provider] .gtk-entry.password) {
+  --gtk-password-icon-width: calc(16px + var(--gtk-border-spacing-x));
+  column-gap: var(--gtk-border-spacing-x);
+}
+
+:where([data-gtk-provider] .gtk-entry.password > .gtk-text) {
+  width: 150px;
+}
+
+:where([data-gtk-provider] .gtk-entry.password:has(> .gtk-image) > .gtk-text) {
+  width: calc(150px - var(--gtk-password-icon-width));
+}
+
+:where([data-gtk-provider] .gtk-entry.password:has(> .gtk-image + .gtk-image) > .gtk-text) {
+  width: calc(150px - 2 * var(--gtk-password-icon-width));
+}
+
+/* The caps-lock indicator has the text's cursor (gtk_password_entry_init()). */
+:where([data-gtk-provider] .gtk-entry.password > .caps-lock-indicator) {
+  cursor: text;
+}
+
 /* GtkScrolledWindow — style the browser scrollbar to match Adwaita's overlay
    indicator: thin rounded thumb, transparent track, 8px wide, fully rounded.
    Uses both standard properties (Firefox) and webkit pseudo-elements

@@ -134,6 +134,7 @@ pub mod paned_horizontal;
 pub mod paned_vertical;
 pub mod password_entry_default;
 pub mod password_entry_disabled;
+pub mod password_entry_natural_width;
 pub mod password_entry_peek_icon;
 pub mod popover_default;
 pub mod progressbar_fraction_small;

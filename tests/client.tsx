@@ -68,9 +68,10 @@ import {
   GtkSwitch,
   GtkTextView,
   GtkToggleButton,
+  GtkWindow,
   GtkWindowTitle,
 } from "@gtk-js/adwaita";
-import { Fragment, type ReactElement, useLayoutEffect, useRef } from "react";
+import { Fragment, type ReactElement, useLayoutEffect, useRef, useState } from "react";
 import { createRoot } from "react-dom/client";
 
 const caseName = window.location.pathname.slice(1);
@@ -85,6 +86,41 @@ function avatarGizmoTarget(el: HTMLDivElement | null) {
 // GtkTextView's ref is its text node; the native cases measure the textview node.
 function textViewTarget(el: HTMLTextAreaElement | null) {
   el?.parentElement?.setAttribute("data-testid", "target");
+}
+
+/** What the password-entry-behavior case's entries report, for its test to read. */
+const passwordEntryEvents: string[] = [];
+(window as unknown as { passwordEntryEvents: string[] }).passwordEntryEvents = passwordEntryEvents;
+
+/** GtkPasswordEntries to drive in password-entry-behavior; the button toggles showPeekIcon. */
+function PasswordEntryBehavior() {
+  const [showPeekIcon, setShowPeekIcon] = useState(true);
+  return (
+    <GtkBox orientation="vertical" spacing={6}>
+      <GtkButton
+        id="password-peek-toggle"
+        label="Peek"
+        onClicked={() => setShowPeekIcon((show) => !show)}
+      />
+      <GtkPasswordEntry id="password-peek" showPeekIcon={showPeekIcon} defaultValue="hunter2" />
+      <GtkPasswordEntry id="password-disabled" showPeekIcon disabled />
+      <GtkPasswordEntry id="password-read-only" readOnly />
+      <GtkWindow>
+        <GtkBox spacing={6}>
+          <GtkPasswordEntry
+            id="password-default"
+            activatesDefault
+            onActivate={() => passwordEntryEvents.push("activate")}
+          />
+          <GtkButton
+            className="default"
+            label="OK"
+            onClicked={() => passwordEntryEvents.push("default")}
+          />
+        </GtkBox>
+      </GtkWindow>
+    </GtkBox>
+  );
 }
 
 /** An app component that renders a row, which AdwPreferencesGroup can't tell from its type. */
@@ -207,6 +243,7 @@ const cases: Record<string, () => React.ReactElement> = {
   ),
 
   // GtkPasswordEntry cases
+  "password-entry-behavior": () => <PasswordEntryBehavior />,
   "password-entry-default": () => (
     <GtkPasswordEntry ref={(el) => el?.parentElement?.setAttribute("data-testid", "target")} />
   ),
@@ -221,6 +258,15 @@ const cases: Record<string, () => React.ReactElement> = {
       disabled
       ref={(el) => el?.parentElement?.setAttribute("data-testid", "target")}
     />
+  ),
+  "password-entry-natural-width": () => (
+    <GtkBox orientation="vertical">
+      <GtkPasswordEntry
+        showPeekIcon
+        halign="start"
+        ref={(el) => el?.parentElement?.setAttribute("data-testid", "target")}
+      />
+    </GtkBox>
   ),
 
   // GtkSearchEntry cases
