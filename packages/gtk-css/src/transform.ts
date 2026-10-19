@@ -244,6 +244,37 @@ function selectionPseudoElement(selector: string): string[] | null {
 }
 
 /**
+ * An insensitive node: a disabled one, or a descendant of one. Widgets
+ * rendered as <span>/<div> carry [data-disabled]; real <button>/<input>
+ * elements are :disabled (and carry no data attribute).
+ * gtk_widget_set_sensitive(FALSE) makes the whole subtree insensitive
+ * (gtk_widget_propagate_state()), so a disabled expander's label matches
+ * label:disabled too; Adwaita undoes dimming where it would stack
+ * (`button:disabled label { filter: none; }`).
+ */
+const INSENSITIVE = "[data-disabled], :disabled, [data-disabled] *, :disabled *";
+const DISABLED = `:is(${INSENSITIVE})`;
+/** In :where(), so :hover / :active keep their own specificity. */
+const SENSITIVE = `:where(:not(${INSENSITIVE}))`;
+
+/**
+ * `:disabled` → DISABLED, and `:hover` / `:active` only on sensitive nodes:
+ * gtk_widget_set_sensitive(FALSE) unsets PRELIGHT and ACTIVE on the subtree,
+ * and gtk_widget_pick() skips insensitive widgets, so they never get them.
+ * Leaves what it already rewrote (held in placeholders meanwhile): PostCSS
+ * revisits rules whose selector changed.
+ */
+function remapSensitivity(selector: string): string {
+  return selector
+    .replaceAll(DISABLED, "\0d")
+    .replaceAll(SENSITIVE, "\0s")
+    .replace(/:disabled\b/g, "\0d")
+    .replace(/:(hover|active)\b(?!\0s)/g, "$&\0s")
+    .replaceAll("\0d", DISABLED)
+    .replaceAll("\0s", SENSITIVE);
+}
+
+/**
  * PostCSS plugin: Remap GTK-specific pseudo-classes to data attributes.
  */
 const remapPseudoClasses: Plugin = {
@@ -270,11 +301,7 @@ const remapPseudoClasses: Plugin = {
     // :visited → [data-visited] (browsers restrict :visited styling; use data attribute)
     sel = sel.replace(/:visited/g, "[data-visited]");
 
-    // :disabled → also [data-disabled]: widgets rendered as <span>/<div> can't
-    // be :disabled, while real <button>/<input> elements are (and carry no
-    // data attribute), so match either.
-    // (Idempotent: PostCSS revisits rules whose selector changed.)
-    sel = sel.replace(/(?<!\[data-disabled\], ):disabled/g, ":is([data-disabled], :disabled)");
+    sel = remapSensitivity(sel);
 
     if (sel !== rule.selector) {
       rule.selector = sel;
