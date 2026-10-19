@@ -6,9 +6,9 @@
  * specificity so theme rules always win.
  */
 
-html:has(body > [data-gtk-provider]),
+html:has(body > [data-gtk-provider]:not([data-gtk-portal])),
 html:has(body > :first-child:has([data-gtk-provider])),
-body:has(> [data-gtk-provider]),
+body:has(> [data-gtk-provider]:not([data-gtk-portal])),
 body:has(> :first-child:has([data-gtk-provider])) {
   margin: 0;
   padding: 0;
@@ -18,7 +18,7 @@ body:has(> :first-child:has([data-gtk-provider])) {
 /* The provider or mount point (e.g. #root) also needs full height so GtkWindow
    can fill the viewport. Covers common React/Vue/Svelte mount patterns while
    avoiding host-page resets when gtk-js is mounted deeper in the DOM. */
-body:has(> [data-gtk-provider]) > [data-gtk-provider],
+body:has(> [data-gtk-provider]:not([data-gtk-portal])) > [data-gtk-provider]:not([data-gtk-portal]),
 body:has(> :first-child:has([data-gtk-provider])) > :first-child {
   height: 100%;
 }
@@ -114,6 +114,12 @@ body:has(> :first-child:has([data-gtk-provider])) > :first-child {
 :where([data-gtk-provider] button) {
   appearance: none;
   cursor: default;
+  outline: none;
+}
+
+/* A dialog's sheet takes the focus when nothing in it can; GTK draws no ring
+   for it (the floating sheet's theme outline still applies). */
+:where([data-gtk-provider] .gtk-sheet) {
   outline: none;
 }
 
