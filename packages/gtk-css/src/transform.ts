@@ -294,6 +294,16 @@ const handleGtkProperties: Plugin = {
       return;
     }
 
+    // GTK's rem is GtkSettings:gtk-font-name's size, not the root node's font
+    // size (gtk_css_font_size_get_default_px()). The provider root sets it as
+    // --gtk-font-size; the browser's rem is the html element's 16px.
+    if (decl.value.includes("rem")) {
+      decl.value = decl.value.replace(
+        /(^|[^\w.-])([+-]?(?:\d+\.?\d*|\.\d+))rem\b/g,
+        "$1calc($2 * var(--gtk-font-size, 11pt))",
+      );
+    }
+
     // border-spacing is how GTK themes set a box's spacing: GtkBoxLayout,
     // GtkCenterLayout and GtkGridLayout add it to their spacing (x between
     // columns, y between rows). On the web it only affects tables, so turn it

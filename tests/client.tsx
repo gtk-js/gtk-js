@@ -1113,6 +1113,19 @@ const cases: Record<string, () => React.ReactElement> = {
       data-testid="target"
     />
   ),
+  // The narrow button's node tree (adw-view-switcher-button.ui), as a probe
+  // for the theme's `> stack > box.narrow` rule (font-size: 0.75rem).
+  "adw-view-switcher-narrow-label": () => (
+    <div className="gtk-viewswitcher narrow" data-testid="target">
+      <button type="button" className="gtk-button toggle flat">
+        <div className="gtk-stack">
+          <GtkBox orientation="vertical" className="narrow">
+            <GtkLabel label="Notifications and Preferences" />
+          </GtkBox>
+        </div>
+      </button>
+    </div>
+  ),
 
   // AdwBreakpointBin cases
   "adw-breakpoint-bin-default": () => (

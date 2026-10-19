@@ -249,6 +249,28 @@ describe("initial fonts", () => {
   });
 });
 
+describe("rem", () => {
+  test("rem → multiples of the GTK default font size", async () => {
+    const out = await transform("viewswitcher .narrow { font-size: 0.75rem; }");
+    expect(out).toContain("font-size: calc(0.75 * var(--gtk-font-size, 11pt))");
+    expect(out).not.toMatch(/\drem/);
+  });
+
+  test("every rem in a value, signs included", async () => {
+    const out = await transform("box { margin: 1rem -.5rem calc(2px + 1.25rem) 0; }");
+    expect(out).toContain(
+      "margin: calc(1 * var(--gtk-font-size, 11pt)) calc(-.5 * var(--gtk-font-size, 11pt)) " +
+        "calc(2px + calc(1.25 * var(--gtk-font-size, 11pt))) 0",
+    );
+  });
+
+  test("other units and names containing rem are kept", async () => {
+    const out = await transform("box { margin: 1em; transition: remove 1s; }");
+    expect(out).toContain("margin: 1em");
+    expect(out).toContain("transition: remove 1s");
+  });
+});
+
 describe(":disabled", () => {
   test("matches native :disabled elements and [data-disabled] ones", async () => {
     const out = await transform(

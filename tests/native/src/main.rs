@@ -67,6 +67,7 @@ enum Command {
     AdwToolbarViewDefault,
     AdwToolbarViewWithBottom,
     AdwViewSwitcherDefault,
+    AdwViewSwitcherNarrowLabel,
     AvatarDefault,
     AvatarInitials,
     AvatarSmall,
@@ -302,6 +303,7 @@ impl Command {
             Self::AdwToolbarViewDefault => Some("adw-toolbar-view-default"),
             Self::AdwToolbarViewWithBottom => Some("adw-toolbar-view-with-bottom"),
             Self::AdwViewSwitcherDefault => Some("adw-view-switcher-default"),
+            Self::AdwViewSwitcherNarrowLabel => Some("adw-view-switcher-narrow-label"),
             Self::AvatarDefault => Some("avatar-default"),
             Self::AvatarInitials => Some("avatar-initials"),
             Self::AvatarSmall => Some("avatar-small"),
@@ -565,6 +567,9 @@ fn create_widget_for_case(name: &str) -> Option<(gtk::Widget, bool)> {
         }
         "adw-view-switcher-default" => {
             widget_case!(cases::adw_view_switcher_default::AdwViewSwitcherDefault, false)
+        }
+        "adw-view-switcher-narrow-label" => {
+            widget_case!(cases::adw_view_switcher_narrow_label::AdwViewSwitcherNarrowLabel, false)
         }
         "avatar-default" => widget_case!(cases::avatar_default::AvatarDefault, true),
         "avatar-initials" => widget_case!(cases::avatar_initials::AvatarInitials, true),
@@ -1032,6 +1037,7 @@ fn is_known_case(name: &str) -> bool {
             | "adw-toolbar-view-default"
             | "adw-toolbar-view-with-bottom"
             | "adw-view-switcher-default"
+            | "adw-view-switcher-narrow-label"
             | "avatar-default"
             | "avatar-initials"
             | "avatar-small"
