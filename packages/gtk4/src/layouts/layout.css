@@ -473,6 +473,68 @@
   right: 0;
 }
 
+/* === GtkLevelBar === */
+/* The trough lays out its blocks itself (gtk_level_bar_allocate_trough()).
+ * Continuous: both blocks get the whole trough and the filled one, drawn over
+ * the empty one, is sized and placed by its inline style. Discrete: the blocks
+ * share the trough's length equally, margins included. */
+.gtk-levelbar > .gtk-trough {
+  display: grid;
+}
+
+.gtk-levelbar.continuous > .gtk-trough > .gtk-block {
+  grid-area: 1 / 1;
+}
+
+.gtk-levelbar.continuous > .gtk-trough > .gtk-block.filled {
+  z-index: 1;
+}
+
+.gtk-levelbar.horizontal.discrete > .gtk-trough {
+  grid-auto-flow: column;
+  grid-auto-columns: 1fr;
+}
+
+.gtk-levelbar.vertical.discrete > .gtk-trough {
+  grid-auto-rows: 1fr;
+}
+
+/* === GtkProgressBar === */
+/* A vertical box layout whatever the bar's orientation (gtk_progress_bar_init()),
+ * so not .gtk-box-layout, which would follow the .horizontal class. The trough
+ * fills the bar's length and is centered across it
+ * (gtk_progress_bar_set_orientation()); it places the progress itself
+ * (allocate_trough()), sized and placed along it by its inline style. */
+.gtk-progressbar {
+  display: flex;
+  flex-direction: column;
+}
+
+.gtk-progressbar.vertical > .gtk-trough {
+  flex-grow: 1;
+  align-self: center;
+}
+
+.gtk-progressbar > .gtk-trough {
+  display: grid;
+}
+
+.gtk-progressbar.horizontal > .gtk-trough > .gtk-progress {
+  align-self: center;
+}
+
+.gtk-progressbar.vertical > .gtk-trough > .gtk-progress {
+  justify-self: center;
+}
+
+/* The text is a GtkLabel: one unselectable line, centered (xalign 0.5). */
+.gtk-progressbar > .gtk-text {
+  min-height: round(up, 1lh, 1px);
+  text-align: center;
+  white-space: pre;
+  user-select: none;
+}
+
 /* === Popover Arrow ===
  * GTK draws the arrow as a TAIL_GAP_WIDTH × TAIL_HEIGHT (24×12) triangle
  * whose base lies on the contents' outer edge plus their border, so it

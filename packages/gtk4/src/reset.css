@@ -166,13 +166,22 @@ body:has(> :first-child:has([data-gtk-provider])) > :first-child {
   align-self: auto;
 }
 
-/* GtkSpinner — its icon (process-working-symbolic) centered in the space it
-   gets, like gtk_spinner_snapshot(). The spin keyframe and opacity/animation
-   are provided by Adwaita CSS. */
+/* GtkSpinner — 16px (the icon size, gtk_spinner_measure()) unless given more
+   room, where its icon (process-working-symbolic) is drawn at the smaller side,
+   centered, like gtk_spinner_snapshot(). The spin keyframe and
+   opacity/animation are provided by Adwaita CSS. */
 :where([data-gtk-provider] .gtk-spinner) {
   display: inline-flex;
-  align-items: center;
-  justify-content: center;
+  position: relative;
+  min-width: 16px;
+  min-height: 16px;
+}
+
+:where([data-gtk-provider] .gtk-spinner > svg) {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
 }
 
 /* GtkImage is a widget with intrinsic sizing — needs a proper box model. Given
