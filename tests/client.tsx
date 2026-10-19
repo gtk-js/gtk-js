@@ -2080,6 +2080,20 @@ const cases: Record<string, () => React.ReactElement> = {
       data-testid="target"
     />
   ),
+  // The native bar fills the test window: 352px wide.
+  "adw-headerbar-strict-centering": () => (
+    <AdwHeaderBar
+      showStartTitleButtons={false}
+      showEndTitleButtons={false}
+      showBackButton={false}
+      centeringPolicy="strict"
+      start={<GtkButton label="Open" />}
+      end={<GtkButton iconName="OpenMenu" />}
+      titleWidget={<GtkWindowTitle title="A Rather Long Window Title Here" />}
+      style={{ width: 352 }}
+      data-testid="target"
+    />
+  ),
 
   // AdwToolbarView cases
   "adw-toolbar-view-default": () => (
@@ -2092,6 +2106,25 @@ const cases: Record<string, () => React.ReactElement> = {
         />
       }
       content={<GtkLabel label="Content" />}
+      data-testid="target"
+    />
+  ),
+  "adw-toolbar-view-extend-two-bars": () => (
+    <AdwToolbarView
+      extendContentToTopEdge
+      topBars={
+        <>
+          <AdwHeaderBar
+            showStartTitleButtons={false}
+            showEndTitleButtons={false}
+            showBackButton={false}
+            showTitle={false}
+          />
+          <GtkSearchBar searchModeEnabled child={<GtkEntry />} />
+        </>
+      }
+      content={<GtkLabel label="Content" />}
+      style={{ width: 360, height: 220 }}
       data-testid="target"
     />
   ),
