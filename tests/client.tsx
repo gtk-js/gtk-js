@@ -354,6 +354,15 @@ const cases: Record<string, () => React.ReactElement> = {
   "scrollbar-default": () => (
     <GtkScrollbar orientation="vertical" value={0} pageSize={0.2} data-testid="target" />
   ),
+  "scrollbar-value": () => (
+    <GtkScrollbar
+      orientation="vertical"
+      value={0.3}
+      pageSize={0.3}
+      style={{ height: "150px" }}
+      data-testid="target"
+    />
+  ),
 
   // GtkImage cases
   "image-default": () => <GtkImage data-testid="target" />,
@@ -947,6 +956,25 @@ const cases: Record<string, () => React.ReactElement> = {
   "scrolled-window-frame": () => (
     <GtkScrolledWindow hasFrame style={{ width: "200px", height: "150px" }} data-testid="target">
       <GtkLabel label="Scrollable content" />
+    </GtkScrolledWindow>
+  ),
+  "scrolled-window-hpolicy-never": () => (
+    <GtkBox orientation="horizontal" style={{ width: "80px" }} data-testid="target">
+      <GtkScrolledWindow hasFrame hscrollbarPolicy="never" style={{ height: "58px" }}>
+        <GtkLabel label="Never-scrolls-horizontally" />
+      </GtkScrolledWindow>
+    </GtkBox>
+  ),
+  "scrolled-window-natural": () => (
+    <GtkBox orientation="vertical" data-testid="target">
+      <GtkScrolledWindow hasFrame>
+        <GtkLabel label={Array.from({ length: 10 }, (_, i) => `Line ${i + 1}`).join("\n")} />
+      </GtkScrolledWindow>
+    </GtkBox>
+  ),
+  "scrolled-window-overflow": () => (
+    <GtkScrolledWindow style={{ width: "200px", height: "150px" }} data-testid="target">
+      <GtkLabel label={Array.from({ length: 30 }, (_, i) => `Line ${i + 1}`).join("\n")} />
     </GtkScrolledWindow>
   ),
 
@@ -1858,7 +1886,7 @@ const cases: Record<string, () => React.ReactElement> = {
           title: "Home",
           children: (
             <GtkBox orientation="vertical">
-              <GtkScrolledWindow>
+              <GtkScrolledWindow vexpand>
                 <GtkBox orientation="vertical">
                   {Array.from({ length: 12 }, (_, i) => (
                     <GtkLabel key={i} label={`Row ${i + 1}`} />
