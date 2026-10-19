@@ -188,6 +188,8 @@ pub mod notebook_tab_pos_left;
 pub mod notebook_tabs;
 pub mod overlay_default;
 pub mod paned_horizontal;
+pub mod paned_min_size;
+pub mod paned_position;
 pub mod paned_vertical;
 pub mod password_entry_default;
 pub mod password_entry_disabled;
