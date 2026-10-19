@@ -40,6 +40,8 @@ pub mod avatar_default;
 pub mod avatar_initials;
 pub mod avatar_small;
 pub mod banner_revealed;
+pub mod banner_start;
+pub mod banner_wide;
 pub mod banner_with_button;
 pub mod carousel_default;
 pub mod carousel_natural_pages;
