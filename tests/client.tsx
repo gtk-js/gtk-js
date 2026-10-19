@@ -1175,10 +1175,13 @@ const cases: Record<string, () => React.ReactElement> = {
   ),
 };
 
-const root = createRoot(document.getElementById("root")!);
+const container = document.getElementById("root")!;
 
-if (isGallery) {
-  root.render(
+if (caseName.startsWith("provider-gate-")) {
+  // Pages for tests/cases/provider-gate.test.ts, which set up their own provider.
+  void import("./provider-gate.tsx").then((m) => m.render(caseName, container));
+} else if (isGallery) {
+  createRoot(container).render(
     <AdwaitaProvider colorScheme="light">
       <div style={{ display: "grid", gridTemplateColumns: "repeat(4, max-content)", gap: 24 }}>
         {Object.entries(cases).map(([name, renderCase]) => (
@@ -1196,8 +1199,10 @@ if (isGallery) {
 } else {
   const renderCase = cases[caseName];
   if (!renderCase) {
-    document.getElementById("root")!.textContent = `Unknown case: ${caseName}`;
+    container.textContent = `Unknown case: ${caseName}`;
   } else {
-    root.render(<AdwaitaProvider colorScheme="light">{renderCase()}</AdwaitaProvider>);
+    createRoot(container).render(
+      <AdwaitaProvider colorScheme="light">{renderCase()}</AdwaitaProvider>,
+    );
   }
 }
