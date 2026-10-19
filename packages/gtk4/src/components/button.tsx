@@ -7,6 +7,7 @@ import React, {
   useState,
 } from "react";
 import { useIcon } from "../icon-context.tsx";
+import { tooltipAttrs } from "../tooltip.tsx";
 import { alignAttrs, type GtkAlignProps } from "../types.ts";
 import { GtkImage } from "./image.tsx";
 import { GtkLabel } from "./label.tsx";
@@ -131,7 +132,7 @@ export const GtkButton = forwardRef<HTMLButtonElement, GtkButtonProps>(function 
     <button
       ref={ref}
       className={classes.join(" ")}
-      title={tooltipText}
+      {...tooltipAttrs(tooltipText)}
       {...alignAttrs(halign, valign, hexpand, vexpand)}
       onClick={handleClick}
       onKeyDown={handleKeyDown}
