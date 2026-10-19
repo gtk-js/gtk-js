@@ -79,6 +79,8 @@ enum Command {
     AvatarInitials,
     AvatarSmall,
     BannerRevealed,
+    BannerStart,
+    BannerWide,
     BannerWithButton,
     CarouselDefault,
     CarouselNaturalPages,
@@ -338,6 +340,8 @@ impl Command {
             Self::AvatarInitials => Some("avatar-initials"),
             Self::AvatarSmall => Some("avatar-small"),
             Self::BannerRevealed => Some("banner-revealed"),
+            Self::BannerStart => Some("banner-start"),
+            Self::BannerWide => Some("banner-wide"),
             Self::BannerWithButton => Some("banner-with-button"),
             Self::CarouselDefault => Some("carousel-default"),
             Self::CarouselNaturalPages => Some("carousel-natural-pages"),
@@ -642,6 +646,8 @@ fn create_widget_for_case(name: &str) -> Option<(gtk::Widget, bool)> {
         "avatar-initials" => widget_case!(cases::avatar_initials::AvatarInitials, true),
         "avatar-small" => widget_case!(cases::avatar_small::AvatarSmall, true),
         "banner-revealed" => widget_case!(cases::banner_revealed::BannerRevealed, false),
+        "banner-start" => widget_case!(cases::banner_start::BannerStart, false),
+        "banner-wide" => widget_case!(cases::banner_wide::BannerWide, false),
         "banner-with-button" => {
             widget_case!(cases::banner_with_button::BannerWithButton, false)
         }
@@ -1154,6 +1160,8 @@ fn is_known_case(name: &str) -> bool {
             | "avatar-initials"
             | "avatar-small"
             | "banner-revealed"
+            | "banner-start"
+            | "banner-wide"
             | "banner-with-button"
             | "carousel-default"
             | "carousel-natural-pages"
