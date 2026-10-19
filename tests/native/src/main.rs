@@ -81,6 +81,8 @@ enum Command {
     BannerRevealed,
     BannerWithButton,
     CarouselDefault,
+    CarouselNaturalPages,
+    CarouselVertical,
     ClampDefault,
     StatusPageDefault,
     StatusPageNoIcon,
@@ -333,6 +335,8 @@ impl Command {
             Self::BannerRevealed => Some("banner-revealed"),
             Self::BannerWithButton => Some("banner-with-button"),
             Self::CarouselDefault => Some("carousel-default"),
+            Self::CarouselNaturalPages => Some("carousel-natural-pages"),
+            Self::CarouselVertical => Some("carousel-vertical"),
             Self::ClampDefault => Some("clamp-default"),
             Self::StatusPageDefault => Some("status-page-default"),
             Self::StatusPageNoIcon => Some("status-page-no-icon"),
@@ -632,6 +636,10 @@ fn create_widget_for_case(name: &str) -> Option<(gtk::Widget, bool)> {
             widget_case!(cases::banner_with_button::BannerWithButton, false)
         }
         "carousel-default" => widget_case!(cases::carousel_default::CarouselDefault, false),
+        "carousel-natural-pages" => {
+            widget_case!(cases::carousel_natural_pages::CarouselNaturalPages, false)
+        }
+        "carousel-vertical" => widget_case!(cases::carousel_vertical::CarouselVertical, false),
         "clamp-default" => widget_case!(cases::clamp_default::ClampDefault, false),
         "status-page-default" => {
             widget_case!(cases::status_page_default::StatusPageDefault, false)
@@ -1123,6 +1131,8 @@ fn is_known_case(name: &str) -> bool {
             | "banner-revealed"
             | "banner-with-button"
             | "carousel-default"
+            | "carousel-natural-pages"
+            | "carousel-vertical"
             | "clamp-default"
             | "status-page-default"
             | "status-page-no-icon"

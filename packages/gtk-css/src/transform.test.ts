@@ -30,6 +30,15 @@ describe("remapSelectors", () => {
     );
     expect(out).toContain(":where(.gtk-indicatorbin):not(_) > :where(.gtk-mask):not(_)");
   });
+
+  test("libadwaita's carousel and indicator node names", async () => {
+    const out = await transform(
+      "carousel.card { border: none; } carouselindicatordots, carouselindicatorlines { color: red; }",
+    );
+    expect(out).toContain(":where(.gtk-carousel):not(_).card");
+    expect(out).toContain(":where(.gtk-carouselindicatordots):not(_),");
+    expect(out).toContain(":where(.gtk-carouselindicatorlines):not(_)");
+  });
 });
 
 describe("text selection", () => {

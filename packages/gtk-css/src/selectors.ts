@@ -119,6 +119,9 @@ export const WIDGET_SELECTORS: Record<string, string> = {
   // Adwaita-specific widgets
   avatar: ".gtk-avatar",
   banner: ".gtk-banner",
+  carousel: ".gtk-carousel",
+  carouselindicatordots: ".gtk-carouselindicatordots",
+  carouselindicatorlines: ".gtk-carouselindicatorlines",
   "status-page": ".gtk-status-page",
   statuspage: ".gtk-statuspage",
   "bottom-sheet": ".gtk-bottom-sheet",
