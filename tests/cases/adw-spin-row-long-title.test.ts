@@ -47,6 +47,19 @@ gtkTest("adw-spin-row-long-title", (native, web) => {
     findClass(web, "box", "title").width,
     "title width",
   );
+  // Where the suffix starts in the header, and the title's two lines.
+  gtkAssert.numbersClose(
+    findClass(native, "box", "suffixes").x!,
+    findClass(web, "box", "suffixes").x!,
+    { tolerance: 2, reason: "title text widths" },
+    "suffixes x",
+  );
+  gtkAssert.numbersClose(
+    findClass(native, "box", "title").height,
+    findClass(web, "box", "title").height,
+    { tolerance: 2, reason: "two lines of title text" },
+    "title height",
+  );
   gtkAssert.numbersClose(
     findChild(native, "row").height,
     content(findChild(web, "row")).height,
