@@ -48,7 +48,9 @@ describe("text selection", () => {
     );
     expect(out).toContain("::selection {");
     expect(out).toContain(":focus-within::selection {");
-    expect(out).toContain(":where(.gtk-label):not(_):is([data-disabled], :disabled)::selection {");
+    expect(out).toContain(
+      ":where(.gtk-label):not(_):is([data-disabled], :disabled, [data-disabled] *, :disabled *)::selection {",
+    );
     expect(out).not.toContain("gtk-selection");
   });
 
@@ -94,8 +96,12 @@ describe("remapPseudoClasses", () => {
     const out = await transform(
       "splitbutton.flat:active { color: red; } button:not(:active):hover { color: blue; }",
     );
-    expect(out).toContain(":where(.gtk-splitbutton):not(_).flat:is(:active, [data-active])");
-    expect(out).toContain(":not(:is(:active, [data-active])):hover");
+    // Both after #113's sensitivity guard.
+    const sensitive = ":where(:not([data-disabled], :disabled, [data-disabled] *, :disabled *))";
+    expect(out).toContain(
+      `:where(.gtk-splitbutton):not(_).flat:is(:active, [data-active])${sensitive}`,
+    );
+    expect(out).toContain(`:not(:is(:active, [data-active])${sensitive}):hover${sensitive}`);
     expect(out).not.toContain(":is(:is(");
   });
 
@@ -328,15 +334,16 @@ describe("check and radio indicators", () => {
     const out = await transform(
       "check:not(:checked):hover, radio:checked:active { color: red; } button:hover check { color: blue; }",
     );
+    // Guarded by #113's sensitivity check; #78 also matches :active as [data-active].
+    const s = ":where(:not([data-disabled], :disabled, [data-disabled] *, :disabled *))";
     expect(out).toContain(
-      ":where(.gtk-check):not(_):not([data-checked]):is(:hover, :where(.gtk-checkbutton:hover > *))",
+      `:where(.gtk-check):not(_):not([data-checked]):is(:hover${s}, :where(.gtk-checkbutton:hover${s} > *))${s}`,
     );
-    // #78 also matches :active as [data-active], on the indicator and its check button.
     expect(out).toContain(
-      ":where(.gtk-radio):not(_)[data-checked]:is(:is(:active, :where(.gtk-checkbutton:is(:active, [data-active]) > *)), [data-active])",
+      `:where(.gtk-radio):not(_)[data-checked]:is(:is(:active${s}, :where(.gtk-checkbutton:is(:active, [data-active])${s} > *)), [data-active])${s}`,
     );
     // Only the indicator's own state is mirrored, once.
-    expect(out).toContain(":where(.gtk-button):not(_):hover :where(.gtk-check):not(_) {");
+    expect(out).toContain(`:where(.gtk-button):not(_):hover${s} :where(.gtk-check):not(_) {`);
     expect(out).not.toContain(":is(:hover, :is(");
   });
 });
@@ -346,10 +353,35 @@ describe(":disabled", () => {
     const out = await transform(
       "button:disabled { opacity: 0.5; } button:not(:disabled):hover { color: red; }",
     );
-    expect(out).toContain(":where(.gtk-button):not(_):is([data-disabled], :disabled)");
-    expect(out).toContain(":where(.gtk-button):not(_):not(:is([data-disabled], :disabled)):hover");
+    expect(out).toContain(
+      ":where(.gtk-button):not(_):is([data-disabled], :disabled, [data-disabled] *, :disabled *) {",
+    );
+    expect(out).toContain(
+      ":where(.gtk-button):not(_):not(:is([data-disabled], :disabled, [data-disabled] *, :disabled *)):hover:where(",
+    );
     // Applied once, even though PostCSS revisits changed rules.
-    expect(out).not.toContain(":is([data-disabled], :is(");
+    expect(out.match(/\[data-disabled\], :disabled,/g)).toHaveLength(3);
+  });
+
+  test("descendants of an insensitive widget are insensitive", async () => {
+    // gtk_widget_set_sensitive(FALSE) propagates to the subtree: a disabled
+    // expander's label is label:disabled.
+    const out = await transform("label:disabled { filter: opacity(0.5); }");
+    expect(out).toContain(
+      ":where(.gtk-label):not(_):is([data-disabled], :disabled, [data-disabled] *, :disabled *) {",
+    );
+  });
+
+  test(":hover and :active never match insensitive widgets, with the same specificity", async () => {
+    const out = await transform(
+      "button:hover { color: red; } button:checked:active, modelbutton:hover > label { color: blue; }",
+    );
+    const sensitive = ":where(:not([data-disabled], :disabled, [data-disabled] *, :disabled *))";
+    expect(out).toContain(`:where(.gtk-button):not(_):hover${sensitive} {`);
+    expect(out).toContain(
+      `:where(.gtk-button):not(_)[data-checked]:is(:active, [data-active])${sensitive},`,
+    );
+    expect(out).toContain(`:where(.gtk-modelbutton):not(_):hover${sensitive} > :where(.gtk-label)`);
   });
 });
 
@@ -398,10 +430,10 @@ describe("currentColor", () => {
       "menubutton > button:checked { color: inherit; } button.opaque:hover, menubutton > button:hover { background-image: image(alpha(currentColor, 0.1)); }",
     );
     expect(out).toMatch(
-      /> :where\(.gtk-button\):not\(_\):hover \{ --gtk-background-overlay: color-mix\(in oklab, var\(--gtk-current-color, currentColor\) 10%/,
+      /> :where\(.gtk-button\):not\(_\):hover:where\([^{]+\) \{ --gtk-background-overlay: color-mix\(in oklab, var\(--gtk-current-color, currentColor\) 10%/,
     );
     expect(out).toMatch(
-      /:where\(.gtk-button\):not\(_\).opaque:hover \{ --gtk-background-overlay: transparent; --gtk-background-tint: 10%/,
+      /:where\(.gtk-button\):not\(_\).opaque:hover:where\([^{]+\) \{ --gtk-background-overlay: transparent; --gtk-background-tint: 10%/,
     );
   });
 
