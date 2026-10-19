@@ -50,6 +50,7 @@ pub mod adw_view_switcher_attention;
 pub mod adw_view_switcher_bar;
 pub mod adw_view_switcher_default;
 pub mod adw_view_switcher_narrow;
+pub mod adw_view_switcher_narrow_label;
 pub mod avatar_default;
 pub mod avatar_initials;
 pub mod avatar_small;
