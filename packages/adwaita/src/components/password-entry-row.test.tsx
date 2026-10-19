@@ -22,5 +22,5 @@ test("a password entry row starts hidden, with a flat image button to show it", 
     /<div class="gtk-box gtk-box-layout horizontal suffixes">(<button[^>]*>)/,
   )?.[1];
   expect(peek).toMatch(/class="gtk-button flat image-button"/);
-  expect(peek).toMatch(/title="Show Password"/);
+  expect(peek).toMatch(/data-gtk-tooltip="Show Password"/);
 });

@@ -51,7 +51,7 @@ describe("AdwAboutDialog main page", () => {
       />,
     );
     expect(html).toContain("Other Apps by Someone");
-    expect(html).toContain('title="appstream:org.example.Other"');
+    expect(html).toContain('data-gtk-tooltip="appstream:org.example.Other"');
     expect(html).toContain("Does other things");
   });
 });
