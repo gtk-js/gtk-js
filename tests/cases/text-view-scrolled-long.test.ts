@@ -10,5 +10,6 @@ gtkTest("text-view-scrolled-long", (native, web) => {
   // window's snapshot (as with other containers); skip it at the root.
   const { failures } = compare(native, web);
   expect(failures.filter((f) => f.property !== "background_color")).toEqual([]);
-  expect(findChild(web, "textview").height).toBe(30 * 18);
+  // Firefox's textarea comes out a pixel taller (541px) than Chromium's.
+  expect(Math.abs(findChild(web, "textview").height - 30 * 18)).toBeLessThanOrEqual(2);
 });
