@@ -382,6 +382,34 @@ const cases: Record<string, () => React.ReactElement> = {
   "switch-on-default": () => <GtkSwitch active data-testid="target" />,
   "switch-off-disabled": () => <GtkSwitch disabled data-testid="target" />,
   "switch-on-disabled": () => <GtkSwitch active disabled data-testid="target" />,
+  "switch-off-title-1": () => (
+    <GtkBox className="title-1" halign="center" valign="center">
+      <GtkSwitch data-testid="target" />
+    </GtkBox>
+  ),
+  "switch-on-pending": () => (
+    <GtkSwitch active state={false} halign="center" valign="center" data-testid="target" />
+  ),
+  "switch-on-rtl": () => (
+    <div dir="rtl">
+      <GtkSwitch active halign="center" valign="center" data-testid="target" />
+    </div>
+  ),
+  "switch-on-small-slider": () => (
+    <>
+      <style>{`
+        .gtk-switch.small-slider { min-width: 22px; padding: 0; }
+        .gtk-switch.small-slider > .gtk-slider { min-width: 12px; min-height: 12px; margin: 5px; }
+      `}</style>
+      <GtkSwitch
+        active
+        className="small-slider"
+        halign="center"
+        valign="center"
+        data-testid="target"
+      />
+    </>
+  ),
 
   // GtkTextView cases
   "text-view-default": () => <GtkTextView ref={textViewTarget} />,
@@ -966,6 +994,15 @@ const cases: Record<string, () => React.ReactElement> = {
   "adw-switch-row-active": () => (
     <GtkListBox selectionMode="none" className="boxed-list" data-testid="target">
       <AdwSwitchRow title="Switch Row" active />
+    </GtkListBox>
+  ),
+  "adw-switch-row-prefix-suffix": () => (
+    <GtkListBox selectionMode="none" className="boxed-list" data-testid="target">
+      <AdwSwitchRow
+        title="Switch Row"
+        prefixWidget={<GtkImage iconName="AirplaneMode" />}
+        suffixWidget={<GtkButton iconName="DocumentEdit" className="flat" valign="center" />}
+      />
     </GtkListBox>
   ),
 

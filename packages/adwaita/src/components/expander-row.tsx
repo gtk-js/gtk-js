@@ -248,7 +248,7 @@ export const AdwExpanderRow = forwardRef<HTMLDivElement, AdwExpanderRowProps>(
                     <GtkSwitch
                       active={enableExpansion}
                       valign="center"
-                      data-disabled={disabled || undefined}
+                      disabled={disabled}
                       onStateSet={setEnableExpansion}
                       // The switch takes the click, from the outer list too.
                       onClick={(e) => e.stopPropagation()}
