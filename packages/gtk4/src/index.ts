@@ -102,6 +102,7 @@ export { GtkWindowHandle } from "./components/window-handle.tsx";
 export type { GtkWindowTitleProps } from "./components/window-title.tsx";
 export { GtkWindowTitle } from "./components/window-title.tsx";
 export { isCoveredByLayer, useEscapeLayer } from "./escape-layers.ts";
+export { noFocusOnClick } from "./focus-on-click.ts";
 export type { IconMap } from "./icon-context.tsx";
 // Icon context
 export { IconProvider, useIcon, useIcons } from "./icon-context.tsx";

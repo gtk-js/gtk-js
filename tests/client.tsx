@@ -1708,6 +1708,10 @@ const cases: Record<string, () => React.ReactElement> = {
   ),
 
   // GtkHeaderBar cases
+  // The test holds the close button down.
+  "headerbar-controls-pressed": () => (
+    <GtkHeaderBar decorationLayout=":close" data-testid="target" />
+  ),
   "headerbar-default": () => <GtkHeaderBar showWindowControls={false} data-testid="target" />,
   // The native case fills the test window, which AdwWindow's minimum size makes
   // 352px wide for the bar (its -1px margins included).
