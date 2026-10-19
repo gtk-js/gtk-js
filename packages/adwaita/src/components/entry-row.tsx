@@ -155,7 +155,8 @@ export const AdwEntryRow = forwardRef<HTMLDivElement, AdwEntryRowProps>(function
             <input
               ref={inputRef}
               className="gtk-text"
-              type={inputPurpose === "password" || !visibility ? "password" : "text"}
+              // GtkText:visibility alone hides the text; input-purpose only hints input methods.
+              type={visibility ? "text" : "password"}
               autoFocus={autoFocus}
               spellCheck={
                 inputPurpose === "free-form" || inputPurpose === "name" ? undefined : false
