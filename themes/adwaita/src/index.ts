@@ -1,4 +1,4 @@
-import { GtkTheme } from "@gtk-js/gtk-css";
+import { GtkTheme, type SystemColorScheme } from "@gtk-js/gtk-css";
 import autoCSS from "../dist/auto.css?raw";
 import darkCSS from "../dist/dark.css?raw";
 import lightCSS from "../dist/light.css?raw";
@@ -35,9 +35,12 @@ export class AdwaitaTheme extends GtkTheme {
     this.accentColor = accentColor;
   }
 
-  getCSS() {
-    const base =
-      this.colorScheme === "dark" ? darkCSS : this.colorScheme === "light" ? lightCSS : autoCSS;
+  getCSS(systemScheme?: SystemColorScheme) {
+    const scheme = this.colorScheme === "auto" ? systemScheme : this.colorScheme;
+    // Until the system scheme is known (server HTML, hydration), auto.css follows
+    // prefers-color-scheme itself. Then GtkProvider switches to the scheme's own
+    // build, with transitions off, like AdwStyleManager's update_stylesheet().
+    const base = scheme === "dark" ? darkCSS : scheme === "light" ? lightCSS : autoCSS;
 
     // Like adw_style_manager's generate_accent_css(): replace the accent the
     // stylesheet's :root reads, so the colors it derives in CSS

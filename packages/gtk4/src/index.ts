@@ -1,6 +1,6 @@
 // Provider
 
-export { GtkTheme } from "@gtk-js/gtk-css";
+export { GtkTheme, type SystemColorScheme } from "@gtk-js/gtk-css";
 export type { GtkActionBarProps } from "./components/action-bar.tsx";
 export { GtkActionBar } from "./components/action-bar.tsx";
 export type { GtkBoxProps } from "./components/box.tsx";
