@@ -10,6 +10,7 @@ import {
   useLayoutEffect,
   useMemo,
   useRef,
+  useState,
 } from "react";
 import { trackExpand } from "./expand.ts";
 import { type IconMap, IconProvider } from "./icon-context.tsx";
@@ -32,7 +33,49 @@ export interface GtkProviderProps {
   icons?: IconMap;
   /** Style applied to the root scoping div. */
   style?: CSSProperties;
+  /**
+   * Keep the content laid out but invisible until it's ready: the theme CSS has
+   * loaded and layout computed in JS (expand) has run. Server-rendered HTML paints
+   * before hydration without either; a client render is ready before its first
+   * paint, so it's never held back unless a `cssHref` stylesheet is still loading.
+   * Default: true.
+   */
+  hideUntilReady?: boolean;
   children: ReactNode;
+}
+
+/** How long to wait for a `cssHref` stylesheet before showing the content anyway. */
+const STYLESHEET_TIMEOUT = 3000;
+
+/** Shows gated content when JavaScript is off, since nothing would ever reveal it. */
+const NOSCRIPT_CSS = "[data-gtk-provider]{visibility:visible!important}";
+
+/**
+ * Calls `done` once the theme element applies: a <style> at once, a <link> when it
+ * has loaded or failed, or after `timeout`. Returns a function that cancels it.
+ */
+export function whenStylesheetLoaded(
+  element: Element | null,
+  done: () => void,
+  timeout = STYLESHEET_TIMEOUT,
+): () => void {
+  if (element?.localName !== "link" || (element as HTMLLinkElement).sheet) {
+    done();
+    return () => {};
+  }
+  const finish = () => {
+    cancel();
+    done();
+  };
+  const timer = setTimeout(finish, timeout);
+  element.addEventListener("load", finish);
+  element.addEventListener("error", finish);
+  function cancel() {
+    clearTimeout(timer);
+    element!.removeEventListener("load", finish);
+    element!.removeEventListener("error", finish);
+  }
+  return cancel;
 }
 
 const ThemeContext = createContext<GtkTheme | undefined>(undefined);
@@ -62,8 +105,11 @@ export function GtkProvider({
   cssText,
   icons = defaultIcons,
   style,
+  hideUntilReady = true,
   children,
 }: GtkProviderProps) {
+  const [ready, setReady] = useState(!hideUntilReady);
+
   // GTK looks an icon up in the theme, then in its own resources.
   const iconMap = useMemo(
     () => (icons === defaultIcons ? icons : { ...defaultIcons, ...icons }),
@@ -134,11 +180,31 @@ export function GtkProvider({
   const rootRef = useRef<HTMLDivElement>(null);
   useEffect(trackTooltips, []);
 
+  // Reveal once the theme CSS applies. With inline CSS that's now, before the first
+  // paint: a state update from a layout effect renders synchronously.
+  useLayoutEffect(() => {
+    if (ready) return;
+    return whenStylesheetLoaded(document.getElementById("gtk-js-theme"), () => setReady(true));
+  }, [ready]);
+
   return (
     <ThemeContext.Provider value={theme}>
       <ProviderStyleContext.Provider value={style}>
         <IconProvider value={iconMap}>
-          <div ref={rootRef} data-gtk-provider="" className="background" style={style}>
+          {!ready && (
+            <noscript>
+              <style>{NOSCRIPT_CSS}</style>
+            </noscript>
+          )}
+          <div
+            ref={rootRef}
+            data-gtk-provider=""
+            data-gtk-ready={ready ? "" : undefined}
+            aria-busy={ready ? undefined : true}
+            className="background"
+            // Hidden, not display: none, so the content is laid out (and measured) already.
+            style={ready ? style : { ...style, visibility: "hidden" }}
+          >
             {children}
             <GtkTooltipLayer rootRef={rootRef} />
           </div>
