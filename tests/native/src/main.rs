@@ -61,7 +61,12 @@ enum Command {
     AdwHeaderbarStartEnd,
     AdwNavigationViewDefault,
     AdwNavigationViewScrolled,
+    AdwOverlaySplitViewCollapsedRtl,
+    AdwOverlaySplitViewCollapsedShown,
     AdwOverlaySplitViewDefault,
+    AdwOverlaySplitViewEnd,
+    AdwOverlaySplitViewHidden,
+    AdwOverlaySplitViewWideSidebar,
     AdwPasswordEntryRowDefault,
     AdwPreferencesGroupDefault,
     AdwPreferencesGroupWithDescription,
@@ -346,7 +351,12 @@ impl Command {
             Self::AdwHeaderbarStartEnd => Some("adw-headerbar-start-end"),
             Self::AdwNavigationViewDefault => Some("adw-navigation-view-default"),
             Self::AdwNavigationViewScrolled => Some("adw-navigation-view-scrolled"),
+            Self::AdwOverlaySplitViewCollapsedRtl => Some("adw-overlay-split-view-collapsed-rtl"),
+            Self::AdwOverlaySplitViewCollapsedShown => Some("adw-overlay-split-view-collapsed-shown"),
             Self::AdwOverlaySplitViewDefault => Some("adw-overlay-split-view-default"),
+            Self::AdwOverlaySplitViewEnd => Some("adw-overlay-split-view-end"),
+            Self::AdwOverlaySplitViewHidden => Some("adw-overlay-split-view-hidden"),
+            Self::AdwOverlaySplitViewWideSidebar => Some("adw-overlay-split-view-wide-sidebar"),
             Self::AdwPasswordEntryRowDefault => Some("adw-password-entry-row-default"),
             Self::AdwPreferencesGroupDefault => Some("adw-preferences-group-default"),
             Self::AdwPreferencesGroupWithDescription => Some("adw-preferences-group-with-description"),
@@ -648,8 +658,23 @@ fn create_widget_for_case(name: &str) -> Option<(gtk::Widget, bool)> {
         "adw-navigation-view-scrolled" => {
             widget_case!(cases::adw_navigation_view_scrolled::AdwNavigationViewScrolled, false)
         }
+        "adw-overlay-split-view-collapsed-rtl" => {
+            widget_case!(cases::adw_overlay_split_view_collapsed_rtl::AdwOverlaySplitViewCollapsedRtl, false)
+        }
+        "adw-overlay-split-view-collapsed-shown" => {
+            widget_case!(cases::adw_overlay_split_view_collapsed_shown::AdwOverlaySplitViewCollapsedShown, false)
+        }
         "adw-overlay-split-view-default" => {
             widget_case!(cases::adw_overlay_split_view_default::AdwOverlaySplitViewDefault, false)
+        }
+        "adw-overlay-split-view-end" => {
+            widget_case!(cases::adw_overlay_split_view_end::AdwOverlaySplitViewEnd, false)
+        }
+        "adw-overlay-split-view-hidden" => {
+            widget_case!(cases::adw_overlay_split_view_hidden::AdwOverlaySplitViewHidden, false)
+        }
+        "adw-overlay-split-view-wide-sidebar" => {
+            widget_case!(cases::adw_overlay_split_view_wide_sidebar::AdwOverlaySplitViewWideSidebar, false)
         }
         "adw-password-entry-row-default" => {
             widget_case!(cases::adw_password_entry_row_default::AdwPasswordEntryRowDefault, false)
@@ -1245,7 +1270,12 @@ fn is_known_case(name: &str) -> bool {
             | "adw-headerbar-start-end"
             | "adw-navigation-view-default"
             | "adw-navigation-view-scrolled"
+            | "adw-overlay-split-view-collapsed-rtl"
+            | "adw-overlay-split-view-collapsed-shown"
             | "adw-overlay-split-view-default"
+            | "adw-overlay-split-view-end"
+            | "adw-overlay-split-view-hidden"
+            | "adw-overlay-split-view-wide-sidebar"
             | "adw-password-entry-row-default"
             | "adw-preferences-group-default"
             | "adw-preferences-group-with-description"

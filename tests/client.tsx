@@ -1703,9 +1703,56 @@ const cases: Record<string, () => React.ReactElement> = {
   ),
 
   // AdwOverlaySplitView cases
+  "adw-overlay-split-view-collapsed-rtl": () => (
+    <AdwOverlaySplitView
+      collapsed
+      showSidebar
+      dir="rtl"
+      style={{ width: 600, height: 200 }}
+      sidebar={<GtkLabel label="Sidebar" />}
+      content={<GtkLabel label="Content" />}
+      data-testid="target"
+    />
+  ),
+  "adw-overlay-split-view-collapsed-shown": () => (
+    <AdwOverlaySplitView
+      collapsed
+      showSidebar
+      style={{ width: 600, height: 200 }}
+      sidebar={<GtkLabel label="Sidebar" />}
+      content={<GtkLabel label="Content" />}
+      data-testid="target"
+    />
+  ),
   "adw-overlay-split-view-default": () => (
     <AdwOverlaySplitView
       sidebar={<GtkLabel label="Sidebar" />}
+      content={<GtkLabel label="Content" />}
+      data-testid="target"
+    />
+  ),
+  "adw-overlay-split-view-end": () => (
+    <AdwOverlaySplitView
+      sidebarPosition="end"
+      style={{ width: 600, height: 200 }}
+      sidebar={<GtkLabel label="Sidebar" />}
+      content={<GtkLabel label="Content" />}
+      data-testid="target"
+    />
+  ),
+  "adw-overlay-split-view-hidden": () => (
+    <AdwOverlaySplitView
+      showSidebar={false}
+      style={{ width: 600, height: 200 }}
+      sidebar={<GtkLabel label="Sidebar" />}
+      content={<GtkLabel label="Content" />}
+      data-testid="target"
+    />
+  ),
+  "adw-overlay-split-view-wide-sidebar": () => (
+    <AdwOverlaySplitView
+      style={{ width: 1000, height: 60 }}
+      sidebar={<GtkBox style={{ width: 400 }} />}
       content={<GtkLabel label="Content" />}
       data-testid="target"
     />
