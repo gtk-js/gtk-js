@@ -172,6 +172,40 @@
   align-self: center;
 }
 
+/* GtkOverlay: the child and the overlays share the overlay's area, each one
+ * placed in it by its halign and valign (gtk_overlay_get_child_position()): an
+ * overlay at the end corner takes only its own size there. The wrappers that
+ * tell the overlays from the child leave the layout to them. */
+.gtk-overlay {
+  display: grid;
+  grid-template: 1fr / 1fr;
+}
+.gtk-overlay > .gtk-overlay-child {
+  display: contents;
+}
+.gtk-overlay > :not(.gtk-overlay-child),
+.gtk-overlay > .gtk-overlay-child > * {
+  grid-area: 1 / 1;
+}
+.gtk-overlay > .gtk-overlay-child > [data-halign="start"] {
+  justify-self: start;
+}
+.gtk-overlay > .gtk-overlay-child > [data-halign="end"] {
+  justify-self: end;
+}
+.gtk-overlay > .gtk-overlay-child > [data-halign="center"] {
+  justify-self: center;
+}
+.gtk-overlay > .gtk-overlay-child > [data-valign="start"] {
+  align-self: start;
+}
+.gtk-overlay > .gtk-overlay-child > [data-valign="end"] {
+  align-self: end;
+}
+.gtk-overlay > .gtk-overlay-child > [data-valign="center"] {
+  align-self: center;
+}
+
 /* === GtkActionBar ===
  * GtkActionBar defaults to halign=GTK_ALIGN_FILL in native GTK, meaning it
  * always fills the full width allocated by its parent. On the web we must
