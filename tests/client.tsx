@@ -494,6 +494,16 @@ const cases: Record<string, () => React.ReactElement> = {
         <GtkButton label="End" halign="end" />
         <GtkButton label="Center" valign="center" />
       </GtkBox>
+      <GtkBox spacing={6}>
+        <GtkButton label="a" />
+        <GtkButton label="b hexpand" hexpand />
+        <GtkButton label="c center" hexpand halign="center" />
+      </GtkBox>
+      <GtkBox orientation="vertical" spacing={6} style={{ height: 160 }}>
+        <GtkButton label="a" halign="end" />
+        <GtkButton label="b vexpand" vexpand />
+        <GtkButton label="c center" vexpand valign="center" />
+      </GtkBox>
     </GtkBox>
   ),
 

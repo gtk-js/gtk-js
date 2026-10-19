@@ -5,6 +5,7 @@ import { gtkTest, type WidgetSnapshot } from "../harness";
 // "Much longer label" keeps one line and "A" is as wide. Each child is placed
 // in its equal slot by its halign/valign (gtk_box_layout_allocate()) instead
 // of filling it. Text widths differ by a few px between browsers.
+// The last two boxes mix a filling and a centered expanding child.
 gtkTest("box-homogeneous-natural", (native, web) => {
   // Native sizes are content sizes, web ones border-box sizes.
   const size = (w: WidgetSnapshot, isWeb: boolean) =>
@@ -25,10 +26,12 @@ gtkTest("box-homogeneous-natural", (native, web) => {
             w.border_widths.bottom,
         };
   const measure = (root: WidgetSnapshot, isWeb: boolean) => {
-    const [natural, aligned, vertical] = root.children!;
+    const [natural, aligned, vertical, expand, vexpand] = root.children!;
     const [a, long] = natural!.children!;
     const [, center] = aligned!.children!;
     const [end, vcenter] = vertical!.children!;
+    const [, b, c] = expand!.children!;
+    const [va, vb, vc] = vexpand!.children!;
     return {
       a: size(a!, isWeb),
       long: size(long!, isWeb),
@@ -38,6 +41,12 @@ gtkTest("box-homogeneous-natural", (native, web) => {
       end: size(end!, isWeb),
       vcenter: size(vcenter!, isWeb),
       vcenterMid: vcenter!.y! + size(vcenter!, isWeb).height / 2,
+      b: size(b!, isWeb),
+      c: size(c!, isWeb),
+      cMid: c!.x! + size(c!, isWeb).width / 2,
+      vaRight: size(vexpand!, isWeb).width - va!.x! - size(va!, isWeb).width,
+      vb: size(vb!, isWeb),
+      vcMid: vc!.y! + size(vc!, isWeb).height / 2,
     };
   };
   const n = measure(native, false);
@@ -61,5 +70,17 @@ gtkTest("box-homogeneous-natural", (native, web) => {
     w.vcenterMid,
     { tolerance: 1, reason: "rounding" },
     "valign center child's center",
+  );
+  // Expanding children share the extra space equally, the centered one too
+  // (gtk_box_layout_allocate()); flexbox gave it all to "b hexpand".
+  gtkAssert.numbersClose(n.b.width, w.b.width, text, "filling expanding child's width");
+  gtkAssert.numbersClose(n.cMid, w.cMid, text, "centered expanding child's center");
+  gtkAssert.numbersEqual(n.vaRight, w.vaRight, "end-aligned child's right gap in a vertical box");
+  gtkAssert.numbersEqual(n.vb.height, w.vb.height, "filling vexpand child's height");
+  gtkAssert.numbersClose(
+    n.vcMid,
+    w.vcMid,
+    { tolerance: 1, reason: "rounding" },
+    "valign center vexpand child's center",
   );
 });

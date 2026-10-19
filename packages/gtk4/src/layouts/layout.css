@@ -54,8 +54,8 @@
  * expand.ts, which sets data-computed-hexpand / data-computed-vexpand).
  * With halign/valign start, end or center, an expanding child keeps its
  * natural size, followed (or preceded) by the extra space. Flexbox only gives
- * auto margins what growing children leave, so in a box that also has a
- * filling child that expands, such a child gets no share; GTK splits it. */
+ * auto margins what growing children leave, so a box that also has a filling
+ * child that expands is a grid instead (below). */
 .gtk-box-layout.horizontal > [data-computed-hexpand] {
   flex-grow: 1;
 }
@@ -118,6 +118,22 @@
   align-self: center;
 }
 
+/* -- BoxLayout with filling and non-filling expanding children -- */
+/* expand.ts writes the tracks: `auto` for the expanding children, which grid
+ * stretches by equal amounts like gtk_box_layout_allocate() shares the extra
+ * space, and natural-size tracks for the rest. Alignment is as in a
+ * homogeneous box (below). */
+.gtk-box-layout[data-box-tracks] {
+  display: grid;
+}
+.gtk-box-layout.horizontal[data-box-tracks] {
+  grid-auto-flow: column;
+  grid-template-columns: var(--gtk-box-tracks);
+}
+.gtk-box-layout.vertical[data-box-tracks] {
+  grid-template-rows: var(--gtk-box-tracks);
+}
+
 /* -- Homogeneous BoxLayout -- */
 /* Equal slots as big as the largest child (gtk_box_layout_compute_size()),
  * in which each child is placed by its halign/valign
@@ -134,25 +150,25 @@
 .gtk-box-layout.homogeneous.vertical {
   grid-auto-rows: 1fr;
 }
-.gtk-box-layout.homogeneous > [data-halign="start"] {
+.gtk-box-layout:is(.homogeneous, [data-box-tracks]) > [data-halign="start"] {
   justify-self: start;
 }
-.gtk-box-layout.homogeneous > [data-halign="end"] {
+.gtk-box-layout:is(.homogeneous, [data-box-tracks]) > [data-halign="end"] {
   justify-self: end;
 }
-.gtk-box-layout.homogeneous > [data-halign="center"] {
+.gtk-box-layout:is(.homogeneous, [data-box-tracks]) > [data-halign="center"] {
   justify-self: center;
 }
-.gtk-box-layout.homogeneous.vertical > * {
+.gtk-box-layout.vertical:is(.homogeneous, [data-box-tracks]) > * {
   align-self: auto;
 }
-.gtk-box-layout.homogeneous.vertical > [data-valign="start"] {
+.gtk-box-layout.vertical:is(.homogeneous, [data-box-tracks]) > [data-valign="start"] {
   align-self: start;
 }
-.gtk-box-layout.homogeneous.vertical > [data-valign="end"] {
+.gtk-box-layout.vertical:is(.homogeneous, [data-box-tracks]) > [data-valign="end"] {
   align-self: end;
 }
-.gtk-box-layout.homogeneous.vertical > [data-valign="center"] {
+.gtk-box-layout.vertical:is(.homogeneous, [data-box-tracks]) > [data-valign="center"] {
   align-self: center;
 }
 

@@ -39,6 +39,30 @@ impl SimpleComponent for BoxHomogeneousNatural {
                 gtk::Button { set_label: "End", set_halign: gtk::Align::End },
                 gtk::Button { set_label: "Center", set_valign: gtk::Align::Center },
             },
+            // A non-homogeneous box gives each expanding child an equal share
+            // of the extra space, in which "c" is placed by its alignment.
+            gtk::Box {
+                set_spacing: 6,
+                gtk::Button { set_label: "a" },
+                gtk::Button { set_label: "b hexpand", set_hexpand: true },
+                gtk::Button {
+                    set_label: "c center",
+                    set_hexpand: true,
+                    set_halign: gtk::Align::Center,
+                },
+            },
+            gtk::Box {
+                set_orientation: gtk::Orientation::Vertical,
+                set_spacing: 6,
+                set_height_request: 160,
+                gtk::Button { set_label: "a", set_halign: gtk::Align::End },
+                gtk::Button { set_label: "b vexpand", set_vexpand: true },
+                gtk::Button {
+                    set_label: "c center",
+                    set_vexpand: true,
+                    set_valign: gtk::Align::Center,
+                },
+            },
         }
     }
 
