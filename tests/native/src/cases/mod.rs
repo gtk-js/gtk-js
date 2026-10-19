@@ -25,6 +25,7 @@ pub mod adw_preferences_row_default;
 pub mod adw_spin_row_default;
 pub mod adw_switch_row_active;
 pub mod adw_switch_row_default;
+pub mod adw_switch_row_prefix_suffix;
 pub mod adw_toolbar_view_default;
 pub mod adw_toolbar_view_with_bottom;
 pub mod adw_view_switcher_default;

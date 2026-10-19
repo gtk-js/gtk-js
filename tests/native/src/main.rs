@@ -64,6 +64,7 @@ enum Command {
     AdwSpinRowDefault,
     AdwSwitchRowDefault,
     AdwSwitchRowActive,
+    AdwSwitchRowPrefixSuffix,
     AdwToolbarViewDefault,
     AdwToolbarViewWithBottom,
     AdwViewSwitcherDefault,
@@ -299,6 +300,7 @@ impl Command {
             Self::AdwSpinRowDefault => Some("adw-spin-row-default"),
             Self::AdwSwitchRowDefault => Some("adw-switch-row-default"),
             Self::AdwSwitchRowActive => Some("adw-switch-row-active"),
+            Self::AdwSwitchRowPrefixSuffix => Some("adw-switch-row-prefix-suffix"),
             Self::AdwToolbarViewDefault => Some("adw-toolbar-view-default"),
             Self::AdwToolbarViewWithBottom => Some("adw-toolbar-view-with-bottom"),
             Self::AdwViewSwitcherDefault => Some("adw-view-switcher-default"),
@@ -556,6 +558,9 @@ fn create_widget_for_case(name: &str) -> Option<(gtk::Widget, bool)> {
         }
         "adw-switch-row-active" => {
             widget_case!(cases::adw_switch_row_active::AdwSwitchRowActive, false)
+        }
+        "adw-switch-row-prefix-suffix" => {
+            widget_case!(cases::adw_switch_row_prefix_suffix::AdwSwitchRowPrefixSuffix, false)
         }
         "adw-toolbar-view-default" => {
             widget_case!(cases::adw_toolbar_view_default::AdwToolbarViewDefault, false)
@@ -1029,6 +1034,7 @@ fn is_known_case(name: &str) -> bool {
             | "adw-spin-row-default"
             | "adw-switch-row-default"
             | "adw-switch-row-active"
+            | "adw-switch-row-prefix-suffix"
             | "adw-toolbar-view-default"
             | "adw-toolbar-view-with-bottom"
             | "adw-view-switcher-default"
