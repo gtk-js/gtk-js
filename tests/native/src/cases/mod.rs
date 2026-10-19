@@ -120,6 +120,8 @@ pub mod levelbar_disabled;
 pub mod levelbar_discrete_default;
 pub mod levelbar_discrete_inverted;
 pub mod link_default;
+pub mod link_disabled;
+pub mod link_narrow_parent;
 pub mod link_visited;
 pub mod listbox_default;
 pub mod listbox_separators;

@@ -325,6 +325,14 @@ const cases: Record<string, () => React.ReactElement> = {
   "link-default": () => (
     <GtkLinkButton uri="https://example.com" label="Link" data-testid="target" />
   ),
+  "link-disabled": () => (
+    <GtkLinkButton uri="https://example.com" label="Link" disabled data-testid="target" />
+  ),
+  "link-narrow-parent": () => (
+    <div style={{ width: 90 }}>
+      <GtkLinkButton uri="https://example.com" label="A long link label" data-testid="target" />
+    </div>
+  ),
   "link-visited": () => (
     <GtkLinkButton uri="https://example.com" label="Link" visited data-testid="target" />
   ),

@@ -165,6 +165,8 @@ enum Command {
     LevelbarDiscreteInverted,
     LevelbarDisabled,
     LinkDefault,
+    LinkDisabled,
+    LinkNarrowParent,
     LinkVisited,
     NotebookDefault,
     MenuButtonTextDefault,
@@ -405,6 +407,8 @@ impl Command {
             Self::LevelbarDiscreteInverted => Some("levelbar-discrete-inverted"),
             Self::LevelbarDisabled => Some("levelbar-disabled"),
             Self::LinkDefault => Some("link-default"),
+            Self::LinkDisabled => Some("link-disabled"),
+            Self::LinkNarrowParent => Some("link-narrow-parent"),
             Self::LinkVisited => Some("link-visited"),
             Self::NotebookDefault => Some("notebook-default"),
             Self::MenuButtonTextDefault => Some("menu-button-text-default"),
@@ -805,6 +809,8 @@ fn create_widget_for_case(name: &str) -> Option<(gtk::Widget, bool)> {
         }
         "levelbar-disabled" => widget_case!(cases::levelbar_disabled::LevelbarDisabled, false),
         "link-default" => widget_case!(cases::link_default::LinkDefault, false),
+        "link-disabled" => widget_case!(cases::link_disabled::LinkDisabled, false),
+        "link-narrow-parent" => widget_case!(cases::link_narrow_parent::LinkNarrowParent, false),
         "link-visited" => widget_case!(cases::link_visited::LinkVisited, false),
         "menu-button-text-default" => {
             widget_case!(cases::menu_button_text_default::MenuButtonTextDefault, true)
@@ -1131,6 +1137,8 @@ fn is_known_case(name: &str) -> bool {
             | "levelbar-discrete-inverted"
             | "levelbar-disabled"
             | "link-default"
+            | "link-disabled"
+            | "link-narrow-parent"
             | "link-visited"
             | "menu-button-text-default"
             | "menu-button-icon"

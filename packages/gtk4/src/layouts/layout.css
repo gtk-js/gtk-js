@@ -171,6 +171,21 @@
   align-self: center;
 }
 
+/* GTK draws a text decoration only under a node's own text, and a button has
+ * none: a link button's underline is its label's (button.link > label). The
+ * browser would also draw button.link's under the label, twice over in the
+ * translucent insensitive color. */
+.gtk-button.link {
+  text-decoration: none !important;
+}
+
+/* GTK doesn't pick an insensitive widget (gtk_widget_can_be_picked()): an
+ * insensitive link button isn't hovered, and the pointer over it shows the
+ * cursor of the widget below. */
+.gtk-button.link[data-disabled] {
+  pointer-events: none;
+}
+
 /* === GtkActionBar ===
  * GtkActionBar defaults to halign=GTK_ALIGN_FILL in native GTK, meaning it
  * always fills the full width allocated by its parent. On the web we must
