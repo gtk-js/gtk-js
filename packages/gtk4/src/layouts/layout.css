@@ -441,48 +441,60 @@
  * GtkSwitch uses a custom layout manager (gtkswitch.c: gtk_switch_measure /
  * gtk_switch_allocate). Native behavior:
  *
- *   // gtkswitch.c lines 374-378 — slider gets half-width, full-height allocation
- *   gtk_widget_size_allocate(slider, {
- *     x: round(handle_pos * (width / 2)),  y: 0,
+ *   // measure: twice the widest child, as tall as the tallest (margins included)
+ *   width  = 2 * MAX (slider, MAX (on_image, off_image));
+ *   height = MAX (slider, MAX (on_image, off_image));
+ *
+ *   // allocate: the slider gets one half, full height; each image is centered in a half
+ *   gtk_widget_size_allocate (slider, {
+ *     x: round (handle_pos * (width / 2)),  y: 0,
  *     width: width / 2,  height: height
  *   });
  *
- *   // gtkwidget.c lines 4275-4278 — CSS margin is subtracted from allocation
- *   adjusted.x += margin.left;  adjusted.y += margin.top;
- *   adjusted.width -= margin.left + margin.right;
- *   adjusted.height -= margin.top + margin.bottom;
+ * A theme's switch min-width/min-height is only a lower bound: the size follows
+ * the theme's slider. Here the switch is a grid of two equal columns, each as
+ * wide as the widest child, margins included, so the slider's 100% inset is
+ * one column, width / 2. The logical inset puts "on" on the left in RTL, like
+ * is_right_side(). While the slider is dragged, its inset follows the pointer
+ * (inline style).
  *
- * We replicate with absolute positioning using opposing insets (left+right,
- * top+bottom) to define the allocation box. When an absolutely-positioned
- * element has both left and right set, CSS margin SHRINKS the element inward
- * — exactly matching how native GTK subtracts margin from the allocation.
- *
- * Unchecked: left:0 + right:50% → slider allocation = left half
- * Checked:   left:50% + right:0 → slider allocation = right half
- *
- * Animation: native uses 100ms ease-out-cubic (gtkswitch.c line 186/202).
- * left and right are both animatable CSS properties.
+ * Animation: native uses 100ms ease-out-cubic (gtkswitch.c ANIMATION_DURATION).
  */
 .gtk-switch {
-  position: relative;
-  min-width: 40px; /* Adwaita default: 2 × 20px slider. Themes override. */
-  min-height: 20px; /* Adwaita default: 20px slider height. Themes override. */
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  /* Like GtkGesturePan(HORIZONTAL): the slider can be dragged by touch, and a
+     vertical swipe still scrolls. */
+  touch-action: pan-y;
+}
+
+/* GTK doesn't pick insensitive widgets: no hover, press or drag. */
+.gtk-switch[data-disabled] {
+  pointer-events: none;
+}
+
+.gtk-switch > .gtk-image {
+  grid-row: 1;
+  place-self: center;
+}
+
+.gtk-switch > .gtk-image:first-child {
+  grid-column: 1;
+}
+
+.gtk-switch > .gtk-image:nth-child(2) {
+  grid-column: 2;
 }
 
 .gtk-switch > .gtk-slider {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 50%;
-  transition:
-    left 100ms cubic-bezier(0.215, 0.61, 0.355, 1),
-    right 100ms cubic-bezier(0.215, 0.61, 0.355, 1);
+  grid-area: 1 / 1;
+  position: relative;
+  inset-inline-start: 0;
+  transition: inset-inline-start 100ms cubic-bezier(0.215, 0.61, 0.355, 1);
 }
 
-.gtk-switch[data-checked] > .gtk-slider {
-  left: 50%;
-  right: 0;
+.gtk-switch[data-active] > .gtk-slider {
+  inset-inline-start: 100%;
 }
 
 /* === Popover Arrow ===

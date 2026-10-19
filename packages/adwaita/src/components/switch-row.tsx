@@ -186,7 +186,7 @@ export const AdwSwitchRow = forwardRef<HTMLDivElement, AdwSwitchRowProps>(functi
             valign="center"
             tabIndex={-1}
             aria-hidden
-            data-disabled={insensitive}
+            disabled={disabled}
             onMouseDown={(e) => e.preventDefault()}
           />
           {suffixWidget}
