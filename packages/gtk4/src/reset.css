@@ -35,7 +35,10 @@ body:has(> :first-child:has([data-gtk-provider])) > :first-child {
 :where([data-gtk-provider] *) {
   margin: 0;
   padding: 0;
-  border: none;
+  /* GTK's initial border-width is 0 (gtkcssstylepropertyimpl.c), not the
+     browser's `medium`, so theme rules that only set a style, like the spin
+     button's `border-style: solid`, draw only the widths they set. */
+  border: 0 none;
   background: transparent;
   box-sizing: content-box;
   /* Inherited, like in GTK CSS: the root sets them (below). */
