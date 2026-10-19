@@ -1,5 +1,5 @@
 import { describe, expect, test } from "vite-plus/test";
-import { arrowGap, insetTriangle, shadowExtents } from "./popover.tsx";
+import { alignAlong, arrowGap, insetTriangle, shadowExtents } from "./popover.tsx";
 
 describe("GtkPopover arrow", () => {
   // libadwaita's popover shadow, as Chromium computes it.
@@ -42,5 +42,24 @@ describe("GtkPopover arrow", () => {
     expect([left[1], right[1]]).toEqual([13, 13]);
     expect(tip[0]).toBeCloseTo(12);
     expect(tip[1]).toBeCloseTo(Math.hypot(12, 13) / 12);
+  });
+});
+
+describe("GtkPopover placement", () => {
+  // A 100px popover along a 40px anchor at 200 (create_popup_layout()).
+  test("halign/valign START and END line up the popover's edge with the anchor's", () => {
+    expect(alignAlong("start", false, 200, 40, 100)).toBe(200);
+    expect(alignAlong("end", false, 200, 40, 100)).toBe(140);
+  });
+
+  test("anything else centers it", () => {
+    for (const align of [undefined, "fill", "center", "baseline-fill"] as const) {
+      expect(alignAlong(align, false, 200, 40, 100)).toBe(170);
+    }
+  });
+
+  test("in RTL, START is the right edge", () => {
+    expect(alignAlong("start", true, 200, 40, 100)).toBe(140);
+    expect(alignAlong("end", true, 200, 40, 100)).toBe(200);
   });
 });

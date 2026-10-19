@@ -141,6 +141,7 @@ enum Command {
     ButtonHalignCenterVbox,
     ButtonHalignEndVbox,
     DropdownDefault,
+    DropdownFill,
     ButtonTextDefault,
     ButtonTextFlat,
     ButtonTextSuggested,
@@ -448,6 +449,7 @@ impl Command {
             Self::ButtonHalignCenterVbox => Some("button-halign-center-vbox"),
             Self::ButtonHalignEndVbox => Some("button-halign-end-vbox"),
             Self::DropdownDefault => Some("dropdown-default"),
+            Self::DropdownFill => Some("dropdown-fill"),
             Self::ButtonTextDefault => Some("button-text-default"),
             Self::ButtonTextFlat => Some("button-text-flat"),
             Self::ButtonTextSuggested => Some("button-text-suggested"),
@@ -838,6 +840,7 @@ fn create_widget_for_case(name: &str) -> Option<(gtk::Widget, bool)> {
             false
         ),
         "dropdown-default" => widget_case!(cases::dropdown_default::DropdownDefault, true),
+        "dropdown-fill" => widget_case!(cases::dropdown_fill::DropdownFill, false),
         "expander-default" => widget_case!(cases::expander_default::ExpanderDefault, false),
         "expander-expanded" => widget_case!(cases::expander_expanded::ExpanderExpanded, false),
         "flow-box-aligned" => widget_case!(cases::flow_box_aligned::FlowBoxAligned, true),
@@ -1374,6 +1377,7 @@ fn is_known_case(name: &str) -> bool {
             | "center-box-toolbar-vertical-start-end"
             | "center-box-toolbar-vertical-start-end-tall"
             | "dropdown-default"
+            | "dropdown-fill"
             | "expander-default"
             | "expander-expanded"
             | "flow-box-aligned"
