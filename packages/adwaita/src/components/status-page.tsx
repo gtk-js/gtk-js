@@ -1,5 +1,5 @@
-import { GtkScrolledWindow, useIcon, wrapStyle } from "@gtk-js/gtk4";
-import { forwardRef, type HTMLAttributes, type ReactNode } from "react";
+import { GtkScrolledWindow, labelText, useIcon, wrapStyle } from "@gtk-js/gtk4";
+import { forwardRef, type HTMLAttributes, type ReactNode, useId } from "react";
 import { AdwClamp } from "./clamp.tsx";
 
 export interface AdwStatusPageProps extends HTMLAttributes<HTMLDivElement> {
@@ -7,7 +7,7 @@ export interface AdwStatusPageProps extends HTMLAttributes<HTMLDivElement> {
   iconName?: string;
   /** Main title text. */
   title?: string;
-  /** Description text (supports markup). */
+  /** Description text, as Pango markup. */
   description?: string;
   /** Custom content below description. */
   children?: ReactNode;
@@ -34,11 +34,18 @@ export const AdwStatusPage = forwardRef<HTMLDivElement, AdwStatusPageProps>(func
 
   const classes = ["gtk-statuspage"];
   if (className) classes.push(className);
-  // Upstream `statuspage.compact` uses 96px icons (see _misc.scss).
-  const compact = classes.some((c) => c.split(" ").includes("compact"));
+  const titleId = useId();
+  const descriptionId = useId();
 
   return (
-    <div ref={ref} className={classes.join(" ")} {...rest}>
+    <div
+      ref={ref}
+      role="group"
+      aria-labelledby={title ? titleId : undefined}
+      aria-describedby={description ? descriptionId : undefined}
+      className={classes.join(" ")}
+      {...rest}
+    >
       <GtkScrolledWindow hscrollbarPolicy="never" propagateNaturalHeight style={{ height: "100%" }}>
         <div
           className="gtk-viewport"
@@ -55,17 +62,22 @@ export const AdwStatusPage = forwardRef<HTMLDivElement, AdwStatusPageProps>(func
               >
                 {Icon && (
                   <span className="gtk-image icon">
-                    <Icon size={compact ? 96 : 128} />
+                    {/* The theme sizes it: 128px, 96px in .compact (_misc.scss). */}
+                    <Icon style={ICON_STYLE} />
                   </span>
                 )}
                 {title && (
-                  <span className="gtk-label title" style={wrapStyle("word-char")}>
+                  <span id={titleId} className="gtk-label title" style={wrapStyle("word-char")}>
                     {title}
                   </span>
                 )}
                 {description && (
-                  <span className="gtk-label body description" style={wrapStyle("word-char")}>
-                    {description}
+                  <span
+                    id={descriptionId}
+                    className="gtk-label body description"
+                    style={wrapStyle("word-char")}
+                  >
+                    {labelText(description, true)}
                   </span>
                 )}
               </div>
@@ -77,3 +89,7 @@ export const AdwStatusPage = forwardRef<HTMLDivElement, AdwStatusPageProps>(func
     </div>
   );
 });
+
+// The image's -gtk-icon-size, which the style overrides the SVG's size with:
+// its width and height attributes can't take var().
+const ICON_STYLE = { width: "var(--gtk-icon-size, 16px)", height: "var(--gtk-icon-size, 16px)" };
