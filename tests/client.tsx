@@ -373,6 +373,9 @@ const cases: Record<string, () => React.ReactElement> = {
 
   // GtkSpinButton cases
   "spin-button-default": () => <GtkSpinButton min={0} max={100} value={50} data-testid="target" />,
+  "spin-button-disabled": () => (
+    <GtkSpinButton min={0} max={100} value={50} disabled data-testid="target" />
+  ),
   "spin-button-vertical": () => (
     <GtkSpinButton min={0} max={100} value={50} orientation="vertical" data-testid="target" />
   ),
@@ -948,6 +951,13 @@ const cases: Record<string, () => React.ReactElement> = {
     <GtkListBox selectionMode="none" className="boxed-list" data-testid="target">
       <AdwSpinRow title="Spin Row" value={50} min={0} max={100} step={1} />
     </GtkListBox>
+  ),
+  "adw-spin-row-long-title": () => (
+    <GtkBox orientation="vertical" halign="start" style={{ width: 360 }} data-testid="target">
+      <GtkListBox selectionMode="none" className="boxed-list">
+        <AdwSpinRow title="Maximum simultaneous downloads" value={4} min={1} max={16} />
+      </GtkListBox>
+    </GtkBox>
   ),
 
   // AdwComboRow cases

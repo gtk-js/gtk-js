@@ -1,23 +1,96 @@
-import { useIcon, useListBoxRow, wrapStyle } from "@gtk-js/gtk4";
-import { forwardRef, type HTMLAttributes, useCallback, useState } from "react";
+import {
+  GtkSpinButton,
+  type GtkSpinButtonUpdatePolicy,
+  useListBoxRow,
+  wrapStyle,
+} from "@gtk-js/gtk4";
+import {
+  forwardRef,
+  type HTMLAttributes,
+  type MouseEvent,
+  type ReactNode,
+  useId,
+  useRef,
+  useState,
+} from "react";
 
 export interface AdwSpinRowProps extends HTMLAttributes<HTMLDivElement> {
+  /** Row title text. */
   title: string;
+  /** Subtitle text. */
   subtitle?: string;
+  /** Maximum lines before title ellipsizes. 0 = unlimited. */
+  titleLines?: number;
+  /** Maximum lines before subtitle ellipsizes. 0 = unlimited. */
+  subtitleLines?: number;
+  /** Prefix widgets (left side). */
+  prefixWidget?: ReactNode;
+  /** Suffix widgets, after the spin button. */
+  suffixWidget?: ReactNode;
+  /** Tooltip shown when hovering the row (GtkWidget:tooltip-text). */
+  tooltipText?: string;
+  /** Current value. */
   value?: number;
+  /** Minimum value. Default: 0. */
   min?: number;
+  /** Maximum value. Default: 100. */
   max?: number;
+  /** Step increment. Default: 1. */
   step?: number;
+  /** Page increment, for PageUp/PageDown. Default: 10. */
+  pageStep?: number;
+  /** How much a held button or key speeds up, every 6 steps, up to `pageStep`. Default: 0. */
+  climbRate?: number;
+  /** Decimal places to display. Default: 0. */
   digits?: number;
+  /** Only allow digits, a leading sign and a decimal point to be typed. Default: false. */
   numeric?: boolean;
+  /** Round committed values to the nearest step. Default: false. */
+  snapToTicks?: boolean;
+  /** Spinning past a bound the value is at goes to the other bound. Default: false. */
   wrap?: boolean;
+  /** Whether typed values out of range are clamped ("always") or dropped ("if-valid"). Default: "always". */
+  updatePolicy?: GtkSpinButtonUpdatePolicy;
+  /** Whether the row is insensitive (GtkWidget:sensitive = false). Default: false. */
+  disabled?: boolean;
+  /** Callback on value change. */
   onValueChanged?: (value: number) => void;
+  /** Callback when spinning wraps around a bound (AdwSpinRow::wrapped). */
+  onWrapped?: () => void;
+  /** Callback when a click outside the spin button activates the row (AdwActionRow::activated). */
+  onActivated?: () => void;
+  /** More suffix widgets, after `suffixWidget`. */
+  children?: ReactNode;
 }
 
+// The labels wrap word-char, and ellipsize after `lines` lines when set
+// (adw_action_row_set_title_lines()).
+function linesStyle(lines: number): React.CSSProperties {
+  if (lines <= 0) return wrapStyle("word-char");
+  return {
+    display: "-webkit-box",
+    WebkitLineClamp: lines,
+    WebkitBoxOrient: "vertical",
+    overflow: "hidden",
+    ...wrapStyle("word-char"),
+  };
+}
+
+// Widgets that take their own clicks, so the row doesn't get them.
+const CLAIMS = ".gtk-spinbutton, button, input, textarea, select, a[href], [tabindex]";
+
 /**
- * AdwSpinRow — An ActionRow with an integrated spin button.
+ * AdwSpinRow — An ActionRow with an integrated GtkSpinButton.
  *
- * CSS node: row.spin
+ * CSS node:
+ *   row.activatable.spin[.focused]
+ *     └── box.header
+ *         ├── box.prefixes
+ *         ├── box.title (vertical)
+ *         │   ├── label.title
+ *         │   └── label.subtitle
+ *         └── box.suffixes
+ *             └── spinbutton
  *
  * @see https://gnome.pages.gitlab.gnome.org/libadwaita/doc/1-latest/class.SpinRow.html
  */
@@ -25,91 +98,157 @@ export const AdwSpinRow = forwardRef<HTMLDivElement, AdwSpinRowProps>(function A
   {
     title,
     subtitle,
-    value: controlledValue,
+    titleLines = 0,
+    subtitleLines = 0,
+    prefixWidget,
+    suffixWidget,
+    tooltipText,
+    value,
     min = 0,
     max = 100,
     step = 1,
+    pageStep = 10,
+    climbRate = 0,
     digits = 0,
     numeric = false,
+    snapToTicks = false,
     wrap = false,
+    updatePolicy = "always",
+    disabled = false,
     onValueChanged,
+    onWrapped,
+    onActivated,
+    children,
     className,
+    onMouseDown,
+    onClick,
     ...rest
   },
   ref,
 ) {
-  const isControlled = controlledValue !== undefined;
-  const [internalValue, setInternalValue] = useState(min);
-  const value = isControlled ? controlledValue : internalValue;
-
-  const DecreaseIcon = useIcon("ValueDecrease");
-  const IncreaseIcon = useIcon("ValueIncrease");
-
-  const clamp = useCallback(
-    (v: number) => {
-      if (wrap) {
-        if (v > max) return min;
-        if (v < min) return max;
-      }
-      return Math.max(min, Math.min(max, v));
-    },
-    [min, max, wrap],
-  );
-
-  const setValue = useCallback(
-    (v: number) => {
-      const clamped = clamp(v);
-      if (!isControlled) setInternalValue(clamped);
-      onValueChanged?.(clamped);
-    },
-    [clamp, isControlled, onValueChanged],
-  );
-
   const placeRow = useListBoxRow();
-  const classes = ["gtk-row", "spin"];
+  const titleId = useId();
+  const subtitleId = useId();
+  const spinRef = useRef<HTMLDivElement>(null);
+  const [focused, setFocused] = useState(false);
+
+  // GTK doesn't pick insensitive widgets, so they get no hover or press
+  // background; without .activatable the theme draws none.
+  const classes = disabled ? ["gtk-row", "spin"] : ["gtk-row", "activatable", "spin"];
+  // While the spin button has the focus (spin_button_state_flags_changed_cb()).
+  if (focused && !disabled) classes.push("focused");
   if (className) classes.push(className);
+  // Insensitivity propagates to the children (gtk_widget_set_sensitive()).
+  const insensitive = disabled || undefined;
+
+  const text = () => spinRef.current?.querySelector<HTMLInputElement>("input.gtk-text");
+  const claimed = (e: MouseEvent<HTMLDivElement>) => {
+    const claim = (e.target as Element).closest(CLAIMS);
+    return !!claim && claim !== e.currentTarget && e.currentTarget.contains(claim);
+  };
+  // The row itself, its header or its prefix/suffix boxes, where AdwActionRow's
+  // own press gesture runs (adw-action-row.c pressed_cb()).
+  const onFrame = (e: MouseEvent<HTMLDivElement>) => {
+    const target = e.target as Element;
+    return target === e.currentTarget || target.matches(".header, .prefixes, .suffixes");
+  };
 
   return placeRow(
-    <div ref={ref} className={classes.join(" ")} {...rest}>
-      <div className="gtk-box gtk-box-layout horizontal header" style={{ alignItems: "center" }}>
-        <div className="gtk-box gtk-box-layout vertical title" style={{ flex: 1 }}>
-          <span className="gtk-label title" style={wrapStyle("word-char")}>
+    <div
+      ref={ref}
+      className={classes.join(" ")}
+      title={tooltipText}
+      aria-disabled={insensitive}
+      data-disabled={insensitive}
+      onMouseDown={(e) => {
+        if (!disabled && !claimed(e)) {
+          // The focus stays in the text, and a press on the row's frame moves
+          // it there without selecting (gtk_text_grab_focus_without_selecting()).
+          e.preventDefault();
+          if (onFrame(e)) text()?.focus();
+        }
+        onMouseDown?.(e);
+      }}
+      onClick={(e) => {
+        // Elsewhere, like on the title, GtkListBox activates the row on the
+        // first click and focuses it, i.e. its text, which selects it
+        // (gtk_list_box_select_and_activate(), adw_spin_row_grab_focus()).
+        if (!disabled && !claimed(e) && !onFrame(e) && e.detail <= 1) {
+          text()?.focus();
+          text()?.select();
+          onActivated?.();
+        }
+        onClick?.(e);
+      }}
+      {...rest}
+    >
+      <div
+        className="gtk-box gtk-box-layout horizontal header"
+        data-disabled={insensitive}
+        // Nothing in an insensitive row takes pointer input.
+        style={disabled ? { pointerEvents: "none" } : undefined}
+      >
+        {prefixWidget && (
+          <div className="gtk-box gtk-box-layout horizontal prefixes" data-disabled={insensitive}>
+            {prefixWidget}
+          </div>
+        )}
+        {/* It doesn't expand, the suffixes do (adw_action_row_set_expand_suffixes()). */}
+        <div
+          className="gtk-box gtk-box-layout vertical title"
+          data-valign="center"
+          data-disabled={insensitive}
+        >
+          <span
+            className="gtk-label title"
+            id={titleId}
+            data-disabled={insensitive}
+            style={linesStyle(titleLines)}
+          >
             {title}
           </span>
           {subtitle && (
-            <span className="gtk-label subtitle" style={wrapStyle("word-char")}>
+            <span
+              className="gtk-label subtitle"
+              id={subtitleId}
+              data-disabled={insensitive}
+              style={linesStyle(subtitleLines)}
+            >
               {subtitle}
             </span>
           )}
         </div>
-        <div className="gtk-spinbutton horizontal" style={{ gap: 6 }}>
-          <input
-            className="gtk-text"
-            type="text"
-            inputMode={numeric ? "numeric" : "text"}
-            value={value.toFixed(digits)}
-            style={{ textAlign: "right" }}
-            onChange={(e) => {
-              const parsed = parseFloat(e.target.value);
-              if (!isNaN(parsed)) setValue(parsed);
+        <div className="gtk-box gtk-box-layout horizontal suffixes" data-disabled={insensitive}>
+          {/* adw-spin-row.ui, with the scroll controller off (adw_spin_row_init()). */}
+          <GtkSpinButton
+            ref={spinRef}
+            value={value}
+            min={min}
+            max={max}
+            step={step}
+            pageStep={pageStep}
+            climbRate={climbRate}
+            digits={digits}
+            numeric={numeric}
+            snapToTicks={snapToTicks}
+            wrap={wrap}
+            updatePolicy={updatePolicy}
+            disabled={disabled}
+            onValueChanged={onValueChanged}
+            onWrapped={onWrapped}
+            valign="center"
+            hexpand
+            xalign={1}
+            spinOnScroll={false}
+            aria-labelledby={titleId}
+            aria-describedby={subtitle ? subtitleId : undefined}
+            onFocus={() => setFocused(true)}
+            onBlur={(e) => {
+              if (!e.currentTarget.contains(e.relatedTarget as Node | null)) setFocused(false);
             }}
           />
-          <button
-            type="button"
-            className="gtk-button image-button down circular"
-            onClick={() => setValue(value - step)}
-            disabled={!wrap && value <= min}
-          >
-            <span className="gtk-image">{DecreaseIcon && <DecreaseIcon size={16} />}</span>
-          </button>
-          <button
-            type="button"
-            className="gtk-button image-button up circular"
-            onClick={() => setValue(value + step)}
-            disabled={!wrap && value >= max}
-          >
-            <span className="gtk-image">{IncreaseIcon && <IncreaseIcon size={16} />}</span>
-          </button>
+          {suffixWidget}
+          {children}
         </div>
       </div>
     </div>,
