@@ -1023,6 +1023,28 @@ const cases: Record<string, () => React.ReactElement> = {
       </AdwExpanderRow>
     </GtkListBox>
   ),
+  "adw-expander-row-widgets": () => (
+    <div style={{ width: 360 }}>
+      <GtkListBox selectionMode="none" className="boxed-list" data-testid="target">
+        <AdwExpanderRow
+          title="A very long expander row title that should be ellipsized after one line"
+          subtitle="A very long subtitle that should also be ellipsized after one line"
+          titleLines={1}
+          subtitleLines={1}
+          showEnableSwitch
+          prefixWidget={
+            <>
+              <GtkImage iconName="EditFind" />
+              <GtkImage iconName="EditFind" />
+            </>
+          }
+          suffixWidget={<GtkButton iconName="EditDelete" className="flat" valign="center" />}
+        >
+          <AdwActionRow title="Child Row" />
+        </AdwExpanderRow>
+      </GtkListBox>
+    </div>
+  ),
 
   // AdwPreferencesRow cases
   "adw-preferences-row-default": () => (
