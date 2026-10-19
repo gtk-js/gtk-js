@@ -23,6 +23,13 @@ describe("remapSelectors", () => {
     expect(out).toContain(":where(.gtk-row):not(_).entry.focused");
     expect(out).toContain(":where(.gtk-window):not(_):not(.solid-csd) :where(.gtk-row):not(_)");
   });
+
+  test("AdwIndicatorBin's mask node is a class, not the SVG element", async () => {
+    const out = await transform(
+      "indicatorbin > indicator, indicatorbin > mask { min-width: 6px; }",
+    );
+    expect(out).toContain(":where(.gtk-indicatorbin):not(_) > :where(.gtk-mask):not(_)");
+  });
 });
 
 describe("text selection", () => {
