@@ -77,6 +77,8 @@ enum Command {
     StatusPageDefault,
     StatusPageNoIcon,
     ToastOverlayDefault,
+    ToastOverlayHello,
+    ToastOverlayNarrow,
     BoxHorizontalDefault,
     BoxVerticalDefault,
     BoxSpacing,
@@ -312,6 +314,8 @@ impl Command {
             Self::StatusPageDefault => Some("status-page-default"),
             Self::StatusPageNoIcon => Some("status-page-no-icon"),
             Self::ToastOverlayDefault => Some("toast-overlay-default"),
+            Self::ToastOverlayHello => Some("toast-overlay-hello"),
+            Self::ToastOverlayNarrow => Some("toast-overlay-narrow"),
             Self::BoxHorizontalDefault => Some("box-horizontal-default"),
             Self::BoxVerticalDefault => Some("box-vertical-default"),
             Self::BoxSpacing => Some("box-spacing"),
@@ -583,6 +587,10 @@ fn create_widget_for_case(name: &str) -> Option<(gtk::Widget, bool)> {
         }
         "toast-overlay-default" => {
             widget_case!(cases::toast_overlay_default::ToastOverlayDefault, false)
+        }
+        "toast-overlay-hello" => widget_case!(cases::toast_overlay_hello::ToastOverlayHello, false),
+        "toast-overlay-narrow" => {
+            widget_case!(cases::toast_overlay_narrow::ToastOverlayNarrow, false)
         }
         "box-horizontal-default" => {
             widget_case!(cases::box_horizontal_default::BoxHorizontalDefault, false)
@@ -1042,6 +1050,8 @@ fn is_known_case(name: &str) -> bool {
             | "status-page-default"
             | "status-page-no-icon"
             | "toast-overlay-default"
+            | "toast-overlay-hello"
+            | "toast-overlay-narrow"
             | "box-horizontal-default"
             | "box-vertical-default"
             | "box-spacing"
