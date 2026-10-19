@@ -45,7 +45,7 @@ export type { GtkMenuButtonProps } from "./components/menu-button.tsx";
 export { GtkMenuButton } from "./components/menu-button.tsx";
 export type { GtkNotebookPageProps, GtkNotebookProps } from "./components/notebook.tsx";
 export { GtkNotebook, GtkNotebookPage } from "./components/notebook.tsx";
-export type { GtkOverlayProps } from "./components/overlay.tsx";
+export type { GtkOverlayChildProps, GtkOverlayProps } from "./components/overlay.tsx";
 export { GtkOverlay } from "./components/overlay.tsx";
 export type { GtkPanedProps } from "./components/paned.tsx";
 export { GtkPaned } from "./components/paned.tsx";
