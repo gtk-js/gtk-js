@@ -8,7 +8,8 @@ export interface CompileOptions {
   /**
    * Filter output to a single color scheme.
    * - "light": strip dark media queries and [data-color-scheme="dark"] rules
-   * - "dark": use dark color values as base, strip all [data-color-scheme] rules
+   * - "dark": use dark color values as base, unwrap dark media queries, strip
+   *   light ones and all [data-color-scheme] rules
    * - omit: emit both (current behavior — @media + [data-color-scheme] overrides)
    */
   scheme?: "light" | "dark";
@@ -100,7 +101,7 @@ export async function compileGtkCSS(scssPath: string, options?: CompileOptions):
 
   // Step 3: PostCSS transforms — remap selectors, pseudo-classes, properties
   const assetPlugin = options?.assetMap ? makeGtkAssetPlugin(options.assetMap) : undefined;
-  const pipeline = buildGtkToWeb(assetPlugin).use(
+  const pipeline = buildGtkToWeb(assetPlugin, options?.scheme).use(
     makeGtkIconSourcePlugin(dirname(scssPath), options?.assetMap),
   );
   const transformed = await pipeline.process(preprocessed, { from: scssPath });

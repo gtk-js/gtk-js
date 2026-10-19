@@ -1,5 +1,5 @@
 import { describe, expect, test } from "vite-plus/test";
-import { gtkToWeb } from "./transform.ts";
+import { buildGtkToWeb, gtkToWeb, preprocess } from "./transform.ts";
 
 async function transform(css: string) {
   const result = await gtkToWeb.process(css, { from: undefined });
@@ -445,6 +445,52 @@ describe(":focus", () => {
     expect(out).toContain(":where(.gtk-row):not(_):focus-within");
     // Applied once, even though PostCSS revisits changed rules.
     expect(out).not.toContain(":is([data-focus], :is(");
+  });
+});
+
+describe("color scheme media queries", () => {
+  // Like libadwaita's _colors.scss: dark @define-colors and plain custom
+  // properties, each in its own @media (prefers-color-scheme: dark) block.
+  const scss =
+    "@define-color window_bg_color #fafafb;\n@media (prefers-color-scheme: dark) {\n  @define-color window_bg_color #222226;\n}\n:root {\n  --active-toggle-bg-color: #ffffff;\n}\n@media (prefers-color-scheme: dark) {\n  :root {\n    --active-toggle-bg-color: rgb(255 255 255 / 20%);\n  }\n}\nwindow { background-color: @window_bg_color; }\n";
+
+  async function compile(scheme?: "light" | "dark") {
+    const result = await buildGtkToWeb(undefined, scheme).process(preprocess(scss, { scheme }), {
+      from: undefined,
+    });
+    return result.css;
+  }
+
+  test("forced dark applies every dark block unconditionally, after the light values", async () => {
+    const out = await compile("dark");
+    expect(out).not.toContain("@media");
+    expect(out).toMatch(
+      /--active-toggle-bg-color: #ffffff;[^]*--active-toggle-bg-color: rgb\(255 255 255 \/ 20%\);/,
+    );
+    expect(out).toContain("--window-bg-color: #222226;");
+  });
+
+  test("forced light drops every dark block", async () => {
+    const out = await compile("light");
+    expect(out).not.toContain("@media");
+    expect(out).not.toContain("rgb(255 255 255 / 20%)");
+    expect(out).not.toContain("#222226");
+  });
+
+  test("auto keeps the dark blocks behind the media query", async () => {
+    const out = await compile();
+    expect(out).toMatch(
+      /@media \(prefers-color-scheme: dark\) \{\s*:root \{\s*--active-toggle-bg-color: rgb\(255 255 255 \/ 20%\);/,
+    );
+  });
+
+  test("other color scheme queries throw instead of being misread", async () => {
+    await expect(
+      buildGtkToWeb(undefined, "dark").process(
+        "@media (prefers-color-scheme: dark) and (min-width: 400px) { :root { --x: 1; } }",
+        { from: undefined },
+      ),
+    ).rejects.toThrow("Unsupported color scheme media query");
   });
 });
 
