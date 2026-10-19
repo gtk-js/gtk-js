@@ -97,6 +97,7 @@ enum Command {
     ExpanderExpanded,
     FlowBoxDefault,
     FrameDefault,
+    FrameLabelXalign,
     HeaderbarDefault,
     HeaderbarStartEnd,
     HeaderbarWithTitle,
@@ -338,6 +339,7 @@ impl Command {
             Self::ExpanderExpanded => Some("expander-expanded"),
             Self::FlowBoxDefault => Some("flow-box-default"),
             Self::FrameDefault => Some("frame-default"),
+            Self::FrameLabelXalign => Some("frame-label-xalign"),
             Self::HeaderbarDefault => Some("headerbar-default"),
             Self::HeaderbarStartEnd => Some("headerbar-start-end"),
             Self::HeaderbarWithTitle => Some("headerbar-with-title"),
@@ -637,6 +639,9 @@ fn create_widget_for_case(name: &str) -> Option<(gtk::Widget, bool)> {
         "expander-expanded" => widget_case!(cases::expander_expanded::ExpanderExpanded, false),
         "flow-box-default" => widget_case!(cases::flow_box_default::FlowBoxDefault, false),
         "frame-default" => widget_case!(cases::frame_default::FrameDefault, false),
+        "frame-label-xalign" => {
+            widget_case!(cases::frame_label_xalign::FrameLabelXalign, false)
+        }
         "headerbar-default" => {
             widget_case!(cases::headerbar_default::HeaderbarDefault, false)
         }
@@ -1063,6 +1068,7 @@ fn is_known_case(name: &str) -> bool {
             | "expander-expanded"
             | "flow-box-default"
             | "frame-default"
+            | "frame-label-xalign"
             | "frame-no-label"
             | "headerbar-default"
             | "headerbar-start-end"

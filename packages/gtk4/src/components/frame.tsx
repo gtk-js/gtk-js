@@ -1,4 +1,11 @@
-import { forwardRef, type HTMLAttributes, type ReactNode } from "react";
+import {
+  cloneElement,
+  forwardRef,
+  type HTMLAttributes,
+  isValidElement,
+  type ReactElement,
+  type ReactNode,
+} from "react";
 import { alignAttrs, type GtkAlignProps } from "../types.ts";
 
 export interface GtkFrameProps extends HTMLAttributes<HTMLDivElement>, GtkAlignProps {
@@ -23,6 +30,9 @@ export interface GtkFrameProps extends HTMLAttributes<HTMLDivElement>, GtkAlignP
  * Adwaita: 1px border, 12px border-radius, label margin 4px.
  * Overflow: hidden (clips children to border-radius).
  *
+ * Layout (gtk_frame_size_allocate()): the label on top, placed at labelXalign
+ * of the width it leaves free (mirrored in RTL), and the child in the rest.
+ *
  * @see https://docs.gtk.org/gtk4/class.Frame.html
  */
 export const GtkFrame = forwardRef<HTMLDivElement, GtkFrameProps>(function GtkFrame(
@@ -44,25 +54,36 @@ export const GtkFrame = forwardRef<HTMLDivElement, GtkFrameProps>(function GtkFr
   const classes = ["gtk-frame"];
   if (className) classes.push(className);
 
-  const labelContent = labelWidget ?? (label ? <span className="gtk-label">{label}</span> : null);
+  const labelText = labelWidget ?? label;
+  // The label is a direct child of the frame (frame > label). It doesn't count
+  // for the frame's expand (gtk_frame_compute_expand()), and layout.css puts
+  // it in the label row by the same attribute.
+  const labelContent = isValidElement(labelText) ? (
+    cloneElement(labelText as ReactElement<Record<string, unknown>>, { "data-expand-ignored": "" })
+  ) : labelText ? (
+    <span className="gtk-label" data-expand-ignored="">
+      {labelText}
+    </span>
+  ) : null;
+
+  // label-xalign is clamped to [0, 1] (gtk_frame_set_label_align()). The free
+  // width goes either side of the label in that ratio; grid columns flip in
+  // RTL, as GTK uses 1 - xalign there.
+  const xalign = Math.min(Math.max(labelXalign, 0), 1);
 
   return (
     <div
       ref={ref}
       className={classes.join(" ")}
       {...alignAttrs(halign, valign, hexpand, vexpand)}
-      style={{ overflow: "clip", ...style }}
+      style={{
+        overflow: "clip",
+        gridTemplateColumns: `${xalign}fr auto ${1 - xalign}fr`,
+        ...style,
+      }}
       {...rest}
     >
-      {labelContent && (
-        // Only the child counts for the frame's expand (gtk_frame_compute_expand()).
-        <div
-          data-expand-ignored=""
-          style={{ textAlign: labelXalign === 0 ? "start" : labelXalign === 1 ? "end" : "center" }}
-        >
-          {labelContent}
-        </div>
-      )}
+      {labelContent}
       {children}
     </div>
   );

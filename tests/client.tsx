@@ -625,6 +625,25 @@ const cases: Record<string, () => React.ReactElement> = {
       <GtkLabel label="Content" />
     </GtkFrame>
   ),
+  "frame-label-xalign": () => (
+    <GtkBox
+      orientation="vertical"
+      halign="start"
+      spacing={12}
+      style={{ width: 360 }}
+      data-testid="target"
+    >
+      <GtkFrame label="Frame">
+        <GtkLabel label="Content" />
+      </GtkFrame>
+      <GtkFrame label="Quarter" labelXalign={0.25}>
+        <GtkLabel label="Content" />
+      </GtkFrame>
+      <GtkFrame label="Quarter" labelXalign={0.25} dir="rtl">
+        <GtkLabel label="Content" />
+      </GtkFrame>
+    </GtkBox>
+  ),
   "frame-no-label": () => (
     <GtkFrame data-testid="target">
       <GtkLabel label="Content" />

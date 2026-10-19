@@ -93,6 +93,7 @@ pub mod expander_default;
 pub mod expander_expanded;
 pub mod flow_box_default;
 pub mod frame_default;
+pub mod frame_label_xalign;
 pub mod frame_no_label;
 pub mod grid_default;
 pub mod headerbar_default;
