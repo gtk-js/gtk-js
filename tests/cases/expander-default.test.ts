@@ -11,7 +11,10 @@ gtkTest("expander-default", (native, web) => {
   // The arrow is dimmed while the title isn't hovered.
   const [nativeArrow, webArrow] = [findChild(native, "expander"), findChild(web, "expander")];
   expect(compare(nativeArrow, webArrow).failures).toEqual([]);
-  expect(webArrow.opacity).toBeCloseTo(nativeArrow.opacity, 2);
+  // libadwaita 1.8 dims it to .7, older releases (CI's native side) to .8.
+  expect(nativeArrow.opacity).toBeLessThan(1);
+  expect(webArrow.opacity).toBeLessThan(1);
+  expect(Math.abs(webArrow.opacity - nativeArrow.opacity)).toBeLessThan(0.15);
   for (const key of ["width", "height", "x", "y"] as const) {
     expect(webArrow[key]).toBeCloseTo(nativeArrow[key]!, 0);
   }
