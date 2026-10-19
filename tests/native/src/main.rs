@@ -62,6 +62,8 @@ enum Command {
     AdwHeaderbarStartEnd,
     AdwNavigationViewBackButton,
     AdwHeaderbarStrictCentering,
+    AdwNavigationSplitViewCollapsedContent,
+    AdwNavigationSplitViewToolbar,
     AdwNavigationViewDefault,
     AdwNavigationViewScrolled,
     AdwOverlaySplitViewCollapsedRtl,
@@ -405,6 +407,10 @@ impl Command {
             Self::AdwHeaderbarStartEnd => Some("adw-headerbar-start-end"),
             Self::AdwNavigationViewBackButton => Some("adw-navigation-view-back-button"),
             Self::AdwHeaderbarStrictCentering => Some("adw-headerbar-strict-centering"),
+            Self::AdwNavigationSplitViewCollapsedContent => {
+                Some("adw-navigation-split-view-collapsed-content")
+            }
+            Self::AdwNavigationSplitViewToolbar => Some("adw-navigation-split-view-toolbar"),
             Self::AdwNavigationViewDefault => Some("adw-navigation-view-default"),
             Self::AdwNavigationViewScrolled => Some("adw-navigation-view-scrolled"),
             Self::AdwOverlaySplitViewCollapsedRtl => Some("adw-overlay-split-view-collapsed-rtl"),
@@ -764,6 +770,13 @@ fn create_widget_for_case(name: &str) -> Option<(gtk::Widget, bool)> {
         }
         "adw-headerbar-strict-centering" => {
             widget_case!(cases::adw_headerbar_strict_centering::AdwHeaderbarStrictCentering, false)
+        }
+        "adw-navigation-split-view-collapsed-content" => widget_case!(
+            cases::adw_navigation_split_view_collapsed_content::AdwNavigationSplitViewCollapsedContent,
+            false
+        ),
+        "adw-navigation-split-view-toolbar" => {
+            widget_case!(cases::adw_navigation_split_view_toolbar::AdwNavigationSplitViewToolbar, false)
         }
         "adw-navigation-view-default" => {
             widget_case!(cases::adw_navigation_view_default::AdwNavigationViewDefault, false)
@@ -1502,6 +1515,8 @@ fn is_known_case(name: &str) -> bool {
             | "adw-headerbar-start-end"
             | "adw-navigation-view-back-button"
             | "adw-headerbar-strict-centering"
+            | "adw-navigation-split-view-collapsed-content"
+            | "adw-navigation-split-view-toolbar"
             | "adw-navigation-view-default"
             | "adw-navigation-view-scrolled"
             | "adw-overlay-split-view-collapsed-rtl"

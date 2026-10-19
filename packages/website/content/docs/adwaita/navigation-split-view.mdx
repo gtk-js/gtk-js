@@ -1,0 +1,53 @@
+---
+title: AdwNavigationSplitView
+description: A sidebar and content side by side, or a navigation view when collapsed.
+---
+
+import Example from "./examples/navigation-split-view";
+
+## Preview
+
+<PreviewFile file="content/docs/adwaita/examples/navigation-split-view.tsx">
+  <Example />
+</PreviewFile>
+
+## CSS Node Tree
+
+```
+navigation-split-view
+├── widget.sidebar-pane[.end]
+│   ╰── navigation-view-page
+╰── widget.content-pane
+    ╰── navigation-view-page
+```
+
+When collapsed:
+
+```
+navigation-split-view
+╰── navigation-view
+    ├── navigation-view-page
+    ╰── navigation-view-page
+```
+
+## Props
+
+<AutoTypeTable
+  path="../adwaita/src/components/navigation-split-view.tsx"
+  name="AdwNavigationSplitViewProps"
+/>
+
+The `sidebar` and `content` pages:
+
+<AutoTypeTable path="../adwaita/src/components/navigation-view.tsx" name="AdwNavigationPageProps" />
+
+## Behavior
+
+- Uncollapsed, the sidebar takes `sidebarWidthFraction` of the width, between `minSidebarWidth` and `maxSidebarWidth`.
+- Collapsed, the panes become the pages of a navigation view: the sidebar is the root page and the content is pushed over it, with a back button, Escape and Alt+← to go back. With `sidebarPosition="end"` it's the other way around.
+- `useNavigation().push(content.tag)` shows the content, collapsed or not. `showContent` is kept across collapsing, and `onShowContentChanged` reports changes.
+- Collapsing an uncollapsed view keeps the pages' state and focus.
+- Uncollapsed, header bars hide the window buttons facing the other pane.
+- Collapse it with an [AdwBreakpointBin](/docs/adwaita/breakpoint-bin), as in the preview.
+
+[Adwaita Documentation →](https://gnome.pages.gitlab.gnome.org/libadwaita/doc/1-latest/class.NavigationSplitView.html)
