@@ -179,8 +179,10 @@
   grid-template-rows: 1fr;
 }
 
-/* Buttons stay inline-level, as <button> is. */
-.gtk-button {
+/* Buttons stay inline-level, as <button> is. As specific as the rule above
+ * once .gtk-button is weighed as a node name, so it wins over it (a link
+ * button is an <a>). */
+:is(.gtk-bin-layout, .gtk-button).gtk-button {
   display: inline-grid;
 }
 
@@ -289,6 +291,21 @@
 .gtk-scrolledwindow > .gtk-viewport.gtk-bin-layout {
   grid-template-columns: minmax(min-content, 1fr);
   grid-template-rows: minmax(min-content, 1fr);
+}
+
+/* GTK draws a text decoration only under a node's own text, and a button has
+ * none: a link button's underline is its label's (button.link > label). The
+ * browser would also draw button.link's under the label, twice over in the
+ * translucent insensitive color. */
+.gtk-button.link {
+  text-decoration: none !important;
+}
+
+/* GTK doesn't pick an insensitive widget (gtk_widget_can_be_picked()): an
+ * insensitive link button isn't hovered, and the pointer over it shows the
+ * cursor of the widget below. */
+.gtk-button.link[data-disabled] {
+  pointer-events: none;
 }
 
 /* === GtkActionBar ===
