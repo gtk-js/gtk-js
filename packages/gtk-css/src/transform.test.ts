@@ -72,6 +72,17 @@ describe("text selection", () => {
   });
 });
 
+describe("text placeholder", () => {
+  test("the placeholder node is the text's ::placeholder, apart from the rest of its rule", async () => {
+    const out = await transform(".dimmed, entry > text > placeholder { opacity: 0.55; }");
+    expect(out).toMatch(/\.dimmed \{\s*opacity: 0\.55;\s*\}/);
+    expect(out).toMatch(
+      /:where\(\.gtk-entry\):not\(_\) > :where\(\.gtk-text\):not\(_\)::placeholder \{\s*opacity: 0\.55;\s*\}/,
+    );
+    expect(out).not.toContain("gtk-placeholder");
+  });
+});
+
 describe("remapPseudoClasses", () => {
   test(":checked → [data-checked]", async () => {
     const out = await transform(".gtk-button:checked { color: red; }");

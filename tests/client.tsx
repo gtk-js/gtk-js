@@ -317,7 +317,14 @@ const cases: Record<string, () => React.ReactElement> = {
   "entry-primary-icon": () => (
     <GtkEntry
       text="Hello"
-      primaryIconName="edit-find-symbolic"
+      primaryIconName="EditFind"
+      ref={(el) => el?.parentElement?.setAttribute("data-testid", "target")}
+    />
+  ),
+  "entry-progress": () => (
+    <GtkEntry
+      text="Progress"
+      progressFraction={0.5}
       ref={(el) => el?.parentElement?.setAttribute("data-testid", "target")}
     />
   ),
