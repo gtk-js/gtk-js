@@ -20,6 +20,7 @@ pub mod adw_headerbar_default;
 pub mod adw_headerbar_narrow_title;
 pub mod adw_headerbar_start_end;
 pub mod adw_headerbar_with_title;
+pub mod adw_navigation_view_back_button;
 pub mod adw_navigation_view_default;
 pub mod adw_navigation_view_scrolled;
 pub mod adw_overlay_split_view_collapsed_rtl;
