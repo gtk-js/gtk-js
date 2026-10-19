@@ -1,4 +1,12 @@
-import { forwardRef, type HTMLAttributes, type PointerEvent, type ReactNode, useMemo } from "react";
+import {
+  forwardRef,
+  type HTMLAttributes,
+  type PointerEvent,
+  type ReactNode,
+  useMemo,
+  useRef,
+} from "react";
+import { useCenterLayout } from "../layouts/center-allocation.ts";
 import { alignAttrs, centerSlotAttrs, type GtkAlignProps } from "../types.ts";
 import {
   useWindowControls,
@@ -135,6 +143,9 @@ export const GtkHeaderBar = forwardRef<HTMLDivElement, GtkHeaderBarProps>(functi
       />
     ) : undefined);
 
+  const centerBoxRef = useRef<HTMLDivElement>(null);
+  useCenterLayout(centerBoxRef);
+
   return (
     <div
       ref={ref}
@@ -145,7 +156,11 @@ export const GtkHeaderBar = forwardRef<HTMLDivElement, GtkHeaderBarProps>(functi
       <WindowControlsContext.Provider value={controls}>
         <GtkWindowHandle>
           {/* The start and end boxes always exist, as in GtkHeaderBar. */}
-          <div className="gtk-box gtk-center-layout" {...centerSlotAttrs(true, title, true)}>
+          <div
+            ref={centerBoxRef}
+            className="gtk-box gtk-center-layout"
+            {...centerSlotAttrs(true, title, true)}
+          >
             <div className="gtk-box gtk-box-layout horizontal start gtk-center-layout-start">
               {showWindowControls && (
                 <GtkWindowControls side="start" decorationLayout={decorationLayout} />

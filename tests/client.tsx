@@ -1041,12 +1041,46 @@ const cases: Record<string, () => React.ReactElement> = {
   ),
 
   // GtkCenterBox cases
+  "center-box-baseline-bottom": () => (
+    <GtkCenterBox
+      halign="start"
+      valign="start"
+      style={{ width: 240, height: 60 }}
+      baselinePosition="bottom"
+      startWidget={<GtkLabel label="Bottom" valign="baseline-center" />}
+      endWidget={<GtkButton label="Baseline" valign="baseline-center" />}
+      data-testid="target"
+    />
+  ),
   "center-box-default": () => (
     <GtkCenterBox
       style={{ width: "300px" }}
       startWidget={<GtkLabel label="Start" />}
       centerWidget={<GtkLabel label="Center" />}
       endWidget={<GtkLabel label="End" />}
+      data-testid="target"
+    />
+  ),
+  "center-box-expand-center": () => (
+    <GtkCenterBox
+      halign="start"
+      valign="start"
+      style={{ width: 480 }}
+      startWidget={<GtkButton label="Open" />}
+      centerWidget={<GtkEntry hexpand />}
+      endWidget={<GtkButton label="Save and Close" />}
+      data-testid="target"
+    />
+  ),
+  // GTK's height request includes the button's 5px vertical padding.
+  "center-box-fill-expand": () => (
+    <GtkCenterBox
+      halign="start"
+      valign="start"
+      style={{ width: 360 }}
+      startWidget={<GtkButton label="Start" hexpand />}
+      centerWidget={<GtkButton label="Tall" style={{ minHeight: 60 }} />}
+      endWidget={<GtkButton label="End" valign="start" />}
       data-testid="target"
     />
   ),
@@ -1717,6 +1751,14 @@ const cases: Record<string, () => React.ReactElement> = {
       data-testid="target"
     />
   ),
+  "actionbar-hexpand": () => (
+    <GtkActionBar
+      style={{ width: 360 }}
+      start={<GtkButton label="Start" hexpand />}
+      end={<GtkButton label="End" />}
+      data-testid="target"
+    />
+  ),
 
   // GtkSearchBar cases
   "searchbar-default": () => (
@@ -2254,6 +2296,19 @@ const cases: Record<string, () => React.ReactElement> = {
       end={<GtkButton label="End" />}
       titleWidget={<GtkWindowTitle title="A Very Long Window Title That Goes On" />}
       style={{ width: 352 }}
+      data-testid="target"
+    />
+  ),
+  // The native header bar is held at 302px by an AdwClamp of 300px.
+  "adw-headerbar-narrow-sides": () => (
+    <AdwHeaderBar
+      style={{ width: 302 }}
+      showStartTitleButtons={false}
+      showEndTitleButtons={false}
+      showBackButton={false}
+      titleWidget={<GtkWindowTitle title="Document Title" />}
+      start={<GtkWindowTitle title="A long start title" />}
+      end={<GtkWindowTitle title="Another long end title" />}
       data-testid="target"
     />
   ),

@@ -2,6 +2,7 @@ import {
   GtkLabel,
   GtkWindowControls,
   GtkWindowHandle,
+  useCenterLayout,
   useIcon,
   useWindowControls,
   windowControlButtons,
@@ -172,6 +173,7 @@ export const AdwHeaderBar = forwardRef<HTMLDivElement, AdwHeaderBarProps>(functi
   const strict = centeringPolicy === "strict";
   const centerBox = useRef<HTMLDivElement>(null);
   useStrictCentering(centerBox, strict);
+  useCenterLayout(centerBox);
 
   // A box with nothing in it is hidden, so its theme margin takes no space,
   // like update_box_visibility(). With the strict policy both sides stay, for
@@ -189,13 +191,16 @@ export const AdwHeaderBar = forwardRef<HTMLDivElement, AdwHeaderBarProps>(functi
   return (
     <div ref={ref} className={classes.join(" ")} {...rest}>
       <GtkWindowHandle>
-        {/* The start and end boxes always exist, as in AdwHeaderBar. */}
+        {/* The start and end bins always exist in AdwHeaderBar (their boxes
+            hide when empty), and the center box has shrink-center-last FALSE,
+            as in adw_header_bar_init(). */}
         <div
           ref={centerBox}
           className="gtk-box gtk-center-layout"
           data-start=""
           data-center={showTitle && title ? "" : undefined}
           data-end=""
+          data-shrink-center-last="false"
         >
           {showStartBox && (
             <div className="gtk-box gtk-box-layout horizontal start gtk-center-layout-start">
