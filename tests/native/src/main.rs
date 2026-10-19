@@ -211,6 +211,10 @@ enum Command {
     LinkDefault,
     LinkVisited,
     NotebookDefault,
+    NotebookHomogeneous,
+    NotebookScrollable,
+    NotebookTabPosLeft,
+    NotebookTabs,
     MenuButtonTextDefault,
     MenuButtonIcon,
     MenuButtonFlat,
@@ -513,6 +517,10 @@ impl Command {
             Self::LinkDefault => Some("link-default"),
             Self::LinkVisited => Some("link-visited"),
             Self::NotebookDefault => Some("notebook-default"),
+            Self::NotebookHomogeneous => Some("notebook-homogeneous"),
+            Self::NotebookScrollable => Some("notebook-scrollable"),
+            Self::NotebookTabPosLeft => Some("notebook-tab-pos-left"),
+            Self::NotebookTabs => Some("notebook-tabs"),
             Self::MenuButtonTextDefault => Some("menu-button-text-default"),
             Self::MenuButtonIcon => Some("menu-button-icon"),
             Self::MenuButtonFlat => Some("menu-button-flat"),
@@ -863,6 +871,10 @@ fn create_widget_for_case(name: &str) -> Option<(gtk::Widget, bool)> {
         "listbox-selection" => widget_case!(cases::listbox_selection::ListboxSelection, false),
         "listbox-separators" => widget_case!(cases::listbox_separators::ListboxSeparators, false),
         "notebook-default" => widget_case!(cases::notebook_default::NotebookDefault, false),
+        "notebook-homogeneous" => widget_case!(cases::notebook_homogeneous::NotebookHomogeneous, false),
+        "notebook-scrollable" => widget_case!(cases::notebook_scrollable::NotebookScrollable, false),
+        "notebook-tab-pos-left" => widget_case!(cases::notebook_tab_pos_left::NotebookTabPosLeft, false),
+        "notebook-tabs" => widget_case!(cases::notebook_tabs::NotebookTabs, false),
         "overlay-default" => widget_case!(cases::overlay_default::OverlayDefault, false),
         "paned-horizontal" => widget_case!(cases::paned_horizontal::PanedHorizontal, false),
         "paned-vertical" => widget_case!(cases::paned_vertical::PanedVertical, false),
@@ -1381,6 +1393,10 @@ fn is_known_case(name: &str) -> bool {
             | "listbox-selection"
             | "listbox-separators"
             | "notebook-default"
+            | "notebook-homogeneous"
+            | "notebook-scrollable"
+            | "notebook-tab-pos-left"
+            | "notebook-tabs"
             | "overlay-default"
             | "paned-horizontal"
             | "paned-vertical"
