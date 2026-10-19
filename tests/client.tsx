@@ -968,6 +968,15 @@ const cases: Record<string, () => React.ReactElement> = {
       <AdwSwitchRow title="Switch Row" active />
     </GtkListBox>
   ),
+  "adw-switch-row-prefix-suffix": () => (
+    <GtkListBox selectionMode="none" className="boxed-list" data-testid="target">
+      <AdwSwitchRow
+        title="Switch Row"
+        prefixWidget={<GtkImage iconName="AirplaneMode" />}
+        suffixWidget={<GtkButton iconName="DocumentEdit" className="flat" valign="center" />}
+      />
+    </GtkListBox>
+  ),
 
   // AdwExpanderRow cases
   "adw-expander-row-default": () => (
