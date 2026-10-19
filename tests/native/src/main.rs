@@ -310,11 +310,13 @@ enum Command {
     SwitchOnPending,
     SwitchOnRtl,
     SwitchOnSmallSlider,
+    TextViewContentHeight,
     TextViewDefault,
     TextViewDisabled,
     TextViewMonospace,
     TextViewNonEditable,
     TextViewScrolled,
+    TextViewScrolledLong,
     ToggleTextDefault,
     ToggleTextChecked,
     ToggleTextFlat,
@@ -641,11 +643,13 @@ impl Command {
             Self::SwitchOnPending => Some("switch-on-pending"),
             Self::SwitchOnRtl => Some("switch-on-rtl"),
             Self::SwitchOnSmallSlider => Some("switch-on-small-slider"),
+            Self::TextViewContentHeight => Some("text-view-content-height"),
             Self::TextViewDefault => Some("text-view-default"),
             Self::TextViewDisabled => Some("text-view-disabled"),
             Self::TextViewMonospace => Some("text-view-monospace"),
             Self::TextViewNonEditable => Some("text-view-non-editable"),
             Self::TextViewScrolled => Some("text-view-scrolled"),
+            Self::TextViewScrolledLong => Some("text-view-scrolled-long"),
             Self::ToggleTextDefault => Some("toggle-text-default"),
             Self::ToggleTextChecked => Some("toggle-text-checked"),
             Self::ToggleTextFlat => Some("toggle-text-flat"),
@@ -1368,6 +1372,9 @@ fn create_widget_for_case(name: &str) -> Option<(gtk::Widget, bool)> {
         "switch-on-small-slider" => {
             widget_case!(cases::switch_on_small_slider::SwitchOnSmallSlider, false)
         }
+        "text-view-content-height" => {
+            widget_case!(cases::text_view_content_height::TextViewContentHeight, false)
+        }
         "text-view-default" => widget_case!(cases::text_view_default::TextViewDefault, false),
         "text-view-disabled" => widget_case!(cases::text_view_disabled::TextViewDisabled, false),
         "text-view-monospace" => widget_case!(cases::text_view_monospace::TextViewMonospace, false),
@@ -1375,6 +1382,9 @@ fn create_widget_for_case(name: &str) -> Option<(gtk::Widget, bool)> {
             widget_case!(cases::text_view_non_editable::TextViewNonEditable, false)
         }
         "text-view-scrolled" => widget_case!(cases::text_view_scrolled::TextViewScrolled, false),
+        "text-view-scrolled-long" => {
+            widget_case!(cases::text_view_scrolled_long::TextViewScrolledLong, false)
+        }
         "toggle-text-default" => widget_case!(cases::toggle_text_default::ToggleTextDefault, false),
         "toggle-text-checked" => widget_case!(cases::toggle_text_checked::ToggleTextChecked, false),
         "toggle-text-flat" => widget_case!(cases::toggle_text_flat::ToggleTextFlat, false),
@@ -1698,11 +1708,13 @@ fn is_known_case(name: &str) -> bool {
             | "switch-on-pending"
             | "switch-on-rtl"
             | "switch-on-small-slider"
+            | "text-view-content-height"
             | "text-view-default"
             | "text-view-disabled"
             | "text-view-monospace"
             | "text-view-non-editable"
             | "text-view-scrolled"
+            | "text-view-scrolled-long"
             | "toggle-text-default"
             | "toggle-text-checked"
             | "toggle-text-flat"

@@ -322,6 +322,38 @@ body:has(> :first-child:has([data-gtk-provider])) > :first-child {
   display: inline-grid;
 }
 
+/* It's as tall as its text and as wide as its margins (gtk_text_view_measure()),
+   not the size a <textarea> takes from `rows` and `cols`; text-view.tsx
+   measures it where `field-sizing` isn't supported. The text never scrolls
+   itself: a GtkScrolledWindow scrolls it. Its lines are whole pixels tall, as
+   GtkTextLayout's are. The indent is each paragraph's where `each-line` is
+   supported (gtk_text_view_set_indent()). */
+:where([data-gtk-provider] .gtk-textview > .gtk-text) {
+  line-height: round(up, 1lh, 1px);
+  field-sizing: content;
+  contain: inline-size;
+  overflow: hidden;
+  text-indent: var(--gtk-textview-indent, 0);
+}
+
+@supports (text-indent: 1px each-line) {
+  :where([data-gtk-provider] .gtk-textview > .gtk-text) {
+    text-indent: var(--gtk-textview-indent, 0) each-line;
+  }
+}
+
+/* Typing hides the pointer until it moves (gtk_text_view_obscure_mouse_cursor()). */
+:where([data-gtk-provider] .gtk-textview[data-cursor-obscured] > .gtk-text) {
+  cursor: none;
+}
+
+/* A GtkTextView is a GtkScrollable: a GtkScrolledWindow allocates it its
+   viewport (gtk_scrolled_window_allocate_child()) and its text, which fills
+   it, scrolls itself (the GtkScrolledWindow rules below). */
+:where([data-gtk-provider] .gtk-scrolledwindow > .gtk-textview > .gtk-text) {
+  min-height: 100%;
+}
+
 /* GtkEntry / GtkSearchEntry: the entry's custom size_allocate lays out children
    (image.left, text, image.right) horizontally at the full widget height.
    We replicate this with flexbox. The text node (input) fills remaining width;
