@@ -28,7 +28,14 @@ gtkTest("spin-button-default", (native, web) => {
   gtkAssert.numbersEqual(native.height, content(web).height, "height");
   const nativeText = findChild(native, "text");
   const webText = content(findChild(web, "text"));
-  gtkAssert.numbersEqual(nativeText.width, webText.width, "text width");
+  // width-chars × the digit width rounded up: Firefox's `ch` for Cantarell can
+  // round up a pixel more than Chromium's or Pango's, per character.
+  gtkAssert.numbersClose(
+    nativeText.width,
+    webText.width,
+    { tolerance: 3, reason: "1ch rounding per character in Firefox" },
+    "text width",
+  );
   gtkAssert.numbersEqual(nativeText.height, webText.height, "text height");
   for (const index of [0, 1]) {
     const button = findChild(web, "button", index);
