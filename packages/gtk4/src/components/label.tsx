@@ -37,8 +37,6 @@ export interface GtkLabelProps extends HTMLAttributes<HTMLSpanElement>, GtkAlign
   xalign?: number;
   /** Vertical alignment 0.0 (top) to 1.0 (bottom). Default: 0.5. */
   yalign?: number;
-  /** The CSS node name (GtkWidget:css-name), e.g. a progress bar's "text". Default: "label". */
-  cssName?: string;
 }
 
 /**
@@ -75,7 +73,6 @@ export const GtkLabel = forwardRef<HTMLSpanElement, GtkLabelProps>(function GtkL
     lines = -1,
     xalign = 0.5,
     yalign = 0.5,
-    cssName = "label",
     halign,
     valign,
     hexpand,
@@ -86,7 +83,7 @@ export const GtkLabel = forwardRef<HTMLSpanElement, GtkLabelProps>(function GtkL
   },
   ref,
 ) {
-  const classes = [`gtk-${cssName}`];
+  const classes = ["gtk-label"];
   if (className) classes.push(className);
 
   const textAlign =

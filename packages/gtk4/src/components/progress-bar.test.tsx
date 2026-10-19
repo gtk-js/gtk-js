@@ -1,25 +1,60 @@
-// Unit tests — no Playwright/cargo preload needed.
-
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, test } from "vite-plus/test";
-import { GtkProgressBar } from "./progress-bar.tsx";
+import { advanceActivity, GtkProgressBar, type GtkProgressBarActivity } from "./progress-bar.tsx";
 
-describe("GtkProgressBar text", () => {
-  test("is a label named text, before the trough", () => {
-    const html = renderToStaticMarkup(
-      <GtkProgressBar fraction={0.3} showText text="4 of 6 items" />,
+describe("GtkProgressBar", () => {
+  test("inverted, the progress is the fraction from the end (allocate_trough())", () => {
+    const html = renderToStaticMarkup(<GtkProgressBar fraction={0.3} inverted />);
+    expect(html).toContain('class="gtk-progress right" style="width:30%;justify-self:end"');
+    const vertical = renderToStaticMarkup(
+      <GtkProgressBar fraction={1} inverted orientation="vertical" />,
     );
-    expect(html).toMatch(/<span class="gtk-text"[^>]*>4 of 6 items<\/span><div class="gtk-trough/);
-    expect(html).toContain('aria-valuetext="4 of 6 items"');
+    expect(vertical).toContain('class="gtk-progress top bottom"');
   });
 
-  test("shows the percentage without a text of its own", () => {
-    const html = renderToStaticMarkup(<GtkProgressBar fraction={0.3} showText />);
-    expect(html).toContain(">30 %</span>");
+  test("the fraction is clamped, like gtk_progress_bar_set_fraction()", () => {
+    const html = renderToStaticMarkup(<GtkProgressBar fraction={1.5} showText />);
+    expect(html).toContain(">100\u200a%</span>");
+    expect(html).toContain('class="gtk-trough full"');
+    expect(html).toContain("width:100%");
   });
 
-  test("isn't shown without showText", () => {
-    const html = renderToStaticMarkup(<GtkProgressBar fraction={0.3} text="4 of 6 items" />);
-    expect(html).not.toContain("gtk-text");
+  test("the text is the text node, ellipsized when asked", () => {
+    const html = renderToStaticMarkup(<GtkProgressBar showText text="Long" ellipsize="end" />);
+    expect(html).toContain(
+      '<span class="gtk-text" style="overflow:hidden;text-overflow:ellipsis">Long</span>',
+    );
+    expect(renderToStaticMarkup(<GtkProgressBar showText text="" />)).toContain(
+      '<span class="gtk-text"></span>',
+    );
+  });
+
+  test("disabled sets data-disabled", () => {
+    expect(renderToStaticMarkup(<GtkProgressBar disabled />)).toMatch(
+      /class="gtk-progressbar[^"]*"[^>]*data-disabled="true"/,
+    );
+  });
+
+  test("the pulse block follows the pulses, like tick_cb()", () => {
+    const t = 1.7e12;
+    // One pulse: the block stays.
+    const a: GtkProgressBarActivity = {
+      active: true,
+      pos: 0,
+      dir: 0,
+      pulse1: 0,
+      pulse2: t,
+      last: t,
+    };
+    advanceActivity(a, t + 500, 0.1);
+    expect(a.pos).toBeLessThan(1e-9);
+    // Pulses 100ms apart: pulseStep per 100ms, slower once the next pulse is late.
+    Object.assign(a, { pulse1: t, pulse2: t + 100, last: t + 100 });
+    advanceActivity(a, t + 150, 0.1);
+    expect(a.pos).toBeCloseTo(0.05 * (100 / 150));
+    // Three intervals without a pulse: it stops.
+    const pos = a.pos;
+    expect(advanceActivity(a, t + 400, 0.1)).toBe(false);
+    expect(a.pos).toBe(pos);
   });
 });
