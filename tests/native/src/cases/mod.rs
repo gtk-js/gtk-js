@@ -147,6 +147,7 @@ pub mod progressbar_vertical_50;
 pub mod radio_button_checked;
 pub mod radio_button_default;
 pub mod scale_default;
+pub mod scale_positions;
 pub mod scrollbar_default;
 pub mod scrolled_window_default;
 pub mod scrolled_window_frame;

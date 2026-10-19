@@ -72,6 +72,7 @@ import {
 } from "@gtk-js/adwaita";
 import { Fragment, type ReactElement, useLayoutEffect, useRef } from "react";
 import { createRoot } from "react-dom/client";
+import { renderToStaticMarkup } from "react-dom/server";
 
 const caseName = window.location.pathname.slice(1);
 const isGallery = caseName === "gallery";
@@ -161,6 +162,20 @@ const cases: Record<string, () => React.ReactElement> = {
 
   // GtkScale cases
   "scale-default": () => <GtkScale min={0} max={100} value={50} step={1} data-testid="target" />,
+  // The server's markup, with no effects run: the slider's place comes from CSS.
+  "scale-positions": () => (
+    <div
+      style={{ display: "contents" }}
+      dangerouslySetInnerHTML={{
+        __html: renderToStaticMarkup(
+          <GtkBox orientation="vertical" data-testid="target">
+            <GtkScale value={30} style={{ width: 250 }} />
+            <GtkScale value={30} inverted style={{ width: 250 }} />
+          </GtkBox>,
+        ),
+      }}
+    />
+  ),
 
   // GtkEditableLabel cases
   "editable-label-display-default": () => (

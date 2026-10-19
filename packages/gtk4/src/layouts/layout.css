@@ -343,21 +343,20 @@
  * GTK uses a custom layout manager (gtk_range_allocate_trough) for the trough.
  * Key facts from the C source (gtkrange.c, gtk_range_compute_slider_position):
  *
- * 1. The trough is sized to contain the slider: trough min-size = slider min-size.
- *    So for a horizontal scale with a 20px slider, the trough is 20px tall.
+ * 1. Slider x = (trough_width - slider_width) * fraction, where slider_width
+ *    is the slider's margin box: Adwaita's 20px slider with `margin: -8px`
+ *    takes 4px. Slider y = floor((trough_height - slider_height) / 2).
  *
- * 2. Slider x = (trough_width - slider_width) * fraction
- *    Slider y = floor((trough_height - slider_height) / 2)  → centered vertically
+ * 2. The trough is as thick as the slider's margin box: Adwaita's negative
+ *    margins make the handle overflow a thin track.
  *
- * 3. The Adwaita CSS `margin: -8px` on the slider is a visual trick to make the
- *    handle appear to overflow the trough visually while letting the track show
- *    as a thin line. In native GTK this works because the trough's CSS min-height
- *    (via `%scale_trough`) renders just the track visually, while the layout
- *    still allocates full slider height. We replicate this with position:absolute.
+ * 3. highlight width = fraction * trough_width (gtk_range_allocate_trough()),
+ *    from the far end when inverted.
  *
- * 4. highlight width = fraction * (trough_width - slider_width) + slider_width/2
- *    (i.e., it grows to the center of the slider handle). We approximate with
- *    the same `left: calc(fraction% - slider_width/2)` formula used for the slider.
+ * The trough lays the slider out in flow, so its margins are the theme's; the
+ * pseudo-elements on either side share the rest of the trough in the ratio of
+ * --gtk-scale-slider-position (the fraction, flipped when inverted), so it
+ * needs no measuring and is right in server-rendered HTML.
  */
 .gtk-scale {
   display: flex;
@@ -371,21 +370,33 @@
   flex-direction: column;
 }
 
-/* Trough fills the scale on the main axis. The trough is intentionally thin (4px);
-   the slider's margin: -8px (from adwaita CSS) makes it overflow the trough visually,
-   giving the correct GTK appearance of a thin track with a larger circular handle. */
+/* Trough fills the scale on the main axis. */
 .gtk-scale > .gtk-trough {
   position: relative;
+  display: flex;
+  align-items: center;
   flex: 1;
   overflow: visible;
-  min-height: 4px;
 }
 
 .gtk-scale.vertical > .gtk-trough {
   flex: unset;
+  flex-direction: column;
   align-self: stretch;
-  min-height: unset;
-  min-width: 4px;
+}
+
+.gtk-scale > .gtk-trough::before,
+.gtk-scale > .gtk-trough::after {
+  content: "";
+  flex: var(--gtk-scale-slider-position) 1 0;
+}
+
+.gtk-scale > .gtk-trough::after {
+  flex-grow: calc(1 - var(--gtk-scale-slider-position));
+}
+
+.gtk-scale > .gtk-trough > .gtk-slider {
+  flex: none;
 }
 
 /* highlight and fill: absolutely positioned, full cross-axis height to match trough */
@@ -395,7 +406,7 @@
   top: 0;
   left: 0;
   height: 100%;
-  /* width is set by JS inline style */
+  /* width is set by an inline style */
 }
 
 .gtk-scale.vertical > .gtk-trough > .gtk-highlight,
@@ -404,24 +415,7 @@
   left: 0;
   width: 100%;
   height: unset;
-  /* height is set by JS inline style */
-}
-
-/* slider: centered on both axes within the trough; left/top set by JS */
-.gtk-scale.horizontal > .gtk-trough > .gtk-slider {
-  position: absolute;
-  /* Center vertically on the trough: trough is 4px, slider is 20px with margin -8px.
-     Net rendered height = 20 - 16 = 4px. top: 0 places it flush; margin does the rest. */
-  top: 0;
-  margin-top: -8px;
-  margin-bottom: -8px;
-}
-
-.gtk-scale.vertical > .gtk-trough > .gtk-slider {
-  position: absolute;
-  left: 0;
-  margin-left: -8px;
-  margin-right: -8px;
+  /* height is set by an inline style */
 }
 
 /* === GtkSwitch === */

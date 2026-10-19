@@ -192,6 +192,7 @@ enum Command {
     RadioButtonDefault,
     RadioButtonChecked,
     ScaleDefault,
+    ScalePositions,
     ScrolledWindowDefault,
     ScrolledWindowFrame,
     StackDefault,
@@ -427,6 +428,7 @@ impl Command {
             Self::RadioButtonDefault => Some("radio-button-default"),
             Self::RadioButtonChecked => Some("radio-button-checked"),
             Self::ScaleDefault => Some("scale-default"),
+            Self::ScalePositions => Some("scale-positions"),
             Self::ScrolledWindowDefault => Some("scrolled-window-default"),
             Self::ScrolledWindowFrame => Some("scrolled-window-frame"),
             Self::StackDefault => Some("stack-default"),
@@ -875,6 +877,7 @@ fn create_widget_for_case(name: &str) -> Option<(gtk::Widget, bool)> {
             widget_case!(cases::radio_button_checked::RadioButtonChecked, false)
         }
         "scale-default" => widget_case!(cases::scale_default::ScaleDefault, false),
+        "scale-positions" => widget_case!(cases::scale_positions::ScalePositions, false),
         "scrolled-window-default" => {
             widget_case!(cases::scrolled_window_default::ScrolledWindowDefault, false)
         }
@@ -1151,6 +1154,7 @@ fn is_known_case(name: &str) -> bool {
             | "radio-button-default"
             | "radio-button-checked"
             | "scale-default"
+            | "scale-positions"
             | "scrolled-window-default"
             | "scrolled-window-frame"
             | "stack-default"

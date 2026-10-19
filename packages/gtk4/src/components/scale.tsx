@@ -1,11 +1,4 @@
-import React, {
-  forwardRef,
-  type HTMLAttributes,
-  useCallback,
-  useLayoutEffect,
-  useRef,
-  useState,
-} from "react";
+import React, { forwardRef, type HTMLAttributes, useCallback, useRef, useState } from "react";
 import {
   alignAttrs,
   type GtkAlignProps,
@@ -90,22 +83,6 @@ export const GtkScale = forwardRef<HTMLDivElement, GtkScaleProps>(function GtkSc
   const troughRef = useRef<HTMLDivElement>(null);
   const sliderRef = useRef<HTMLDivElement>(null);
   const [fineTune, setFineTune] = useState(false);
-  // Measured slider metrics for theme-independent positioning.
-  // The slider's CSS margin shifts its visual position, so we measure from
-  // the DOM to compute the correct left/top range for any theme.
-  const [sliderMetrics, setSliderMetrics] = useState({ size: 20, margin: 0 });
-
-  useLayoutEffect(() => {
-    const slider = sliderRef.current;
-    if (!slider) return;
-    const style = getComputedStyle(slider);
-    const isHoriz = orientation === "horizontal";
-    const size = parseFloat(isHoriz ? style.minWidth : style.minHeight) || 20;
-    const margin = parseFloat(isHoriz ? style.marginLeft : style.marginTop) || 0;
-    setSliderMetrics((prev) =>
-      prev.size === size && prev.margin === margin ? prev : { size, margin },
-    );
-  }, [orientation]);
 
   const fraction = max > min ? (value - min) / (max - min) : 0;
   const displayFraction = inverted ? 1 - fraction : fraction;
@@ -221,35 +198,16 @@ export const GtkScale = forwardRef<HTMLDivElement, GtkScaleProps>(function GtkSc
   );
 
   const isHoriz = orientation === "horizontal";
-  // Position the slider and highlight using measured metrics so the visual
-  // bounds align with the trough edges for any theme's slider size + margin.
-  // For absolute positioning, only margin-left affects position:
-  //   visual_left = CSS_left + margin_left
-  //   visual_right = CSS_left + margin_left + size
-  // At f=0: visual_left = 0 → CSS_left = -margin
-  // At f=1: visual_right = 100% → CSS_left = 100% - margin - size
-  // Range of CSS_left: -margin to (100% - margin - size). Span = 100% - size.
-  const { size: slSize, margin: slMargin } = sliderMetrics;
-  const leftMin = -slMargin; // e.g. 8 when margin=-8
-  const sliderStyle: React.CSSProperties = isHoriz
-    ? { left: `calc(${leftMin}px + ${displayFraction} * (100% - ${slSize}px))` }
-    : { top: `calc(${leftMin}px + ${displayFraction} * (100% - ${slSize}px))` };
-  // Highlight grows to the visual center of the slider handle.
-  // Visual center = CSS_left + margin + size/2 = leftMin + f*(100%-slSize) + margin + size/2
-  //               = f*(100%-slSize) + size/2  (since leftMin + margin = 0)
-  const highlightStyle: React.CSSProperties = isHoriz
-    ? {
-        width:
-          displayFraction <= 0
-            ? "0px"
-            : `calc(${displayFraction} * (100% - ${slSize}px) + ${slSize / 2}px)`,
-      }
-    : {
-        height:
-          displayFraction <= 0
-            ? "0px"
-            : `calc(${displayFraction} * (100% - ${slSize}px) + ${slSize / 2}px)`,
-      };
+  // gtk_range_compute_slider_position(): the slider's margin box starts at
+  // this fraction of the trough's length less its own, which layout.css lays
+  // out with the slider's actual CSS margins.
+  const troughStyle = { "--gtk-scale-slider-position": displayFraction } as React.CSSProperties;
+  // gtk_range_allocate_trough(): the highlight is the fraction of the trough,
+  // from its far end when inverted.
+  const highlightStyle: React.CSSProperties = {
+    [isHoriz ? "width" : "height"]: `${fraction * 100}%`,
+    ...(inverted && (isHoriz ? { left: "auto", right: 0 } : { top: "auto", bottom: 0 })),
+  };
 
   return (
     <div
@@ -269,9 +227,9 @@ export const GtkScale = forwardRef<HTMLDivElement, GtkScaleProps>(function GtkSc
       {...rest}
     >
       {drawValue && <span className={`gtk-value ${valuePos}`}>{value.toFixed(digits)}</span>}
-      <div ref={troughRef} className="gtk-trough">
+      <div ref={troughRef} className="gtk-trough" style={troughStyle}>
         {hasOrigin && <div className="gtk-highlight" style={highlightStyle} />}
-        <div ref={sliderRef} className="gtk-slider" style={sliderStyle} />
+        <div ref={sliderRef} className="gtk-slider" />
       </div>
       {marks && marks.length > 0 && (
         <div className="gtk-marks">
