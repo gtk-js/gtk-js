@@ -65,6 +65,7 @@ import {
   GtkSpinner,
   GtkStack,
   GtkStackPage,
+  GtkStackSwitcher,
   GtkSwitch,
   GtkTextView,
   GtkToggleButton,
@@ -690,6 +691,13 @@ const cases: Record<string, () => React.ReactElement> = {
   ),
 
   // GtkStack cases
+  "stack-child-align": () => (
+    <GtkStack style={{ minWidth: 300, minHeight: 80 }} data-testid="target">
+      <GtkStackPage name="page">
+        <GtkButton label="Centered" halign="center" valign="center" />
+      </GtkStackPage>
+    </GtkStack>
+  ),
   "stack-default": () => (
     <GtkStack visibleChildName="page1" data-testid="target">
       <GtkStackPage name="page1" title="Page 1">
@@ -697,6 +705,16 @@ const cases: Record<string, () => React.ReactElement> = {
       </GtkStackPage>
       <GtkStackPage name="page2" title="Page 2">
         <GtkLabel label="Second" />
+      </GtkStackPage>
+    </GtkStack>
+  ),
+  "stack-hhomogeneous-false": () => (
+    <GtkStack visibleChildName="short" hhomogeneous={false} data-testid="target">
+      <GtkStackPage name="short">
+        <GtkLabel label="Short visible page" />
+      </GtkStackPage>
+      <GtkStackPage name="long">
+        <GtkLabel label="A few words" wrap />
       </GtkStackPage>
     </GtkStack>
   ),
@@ -712,6 +730,42 @@ const cases: Record<string, () => React.ReactElement> = {
       </GtkStack>
       <GtkLabel label="A much longer page" />
     </GtkBox>
+  ),
+  "stack-switcher-expand": () => (
+    <GtkBox orientation="vertical" spacing={8} style={{ minWidth: 500 }} data-testid="target">
+      <GtkStackSwitcher
+        pages={[
+          { name: "page1", title: "First" },
+          { name: "page2", title: "Second" },
+          { name: "page3", title: "Third" },
+        ]}
+        activePageName="page1"
+      />
+      <GtkStack visibleChildName="page1">
+        <GtkStackPage name="page1">
+          <GtkLabel label="One" />
+        </GtkStackPage>
+        <GtkStackPage name="page2">
+          <GtkLabel label="Two" />
+        </GtkStackPage>
+        <GtkStackPage name="page3">
+          <GtkLabel label="Three" />
+        </GtkStackPage>
+      </GtkStack>
+    </GtkBox>
+  ),
+  "stack-switcher-icons": () => (
+    <GtkStackSwitcher
+      halign="start"
+      pages={[
+        { name: "open", title: "Open", iconName: "DocumentOpen" },
+        { name: "find", iconName: "EditFind" },
+        { name: "text", title: "Attention", needsAttention: true },
+        { name: "untitled" },
+      ]}
+      activePageName="open"
+      data-testid="target"
+    />
   ),
 
   // GtkNotebook cases
