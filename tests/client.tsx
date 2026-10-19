@@ -474,6 +474,28 @@ const cases: Record<string, () => React.ReactElement> = {
       <GtkLabel label="C" />
     </GtkBox>
   ),
+  "box-homogeneous-natural": () => (
+    <GtkBox
+      orientation="vertical"
+      spacing={12}
+      halign="start"
+      style={{ width: 360 }}
+      data-testid="target"
+    >
+      <GtkBox homogeneous spacing={6} halign="start">
+        <GtkButton label="A" />
+        <GtkButton label="Much longer label" />
+      </GtkBox>
+      <GtkBox homogeneous spacing={6}>
+        <GtkButton label="Fill" />
+        <GtkButton label="Center" halign="center" />
+      </GtkBox>
+      <GtkBox orientation="vertical" homogeneous spacing={6} style={{ height: 120 }}>
+        <GtkButton label="End" halign="end" />
+        <GtkButton label="Center" valign="center" />
+      </GtkBox>
+    </GtkBox>
+  ),
 
   // GtkCenterBox cases
   "center-box-default": () => (

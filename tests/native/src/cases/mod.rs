@@ -41,6 +41,7 @@ pub mod toast_overlay_default;
 pub mod box_hexpand;
 pub mod box_hexpand_computed;
 pub mod box_homogeneous;
+pub mod box_homogeneous_natural;
 pub mod box_horizontal_default;
 pub mod box_spacing;
 pub mod box_spacing_toolbar;
