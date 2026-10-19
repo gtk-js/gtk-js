@@ -19,16 +19,10 @@ impl SimpleComponent for ToggleGroupIcon {
         let model = Self;
         let widgets = view_output!();
 
-        let t1 = adw::Toggle::builder()
-            .name("list")
-            .icon_name("view-list-symbolic")
-            .build();
+        let t1 = adw::Toggle::builder().name("list").icon_name("view-list-symbolic").build();
         root.add(t1);
 
-        let t2 = adw::Toggle::builder()
-            .name("grid")
-            .icon_name("view-grid-symbolic")
-            .build();
+        let t2 = adw::Toggle::builder().name("grid").icon_name("view-grid-symbolic").build();
         root.add(t2);
 
         ComponentParts { model, widgets }

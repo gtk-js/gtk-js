@@ -20,18 +20,8 @@ impl SimpleComponent for AdwViewSwitcherDefault {
         let widgets = view_output!();
 
         let stack = adw::ViewStack::new();
-        stack.add_titled_with_icon(
-            &gtk::Label::new(Some("Page 1")),
-            Some("page1"),
-            "Page 1",
-            "open-menu-symbolic",
-        );
-        stack.add_titled_with_icon(
-            &gtk::Label::new(Some("Page 2")),
-            Some("page2"),
-            "Page 2",
-            "open-menu-symbolic",
-        );
+        stack.add_titled_with_icon(&gtk::Label::new(Some("Page 1")), Some("page1"), "Page 1", "open-menu-symbolic");
+        stack.add_titled_with_icon(&gtk::Label::new(Some("Page 2")), Some("page2"), "Page 2", "open-menu-symbolic");
         root.set_stack(Some(&stack));
 
         ComponentParts { model, widgets }

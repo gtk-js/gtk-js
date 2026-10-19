@@ -26,10 +26,7 @@ impl SimpleComponent for AdwComboRowDefault {
         let widgets = view_output!();
 
         let items = gtk::StringList::new(&["Option 1", "Option 2", "Option 3"]);
-        if let Some(row) = root
-            .first_child()
-            .and_then(|w| w.downcast::<adw::ComboRow>().ok())
-        {
+        if let Some(row) = root.first_child().and_then(|w| w.downcast::<adw::ComboRow>().ok()) {
             row.set_model(Some(&items));
             row.set_selected(0);
         }

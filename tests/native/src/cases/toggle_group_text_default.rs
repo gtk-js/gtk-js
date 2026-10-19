@@ -22,10 +22,7 @@ impl SimpleComponent for ToggleGroupTextDefault {
         let t1 = adw::Toggle::builder().name("first").label("First").build();
         root.add(t1);
 
-        let t2 = adw::Toggle::builder()
-            .name("second")
-            .label("Second")
-            .build();
+        let t2 = adw::Toggle::builder().name("second").label("Second").build();
         root.add(t2);
 
         let t3 = adw::Toggle::builder().name("third").label("Third").build();

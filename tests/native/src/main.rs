@@ -291,9 +291,7 @@ impl Command {
             Self::AdwOverlaySplitViewDefault => Some("adw-overlay-split-view-default"),
             Self::AdwPasswordEntryRowDefault => Some("adw-password-entry-row-default"),
             Self::AdwPreferencesGroupDefault => Some("adw-preferences-group-default"),
-            Self::AdwPreferencesGroupWithDescription => {
-                Some("adw-preferences-group-with-description")
-            }
+            Self::AdwPreferencesGroupWithDescription => Some("adw-preferences-group-with-description"),
             Self::AdwPreferencesGroupFooter => Some("adw-preferences-group-footer"),
             Self::AdwPreferencesGroupLabelOnly => Some("adw-preferences-group-label-only"),
             Self::AdwPreferencesGroupMixed => Some("adw-preferences-group-mixed"),
