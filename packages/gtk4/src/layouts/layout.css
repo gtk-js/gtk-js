@@ -978,18 +978,44 @@
   margin-right: 12px;
 }
 
-/* === GtkCalendar grid ===
- * The calendar's grid node is a GtkGrid using GtkGridLayout.
- * Column count: 7 without week numbers, 8 with (first column for week numbers).
- * Each column gets equal width (1fr). Items auto-place left-to-right.
- * GtkLabel defaults halign=CENTER, so all grid labels get justify-content:center. */
+/* === GtkCalendar ===
+ * A vertical GtkBoxLayout: the header at its natural height, then the grid
+ * (vexpand) in the rest. The grid's sizer (below) shares the grid's place, so
+ * it's laid out as a one-column grid. GTK draws its focus on the cursor's day
+ * (label:focus), not around it. */
+.gtk-calendar.gtk-box-layout {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  outline: none;
+}
+
+/* The grid is a homogeneous GtkGrid (gtk_calendar_init()): its columns, the
+ * days of the week after the week numbers, share its width equally, and its
+ * rows its height. */
 .gtk-calendar > .gtk-grid {
   display: grid;
+  grid-area: 2 / 1;
   grid-template-columns: repeat(7, 1fr);
+  grid-auto-rows: 1fr;
 }
 
 .gtk-calendar > .gtk-grid[data-week-numbers] {
-  grid-template-columns: auto repeat(7, 1fr);
+  grid-template-columns: repeat(8, 1fr);
+}
+
+/* Nothing is attached above the week numbers. */
+.gtk-calendar > .gtk-grid[data-week-numbers] > .day-name:first-child {
+  grid-column-start: 2;
+}
+
+/* A homogeneous GtkGridLayout requests every line from its first child to its
+ * last, shown or not, as large as the largest child (grid_request_homogeneous()):
+ * 8 columns with the week numbers hidden, 7 rows with the day names hidden.
+ * It then shares its size among the shown lines only. The sizer, invisible
+ * copies of the shown labels in 8 × 7 equal cells, is that request. */
+.gtk-calendar > .gtk-grid[data-sizer] {
+  grid-template: repeat(7, 1fr) / repeat(8, 1fr);
+  visibility: hidden;
 }
 
 /* GtkLabel halign=CENTER: center text within each grid cell */
@@ -997,28 +1023,20 @@
   justify-content: center;
 }
 
-/* Prevent layout shift when navigating months/years.
- * Native: month is in a GtkStack (sized to widest month = "September"),
- * year gets +10px via gtk_widget_set_size_request. */
-.gtk-calendar > .gtk-header > .gtk-label.month {
-  min-width: 6ch;
-  justify-content: center;
-}
-
+/* The year label requests the width of its text at init (this year) + 10px,
+ * so other years don't change the calendar's width (gtk_calendar_init()).
+ * Under the text, a hidden copy of that one, 10px wider and 0px tall. */
 .gtk-calendar > .gtk-header > .gtk-label.year {
-  min-width: 4ch;
-  justify-content: center;
+  flex-direction: column;
+  align-items: center;
 }
 
-/* Web adaptation: day-number cells are clickable — show pointer cursor and
- * a subtle hover highlight (Adwaita button hover = 7% currentColor). */
-.gtk-calendar > .gtk-grid > .gtk-label.day-number {
-  cursor: pointer;
-}
-
-.gtk-calendar > .gtk-grid > .gtk-label.day-number:hover {
-  background-color: color-mix(in srgb, currentColor 7%, transparent);
-  border-radius: 9px;
+.gtk-calendar > .gtk-header > .gtk-label.year::after {
+  content: attr(data-init-label);
+  height: 0;
+  padding-inline-start: 10px;
+  overflow: hidden;
+  visibility: hidden;
 }
 
 /* -- AdwPreferencesGroup's list --

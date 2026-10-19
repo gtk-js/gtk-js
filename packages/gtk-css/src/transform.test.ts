@@ -55,7 +55,7 @@ describe("text selection", () => {
   test("a descendant selection is the text's or a descendant's", async () => {
     const out = await transform("entry selection:focus { color: white; }");
     expect(out).toContain(
-      ":where(.gtk-entry):not(_):focus::selection, :where(.gtk-entry):not(_) *:focus::selection {",
+      ":where(.gtk-entry):not(_):is([data-focus], :focus)::selection, :where(.gtk-entry):not(_) *:is([data-focus], :focus)::selection {",
     );
   });
 
@@ -317,6 +317,19 @@ describe(":disabled", () => {
     expect(out).toContain(":where(.gtk-button):not(_):not(:is([data-disabled], :disabled)):hover");
     // Applied once, even though PostCSS revisits changed rules.
     expect(out).not.toContain(":is([data-disabled], :is(");
+  });
+});
+
+describe(":focus", () => {
+  test("matches the focused element and [data-focus] ones, not :focus-visible or :focus-within", async () => {
+    const out = await transform(
+      "calendar > grid > label:focus { outline-width: 2px; } button:focus:focus-visible, row:focus-within { color: red; }",
+    );
+    expect(out).toContain(":where(.gtk-label):not(_):is([data-focus], :focus) {");
+    expect(out).toContain(":where(.gtk-button):not(_):is([data-focus], :focus):focus-visible");
+    expect(out).toContain(":where(.gtk-row):not(_):focus-within");
+    // Applied once, even though PostCSS revisits changed rules.
+    expect(out).not.toContain(":is([data-focus], :is(");
   });
 });
 
