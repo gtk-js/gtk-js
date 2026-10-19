@@ -280,6 +280,14 @@ const cases: Record<string, () => React.ReactElement> = {
       data-testid="target"
     />
   ),
+  "label-fractional-text": () => (
+    <GtkBox spacing={6} halign="start" valign="start" data-testid="target">
+      <GtkButton label="Save" />
+      <GtkButton label="Flat" className="flat" />
+      <GtkButton label="Up" />
+      <GtkLabel label={"Two\nlines"} valign="start" />
+    </GtkBox>
+  ),
   "label-heights": () => (
     <GtkBox orientation="vertical" halign="start" valign="start" data-testid="target">
       <GtkLabel label="Label" />

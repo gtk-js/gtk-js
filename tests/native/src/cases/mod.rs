@@ -106,6 +106,7 @@ pub mod image_pixel_size_24;
 pub mod label_default;
 pub mod label_disabled;
 pub mod label_ellipsize;
+pub mod label_fractional_text;
 pub mod label_heights;
 pub mod label_justify_center;
 pub mod label_width_chars;
