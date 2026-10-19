@@ -511,7 +511,10 @@ export function compare(native: WidgetSnapshot, web: WidgetSnapshot): CompareRes
   function normalizeFontFamily(f: string) {
     return f.toLowerCase().replace("adwaita sans", "cantarell");
   }
-  if (native.font_family && web.font_family) {
+  // A generic family (the monospace font's default) is resolved by fontconfig
+  // like Pango's "Monospace" alias, so native reports the font it picked.
+  const genericFamily = ["monospace", "sans-serif", "serif"].includes(web.font_family ?? "");
+  if (native.font_family && web.font_family && !genericFamily) {
     if (normalizeFontFamily(native.font_family) !== normalizeFontFamily(web.font_family)) {
       failures.push({ property: "font_family", native: native.font_family, web: web.font_family });
     }
