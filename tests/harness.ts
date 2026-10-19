@@ -579,7 +579,12 @@ export function findChild(tree: WidgetSnapshot, cssName: string, index = 0): Wid
   throw new Error(`Child with css_name="${cssName}" (index ${index}) not found in tree`);
 }
 
-export type GtkTestCallback = (native: WidgetSnapshot, web: WidgetSnapshot) => void;
+export type GtkTestCallback = (
+  native: WidgetSnapshot,
+  web: WidgetSnapshot,
+  /** "chromium" or "firefox", for differences only one engine has. */
+  browserName: string,
+) => void;
 
 export interface GtkTestOptions {
   /** CSS selector for a child element within [data-testid='target'] to extract styles from.
@@ -606,7 +611,7 @@ export function gtkTest(
         ]);
         try {
           if (callback) {
-            callback(native, web);
+            callback(native, web, browserName);
           } else {
             const result = compare(native, web);
             if (result.failures.length > 0) {
