@@ -136,6 +136,7 @@ pub mod password_entry_default;
 pub mod password_entry_disabled;
 pub mod password_entry_peek_icon;
 pub mod popover_default;
+pub mod popover_no_arrow;
 pub mod progressbar_fraction_small;
 pub mod progressbar_horizontal_0;
 pub mod progressbar_horizontal_100;

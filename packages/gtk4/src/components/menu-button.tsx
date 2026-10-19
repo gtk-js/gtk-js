@@ -2,7 +2,6 @@ import {
   forwardRef,
   type HTMLAttributes,
   isValidElement,
-  type MouseEvent,
   type ReactNode,
   useCallback,
   useImperativeHandle,
@@ -17,12 +16,7 @@ import {
   type GtkPositionType,
 } from "../types.ts";
 import { GtkPopover } from "./popover.tsx";
-import {
-  type GtkMenuModel,
-  GtkPopoverMenu,
-  PopoverMenuCloseProvider,
-  PopoverMenuKeyboardProvider,
-} from "./popover-menu.tsx";
+import { type GtkMenuModel, GtkPopoverMenu, PopoverMenuCloseProvider } from "./popover-menu.tsx";
 
 export interface GtkMenuButtonProps
   extends Omit<HTMLAttributes<HTMLDivElement>, "popover">,
@@ -115,13 +109,9 @@ export const GtkMenuButton = forwardRef<HTMLDivElement, GtkMenuButtonProps>(func
     [active, onActiveChanged],
   );
   const popoverRef = useRef<HTMLDivElement>(null);
-  const close = useCallback(() => {
-    // A popover closing with the keyboard focus gives it back to the button,
-    // as in GTK.
-    if (popoverRef.current?.contains(document.activeElement))
-      buttonRef.current?.focus({ preventScroll: true });
-    setOpen(false);
-  }, [setOpen]);
+  // Closing with the focus inside, the popover gives it back to the button it
+  // points to (cascade_popdown()).
+  const close = useCallback(() => setOpen(false), [setOpen]);
 
   const ArrowIcon = useIcon(arrowIconMap[direction] ?? "PanDown");
   const ContentIcon = useIcon(iconName ?? "");
@@ -142,16 +132,10 @@ export const GtkMenuButton = forwardRef<HTMLDivElement, GtkMenuButtonProps>(func
   if (showArrow && !arrowOnly) btnClasses.push("arrow-button");
   if (open) btnClasses.push("has-open-popup");
 
-  const [openedFromKeyboard, setOpenedFromKeyboard] = useState(false);
-  const toggle = useCallback(
-    (e: MouseEvent) => {
-      if (disabled) return;
-      // Enter and Space click without a pointer (detail 0).
-      setOpenedFromKeyboard(e.detail === 0);
-      setOpen(!open);
-    },
-    [disabled, open, setOpen],
-  );
+  const toggle = useCallback(() => {
+    if (disabled) return;
+    setOpen(!open);
+  }, [disabled, open, setOpen]);
 
   // Popovers open away from the arrow direction, like GTK.
   const position: GtkPositionType =
@@ -222,9 +206,7 @@ export const GtkMenuButton = forwardRef<HTMLDivElement, GtkMenuButtonProps>(func
           className={isMenu ? "menu" : undefined}
         >
           <PopoverMenuCloseProvider value={close}>
-            <PopoverMenuKeyboardProvider value={openedFromKeyboard}>
-              {menuModel ? <GtkPopoverMenu model={menuModel}>{popover}</GtkPopoverMenu> : popover}
-            </PopoverMenuKeyboardProvider>
+            {menuModel ? <GtkPopoverMenu model={menuModel}>{popover}</GtkPopoverMenu> : popover}
           </PopoverMenuCloseProvider>
         </GtkPopover>
       )}

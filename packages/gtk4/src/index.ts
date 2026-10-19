@@ -113,7 +113,7 @@ export {
   useListBoxRow,
 } from "./list-box-row-context.tsx";
 export type { GtkProviderProps } from "./provider.tsx";
-export { GtkProvider, useGtkTheme } from "./provider.tsx";
+export { GtkProvider, GtkProviderBoundary, useGtkTheme } from "./provider.tsx";
 // Types
 export type * from "./types.ts";
 export { DecorationLayout } from "./types.ts";

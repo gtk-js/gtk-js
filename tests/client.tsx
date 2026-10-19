@@ -712,6 +712,20 @@ const cases: Record<string, () => React.ReactElement> = {
       </GtkPopover>
     </GtkBox>
   ),
+  "popover-no-arrow": () => (
+    <GtkBox data-testid="target">
+      <GtkLabel label="Anchor" />
+      <GtkPopover
+        visible
+        hasArrow={false}
+        autohide={false}
+        portal={false}
+        style={{ position: "relative", zIndex: "auto", top: "auto", left: "auto" }}
+      >
+        <GtkLabel label="Popover content" />
+      </GtkPopover>
+    </GtkBox>
+  ),
 
   // GtkDropDown cases
   "dropdown-default": () => (

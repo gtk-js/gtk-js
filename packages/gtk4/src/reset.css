@@ -6,9 +6,9 @@
  * specificity so theme rules always win.
  */
 
-html:has(body > [data-gtk-provider]),
+html:has(body > [data-gtk-provider]:not([data-gtk-portal])),
 html:has(body > :first-child:has([data-gtk-provider])),
-body:has(> [data-gtk-provider]),
+body:has(> [data-gtk-provider]:not([data-gtk-portal])),
 body:has(> :first-child:has([data-gtk-provider])) {
   margin: 0;
   padding: 0;
@@ -18,7 +18,7 @@ body:has(> :first-child:has([data-gtk-provider])) {
 /* The provider or mount point (e.g. #root) also needs full height so GtkWindow
    can fill the viewport. Covers common React/Vue/Svelte mount patterns while
    avoiding host-page resets when gtk-js is mounted deeper in the DOM. */
-body:has(> [data-gtk-provider]) > [data-gtk-provider],
+body:has(> [data-gtk-provider]:not([data-gtk-portal])) > [data-gtk-provider]:not([data-gtk-portal]),
 body:has(> :first-child:has([data-gtk-provider])) > :first-child {
   height: 100%;
 }
