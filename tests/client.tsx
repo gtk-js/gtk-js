@@ -94,6 +94,25 @@ function WrappedActionRow(props: { title: string; subtitle?: string }) {
   return <AdwActionRow {...props} />;
 }
 
+/** A flat split button whose menu a pointer click opened. */
+function OpenSplitButton() {
+  const ref = useRef<HTMLDivElement>(null);
+  useLayoutEffect(() => {
+    ref.current
+      ?.querySelector(".gtk-menubutton > button")
+      ?.dispatchEvent(new MouseEvent("click", { bubbles: true, detail: 1 }));
+  }, []);
+  return (
+    <AdwSplitButton
+      ref={ref}
+      label="Save"
+      className="flat"
+      menuModel={[[{ label: "Save As…" }, { label: "Save All" }]]}
+      data-testid="target"
+    />
+  );
+}
+
 /** Fixes its child's height when it mounts, like AdwDialog fixing its natural size when presented. */
 function SizedOnMount({ children }: { children: ReactElement }) {
   const ref = useRef<HTMLDivElement>(null);
@@ -954,19 +973,58 @@ const cases: Record<string, () => React.ReactElement> = {
   ),
 
   // AdwButtonContent cases
+  "button-content-button": () => (
+    <GtkButton style={{ width: 150, boxSizing: "border-box" }} data-testid="target">
+      <AdwButtonContent iconName="DocumentOpen" label="Open" />
+    </GtkButton>
+  ),
   "button-content-icon-label": () => (
-    <AdwButtonContent iconName="open-menu-symbolic" label="Open" data-testid="target" />
+    <AdwButtonContent iconName="OpenMenu" label="Open" data-testid="target" />
   ),
   "button-content-label-only": () => <AdwButtonContent label="Open" data-testid="target" />,
-  "button-content-icon-only": () => (
-    <AdwButtonContent iconName="open-menu-symbolic" data-testid="target" />
-  ),
+  "button-content-icon-only": () => <AdwButtonContent iconName="OpenMenu" data-testid="target" />,
 
   // AdwSplitButton cases
-  "split-button-text-default": () => <AdwSplitButton label="Button" data-testid="target" />,
-  "split-button-icon": () => <AdwSplitButton iconName="open-menu-symbolic" data-testid="target" />,
+  "split-button-text-default": () => (
+    <AdwSplitButton label="Button" popover={<GtkLabel label="Popover" />} data-testid="target" />
+  ),
+  "split-button-icon": () => (
+    <AdwSplitButton
+      iconName="OpenMenu"
+      popover={<GtkLabel label="Popover" />}
+      data-testid="target"
+    />
+  ),
   "split-button-flat": () => (
-    <AdwSplitButton label="Button" className="flat" data-testid="target" />
+    <AdwSplitButton
+      label="Button"
+      className="flat"
+      popover={<GtkLabel label="Popover" />}
+      data-testid="target"
+    />
+  ),
+  "split-button-open": () => <OpenSplitButton />,
+  "split-button-tall": () => (
+    <AdwSplitButton
+      child={<GtkLabel label="Tall" style={{ minHeight: 50 }} />}
+      popover={<GtkLabel label="Popover" />}
+      data-testid="target"
+    />
+  ),
+  "split-button-fill": () => (
+    <GtkBox orientation="vertical" style={{ width: 200 }}>
+      <AdwSplitButton label="Fill" popover={<GtkLabel label="Popover" />} data-testid="target" />
+    </GtkBox>
+  ),
+  "split-button-can-shrink": () => (
+    <div style={{ display: "flex", width: 100 }}>
+      <AdwSplitButton
+        label="Save document as"
+        canShrink
+        popover={<GtkLabel label="Popover" />}
+        data-testid="target"
+      />
+    </div>
   ),
 
   // AdwButtonRow cases — inside GtkListBox to match native structure

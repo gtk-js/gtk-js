@@ -224,7 +224,9 @@ export const GtkSwitch = forwardRef<HTMLDivElement, GtkSwitchProps>(function Gtk
       tabIndex={disabled ? -1 : 0}
       className={classes.join(" ")}
       {...alignAttrs(halign, valign, hexpand, vexpand)}
-      data-active={(slideTo ?? active) || undefined}
+      // Where the slider is. Not [data-active], which gtk-css matches as :active
+      // (pressed).
+      data-switch-active={(slideTo ?? active) || undefined}
       data-checked={state || undefined}
       data-disabled={disabled || undefined}
       // GtkSwitch never grabs the focus on click.

@@ -140,6 +140,12 @@
   display: inline-grid;
 }
 
+/* GtkMenuButton measures and allocates only its button, which fills it; its
+ * popover is a surface of its own (gtk_menu_button_size_allocate()). */
+.gtk-menubutton {
+  display: inline-grid;
+}
+
 :is(.gtk-bin-layout, .gtk-button:not(.image-text-button)) > * {
   grid-column: 1;
   grid-row: 1;
@@ -714,7 +720,7 @@
   transition: inset-inline-start 100ms cubic-bezier(0.215, 0.61, 0.355, 1);
 }
 
-.gtk-switch[data-active] > .gtk-slider {
+.gtk-switch[data-switch-active] > .gtk-slider {
   inset-inline-start: 100%;
 }
 

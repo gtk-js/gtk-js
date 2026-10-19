@@ -8,6 +8,7 @@ import React, {
 import { useIcon } from "../icon-context.tsx";
 import { tooltipAttrs } from "../tooltip.tsx";
 import { alignAttrs, type GtkAlignProps } from "../types.ts";
+import { childButtonClass } from "./button.tsx";
 
 export interface GtkToggleButtonProps
   extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, "children">,
@@ -75,6 +76,8 @@ export const GtkToggleButton = forwardRef<HTMLButtonElement, GtkToggleButtonProp
     if (hasLabel && !hasIcon) classes.push("text-button");
     if (hasIcon && !hasLabel) classes.push("image-button");
     if (hasIcon && hasLabel) classes.push("image-text-button");
+    const childClass = childButtonClass(children);
+    if (childClass) classes.push(childClass);
     if (keyboardActivating) classes.push("keyboard-activating");
     if (className) classes.push(className);
 
