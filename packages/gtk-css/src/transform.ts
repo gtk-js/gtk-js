@@ -98,6 +98,37 @@ export function preprocess(rawCSS: string, options?: CompileOptions): string {
     output.push(line);
   }
 
+  // GTK resolves a named color where a declaration uses it, so a custom
+  // property set from one (`:root { --window-bg-color: @window_bg_color; }`)
+  // takes its dark value in dark mode. Named colors aren't custom properties
+  // themselves: libadwaita derives e.g. `--accent-color` from
+  // `var(--accent-bg-color)` in CSS, which must keep following the accent
+  // AdwStyleManager sets at runtime, not the @accent_color built from the default.
+  const darkOverrides: string[] = [];
+  let depth = 0;
+  let inRoot = false;
+  for (const line of output) {
+    const trimmed = line.trim();
+    if (depth === 0 && trimmed === ":root {") inRoot = true;
+    const decl = trimmed.match(/^(--[\w-]+):\s*(.*@[a-z][a-z0-9]*_.*);$/);
+    if (decl) {
+      const prop = decl[1]!;
+      const value = decl[2]!;
+      const dark = resolveColorRef(value, darkColors);
+      if (dark !== resolveColorRef(value, lightColors)) {
+        if (!inRoot || depth !== 1) {
+          throw new Error(`Dark value of ${prop} outside a top-level :root rule: ${trimmed}`);
+        }
+        darkOverrides.push(`    ${prop}: ${dark};`);
+      }
+    }
+    for (const ch of trimmed) {
+      if (ch === "{") depth++;
+      else if (ch === "}") depth--;
+    }
+    if (depth === 0) inRoot = false;
+  }
+
   let result = output.join("\n");
 
   // Convert remaining GTK @color_name references to resolved values.
@@ -111,17 +142,6 @@ export function preprocess(rawCSS: string, options?: CompileOptions): string {
     return `var(--${name.replace(/_/g, "-")})`;
   });
 
-  // Collect per-scheme color variable differences
-  const darkOverrides: string[] = [];
-  for (const [name, darkVal] of darkColors) {
-    const lightVal = lightColors.get(name);
-    const resolvedDark = resolveColorRef(darkVal, darkColors);
-    const resolvedLight = lightVal ? resolveColorRef(lightVal, lightColors) : null;
-    if (resolvedDark !== resolvedLight) {
-      darkOverrides.push(`    --${name.replace(/_/g, "-")}: ${resolvedDark};`);
-    }
-  }
-
   if (scheme === "dark") {
     // Dark-only output: rewrite base :root variables to dark values, emit nothing else
     if (darkOverrides.length > 0) {
@@ -129,21 +149,9 @@ export function preprocess(rawCSS: string, options?: CompileOptions): string {
     }
   } else if (scheme === "light") {
     // Light-only output: no dark overrides at all — light values are already the base
-  } else {
-    // Default: emit both @media and [data-color-scheme] overrides (auto behavior)
-    if (darkOverrides.length > 0) {
-      result += `\n@media (prefers-color-scheme: dark) {\n  :root {\n${darkOverrides.join("\n")}\n  }\n}\n`;
-      result += `\n[data-gtk-provider][data-color-scheme="dark"] {\n${darkOverrides.join("\n")}\n}\n`;
-    }
-
-    const lightOverrides = [...lightColors.entries()]
-      .filter(([name]) => darkColors.has(name))
-      .map(
-        ([name, val]) => `  --${name.replace(/_/g, "-")}: ${resolveColorRef(val, lightColors)};`,
-      );
-    if (lightOverrides.length > 0) {
-      result += `\n[data-gtk-provider][data-color-scheme="light"] {\n${lightOverrides.join("\n")}\n}\n`;
-    }
+  } else if (darkOverrides.length > 0) {
+    // Auto: the page's prefers-color-scheme picks the scheme
+    result += `\n@media (prefers-color-scheme: dark) {\n  :root {\n${darkOverrides.join("\n")}\n  }\n}\n`;
   }
 
   return result;
