@@ -44,6 +44,7 @@ enum Command {
     AdwActionRowIcon,
     AdwActionRowSubtitleOnly,
     AdwActionRowSuffixFill,
+    AdwBreakpointBinConditions,
     AdwBreakpointBinDefault,
     AdwComboRowDefault,
     AdwComboRowLongValue,
@@ -97,6 +98,7 @@ enum Command {
     CarouselDefault,
     CarouselNaturalPages,
     CarouselVertical,
+    ClampChildMin,
     ClampDefault,
     StatusPageDefault,
     StatusPageNoIcon,
@@ -337,6 +339,7 @@ impl Command {
             Self::AdwActionRowIcon => Some("adw-action-row-icon"),
             Self::AdwActionRowSubtitleOnly => Some("adw-action-row-subtitle-only"),
             Self::AdwActionRowSuffixFill => Some("adw-action-row-suffix-fill"),
+            Self::AdwBreakpointBinConditions => Some("adw-breakpoint-bin-conditions"),
             Self::AdwBreakpointBinDefault => Some("adw-breakpoint-bin-default"),
             Self::AdwComboRowDefault => Some("adw-combo-row-default"),
             Self::AdwComboRowLongValue => Some("adw-combo-row-long-value"),
@@ -390,6 +393,7 @@ impl Command {
             Self::CarouselDefault => Some("carousel-default"),
             Self::CarouselNaturalPages => Some("carousel-natural-pages"),
             Self::CarouselVertical => Some("carousel-vertical"),
+            Self::ClampChildMin => Some("clamp-child-min"),
             Self::ClampDefault => Some("clamp-default"),
             Self::StatusPageDefault => Some("status-page-default"),
             Self::StatusPageNoIcon => Some("status-page-no-icon"),
@@ -613,6 +617,9 @@ fn create_widget_for_case(name: &str) -> Option<(gtk::Widget, bool)> {
         "adw-action-row-suffix-fill" => {
             widget_case!(cases::adw_action_row_suffix_fill::AdwActionRowSuffixFill, false)
         }
+        "adw-breakpoint-bin-conditions" => {
+            widget_case!(cases::adw_breakpoint_bin_conditions::AdwBreakpointBinConditions, false)
+        }
         "adw-breakpoint-bin-default" => {
             widget_case!(cases::adw_breakpoint_bin_default::AdwBreakpointBinDefault, false)
         }
@@ -759,6 +766,7 @@ fn create_widget_for_case(name: &str) -> Option<(gtk::Widget, bool)> {
             widget_case!(cases::carousel_natural_pages::CarouselNaturalPages, false)
         }
         "carousel-vertical" => widget_case!(cases::carousel_vertical::CarouselVertical, false),
+        "clamp-child-min" => widget_case!(cases::clamp_child_min::ClampChildMin, false),
         "clamp-default" => widget_case!(cases::clamp_default::ClampDefault, false),
         "status-page-default" => {
             widget_case!(cases::status_page_default::StatusPageDefault, false)
@@ -1268,6 +1276,7 @@ fn is_known_case(name: &str) -> bool {
             | "adw-action-row-icon"
             | "adw-action-row-subtitle-only"
             | "adw-action-row-suffix-fill"
+            | "adw-breakpoint-bin-conditions"
             | "adw-breakpoint-bin-default"
             | "adw-combo-row-default"
             | "adw-combo-row-long-value"
@@ -1321,6 +1330,7 @@ fn is_known_case(name: &str) -> bool {
             | "carousel-default"
             | "carousel-natural-pages"
             | "carousel-vertical"
+            | "clamp-child-min"
             | "clamp-default"
             | "status-page-default"
             | "status-page-no-icon"
