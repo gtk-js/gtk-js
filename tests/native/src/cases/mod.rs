@@ -147,6 +147,7 @@ pub mod flow_box_default;
 pub mod flow_box_homogeneous;
 pub mod flow_box_selected;
 pub mod frame_default;
+pub mod frame_label_xalign;
 pub mod frame_no_label;
 pub mod grid_default;
 pub mod grid_hexpand;

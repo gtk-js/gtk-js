@@ -138,6 +138,7 @@ enum Command {
     FlowBoxHomogeneous,
     FlowBoxSelected,
     FrameDefault,
+    FrameLabelXalign,
     HeaderbarDefault,
     HeaderbarNarrowTitle,
     HeaderbarStartEnd,
@@ -498,6 +499,7 @@ impl Command {
             Self::FlowBoxHomogeneous => Some("flow-box-homogeneous"),
             Self::FlowBoxSelected => Some("flow-box-selected"),
             Self::FrameDefault => Some("frame-default"),
+            Self::FrameLabelXalign => Some("frame-label-xalign"),
             Self::HeaderbarDefault => Some("headerbar-default"),
             Self::HeaderbarNarrowTitle => Some("headerbar-narrow-title"),
             Self::HeaderbarStartEnd => Some("headerbar-start-end"),
@@ -983,6 +985,9 @@ fn create_widget_for_case(name: &str) -> Option<(gtk::Widget, bool)> {
         }
         "flow-box-selected" => widget_case!(cases::flow_box_selected::FlowBoxSelected, false),
         "frame-default" => widget_case!(cases::frame_default::FrameDefault, false),
+        "frame-label-xalign" => {
+            widget_case!(cases::frame_label_xalign::FrameLabelXalign, false)
+        }
         "headerbar-default" => {
             widget_case!(cases::headerbar_default::HeaderbarDefault, false)
         }
@@ -1622,6 +1627,7 @@ fn is_known_case(name: &str) -> bool {
             | "flow-box-homogeneous"
             | "flow-box-selected"
             | "frame-default"
+            | "frame-label-xalign"
             | "frame-no-label"
             | "headerbar-default"
             | "headerbar-narrow-title"

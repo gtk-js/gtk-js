@@ -397,6 +397,45 @@
   pointer-events: none;
 }
 
+/* === GtkFrame === */
+/* gtk_frame_size_allocate(): the label (marked data-expand-ignored) gets its
+ * natural width, at most the frame's, in the first row, between the columns
+ * GtkFrame sizes by label-xalign. The child gets the rest of the frame
+ * (compute_child_allocation()) and aligns in it like in a BinLayout. */
+.gtk-frame {
+  display: grid;
+  grid-template-rows: auto 1fr;
+}
+
+.gtk-frame > * {
+  grid-column: 1 / -1;
+  grid-row: 2;
+}
+
+.gtk-frame > [data-expand-ignored] {
+  grid-column: 2;
+  grid-row: 1;
+}
+
+.gtk-frame > [data-halign="start"] {
+  justify-self: start;
+}
+.gtk-frame > [data-halign="end"] {
+  justify-self: end;
+}
+.gtk-frame > [data-halign="center"] {
+  justify-self: center;
+}
+.gtk-frame > [data-valign="start"] {
+  align-self: start;
+}
+.gtk-frame > [data-valign="end"] {
+  align-self: end;
+}
+.gtk-frame > [data-valign="center"] {
+  align-self: center;
+}
+
 /* === GtkStack === */
 /* All pages share one cell, like gtk_stack_size_allocate(): the visible page,
    the hidden ones a homogeneous stack is sized by, and the one a transition
