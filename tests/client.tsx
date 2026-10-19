@@ -747,6 +747,10 @@ const cases: Record<string, () => React.ReactElement> = {
   ),
 
   // GtkHeaderBar cases
+  // The test holds the close button down.
+  "headerbar-controls-pressed": () => (
+    <GtkHeaderBar decorationLayout=":close" data-testid="target" />
+  ),
   "headerbar-default": () => <GtkHeaderBar showWindowControls={false} data-testid="target" />,
   "headerbar-with-title": () => (
     <GtkHeaderBar

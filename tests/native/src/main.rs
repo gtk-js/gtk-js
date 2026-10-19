@@ -97,6 +97,7 @@ enum Command {
     ExpanderExpanded,
     FlowBoxDefault,
     FrameDefault,
+    HeaderbarControlsPressed,
     HeaderbarDefault,
     HeaderbarStartEnd,
     HeaderbarWithTitle,
@@ -290,7 +291,9 @@ impl Command {
             Self::AdwOverlaySplitViewDefault => Some("adw-overlay-split-view-default"),
             Self::AdwPasswordEntryRowDefault => Some("adw-password-entry-row-default"),
             Self::AdwPreferencesGroupDefault => Some("adw-preferences-group-default"),
-            Self::AdwPreferencesGroupWithDescription => Some("adw-preferences-group-with-description"),
+            Self::AdwPreferencesGroupWithDescription => {
+                Some("adw-preferences-group-with-description")
+            }
             Self::AdwPreferencesGroupFooter => Some("adw-preferences-group-footer"),
             Self::AdwPreferencesGroupLabelOnly => Some("adw-preferences-group-label-only"),
             Self::AdwPreferencesGroupMixed => Some("adw-preferences-group-mixed"),
@@ -338,6 +341,7 @@ impl Command {
             Self::ExpanderExpanded => Some("expander-expanded"),
             Self::FlowBoxDefault => Some("flow-box-default"),
             Self::FrameDefault => Some("frame-default"),
+            Self::HeaderbarControlsPressed => Some("headerbar-controls-pressed"),
             Self::HeaderbarDefault => Some("headerbar-default"),
             Self::HeaderbarStartEnd => Some("headerbar-start-end"),
             Self::HeaderbarWithTitle => Some("headerbar-with-title"),
@@ -637,6 +641,9 @@ fn create_widget_for_case(name: &str) -> Option<(gtk::Widget, bool)> {
         "expander-expanded" => widget_case!(cases::expander_expanded::ExpanderExpanded, false),
         "flow-box-default" => widget_case!(cases::flow_box_default::FlowBoxDefault, false),
         "frame-default" => widget_case!(cases::frame_default::FrameDefault, false),
+        "headerbar-controls-pressed" => {
+            widget_case!(cases::headerbar_controls_pressed::HeaderbarControlsPressed, false)
+        }
         "headerbar-default" => {
             widget_case!(cases::headerbar_default::HeaderbarDefault, false)
         }
@@ -1064,6 +1071,7 @@ fn is_known_case(name: &str) -> bool {
             | "flow-box-default"
             | "frame-default"
             | "frame-no-label"
+            | "headerbar-controls-pressed"
             | "headerbar-default"
             | "headerbar-start-end"
             | "headerbar-with-title"

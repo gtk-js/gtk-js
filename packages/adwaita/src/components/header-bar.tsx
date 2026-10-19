@@ -1,4 +1,4 @@
-import { GtkLabel, useIcon, useWindowControls } from "@gtk-js/gtk4";
+import { GtkLabel, noFocusOnClick, useIcon, useWindowControls } from "@gtk-js/gtk4";
 import { forwardRef, type HTMLAttributes, type ReactNode, useCallback } from "react";
 import type { AdwCenteringPolicy } from "../types.ts";
 import { useHeaderBarTitle } from "./header-bar-title.ts";
@@ -39,14 +39,15 @@ function WindowControlButton({ name, onClick }: { name: string; onClick?: () => 
       type="button"
       tabIndex={-1}
       aria-label={WINDOW_CONTROL_LABELS[name]}
-      onMouseDown={(e) => e.preventDefault()}
+      {...noFocusOnClick({
+        onPointerDown: (e) => {
+          // Stop propagation so the windowhandle drag handler doesn't fire.
+          // In Tauri/WebKitGTK, startDragging() captures all input and
+          // prevents the subsequent click event from reaching the button.
+          e.stopPropagation();
+        },
+      })}
       onClick={onClick}
-      onPointerDown={(e) => {
-        // Stop propagation so the windowhandle drag handler doesn't fire.
-        // In Tauri/WebKitGTK, startDragging() captures all input and
-        // prevents the subsequent click event from reaching the button.
-        e.stopPropagation();
-      }}
     >
       <span className="gtk-image">
         <Icon size={16} />

@@ -81,6 +81,18 @@ describe("remapPseudoClasses", () => {
     expect(out).not.toContain(":drop(active)");
   });
 
+  test(":active → :active or [data-pressed], with the same specificity", async () => {
+    const out = await transform(
+      "button:active, label { color: red; } button:not(:active):hover > image { color: blue; } row:drop(active) { color: green; }",
+    );
+    expect(out).toContain(":where(.gtk-button):not(_):active");
+    expect(out).toContain(":where(.gtk-button):not(_)[data-pressed], :where(.gtk-label):not(_) {");
+    expect(out).toMatch(/:where\(.gtk-button\):not\(_\):not\(:active.*?, \[data-pressed\]\):hover/);
+    expect(out).toContain(":where(.gtk-row):not(_)[data-drop-active]");
+    // Applied once, even though PostCSS revisits changed rules.
+    expect(out.match(/\[data-pressed\]/g)).toHaveLength(2);
+  });
+
   test(":selected → [aria-selected] or [data-selected]", async () => {
     const out = await transform(".gtk-row:selected { background: blue; }");
     expect(out).toContain(':is([aria-selected="true"], [data-selected])');

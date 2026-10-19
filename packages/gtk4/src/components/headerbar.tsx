@@ -1,4 +1,5 @@
 import { forwardRef, type HTMLAttributes, type PointerEvent, type ReactNode } from "react";
+import { noFocusOnClick } from "../focus-on-click.ts";
 import { useIcon } from "../icon-context.tsx";
 import { alignAttrs, centerSlotAttrs, type GtkAlignProps } from "../types.ts";
 
@@ -58,13 +59,15 @@ function WindowControlButton({ name, onClick }: { name: string; onClick?: () => 
 
   if (!Icon) return null;
 
+  // Window controls can't take focus (gtk_widget_set_can_focus (button, FALSE)
+  // in gtkwindowcontrols.c).
   return (
     <button
       className={`gtk-button image-button ${name}`}
       type="button"
       tabIndex={-1}
       aria-label={controlLabels[name]}
-      onMouseDown={(e) => e.preventDefault()}
+      {...noFocusOnClick()}
       onClick={onClick}
     >
       <span className="gtk-image">

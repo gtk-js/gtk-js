@@ -1,4 +1,4 @@
-import postcss, { type Plugin } from "postcss";
+import postcss, { list, type Plugin } from "postcss";
 import type { CompileOptions } from "./compile.ts";
 import { ALL_SELECTORS } from "./selectors.ts";
 
@@ -256,6 +256,23 @@ const remapPseudoClasses: Plugin = {
 
     // :drop(active) → [data-drop-active]
     sel = sel.replace(/:drop\(active\)/g, "[data-drop-active]");
+
+    // :active → also [data-pressed]: widgets a click doesn't focus prevent
+    // mousedown's default, which keeps Firefox from making them :active, and
+    // mark the press with data-pressed instead (noFocusOnClick() in gtk4).
+    // Each selector gets a copy, which leaves :active itself as it is.
+    // (Once: PostCSS revisits rules whose selector changed.)
+    if (/:active\b/.test(sel) && !sel.includes("[data-pressed]")) {
+      const separator = sel.match(/,\s*/)?.[0] ?? ", ";
+      sel = list
+        .comma(sel)
+        .flatMap((s) => {
+          s = s.replace(/:not\(:active\)/g, ":not(:active, [data-pressed])");
+          const pressed = s.replace(/(?<!:not\():active\b/g, "[data-pressed]");
+          return pressed === s ? [s] : [s, pressed];
+        })
+        .join(separator);
+    }
 
     // :selected → [aria-selected="true"], or [data-selected] where ARIA has no
     // selected state (a menu's active item, GtkModelButton)

@@ -26,8 +26,12 @@ impl SimpleComponent for AdwSpinRowDefault {
         let widgets = view_output!();
 
         let adjustment = gtk::Adjustment::new(50.0, 0.0, 100.0, 1.0, 10.0, 0.0);
-        if let Some(row) = root.first_child()
-            .and_then(|w| w.downcast::<adw::SpinRow>().ok()) { row.set_adjustment(Some(&adjustment)) }
+        if let Some(row) = root
+            .first_child()
+            .and_then(|w| w.downcast::<adw::SpinRow>().ok())
+        {
+            row.set_adjustment(Some(&adjustment))
+        }
 
         ComponentParts { model, widgets }
     }
