@@ -249,6 +249,9 @@ enum Command {
     RadioButtonDefault,
     RadioButtonChecked,
     ScaleDefault,
+    ScaleDrawValue,
+    ScaleMarksInverted,
+    ScaleVertical,
     ScrolledWindowDefault,
     ScrolledWindowFrame,
     StackChildAlign,
@@ -564,6 +567,9 @@ impl Command {
             Self::RadioButtonDefault => Some("radio-button-default"),
             Self::RadioButtonChecked => Some("radio-button-checked"),
             Self::ScaleDefault => Some("scale-default"),
+            Self::ScaleDrawValue => Some("scale-draw-value"),
+            Self::ScaleMarksInverted => Some("scale-marks-inverted"),
+            Self::ScaleVertical => Some("scale-vertical"),
             Self::ScrolledWindowDefault => Some("scrolled-window-default"),
             Self::ScrolledWindowFrame => Some("scrolled-window-frame"),
             Self::StackChildAlign => Some("stack-child-align"),
@@ -1174,6 +1180,11 @@ fn create_widget_for_case(name: &str) -> Option<(gtk::Widget, bool)> {
             widget_case!(cases::radio_button_checked::RadioButtonChecked, false)
         }
         "scale-default" => widget_case!(cases::scale_default::ScaleDefault, false),
+        "scale-draw-value" => widget_case!(cases::scale_draw_value::ScaleDrawValue, false),
+        "scale-marks-inverted" => {
+            widget_case!(cases::scale_marks_inverted::ScaleMarksInverted, false)
+        }
+        "scale-vertical" => widget_case!(cases::scale_vertical::ScaleVertical, false),
         "scrolled-window-default" => {
             widget_case!(cases::scrolled_window_default::ScrolledWindowDefault, false)
         }
@@ -1565,6 +1576,9 @@ fn is_known_case(name: &str) -> bool {
             | "radio-button-default"
             | "radio-button-checked"
             | "scale-default"
+            | "scale-draw-value"
+            | "scale-marks-inverted"
+            | "scale-vertical"
             | "scrolled-window-default"
             | "scrolled-window-frame"
             | "stack-child-align"

@@ -312,6 +312,36 @@ const cases: Record<string, () => React.ReactElement> = {
 
   // GtkScale cases
   "scale-default": () => <GtkScale min={0} max={100} value={50} step={1} data-testid="target" />,
+  // Native sizes (set_width/height_request) include the 12px padding; CSS ones don't.
+  "scale-draw-value": () => (
+    <GtkScale min={0} max={100} value={25} drawValue style={{ width: 226 }} data-testid="target" />
+  ),
+  "scale-marks-inverted": () => (
+    <GtkScale
+      min={0}
+      max={100}
+      value={20}
+      inverted
+      marks={[
+        { value: 0, position: "bottom", label: "Low" },
+        { value: 50, position: "top", label: "Mid" },
+        { value: 75, position: "top" },
+        { value: 100, position: "bottom", label: "High" },
+      ]}
+      style={{ width: 226 }}
+      data-testid="target"
+    />
+  ),
+  "scale-vertical": () => (
+    <GtkScale
+      min={0}
+      max={100}
+      value={50}
+      orientation="vertical"
+      style={{ height: 176 }}
+      data-testid="target"
+    />
+  ),
 
   // GtkEditableLabel cases
   "editable-label-display-default": () => (

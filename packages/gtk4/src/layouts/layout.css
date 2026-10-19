@@ -878,88 +878,185 @@
 }
 
 /*
- * GTK uses a custom layout manager (gtk_range_allocate_trough) for the trough.
- * Key facts from the C source (gtkrange.c, gtk_range_compute_slider_position):
- *
- * 1. The trough is sized to contain the slider: trough min-size = slider min-size.
- *    So for a horizontal scale with a 20px slider, the trough is 20px tall.
- *
- * 2. Slider x = (trough_width - slider_width) * fraction
- *    Slider y = floor((trough_height - slider_height) / 2)  → centered vertically
- *
- * 3. The Adwaita CSS `margin: -8px` on the slider is a visual trick to make the
- *    handle appear to overflow the trough visually while letting the track show
- *    as a thin line. In native GTK this works because the trough's CSS min-height
- *    (via `%scale_trough`) renders just the track visually, while the layout
- *    still allocates full slider height. We replicate this with position:absolute.
- *
- * 4. highlight width = fraction * (trough_width - slider_width) + slider_width/2
- *    (i.e., it grows to the center of the slider handle). We approximate with
- *    the same `left: calc(fraction% - slider_width/2)` formula used for the slider.
+ * gtk_scale_size_allocate() / gtk_range_size_allocate(): the trough takes the
+ * whole length of the scale and is centered across it; marks.top and
+ * marks.bottom sit against the trough, and the value label at the scale's edge
+ * (gtk_scale_get_range_border()), or beside the trough when it's at the start
+ * or end. A grid places them; the 1fr tracks split extra space around the
+ * marks and trough. A horizontal scale stacks value.top, marks.top, trough,
+ * marks.bottom and value.bottom; a vertical one is the transpose.
  */
 .gtk-scale {
-  display: flex;
-  align-items: center;
-  box-sizing: border-box;
-  flex: 1;
-  min-width: 0;
+  display: grid;
+}
+
+.gtk-scale.horizontal {
+  grid-template-columns: auto 1fr auto;
+  grid-template-rows: auto 1fr auto auto auto 1fr auto;
 }
 
 .gtk-scale.vertical {
-  flex-direction: column;
+  grid-template-columns: auto 1fr auto auto auto 1fr auto;
+  grid-template-rows: auto 1fr auto;
 }
 
-/* Trough fills the scale on the main axis. The trough is intentionally thin (4px);
-   the slider's margin: -8px (from adwaita CSS) makes it overflow the trough visually,
-   giving the correct GTK appearance of a thin track with a larger circular handle. */
-.gtk-scale > .gtk-trough {
-  position: relative;
-  flex: 1;
-  overflow: visible;
-  min-height: 4px;
+.gtk-scale.horizontal > .gtk-trough {
+  grid-area: 4 / 2;
+  align-self: center;
 }
 
 .gtk-scale.vertical > .gtk-trough {
-  flex: unset;
-  align-self: stretch;
-  min-height: unset;
-  min-width: 4px;
+  grid-area: 2 / 4;
+  justify-self: center;
 }
 
-/* highlight and fill: absolutely positioned, full cross-axis height to match trough */
-.gtk-scale > .gtk-trough > .gtk-highlight,
-.gtk-scale > .gtk-trough > .gtk-fill {
-  position: absolute;
-  top: 0;
-  left: 0;
-  height: 100%;
-  /* width is set by JS inline style */
+.gtk-scale.horizontal > .gtk-marks.top {
+  grid-area: 3 / 2;
 }
 
-.gtk-scale.vertical > .gtk-trough > .gtk-highlight,
-.gtk-scale.vertical > .gtk-trough > .gtk-fill {
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: unset;
-  /* height is set by JS inline style */
+.gtk-scale.horizontal > .gtk-marks.bottom {
+  grid-area: 5 / 2;
 }
 
-/* slider: centered on both axes within the trough; left/top set by JS */
+.gtk-scale.vertical > .gtk-marks.top {
+  grid-area: 2 / 3;
+}
+
+.gtk-scale.vertical > .gtk-marks.bottom {
+  grid-area: 2 / 5;
+}
+
+/* gtk_scale_allocate_value(): centered on the slider (left/top set by JS) when
+   it's along the trough, centered on the trough when it's across it. A GtkLabel,
+   it's whole lines tall, like .gtk-label in reset.css. */
+.gtk-scale > .gtk-value {
+  position: relative;
+  min-height: round(up, 1lh, 1px);
+}
+
+.gtk-scale.horizontal > .gtk-value.top {
+  grid-area: 1 / 2;
+}
+
+.gtk-scale.horizontal > .gtk-value.bottom {
+  grid-area: 7 / 2;
+}
+
+.gtk-scale.horizontal > :is(.gtk-value.top, .gtk-value.bottom) {
+  justify-self: start;
+  translate: -50% 0;
+}
+
+.gtk-scale.horizontal > .gtk-value.left {
+  grid-area: 4 / 1;
+  align-self: center;
+}
+
+.gtk-scale.horizontal > .gtk-value.right {
+  grid-area: 4 / 3;
+  align-self: center;
+}
+
+.gtk-scale.vertical > .gtk-value.top {
+  grid-area: 1 / 2 / 2 / 7;
+  justify-self: center;
+}
+
+.gtk-scale.vertical > .gtk-value.bottom {
+  grid-area: 3 / 2 / 4 / 7;
+  justify-self: center;
+}
+
+.gtk-scale.vertical > .gtk-value.left {
+  grid-area: 2 / 1;
+}
+
+.gtk-scale.vertical > .gtk-value.right {
+  grid-area: 2 / 7;
+}
+
+.gtk-scale.vertical > :is(.gtk-value.left, .gtk-value.right) {
+  align-self: start;
+  translate: 0 -50%;
+}
+
+/* gtk_range_measure_trough() / gtk_range_allocate_trough(): the trough is as
+   thick as the slider's margin box (Adwaita's 20px slider with -8px margins: a
+   4px track) and the highlight fills it from the origin. The slider is moved
+   along it by JS, its margins letting it overhang the track. */
+.gtk-scale > .gtk-trough {
+  display: grid;
+}
+
+.gtk-scale > .gtk-trough > :is(.gtk-highlight, .gtk-slider) {
+  grid-area: 1 / 1;
+}
+
+.gtk-scale > .gtk-trough > .gtk-slider {
+  position: relative;
+}
+
+.gtk-scale.horizontal > .gtk-trough > .gtk-highlight {
+  justify-self: start;
+}
+
+.gtk-scale.horizontal > .gtk-trough > .gtk-highlight.bottom {
+  justify-self: end;
+}
+
 .gtk-scale.horizontal > .gtk-trough > .gtk-slider {
-  position: absolute;
-  /* Center vertically on the trough: trough is 4px, slider is 20px with margin -8px.
-     Net rendered height = 20 - 16 = 4px. top: 0 places it flush; margin does the rest. */
-  top: 0;
-  margin-top: -8px;
-  margin-bottom: -8px;
+  justify-self: start;
+  align-self: center;
+}
+
+.gtk-scale.vertical > .gtk-trough > .gtk-highlight {
+  align-self: start;
+}
+
+.gtk-scale.vertical > .gtk-trough > .gtk-highlight.bottom {
+  align-self: end;
 }
 
 .gtk-scale.vertical > .gtk-trough > .gtk-slider {
-  position: absolute;
-  left: 0;
-  margin-left: -8px;
-  margin-right: -8px;
+  align-self: start;
+  justify-self: center;
+}
+
+/* gtk_scale_allocate_marks() / gtk_scale_allocate_mark(): every mark is as
+   thick as the marks node and centered on its value (left/top set by JS); its
+   indicator is centered and touches the trough, its label fills the rest. */
+.gtk-scale > .gtk-marks {
+  display: grid;
+}
+
+.gtk-scale > .gtk-marks > .gtk-mark {
+  grid-area: 1 / 1;
+  position: relative;
+  display: flex;
+}
+
+.gtk-scale.horizontal > .gtk-marks > .gtk-mark {
+  flex-direction: column;
+  justify-self: start;
+  translate: -50% 0;
+}
+
+.gtk-scale.vertical > .gtk-marks > .gtk-mark {
+  align-self: start;
+  translate: 0 -50%;
+}
+
+.gtk-scale > .gtk-marks.top > .gtk-mark {
+  justify-content: flex-end;
+}
+
+.gtk-scale > .gtk-marks > .gtk-mark > .gtk-label {
+  flex: 1;
+  justify-content: center;
+}
+
+.gtk-scale > .gtk-marks > .gtk-mark > .gtk-indicator {
+  align-self: center;
 }
 
 /* === GtkScrollbar === */
