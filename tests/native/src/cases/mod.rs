@@ -246,6 +246,7 @@ pub mod scale_default;
 pub mod scale_draw_value;
 pub mod scale_marks_inverted;
 pub mod scale_vertical;
+pub mod scale_positions;
 pub mod scrollbar_default;
 pub mod scrollbar_value;
 pub mod scrolled_window_default;

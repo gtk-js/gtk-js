@@ -457,6 +457,21 @@ const cases: Record<string, () => React.ReactElement> = {
       data-testid="target"
     />
   ),
+  // The server's markup, with no effects run: the slider's place comes from CSS.
+  // Native sizes include the scale's 12px padding (#103); CSS ones don't.
+  "scale-positions": () => (
+    <div
+      style={{ display: "contents" }}
+      dangerouslySetInnerHTML={{
+        __html: renderToStaticMarkup(
+          <GtkBox orientation="vertical" data-testid="target">
+            <GtkScale value={30} style={{ width: 226 }} />
+            <GtkScale value={30} inverted style={{ width: 226 }} />
+          </GtkBox>,
+        ),
+      }}
+    />
+  ),
 
   // GtkEditableLabel cases
   "editable-label-display-default": () => (

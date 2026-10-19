@@ -341,9 +341,6 @@ export const GtkScale = forwardRef<HTMLDivElement, GtkScaleProps>(function GtkSc
   const fraction = max > min ? (value - min) / (max - min) : 0;
   const along = (length: string): React.CSSProperties =>
     isHoriz ? { left: length } : { top: length };
-  /** Where the slider's margin box starts along the trough for a fraction of the
-   *  range (gtk_range_compute_slider_position()), as a CSS length. */
-  const sliderStart = (f: number) => `calc(${inverted ? 1 - f : f} * (100% - ${sliderLength}px))`;
   /** The slider's center for a fraction: marks and the value label follow it. */
   const sliderCenter = (f: number) =>
     `calc(${inverted ? 1 - f : f} * (100% - ${sliderLength}px) + ${sliderLength / 2}px)`;
@@ -635,19 +632,25 @@ export const GtkScale = forwardRef<HTMLDivElement, GtkScaleProps>(function GtkSc
       )}
       {renderMarks(topMarks, "top")}
       {renderMarks(bottomMarks, "bottom")}
-      <div ref={troughRef} className="gtk-trough">
+      <div
+        ref={troughRef}
+        className="gtk-trough"
+        // gtk_range_compute_slider_position(): the slider's margin box starts at
+        // this fraction of the trough's length less its own, which layout.css
+        // lays out with the slider's actual CSS margins (right before hydration too).
+        style={
+          {
+            "--gtk-scale-slider-position": inverted ? 1 - fraction : fraction,
+          } as React.CSSProperties
+        }
+      >
         {hasOrigin && (
           <div
             className={`gtk-highlight ${inverted ? "bottom" : "top"}`}
             style={isHoriz ? { width: `${fraction * 100}%` } : { height: `${fraction * 100}%` }}
           />
         )}
-        <div
-          ref={sliderRef}
-          className="gtk-slider"
-          data-disabled={disabled || undefined}
-          style={along(sliderStart(fraction))}
-        />
+        <div ref={sliderRef} className="gtk-slider" data-disabled={disabled || undefined} />
       </div>
     </div>
   );
