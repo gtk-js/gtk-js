@@ -82,6 +82,7 @@ enum Command {
     BoxSpacing,
     BoxSpacingToolbar,
     BoxHexpand,
+    BoxExpandSet,
     BoxHexpandComputed,
     BoxHomogeneous,
     CenterBoxDefault,
@@ -318,6 +319,7 @@ impl Command {
             Self::BoxSpacingToolbar => Some("box-spacing-toolbar"),
             Self::BoxHomogeneous => Some("box-homogeneous"),
             Self::BoxHexpand => Some("box-hexpand"),
+            Self::BoxExpandSet => Some("box-expand-set"),
             Self::BoxHexpandComputed => Some("box-hexpand-computed"),
             Self::CenterBoxDefault => Some("center-box-default"),
             Self::CenterBoxToolbarCenterEndNarrow => Some("center-box-toolbar-center-end-narrow"),
@@ -596,6 +598,7 @@ fn create_widget_for_case(name: &str) -> Option<(gtk::Widget, bool)> {
         }
         "box-homogeneous" => widget_case!(cases::box_homogeneous::BoxHomogeneous, false),
         "box-hexpand" => widget_case!(cases::box_hexpand::BoxHexpand, false),
+        "box-expand-set" => widget_case!(cases::box_expand_set::BoxExpandSet, false),
         "box-hexpand-computed" => {
             widget_case!(cases::box_hexpand_computed::BoxHexpandComputed, false)
         }
@@ -1048,6 +1051,7 @@ fn is_known_case(name: &str) -> bool {
             | "box-spacing-toolbar"
             | "box-homogeneous"
             | "box-hexpand"
+            | "box-expand-set"
             | "box-hexpand-computed"
             | "center-box-default"
             | "center-box-toolbar-center-end-narrow"

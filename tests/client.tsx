@@ -72,6 +72,7 @@ import {
 } from "@gtk-js/adwaita";
 import { Fragment, type ReactElement, useLayoutEffect, useRef } from "react";
 import { createRoot } from "react-dom/client";
+import { renderToStaticMarkup } from "react-dom/server";
 
 const caseName = window.location.pathname.slice(1);
 const isGallery = caseName === "gallery";
@@ -455,6 +456,39 @@ const cases: Record<string, () => React.ReactElement> = {
       <GtkLabel label="Same" hexpand />
       <GtkLabel label="End" />
     </GtkBox>
+  ),
+  // The server's markup, with no effects run: a widget's own hexpand/vexpand
+  // has to work from CSS alone, before expand.ts computes anything.
+  "box-expand-set": () => (
+    <div
+      style={{ display: "contents" }}
+      // Nor has it run on the server: drop what it computes when it starts.
+      ref={(el) =>
+        queueMicrotask(() => {
+          for (const e of el?.querySelectorAll("*") ?? []) {
+            e.removeAttribute("data-computed-hexpand");
+            e.removeAttribute("data-computed-vexpand");
+          }
+        })
+      }
+      dangerouslySetInnerHTML={{
+        __html: renderToStaticMarkup(
+          <GtkBox halign="start" valign="start" spacing={12} data-testid="target">
+            <GtkBox style={{ width: 360 }}>
+              <GtkButton label="Next" hexpand halign="start" />
+              <GtkLabel label="Year" />
+              <GtkBox hexpand={false}>
+                <GtkLabel label="Box" hexpand />
+              </GtkBox>
+            </GtkBox>
+            <GtkBox orientation="vertical" style={{ height: 150 }}>
+              <GtkButton label="Top" vexpand valign="start" />
+              <GtkLabel label="Bottom" />
+            </GtkBox>
+          </GtkBox>,
+        ),
+      }}
+    />
   ),
   "box-hexpand-computed": () => (
     <GtkBox halign="start" style={{ width: 360 }} data-testid="target">
