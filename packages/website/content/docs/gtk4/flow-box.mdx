@@ -14,7 +14,7 @@ import Example from "./examples/flow-box";
 ## CSS Node Tree
 
 ```
-flowbox
+flowbox.horizontal|.vertical
   └── flowboxchild (per child)
 ```
 
@@ -25,9 +25,18 @@ flowbox
   name="GtkFlowBoxProps"
 />
 
+## Child Props
+
+<AutoTypeTable
+  path="../gtk4/src/components/flow-box.tsx"
+  name="GtkFlowBoxChildProps"
+/>
+
 ## Behavior
 
-- Children wrap to the next row/column when they exceed the available space.
-- Supports single, multiple, and no selection modes.
+- Children that aren't a `GtkFlowBoxChild` are put in one.
+- Children flow in aligned columns (rows when vertical), as many per line as fit, between `minChildrenPerLine` and `maxChildrenPerLine`. The columns share the width left over.
+- Clicking a child selects and activates it; with `activateOnSingleClick={false}`, a click selects (Ctrl toggles, Shift extends in multiple mode) and a double click activates. Clicks on widgets in a child, such as buttons, stay theirs.
+- Every child is a Tab stop, and the keyboard focus selects the child it moves to. The arrow keys, Home, End, Page Up and Page Down move between children (Shift extends the selection, Ctrl moves without selecting), Enter and Space activate, Ctrl+Space toggles the selection and Ctrl+A / Shift+Ctrl+A select and unselect all in multiple mode.
 
 [GTK4 Documentation →](https://docs.gtk.org/gtk4/class.FlowBox.html)
