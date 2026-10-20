@@ -1,6 +1,6 @@
 "use client";
 
-import { GtkBox, GtkButton, GtkLabel, GtkPopover } from "@gtk-js/gtk4";
+import { GtkBox, GtkButton, GtkLabel, GtkPopover, tooltipAttrs } from "@gtk-js/gtk4";
 import { ApplicationsSystem } from "@gtk-js/icons-adwaita";
 import { useRef, useState } from "react";
 import {
@@ -26,7 +26,9 @@ function AccentPicker({
       {presets.map((color) => (
         <button
           key={color}
-          title={color}
+          type="button"
+          // A GTK tooltip, like the widgets' tooltipText.
+          {...tooltipAttrs(color)}
           aria-label={color}
           aria-pressed={value === color}
           onClick={() => onChange(color)}
