@@ -2094,6 +2094,28 @@ const cases: Record<string, () => React.ReactElement> = {
       <GtkLabel label="Footer" xalign={0} className="caption" />
     </AdwPreferencesGroup>
   ),
+  "adw-preferences-group-header-suffix": () => (
+    <AdwPreferencesGroup
+      title="Group Title"
+      description="A description"
+      headerSuffix={<GtkButton label="Add" />}
+      data-testid="target"
+    >
+      <AdwActionRow title="Row 1" />
+    </AdwPreferencesGroup>
+  ),
+  "adw-preferences-group-long-title": () => (
+    <AdwClamp maximumSize={300} tighteningThreshold={300} data-testid="target">
+      <AdwPreferencesGroup title="A very long group title that will not fit on one line at all">
+        <AdwActionRow title="Row 1" />
+      </AdwPreferencesGroup>
+    </AdwClamp>
+  ),
+  "adw-preferences-group-suffix-only": () => (
+    <AdwPreferencesGroup headerSuffix={<GtkButton label="Suffix" />} data-testid="target">
+      <AdwActionRow title="Row 1" />
+    </AdwPreferencesGroup>
+  ),
 
   // AdwPreferencesPage cases
   "adw-preferences-page-default": () => (

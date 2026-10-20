@@ -8,7 +8,7 @@ export default function Example() {
       iconName="DialogInformation"
       title="No Results"
       description="Try a different search term."
-      style={{ height: 250 }}
+      style={{ height: 320 }}
     />
   );
 }

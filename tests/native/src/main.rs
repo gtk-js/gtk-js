@@ -78,6 +78,9 @@ enum Command {
     AdwPreferencesGroupFooter,
     AdwPreferencesGroupLabelOnly,
     AdwPreferencesGroupMixed,
+    AdwPreferencesGroupHeaderSuffix,
+    AdwPreferencesGroupLongTitle,
+    AdwPreferencesGroupSuffixOnly,
     AdwPreferencesPageDefault,
     AdwPreferencesRowDefault,
     AdwPreferencesRowCustomChild,
@@ -426,6 +429,9 @@ impl Command {
             Self::AdwPreferencesGroupFooter => Some("adw-preferences-group-footer"),
             Self::AdwPreferencesGroupLabelOnly => Some("adw-preferences-group-label-only"),
             Self::AdwPreferencesGroupMixed => Some("adw-preferences-group-mixed"),
+            Self::AdwPreferencesGroupHeaderSuffix => Some("adw-preferences-group-header-suffix"),
+            Self::AdwPreferencesGroupLongTitle => Some("adw-preferences-group-long-title"),
+            Self::AdwPreferencesGroupSuffixOnly => Some("adw-preferences-group-suffix-only"),
             Self::AdwPreferencesPageDefault => Some("adw-preferences-page-default"),
             Self::AdwPreferencesRowDefault => Some("adw-preferences-row-default"),
             Self::AdwPreferencesRowCustomChild => Some("adw-preferences-row-custom-child"),
@@ -821,6 +827,15 @@ fn create_widget_for_case(name: &str) -> Option<(gtk::Widget, bool)> {
         }
         "adw-preferences-group-mixed" => {
             widget_case!(cases::adw_preferences_group_mixed::AdwPreferencesGroupMixed, false)
+        }
+        "adw-preferences-group-header-suffix" => {
+            widget_case!(cases::adw_preferences_group_header_suffix::AdwPreferencesGroupHeaderSuffix, false)
+        }
+        "adw-preferences-group-long-title" => {
+            widget_case!(cases::adw_preferences_group_long_title::AdwPreferencesGroupLongTitle, false)
+        }
+        "adw-preferences-group-suffix-only" => {
+            widget_case!(cases::adw_preferences_group_suffix_only::AdwPreferencesGroupSuffixOnly, false)
         }
         "adw-preferences-page-default" => {
             widget_case!(cases::adw_preferences_page_default::AdwPreferencesPageDefault, false)
@@ -1536,6 +1551,9 @@ fn is_known_case(name: &str) -> bool {
             | "adw-preferences-group-footer"
             | "adw-preferences-group-label-only"
             | "adw-preferences-group-mixed"
+            | "adw-preferences-group-header-suffix"
+            | "adw-preferences-group-long-title"
+            | "adw-preferences-group-suffix-only"
             | "adw-preferences-page-default"
             | "adw-preferences-row-default"
             | "adw-preferences-row-custom-child"
