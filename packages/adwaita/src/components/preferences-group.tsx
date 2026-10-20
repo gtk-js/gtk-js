@@ -1,4 +1,4 @@
-import { GtkListBoxRowContext, labelText, orderRows, wrapStyle } from "@gtk-js/gtk4";
+import { GtkListBoxRowContext, labelText, useRowContainer, wrapStyle } from "@gtk-js/gtk4";
 import {
   type CSSProperties,
   forwardRef,
@@ -6,9 +6,7 @@ import {
   type ReactNode,
   useId,
   useLayoutEffect,
-  useMemo,
   useRef,
-  useState,
 } from "react";
 
 export interface AdwPreferencesGroupProps extends HTMLAttributes<HTMLDivElement> {
@@ -107,26 +105,25 @@ export const AdwPreferencesGroup = forwardRef<HTMLDivElement, AdwPreferencesGrou
     const descriptionId = useId();
 
     // Like adw_preferences_group_add(): rows go in the list and other widgets
-    // below it. Every child is rendered below the list, and a row portals itself
-    // into the list (useListBoxRow), so no child moves when it turns out to be a
-    // row, or stops being one.
+    // below it. On the client every child is rendered below the list, and a
+    // row portals itself into the list (useListBoxRow), so no child moves when
+    // it turns out to be a row, or stops being one. The list exists from the
+    // first render, so a parent that measures the group when it mounts, like a
+    // dialog fixing its natural size, sees the rows in it.
     //
-    // The list exists from the first render, so the rows portal into it in the
-    // group's first commit: a parent that measures the group when it mounts,
-    // like a dialog fixing its natural size, sees them. React doesn't render
-    // the list; the group puts it first in its box. None on the server.
-    const [list] = useState(() =>
-      typeof document === "undefined" ? null : document.createElement("div"),
-    );
-    const container = useMemo(() => ({ list }), [list]);
+    // A server render can't portal: there the children render in the list, so
+    // the rows are in place before and after hydration (useRowContainer).
     const boxRef = useRef<HTMLDivElement>(null);
+    const listRef = useRef<HTMLDivElement>(null);
+    const listClass = `gtk-list gtk-preferencesgroup-list ${separateRows ? "boxed-list-separate" : "boxed-list"}`;
+    const { container, rendersList } = useRowContainer(boxRef, listRef, listClass);
+    const rows = (
+      <GtkListBoxRowContext.Provider value={container}>{children}</GtkListBoxRowContext.Provider>
+    );
     useLayoutEffect(() => {
-      const box = boxRef.current;
-      if (!list || !box) return;
-      // GTK hides the list while it has no rows: see .gtk-preferencesgroup-list.
-      list.setAttribute("role", "list");
-      box.prepend(list);
-      const stopOrdering = orderRows(list, box);
+      // The list node, the server-rendered one too while hydrating (#134).
+      const list = container.list ?? listRef.current;
+      if (!list) return;
 
       // The list's move-cursor bindings, for keys pressed on a row. The cursor
       // can be on an insensitive row, which focus can't move to. Past either
@@ -161,14 +158,8 @@ export const AdwPreferencesGroup = forwardRef<HTMLDivElement, AdwPreferencesGrou
       return () => {
         list.removeEventListener("focusin", onFocusIn);
         list.removeEventListener("keydown", onKeyDown);
-        stopOrdering();
-        list.remove();
       };
-    }, [list]);
-    useLayoutEffect(() => {
-      if (list)
-        list.className = `gtk-list gtk-preferencesgroup-list ${separateRows ? "boxed-list-separate" : "boxed-list"}`;
-    }, [list, separateRows]);
+    }, [container.list]);
 
     const classes = ["gtk-preferencesgroup"];
     if (className) classes.push(className);
@@ -217,9 +208,13 @@ export const AdwPreferencesGroup = forwardRef<HTMLDivElement, AdwPreferencesGrou
             </div>
           )}
           <div ref={boxRef} className="gtk-box gtk-box-layout vertical">
-            <GtkListBoxRowContext.Provider value={container}>
-              {children}
-            </GtkListBoxRowContext.Provider>
+            {/* GTK hides the list while it has no rows: see .gtk-preferencesgroup-list. */}
+            {rendersList && (
+              <div ref={listRef} role="list" className={listClass}>
+                {!container.list && rows}
+              </div>
+            )}
+            {container.list && rows}
           </div>
         </div>
       </div>
