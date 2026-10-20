@@ -79,6 +79,7 @@ enum Command {
     AdwPreferencesRowDefault,
     AdwPreferencesRowCustomChild,
     AdwSpinRowDefault,
+    AdwSpinRowLongTitle,
     AdwSwitchRowDefault,
     AdwSwitchRowActive,
     AdwSwitchRowPrefixSuffix,
@@ -269,6 +270,7 @@ enum Command {
     SeparatorVertical,
     SeparatorSpacerHorizontal,
     SpinButtonDefault,
+    SpinButtonDisabled,
     SpinButtonVertical,
     SpinnerDefault,
     SpinnerSpinning,
@@ -392,6 +394,7 @@ impl Command {
             Self::AdwPreferencesRowDefault => Some("adw-preferences-row-default"),
             Self::AdwPreferencesRowCustomChild => Some("adw-preferences-row-custom-child"),
             Self::AdwSpinRowDefault => Some("adw-spin-row-default"),
+            Self::AdwSpinRowLongTitle => Some("adw-spin-row-long-title"),
             Self::AdwSwitchRowDefault => Some("adw-switch-row-default"),
             Self::AdwSwitchRowActive => Some("adw-switch-row-active"),
             Self::AdwSwitchRowPrefixSuffix => Some("adw-switch-row-prefix-suffix"),
@@ -582,6 +585,7 @@ impl Command {
             Self::SeparatorVertical => Some("separator-vertical"),
             Self::SeparatorSpacerHorizontal => Some("separator-spacer-horizontal"),
             Self::SpinButtonDefault => Some("spin-button-default"),
+            Self::SpinButtonDisabled => Some("spin-button-disabled"),
             Self::SpinButtonVertical => Some("spin-button-vertical"),
             Self::SpinnerDefault => Some("spinner-default"),
             Self::SpinnerSpinning => Some("spinner-spinning"),
@@ -760,6 +764,9 @@ fn create_widget_for_case(name: &str) -> Option<(gtk::Widget, bool)> {
         }
         "adw-spin-row-default" => {
             widget_case!(cases::adw_spin_row_default::AdwSpinRowDefault, false)
+        }
+        "adw-spin-row-long-title" => {
+            widget_case!(cases::adw_spin_row_long_title::AdwSpinRowLongTitle, false)
         }
         "adw-switch-row-default" => {
             widget_case!(cases::adw_switch_row_default::AdwSwitchRowDefault, false)
@@ -1230,6 +1237,9 @@ fn create_widget_for_case(name: &str) -> Option<(gtk::Widget, bool)> {
         "spin-button-default" => {
             widget_case!(cases::spin_button_default::SpinButtonDefault, false)
         }
+        "spin-button-disabled" => {
+            widget_case!(cases::spin_button_disabled::SpinButtonDisabled, false)
+        }
         "spin-button-vertical" => {
             widget_case!(cases::spin_button_vertical::SpinButtonVertical, false)
         }
@@ -1391,6 +1401,7 @@ fn is_known_case(name: &str) -> bool {
             | "adw-preferences-row-default"
             | "adw-preferences-row-custom-child"
             | "adw-spin-row-default"
+            | "adw-spin-row-long-title"
             | "adw-switch-row-default"
             | "adw-switch-row-active"
             | "adw-switch-row-prefix-suffix"
@@ -1575,6 +1586,7 @@ fn is_known_case(name: &str) -> bool {
             | "separator-vertical"
             | "separator-spacer-horizontal"
             | "spin-button-default"
+            | "spin-button-disabled"
             | "spin-button-vertical"
             | "spinner-default"
             | "spinner-spinning"
