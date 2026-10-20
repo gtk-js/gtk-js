@@ -205,6 +205,16 @@ export const INTERNAL_SELECTORS: Record<string, string> = {
   accelerator: ".gtk-accelerator",
 };
 
+/**
+ * GTK style classes that utility CSS frameworks also define, with another
+ * meaning, as `.gtk-*` classes: Tailwind's `hidden` is `display: none`, which
+ * no GTK rule overrides, while GTK's .hidden only fades a node out (e.g.
+ * AdwToggleGroup's separators). Components emit the mapped class.
+ */
+export const STYLE_CLASS_SELECTORS: Record<string, string> = {
+  hidden: ".gtk-hidden",
+};
+
 /** All selector mappings combined. */
 export const ALL_SELECTORS: Record<string, string> = {
   ...WIDGET_SELECTORS,

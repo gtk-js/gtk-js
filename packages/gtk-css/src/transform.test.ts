@@ -41,6 +41,18 @@ describe("remapSelectors", () => {
   });
 });
 
+describe("remapStyleClasses", () => {
+  test("GTK's .hidden is .gtk-hidden, apart from Tailwind's `hidden` utility", async () => {
+    const out = await transform(
+      "toggle-group > separator.hidden { opacity: 0; } tab.hidden-tab, .hiddenx { color: red; }",
+    );
+    expect(out).toContain(":where(.gtk-separator):not(_).gtk-hidden {");
+    expect(out).not.toMatch(/(?<![\w-])\.hidden(?![\w-])/);
+    // Only the class itself: other names that start with it stay.
+    expect(out).toContain(".hidden-tab, .hiddenx");
+  });
+});
+
 describe("text selection", () => {
   test("the selection node is ::selection, its state on the text", async () => {
     const out = await transform(

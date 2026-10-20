@@ -1,6 +1,6 @@
 import postcss, { list, type Plugin } from "postcss";
 import type { CompileOptions } from "./compile.ts";
-import { ALL_SELECTORS } from "./selectors.ts";
+import { ALL_SELECTORS, STYLE_CLASS_SELECTORS } from "./selectors.ts";
 
 /**
  * Pre-processes raw sassc output to remove GTK-specific syntax that
@@ -203,6 +203,26 @@ const remapSelectors: Plugin = {
     if (remapped !== original) {
       rule.selector = remapped;
     }
+  },
+};
+
+const styleClassRegex = new RegExp(
+  `\\.(${Object.keys(STYLE_CLASS_SELECTORS).join("|")})(?![\\w-])`,
+  "g",
+);
+
+/**
+ * PostCSS plugin: GTK style classes that utility frameworks define too, e.g.
+ * `.hidden`, to their `.gtk-*` classes (STYLE_CLASS_SELECTORS).
+ */
+const remapStyleClasses: Plugin = {
+  postcssPlugin: "gtk-remap-style-classes",
+  Rule(rule) {
+    const remapped = rule.selector.replace(
+      styleClassRegex,
+      (match, name: string) => STYLE_CLASS_SELECTORS[name] ?? match,
+    );
+    if (remapped !== rule.selector) rule.selector = remapped;
   },
 };
 
@@ -1101,6 +1121,7 @@ export function buildGtkToWeb(assetPlugin?: Plugin, scheme?: "light" | "dark") {
   return postcss([
     ...(scheme ? [forceColorScheme(scheme)] : []),
     remapSelectors,
+    remapStyleClasses,
     remapSelectionNode,
     remapPseudoClasses,
     mirrorIndicatorState,

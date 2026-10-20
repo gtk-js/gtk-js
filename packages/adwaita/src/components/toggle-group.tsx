@@ -87,7 +87,7 @@ export function nextFocusable(toggles: AdwToggle[], from: number, step: 1 | -1):
  * CSS node:
  *   toggle-group[.horizontal|.vertical]
  *     ├── toggle.toggle[.text-button|.image-button|.image-text-button]
- *     ├── separator.horizontal|.vertical[.hidden]
+ *     ├── separator.horizontal|.vertical[.hidden] (.gtk-hidden, see gtk-css)
  *     └── toggle.toggle[...]
  *
  * @see https://gnome.pages.gitlab.gnome.org/libadwaita/doc/1-latest/class.ToggleGroup.html
@@ -229,7 +229,9 @@ export const AdwToggleGroup = forwardRef<HTMLDivElement, AdwToggleGroupProps>(
               {i > 0 && (
                 <GtkSeparator
                   orientation={orientation}
-                  className={hidesSeparators(i - 1) || hidesSeparators(i) ? "hidden" : undefined}
+                  className={
+                    hidesSeparators(i - 1) || hidesSeparators(i) ? "gtk-hidden" : undefined
+                  }
                   data-disabled={disabled || undefined}
                 />
               )}
