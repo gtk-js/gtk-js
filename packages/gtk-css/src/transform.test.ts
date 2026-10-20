@@ -452,7 +452,7 @@ describe("color scheme media queries", () => {
   // Like libadwaita's _colors.scss: dark @define-colors and plain custom
   // properties, each in its own @media (prefers-color-scheme: dark) block.
   const scss =
-    "@define-color window_bg_color #fafafb;\n@media (prefers-color-scheme: dark) {\n  @define-color window_bg_color #222226;\n}\n:root {\n  --active-toggle-bg-color: #ffffff;\n}\n@media (prefers-color-scheme: dark) {\n  :root {\n    --active-toggle-bg-color: rgb(255 255 255 / 20%);\n  }\n}\nwindow { background-color: @window_bg_color; }\n";
+    "@define-color window_bg_color #fafafb;\n@media (prefers-color-scheme: dark) {\n  @define-color window_bg_color #222226;\n}\n:root {\n  --window-bg-color: @window_bg_color;\n  --active-toggle-bg-color: #ffffff;\n}\n@media (prefers-color-scheme: dark) {\n  :root {\n    --active-toggle-bg-color: rgb(255 255 255 / 20%);\n  }\n}\nwindow { background-color: @window_bg_color; }\n";
 
   async function compile(scheme?: "light" | "dark") {
     const result = await buildGtkToWeb(undefined, scheme).process(preprocess(scss, { scheme }), {
@@ -491,6 +491,43 @@ describe("color scheme media queries", () => {
         { from: undefined },
       ),
     ).rejects.toThrow("Unsupported color scheme media query");
+  });
+});
+
+describe("named colors", () => {
+  // Like libadwaita's _colors.scss: :root sets --window-bg-color from a named
+  // color, but derives --accent-color in CSS from the accent AdwStyleManager
+  // sets at runtime. @accent_color is a named color, not that custom property.
+  const scss = [
+    "@define-color accent_color oklab(from @accent_bg_color min(l, 0.5) a b);",
+    "@define-color window_bg_color #fafafb;",
+    "@media (prefers-color-scheme: dark) {",
+    "  @define-color accent_color oklab(from @accent_bg_color max(l, 0.85) a b);",
+    "  @define-color window_bg_color #222226;",
+    "}",
+    ":root {",
+    "  --accent-bg-color: @accent_bg_color;",
+    "  --accent-color: oklab(from var(--accent-bg-color) var(--standalone-color-oklab));",
+    "  --window-bg-color: @window_bg_color;",
+    "}",
+  ].join("\n");
+
+  test.each([
+    ["forced dark", "dark"],
+    ["auto", undefined],
+  ] as const)("%s: properties set from named colors get their dark values, derived ones aren't baked", (_name, scheme) => {
+    const out = preprocess(scss, { scheme });
+    expect(out).toMatch(/--window-bg-color: #fafafb;[^]*--window-bg-color: #222226;/);
+    expect(out.match(/--accent-color:.*/g)).toEqual([
+      "--accent-color: oklab(from var(--accent-bg-color) var(--standalone-color-oklab));",
+    ]);
+    expect(out).not.toContain("data-color-scheme");
+  });
+
+  test("a dark value outside :root throws instead of being applied to :root", () => {
+    expect(() => preprocess(scss.replace(":root {", ".osd {"), { scheme: "dark" })).toThrow(
+      "Dark value of --window-bg-color outside a top-level :root rule",
+    );
   });
 });
 
