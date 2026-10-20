@@ -1539,7 +1539,11 @@
   flex-grow: calc(1 - var(--gtk-scale-slider-position));
 }
 
+/* gtk_range_render_trough() draws the highlight, then the slider over it. The
+   highlight is positioned, which would paint it above an in-flow slider; a
+   positioned slider (still in flow) paints after it, in tree order. */
 .gtk-scale > .gtk-trough > .gtk-slider {
+  position: relative;
   flex: none;
 }
 
