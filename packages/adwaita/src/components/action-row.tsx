@@ -1,4 +1,4 @@
-import { GtkImage, labelText, useListBoxRow, wrapStyle } from "@gtk-js/gtk4";
+import { GtkImage, labelText, tooltipAttrs, useListBoxRow, wrapStyle } from "@gtk-js/gtk4";
 import {
   forwardRef,
   type HTMLAttributes,
@@ -178,7 +178,7 @@ export const AdwActionRow = forwardRef<HTMLDivElement, AdwActionRowProps>(functi
       ref={ref}
       role="listitem"
       className={classes.join(" ")}
-      title={tooltipText}
+      {...tooltipAttrs(tooltipText)}
       // Every GtkListBoxRow is focusable, one Tab stop each (GTK_LIST_TAB_ALL),
       // unless it's insensitive.
       tabIndex={disabled ? undefined : 0}
