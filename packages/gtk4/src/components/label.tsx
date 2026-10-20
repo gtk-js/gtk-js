@@ -13,6 +13,8 @@ import {
   useState,
 } from "react";
 import { parseMarkup } from "../markup.tsx";
+import { MnemonicText } from "../mnemonic.tsx";
+import { tooltipAttrs } from "../tooltip.tsx";
 import {
   alignAttrs,
   type GtkAlignProps,
@@ -37,6 +39,12 @@ export interface GtkLabelProps extends HTMLAttributes<HTMLSpanElement>, GtkAlign
   wrapMode?: GtkWrapMode;
   /** Whether the text is selectable. Default: false. */
   selectable?: boolean;
+  /**
+   * Whether an underscore marks the next character as the mnemonic ("_Save"),
+   * underlined while Alt is held; Alt with it activates the widget the label
+   * is in. `__` is a literal underscore. Default: false.
+   */
+  useUnderline?: boolean;
   /** Ellipsize mode. Default: "none". */
   ellipsize?: GtkEllipsizeMode;
   /** Minimum width in characters. Default: -1 (natural). */
@@ -88,6 +96,7 @@ export const GtkLabel = forwardRef<HTMLSpanElement, GtkLabelProps>(function GtkL
     wrap = false,
     wrapMode = "word",
     selectable = false,
+    useUnderline = false,
     ellipsize = "none",
     widthChars = -1,
     maxWidthChars = -1,
@@ -155,7 +164,13 @@ export const GtkLabel = forwardRef<HTMLSpanElement, GtkLabelProps>(function GtkL
   // Pango keeps every space and line break of the text: "pre" rather than the
   // collapsing "nowrap".
   if (!wrap) cssStyle.whiteSpace = "pre";
-  else Object.assign(cssStyle, wrapStyle(wrapMode));
+  else {
+    Object.assign(cssStyle, wrapStyle(wrapMode));
+    // GTK sizes a label in whole pixels (gtk_label_measure() takes the
+    // layout's pixel size): several lines of 20.5px make a 42px label, not a
+    // 41px one that leaves what follows on a fractional pixel.
+    cssStyle.height ??= WRAPPING_HEIGHT;
+  }
 
   // `lines` only limits a wrapping, ellipsizing label, which wraps up to that
   // many lines. Otherwise an ellipsized paragraph is one line (Pango's default
@@ -180,9 +195,9 @@ export const GtkLabel = forwardRef<HTMLSpanElement, GtkLabelProps>(function GtkL
     cssStyle.minWidth = `${widthChars}ch`;
   }
 
-  let content: ReactNode = text;
+  let content: ReactNode = useUnderline ? <MnemonicText text={text} /> : text;
   if (useMarkup) {
-    const markup = renderMarkup(text, (link, key, children) => (
+    const markup = renderMarkup(text, useUnderline, (link, key, children) => (
       <a
         key={key}
         className={link.className ? `gtk-link ${link.className}` : "gtk-link"}
@@ -191,7 +206,7 @@ export const GtkLabel = forwardRef<HTMLSpanElement, GtkLabelProps>(function GtkL
         target="_blank"
         rel="noopener noreferrer"
         // A link's title is its tooltip (gtk_label_query_tooltip()).
-        title={link.title}
+        {...tooltipAttrs(link.title)}
         data-visited={visited.has(link.uri) || undefined}
         data-disabled={disabled || undefined}
         style={disabled ? undefined : LINK_STYLE}
@@ -310,6 +325,9 @@ function flexAlign(align: number): "flex-start" | "center" | "flex-end" {
   return align < 0.25 ? "flex-start" : align > 0.75 ? "flex-end" : "center";
 }
 
+/** A wrapping label's height: its text's, rounded up to whole pixels. */
+const WRAPPING_HEIGHT = "calc-size(auto, round(up, size, 1px))";
+
 /** The clamp draws the ellipsis at the end of its last line. */
 function lineClamp(lines: number): React.CSSProperties {
   return {
@@ -401,6 +419,7 @@ function attributeValue(quoted: string): string | null {
  */
 function renderMarkup(
   markup: string,
+  useUnderline: boolean,
   renderLink: (link: LabelLink, key: number, children: ReactNode) => ReactNode,
 ): { content: ReactNode; hasLinks: boolean } {
   const parts: { markup: string; link?: LabelLink }[] = [];
@@ -456,7 +475,7 @@ function renderMarkup(
 
   const content: ReactNode[] = [];
   for (const [i, { markup: partMarkup, link }] of parts.entries()) {
-    const children = parseMarkup(partMarkup);
+    const children = parseMarkup(partMarkup, useUnderline);
     if (children === null) return invalid();
     content.push(link ? renderLink(link, i, children) : <Fragment key={i}>{children}</Fragment>);
   }

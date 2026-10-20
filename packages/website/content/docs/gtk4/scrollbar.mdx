@@ -15,7 +15,7 @@ import Example from "./examples/scrollbar";
 
 ```
 scrollbar[.horizontal|.vertical]
-  └── range
+  └── range[.dragging]
       └── trough
           └── slider
 ```
@@ -29,7 +29,8 @@ scrollbar[.horizontal|.vertical]
 
 ## Behavior
 
-- Most apps should use `GtkScrolledWindow` instead.
-- This component is for standalone scrollbar use cases.
+- Most apps should use `GtkScrolledWindow` instead, whose scrollbars are these.
+- Pressing the slider grabs it; a click in the trough centers the slider on the pointer.
+- Shift+click or a middle click pages towards the pointer while held; the wheel moves by pages.
 
 [GTK4 Documentation →](https://docs.gtk.org/gtk4/class.Scrollbar.html)

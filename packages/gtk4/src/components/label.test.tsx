@@ -27,6 +27,14 @@ describe("GtkLabel", () => {
     expect(style).not.toContain("line-clamp");
   });
 
+  test("a wrapping label is whole pixels tall, unless its style sets a height", () => {
+    const style = (props: object) =>
+      styleOf(renderToStaticMarkup(<GtkLabel label="text" wrap {...props} />));
+    // gtk_label_measure() takes the layout's pixel size.
+    expect(style({})).toContain("height:calc-size(auto, round(up, size, 1px))");
+    expect(style({ style: { height: 40 } })).toContain("height:40px");
+  });
+
   test("xalign places the text, centered by default like GtkLabel", () => {
     const style = (props: object) =>
       styleOf(renderToStaticMarkup(<GtkLabel label="text" {...props} />));
@@ -100,7 +108,7 @@ describe("GtkLabel", () => {
     );
     expect(html).toContain('class="gtk-label link"');
     expect(html).toContain(
-      '<a class="gtk-link x" href="https://gnome.org?a=1&amp;b=2" target="_blank" rel="noopener noreferrer" title="Site" style="cursor:pointer"><span><span style="font-weight:bold">GNOME</span></span></a>',
+      '<a class="gtk-link x" href="https://gnome.org?a=1&amp;b=2" target="_blank" rel="noopener noreferrer" data-gtk-tooltip="Site" aria-description="Site" style="cursor:pointer"><span><span style="font-weight:bold">GNOME</span></span></a>',
     );
     expect(html).toContain('<span style="font-weight:bold"> now</span>');
     expect(renderToStaticMarkup(<GtkLabel label="<b>bold</b>" />)).toContain("&lt;b&gt;");
