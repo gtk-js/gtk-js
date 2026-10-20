@@ -3,7 +3,7 @@
   "publishConfig": {
     "access": "public"
   },
-  "version": "0.1.8",
+  "version": "0.1.9",
   "type": "module",
   "main": "dist/index.js",
   "files": [
@@ -18,7 +18,7 @@
     "./gtk4.css": "./dist/gtk4.css"
   },
   "dependencies": {
-    "@gtk-js/gtk-css": "0.1.7",
+    "@gtk-js/gtk-css": "0.1.8",
     "@gtk-js/icon-helpers": "0.1.6",
     "@gtk-js/icons-gtk4": "0.1.6"
   },

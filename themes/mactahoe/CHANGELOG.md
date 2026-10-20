@@ -1,5 +1,20 @@
 # @gtk-js/theme-mactahoe
 
+## [0.0.9](https://github.com/gtk-js/gtk-js/compare/theme-mactahoe-v0.0.8...theme-mactahoe-v0.0.9) (2026-10-20)
+
+
+### Bug Fixes
+
+* embed every theme image, drawing Fluent's scale knobs and check marks ([#148](https://github.com/gtk-js/gtk-js/issues/148)) ([f96e666](https://github.com/gtk-js/gtk-js/commit/f96e666417eaa130f5aa2899a9739c4596045cdd))
+* follow the OS color scheme without fading, in every auto theme ([#142](https://github.com/gtk-js/gtk-js/issues/142)) ([dd65fa1](https://github.com/gtk-js/gtk-js/commit/dd65fa1ecb0b43291f1a97ec93899f58fe145b1b))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @gtk-js/gtk-css bumped from 0.1.7 to 0.1.8
+
 ## [0.0.8](https://github.com/gtk-js/gtk-js/compare/theme-mactahoe-v0.0.7...theme-mactahoe-v0.0.8) (2026-10-16)
 
 

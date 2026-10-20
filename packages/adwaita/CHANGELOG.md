@@ -1,5 +1,63 @@
 # @gtk-js/adwaita
 
+## [0.1.9](https://github.com/gtk-js/gtk-js/compare/adwaita-v0.1.8...adwaita-v0.1.9) (2026-10-20)
+
+
+### Features
+
+* GTK tooltips for tooltipText, with GTK's hover and browse timeouts ([#65](https://github.com/gtk-js/gtk-js/issues/65)) ([8cc4b88](https://github.com/gtk-js/gtk-js/commit/8cc4b88e049652e1478780580db9d2940c3d4b39))
+
+
+### Bug Fixes
+
+* **adwaita:** confirm AdwAboutDialog copies with a toast ([#66](https://github.com/gtk-js/gtk-js/issues/66)) ([5e01c7d](https://github.com/gtk-js/gtk-js/commit/5e01c7d2b4de3975c6f43f6f3c6ca5dd5e5b7f95))
+* AdwComboRow shows the default cursor and behaves like GTK's combo row ([#72](https://github.com/gtk-js/gtk-js/issues/72)) ([33eacfd](https://github.com/gtk-js/gtk-js/commit/33eacfdcdc98e44af6f83a3bd6f7cc67fe91782b))
+* AdwNavigationSplitView keeps its pages across collapsing and matches GTK's panes ([#118](https://github.com/gtk-js/gtk-js/issues/118)) ([5ca06d9](https://github.com/gtk-js/gtk-js/commit/5ca06d95a8b3be3ce7f473d16b161730bbfc2cd8))
+* AdwOverlaySplitView shows, hides and overlays its sidebar like libadwaita ([#88](https://github.com/gtk-js/gtk-js/issues/88)) ([c3070e0](https://github.com/gtk-js/gtk-js/commit/c3070e0c5599db8f162cadaf965f0bcbd614ceba))
+* AdwWindow is a GtkWindow, and AdwToolbarView's bars overlay, slide and collapse like libadwaita's ([#117](https://github.com/gtk-js/gtk-js/issues/117)) ([2a2e44b](https://github.com/gtk-js/gtk-js/commit/2a2e44b12a4965b95929b0ba748a6686bb68f3f0))
+* animate AdwExpanderRow open and closed, and give it its expanded look ([#71](https://github.com/gtk-js/gtk-js/issues/71)) ([6e488aa](https://github.com/gtk-js/gtk-js/commit/6e488aa7bce99a12016ff4aceb815117d6031a0b))
+* clamp, center and size AdwToastOverlay toasts like libadwaita ([#116](https://github.com/gtk-js/gtk-js/issues/116)) ([76e50d2](https://github.com/gtk-js/gtk-js/commit/76e50d235d6066da090fff9117cbe7767390a55b))
+* draw AdwAboutDialog's toast over its pages, centered like libadwaita ([#150](https://github.com/gtk-js/gtk-js/issues/150)) ([d98bbb6](https://github.com/gtk-js/gtk-js/commit/d98bbb647853b03c69c133119904f43750c3c0d9))
+* follow the OS color scheme without fading, in every auto theme ([#142](https://github.com/gtk-js/gtk-js/issues/142)) ([dd65fa1](https://github.com/gtk-js/gtk-js/commit/dd65fa1ecb0b43291f1a97ec93899f58fe145b1b))
+* give AdwSwitchRow keyboard focus, a live GtkSwitch, disabled and AdwActionRow's props ([#69](https://github.com/gtk-js/gtk-js/issues/69)) ([0300c0e](https://github.com/gtk-js/gtk-js/commit/0300c0e1b3c2a214bba753bf8c12c85006af242a))
+* give AdwViewSwitcher's buttons libadwaita's padding, icons and indicators ([#76](https://github.com/gtk-js/gtk-js/issues/76)) ([56af7fa](https://github.com/gtk-js/gtk-js/commit/56af7fa9d3e66246453bd3ca09cb3a9077bd211d))
+* GtkButton/GtkToggleButton keyboard activation, labels, icons and groups like GTK ([#86](https://github.com/gtk-js/gtk-js/issues/86)) ([b52973a](https://github.com/gtk-js/gtk-js/commit/b52973ac02c62ccfb37c932960856657a229d6cf))
+* GtkCenterBox/GtkActionBar children fill, align and expand; action bar slides ([#128](https://github.com/gtk-js/gtk-js/issues/128)) ([c40ff30](https://github.com/gtk-js/gtk-js/commit/c40ff30a377eed1edea34e6a8c8de9845f2333fc))
+* GtkMenuButton lays out its label, icon and arrow side by side, and behaves like GTK's ([#96](https://github.com/gtk-js/gtk-js/issues/96)) ([49d648b](https://github.com/gtk-js/gtk-js/commit/49d648b05c68dedc4d4840728c0e977598bd2590))
+* GtkWindow's header bar controls, title bar and resize edges behave like GTK's ([#92](https://github.com/gtk-js/gtk-js/issues/92)) ([664b131](https://github.com/gtk-js/gtk-js/commit/664b13197104ecbca2bbf8f6087fc1c77ec82e34))
+* keep the header bars' 6px gap between the title and the side boxes ([#74](https://github.com/gtk-js/gtk-js/issues/74)) ([e217bcc](https://github.com/gtk-js/gtk-js/commit/e217bcc2be70d8558998bc441805b7c3ab3697ee))
+* lay out AdwBanner like libadwaita, and slide it in and out ([#79](https://github.com/gtk-js/gtk-js/issues/79)) ([e7b24d4](https://github.com/gtk-js/gtk-js/commit/e7b24d4a6717dcf974ec31f751753601f528dbaf))
+* make AdwActionRow, AdwButtonRow and AdwPreferencesRow behave like libadwaita's rows ([#87](https://github.com/gtk-js/gtk-js/issues/87)) ([9c6b084](https://github.com/gtk-js/gtk-js/commit/9c6b08477c222b872b99891cd3c5ae3868d8a80b))
+* make AdwBreakpointBin and AdwClamp size and apply like libadwaita ([#91](https://github.com/gtk-js/gtk-js/issues/91)) ([4f0d30d](https://github.com/gtk-js/gtk-js/commit/4f0d30dc1dae46531f0bf6fcd28f0332162632db))
+* make AdwCarousel swipe, scroll and lay out pages like libadwaita ([#77](https://github.com/gtk-js/gtk-js/issues/77)) ([9988a2c](https://github.com/gtk-js/gtk-js/commit/9988a2c3c7dacda5c0e3f802c559fb475e9a48a3))
+* make AdwDialog and AdwAlertDialog modal, adaptive and focused like libadwaita ([#93](https://github.com/gtk-js/gtk-js/issues/93)) ([6bc0bde](https://github.com/gtk-js/gtk-js/commit/6bc0bdeb25005947fe79cb2a1f12855b02df0798))
+* make AdwNavigationView's swipes, shortcuts, focus and back button menu work like libadwaita ([#89](https://github.com/gtk-js/gtk-js/issues/89)) ([39ea3bc](https://github.com/gtk-js/gtk-js/commit/39ea3bc1166e0f55781f1e25e0d8ca61a312dd26))
+* make AdwToggleGroup select, lay out and take keyboard focus like libadwaita ([#90](https://github.com/gtk-js/gtk-js/issues/90)) ([3e3042b](https://github.com/gtk-js/gtk-js/commit/3e3042bc1bed6dc4d69eadde9cc66953d11183b5))
+* make GtkLabel and GtkImage behave like GTK's label and image ([#109](https://github.com/gtk-js/gtk-js/issues/109)) ([7535aa7](https://github.com/gtk-js/gtk-js/commit/7535aa70affaa0a5c191452cb5b4b0d495dd3343))
+* make GtkSpinButton spin, type, size and focus like GTK, and build AdwSpinRow on it ([#101](https://github.com/gtk-js/gtk-js/issues/101)) ([2bc803c](https://github.com/gtk-js/gtk-js/commit/2bc803c62ec2507af971bed84a925d798fa2ac6b))
+* open AdwSplitButton's menu in a popover and keep both halves the same height ([#78](https://github.com/gtk-js/gtk-js/issues/78)) ([c70179a](https://github.com/gtk-js/gtk-js/commit/c70179a0b419e7e10151ca7287b9679c1a87a975))
+* overlay scrollbars and GTK sizing for GtkScrolledWindow, working GtkScrollbar ([#97](https://github.com/gtk-js/gtk-js/issues/97)) ([c02876a](https://github.com/gtk-js/gtk-js/commit/c02876a2e98d839ce193777fc0d335e6d47acc3e))
+* post-merge cleanup: shared helpers, GTK tooltips and presses, .gtk-hidden, docs themes as files ([#149](https://github.com/gtk-js/gtk-js/issues/149)) ([04457c5](https://github.com/gtk-js/gtk-js/commit/04457c5c1fbe56529c6aa9c1c6bf520853a537b3))
+* preferences group/page and status page markup, header layout and row keyboard navigation ([#122](https://github.com/gtk-js/gtk-js/issues/122)) ([19b090c](https://github.com/gtk-js/gtk-js/commit/19b090c85b28c86bbe6f8deb585ff6e3c1f69ecf))
+* render AdwPreferencesGroup's boxed list and rows on the server ([#134](https://github.com/gtk-js/gtk-js/issues/134)) ([2d24fba](https://github.com/gtk-js/gtk-js/commit/2d24fbac4dd8f5368d3975afe4133c1bbee50f4a))
+* reveal AdwPasswordEntryRow's text with its peek button, and mask it like GTK ([#64](https://github.com/gtk-js/gtk-js/issues/64)) ([baaf567](https://github.com/gtk-js/gtk-js/commit/baaf56761ea7bff235716755125d9e3a0e457445))
+* show AdwAlertDialog's body, sized to its natural height like libadwaita ([#146](https://github.com/gtk-js/gtk-js/issues/146)) ([3a148b5](https://github.com/gtk-js/gtk-js/commit/3a148b55651e20cea27b42854cb8c0794811966d))
+* show off AdwAboutDialog in its docs example and match its pages to libadwaita ([#81](https://github.com/gtk-js/gtk-js/issues/81)) ([70eef9e](https://github.com/gtk-js/gtk-js/commit/70eef9ee440a6a07510bae5486c95f47ac4df8e7))
+* show the I-beam over the whole AdwEntryRow, and match its states to libadwaita ([#83](https://github.com/gtk-js/gtk-js/issues/83)) ([30c9b26](https://github.com/gtk-js/gtk-js/commit/30c9b26dd925a19c41c443683c235ad019f1fb7e))
+* size AdwClamp's child in CSS, so the server HTML is clamped too ([#139](https://github.com/gtk-js/gtk-js/issues/139)) ([95d5c53](https://github.com/gtk-js/gtk-js/commit/95d5c5313279d97c6884953480e33dd8ab7284d6))
+* size and color AdwAvatar like libadwaita ([#120](https://github.com/gtk-js/gtk-js/issues/120)) ([db0eadd](https://github.com/gtk-js/gtk-js/commit/db0eaddfa8dd3107bb47e71ee5a0e362c2cfaceb))
+* size GtkSwitch from its slider like GTK, and fix dragging, disabled and delayed state ([#70](https://github.com/gtk-js/gtk-js/issues/70)) ([b69e9b0](https://github.com/gtk-js/gtk-js/commit/b69e9b0c38a1a2adf48a4e43b3b4b9dadab51ac1))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @gtk-js/gtk4 bumped from 0.1.8 to 0.1.9
+    * @gtk-js/theme-adwaita bumped from 0.0.8 to 0.0.9
+  * devDependencies
+    * @gtk-js/gtk-css bumped from 0.1.7 to 0.1.8
+
 ## [0.1.8](https://github.com/gtk-js/gtk-js/compare/adwaita-v0.1.7...adwaita-v0.1.8) (2026-10-16)
 
 

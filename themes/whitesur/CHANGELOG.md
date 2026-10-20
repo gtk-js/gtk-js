@@ -1,5 +1,21 @@
 # @gtk-js/theme-whitesur
 
+## [0.0.9](https://github.com/gtk-js/gtk-js/compare/theme-whitesur-v0.0.8...theme-whitesur-v0.0.9) (2026-10-20)
+
+
+### Bug Fixes
+
+* embed every theme image, drawing Fluent's scale knobs and check marks ([#148](https://github.com/gtk-js/gtk-js/issues/148)) ([f96e666](https://github.com/gtk-js/gtk-js/commit/f96e666417eaa130f5aa2899a9739c4596045cdd))
+* follow the OS color scheme without fading, in every auto theme ([#142](https://github.com/gtk-js/gtk-js/issues/142)) ([dd65fa1](https://github.com/gtk-js/gtk-js/commit/dd65fa1ecb0b43291f1a97ec93899f58fe145b1b))
+* size GtkSwitch from its slider like GTK, and fix dragging, disabled and delayed state ([#70](https://github.com/gtk-js/gtk-js/issues/70)) ([b69e9b0](https://github.com/gtk-js/gtk-js/commit/b69e9b0c38a1a2adf48a4e43b3b4b9dadab51ac1))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @gtk-js/gtk-css bumped from 0.1.7 to 0.1.8
+
 ## [0.0.8](https://github.com/gtk-js/gtk-js/compare/theme-whitesur-v0.0.7...theme-whitesur-v0.0.8) (2026-10-16)
 
 

@@ -3,7 +3,7 @@
   "publishConfig": {
     "access": "public"
   },
-  "version": "0.1.8",
+  "version": "0.1.9",
   "type": "module",
   "main": "dist/index.js",
   "files": [
@@ -19,11 +19,11 @@
   },
   "dependencies": {
     "@gtk-js/icons-adwaita": "0.1.6",
-    "@gtk-js/gtk4": "0.1.8",
-    "@gtk-js/theme-adwaita": "0.0.8"
+    "@gtk-js/gtk4": "0.1.9",
+    "@gtk-js/theme-adwaita": "0.0.9"
   },
   "devDependencies": {
-    "@gtk-js/gtk-css": "0.1.7",
+    "@gtk-js/gtk-css": "0.1.8",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3"
   },
