@@ -266,6 +266,20 @@
   order: var(--gtk-clamp-remainder-order, 0);
 }
 
+/* === GtkDropDown ===
+ * The dropdown measures and allocates only its button, which fills it; its
+ * popup is a surface of its own (gtk_drop_down_size_allocate()). The arrow is
+ * a GtkBuiltinIcon, which draws its icon centered. */
+.gtk-dropdown {
+  display: inline-grid;
+}
+
+.gtk-dropdown > .gtk-button > .gtk-box > .gtk-arrow {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
 /* === GtkActionBar ===
  * GtkActionBar defaults to halign=GTK_ALIGN_FILL in native GTK, meaning it
  * always fills the full width allocated by its parent. On the web we must
