@@ -16,6 +16,8 @@
  * (see boxTracks()), from those flags alone: nothing is measured.
  */
 
+import { CENTER_EXPAND_CHANGE } from "./layouts/center-allocation.ts";
+
 /** Widgets without a compute_expand vfunc, in GTK and libadwaita. */
 const KEEPS_OWN_EXPAND = [
   ".gtk-actionbar",
@@ -134,6 +136,11 @@ function update(element: Element): boolean {
     }
   }
   if (element.classList.contains("gtk-box-layout")) updateBoxTracks(element);
+  // An expanding center child changes how its center layout allocates.
+  const parent = element.parentElement;
+  if (changed && parent?.classList.contains("gtk-center-layout")) {
+    parent.dispatchEvent(new Event(CENTER_EXPAND_CHANGE));
+  }
   return changed;
 }
 

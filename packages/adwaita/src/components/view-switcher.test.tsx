@@ -120,7 +120,7 @@ describe("AdwViewSwitcherBar", () => {
   test("holds a narrow switcher as its action bar's center widget, 10px from the sides", () => {
     const html = render(<AdwViewSwitcherBar reveal pages={PAGES} />);
     expect(html).toMatch(
-      /^<div class="gtk-viewswitcherbar gtk-bin-layout"><div class="gtk-actionbar"><div class="gtk-revealer">.*<div class="gtk-center-layout-center"><div role="tablist" class="gtk-viewswitcher gtk-box-layout horizontal homogeneous narrow" style="margin-inline:10px"/,
+      /^<div class="gtk-viewswitcherbar gtk-bin-layout"><div class="gtk-actionbar"><div class="gtk-revealer[^"]*"><div class="gtk-box gtk-center-layout"[^>]*><div class="gtk-box gtk-box-layout horizontal start"><\/div><div role="tablist" class="gtk-viewswitcher gtk-box-layout horizontal homogeneous narrow" style="margin-inline:10px"/,
     );
   });
 
@@ -128,7 +128,8 @@ describe("AdwViewSwitcherBar", () => {
     const shown = (element: ReactElement) => {
       const html = render(element);
       expect(html).toMatch(/^<div class="gtk-viewswitcherbar/);
-      return html.includes("gtk-viewswitcher ");
+      // The action bar keeps its children in a closed revealer (#128).
+      return !/<div class="gtk-revealer[^"]*" style="[^"]*visibility:hidden/.test(html);
     };
     expect(shown(<AdwViewSwitcherBar reveal pages={PAGES} />)).toBe(true);
     expect(shown(<AdwViewSwitcherBar pages={PAGES} />)).toBe(false);
