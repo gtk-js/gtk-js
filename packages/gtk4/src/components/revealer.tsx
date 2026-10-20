@@ -120,7 +120,9 @@ export const GtkRevealer = forwardRef<HTMLDivElement, GtkRevealerProps>(function
   if (className) classes.push(className);
 
   const revealerStyle: CSSProperties = {
-    ...(transitionType === "slide-down" && { alignContent: "end" }),
+    // The child's bottom edge stays in view, even while the revealer is
+    // shorter than the child.
+    ...(transitionType === "slide-down" && { alignContent: "unsafe end" }),
     ...(!childVisible && { height: 0, overflow: "clip", visibility: "hidden" }),
     ...style,
   };

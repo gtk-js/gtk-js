@@ -27,6 +27,6 @@ describe("GtkRevealer", () => {
 
   test("slide-down keeps the child's bottom edge in view while it slides", () => {
     const html = renderToStaticMarkup(<GtkRevealer revealChild />);
-    expect(html).toContain("align-content:end");
+    expect(html).toContain("align-content:unsafe end");
   });
 });

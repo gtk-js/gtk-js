@@ -8,7 +8,7 @@ describe("AdwBanner nodes", () => {
   test("the gizmo is the `widget` node the theme pads and colors (banner > revealer > widget)", () => {
     const html = renderToStaticMarkup(<AdwBanner title="You are offline" revealed />);
     expect(html).toMatch(
-      /^<div class="gtk-banner[^"]*"[^>]*><div class="gtk-revealer"><div class="gtk-widget"><span[^>]* class="gtk-label heading"/,
+      /^<div class="gtk-banner[^"]*"[^>]*><div class="gtk-revealer[^"]*"[^>]*><div class="gtk-widget"><span[^>]* class="gtk-label heading"/,
     );
   });
 
@@ -42,8 +42,9 @@ describe("AdwBanner nodes", () => {
       <AdwBanner title="You are offline" buttonLabel="Retry" className="mine" />,
     );
     expect(html).toContain('class="gtk-banner gtk-bin-layout mine"');
-    expect(html).toContain(
-      '<div class="gtk-revealer" style="height:0;overflow:clip;visibility:hidden"><div class="gtk-widget">',
+    // A GtkRevealer (slide-down).
+    expect(html).toMatch(
+      /<div class="gtk-revealer[^"]*" style="[^"]*height:0;overflow:clip;visibility:hidden"><div class="gtk-widget">/,
     );
     expect(html).toContain("<button");
   });
