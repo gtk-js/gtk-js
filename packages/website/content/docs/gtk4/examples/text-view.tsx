@@ -11,7 +11,7 @@ export default function Example() {
       value={text}
       onChanged={setText}
       wrapMode="word"
-      style={{ width: 300, height: 100 }}
+      style={{ width: 300, minHeight: 100 }}
     />
   );
 }
