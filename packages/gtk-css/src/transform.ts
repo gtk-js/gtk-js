@@ -270,15 +270,55 @@ const remapPseudoClasses: Plugin = {
     // :visited → [data-visited] (browsers restrict :visited styling; use data attribute)
     sel = sel.replace(/:visited/g, "[data-visited]");
 
+    // :active → also [data-active]: browsers only make an element active while
+    // it or a descendant is pressed, and GTK also sets the state itself (an
+    // AdwSplitButton while one of its buttons is keyboard-activating).
+    // (Idempotent, like :disabled below.)
+    sel = sel.replace(/(?<!:is\():active(?![\w-])/g, ":is(:active, [data-active])");
+
     // :disabled → also [data-disabled]: widgets rendered as <span>/<div> can't
     // be :disabled, while real <button>/<input> elements are (and carry no
     // data attribute), so match either.
     // (Idempotent: PostCSS revisits rules whose selector changed.)
     sel = sel.replace(/(?<!\[data-disabled\], ):disabled/g, ":is([data-disabled], :disabled)");
 
+    // :focus → also [data-focus]: a widget can give a child that doesn't have
+    // the keyboard focus GTK's focused state (GtkCalendar's cursor day).
+    sel = sel.replace(/(?<!\[data-focus\], ):focus(?![\w-])/g, ":is([data-focus], :focus)");
+
     if (sel !== rule.selector) {
       rule.selector = sel;
     }
+  },
+};
+
+/**
+ * PostCSS plugin: A check button's check or radio is hovered and pressed with
+ * the button.
+ *
+ * gtk_check_button_state_flags_changed() gives the indicator all of the check
+ * button's state flags, so it shows :hover and :active while the pointer is
+ * anywhere on the button, its label included. The indicator carries the
+ * button's :checked, :indeterminate and :disabled itself; the pointer's states
+ * also match through its parent. `:is()` keeps the selector's specificity.
+ */
+const INDICATOR_RE = /^:where\(\.gtk-(?:check|radio)\):not\(_\)/;
+const POINTER_STATE_RE = /:(hover|active)(?![\w-])/g;
+const mirrorIndicatorState: Plugin = {
+  postcssPlugin: "gtk-mirror-indicator-state",
+  Rule(rule) {
+    const selectors = rule.selectors.map((selector) => {
+      const start = lastCompoundStart(selector);
+      const subject = selector.slice(start);
+      // (Idempotent: PostCSS revisits rules whose selector changed.)
+      if (!INDICATOR_RE.test(subject) || subject.includes(".gtk-checkbutton:")) return selector;
+      const mirrored = subject.replace(
+        POINTER_STATE_RE,
+        (_, state: string) => `:is(:${state}, :where(.gtk-checkbutton:${state} > *))`,
+      );
+      return selector.slice(0, start) + mirrored;
+    });
+    if (selectors.some((s, i) => s !== rule.selectors[i])) rule.selectors = selectors;
   },
 };
 
@@ -352,8 +392,22 @@ const handleGtkProperties: Plugin = {
         decl.prop = "--gtk-icon-size";
         break;
 
+      case "-gtk-icon-source": {
+        // A theme's own symbolic image, recolored to the node's color, like a
+        // check's mark: kept for layout.css to paint (see --gtk-icon-source
+        // there). Icon theme icons, -gtk-icontheme(), come from the
+        // components' icon set instead.
+        const url = recoloredImageUrl(decl.value);
+        if (url || decl.value.trim() === "none") {
+          decl.prop = "--gtk-icon-source";
+          decl.value = url ?? "none";
+        } else {
+          decl.remove();
+        }
+        break;
+      }
+
       case "-gtk-icon-palette":
-      case "-gtk-icon-source":
       case "-gtk-icon-style":
       case "-gtk-icon-filter":
       case "-gtk-icon-weight":
@@ -370,6 +424,11 @@ const handleGtkProperties: Plugin = {
     }
   },
 };
+
+/** The url() of `-gtk-recolor(url(…))`, a symbolic image in the node's colors; null otherwise. */
+function recoloredImageUrl(value: string): string | null {
+  return value.trim().match(/^-gtk-recolor\(\s*(url\([^()]*\))\s*\)$/)?.[1] ?? null;
+}
 
 /**
  * PostCSS plugin: Replace CSS image() function with linear-gradient() fallback.
@@ -935,33 +994,6 @@ function compoundKey(compound: string): string {
 }
 
 /**
- * PostCSS plugin: Convert .gtk-switch padding to transparent border.
- *
- * In native GTK, padding on the switch reduces the child allocation — the slider
- * knob is inset from the track edge. With CSS absolute positioning (used in
- * layout.css), the containing block is the padding edge (inside border, outside
- * padding), so padding does NOT shrink the space for absolutely-positioned children.
- *
- * Border DOES shrink it: the containing block for position:absolute is the
- * padding edge, which is inside the border. So converting padding to transparent
- * border achieves the same visual inset while correctly constraining the slider.
- */
-const fixSwitchPadding: Plugin = {
-  postcssPlugin: "gtk-fix-switch-padding",
-  Declaration(decl) {
-    if (decl.prop !== "padding") return;
-    if (!decl.parent || decl.parent.type !== "rule") return;
-    const rule = decl.parent;
-    if (!rule.selector.includes(".gtk-switch")) return;
-    if (rule.selector.includes(">")) return;
-
-    // Replace padding with transparent border of the same width
-    decl.prop = "border";
-    decl.value = `${decl.value} solid transparent`;
-  },
-};
-
-/**
  * The complete GTK → web CSS PostCSS transformation pipeline.
  * Pass a custom asset plugin to replace -gtk-scaled() with embedded data URIs.
  */
@@ -970,6 +1002,7 @@ export function buildGtkToWeb(assetPlugin?: Plugin) {
     remapSelectors,
     remapSelectionNode,
     remapPseudoClasses,
+    mirrorIndicatorState,
     handleGtkProperties,
     fixGtkTransitionRefs,
     convertGtkColorFunctions,
@@ -979,7 +1012,6 @@ export function buildGtkToWeb(assetPlugin?: Plugin) {
     resolveCurrentColor,
     removeGtkRecolor,
     assetPlugin ?? removeGtkAssetFunctions,
-    fixSwitchPadding,
   ]);
 }
 

@@ -26,6 +26,7 @@ import {
   AdwToggleGroup,
   AdwToolbarView,
   AdwViewSwitcher,
+  AdwViewSwitcherBar,
   GtkActionBar,
   GtkBox,
   GtkButton,
@@ -65,6 +66,7 @@ import {
   GtkSpinner,
   GtkStack,
   GtkStackPage,
+  GtkStackSwitcher,
   GtkSwitch,
   GtkTextView,
   GtkToggleButton,
@@ -90,6 +92,25 @@ function textViewTarget(el: HTMLTextAreaElement | null) {
 /** An app component that renders a row, which AdwPreferencesGroup can't tell from its type. */
 function WrappedActionRow(props: { title: string; subtitle?: string }) {
   return <AdwActionRow {...props} />;
+}
+
+/** A flat split button whose menu a pointer click opened. */
+function OpenSplitButton() {
+  const ref = useRef<HTMLDivElement>(null);
+  useLayoutEffect(() => {
+    ref.current
+      ?.querySelector(".gtk-menubutton > button")
+      ?.dispatchEvent(new MouseEvent("click", { bubbles: true, detail: 1 }));
+  }, []);
+  return (
+    <AdwSplitButton
+      ref={ref}
+      label="Save"
+      className="flat"
+      menuModel={[[{ label: "Save As…" }, { label: "Save All" }]]}
+      data-testid="target"
+    />
+  );
 }
 
 /**
@@ -138,6 +159,10 @@ function SizedOnMount({ children }: { children: ReactElement }) {
   return <div ref={ref}>{children}</div>;
 }
 
+/** What the flow-box-behavior case's flow boxes report, for its test to read. */
+const flowBoxEvents: string[] = [];
+(window as unknown as { flowBoxEvents: string[] }).flowBoxEvents = flowBoxEvents;
+
 const cases: Record<string, () => React.ReactElement> = {
   // halign/valign alignment cases
   "button-valign-center-hbox": () => (
@@ -184,6 +209,18 @@ const cases: Record<string, () => React.ReactElement> = {
 
   // GtkCalendar cases
   "calendar-default": () => <GtkCalendar year={2024} month={0} day={15} data-testid="target" />,
+  "calendar-disabled": () => (
+    <GtkCalendar year={2024} month={0} day={15} disabled data-testid="target" />
+  ),
+  "calendar-marked": () => (
+    <GtkCalendar year={2024} month={0} day={15} markedDays={[5]} data-testid="target" />
+  ),
+  "calendar-no-day-names": () => (
+    <GtkCalendar year={2024} month={0} day={15} showDayNames={false} data-testid="target" />
+  ),
+  "calendar-week-numbers": () => (
+    <GtkCalendar year={2024} month={0} day={15} showWeekNumbers data-testid="target" />
+  ),
 
   // GtkCheckButton cases
   "check-button-default": () => <GtkCheckButton label="Checkbox" data-testid="target" />,
@@ -196,6 +233,15 @@ const cases: Record<string, () => React.ReactElement> = {
     <GtkCheckButton label="Checkbox" active disabled data-testid="target" />
   ),
   "check-button-no-label": () => <GtkCheckButton data-testid="target" />,
+  "check-button-custom-child": () => (
+    <GtkCheckButton data-testid="target">
+      <GtkBox orientation="vertical">
+        <GtkLabel label="Title line" xalign={0} />
+        <GtkLabel label="Second line of text" xalign={0} />
+      </GtkBox>
+    </GtkCheckButton>
+  ),
+  "check-button-empty-label": () => <GtkCheckButton label="" data-testid="target" />,
   "radio-button-default": () => <GtkCheckButton label="Radio" group="test" data-testid="target" />,
   "radio-button-checked": () => (
     <GtkCheckButton label="Radio" group="test" active data-testid="target" />
@@ -314,6 +360,30 @@ const cases: Record<string, () => React.ReactElement> = {
       data-testid="target"
     />
   ),
+  "label-wrap-heights": () => (
+    <GtkBox
+      orientation="vertical"
+      halign="start"
+      valign="start"
+      style={{ width: 200 }}
+      data-testid="target"
+    >
+      <GtkLabel
+        label="Typeset is an app that doesn’t exist."
+        wrap
+        wrapMode="word-char"
+        xalign={0}
+        className="body"
+      />
+      <GtkLabel
+        label="Two lines of the default font in a wrapping label."
+        wrap
+        wrapMode="word-char"
+        xalign={0}
+      />
+      <GtkLabel label="After" xalign={0} />
+    </GtkBox>
+  ),
   "label-ellipsize": () => (
     <GtkLabel
       label="This is a very long label that should be ellipsized"
@@ -424,6 +494,34 @@ const cases: Record<string, () => React.ReactElement> = {
   "switch-on-default": () => <GtkSwitch active data-testid="target" />,
   "switch-off-disabled": () => <GtkSwitch disabled data-testid="target" />,
   "switch-on-disabled": () => <GtkSwitch active disabled data-testid="target" />,
+  "switch-off-title-1": () => (
+    <GtkBox className="title-1" halign="center" valign="center">
+      <GtkSwitch data-testid="target" />
+    </GtkBox>
+  ),
+  "switch-on-pending": () => (
+    <GtkSwitch active state={false} halign="center" valign="center" data-testid="target" />
+  ),
+  "switch-on-rtl": () => (
+    <div dir="rtl">
+      <GtkSwitch active halign="center" valign="center" data-testid="target" />
+    </div>
+  ),
+  "switch-on-small-slider": () => (
+    <>
+      <style>{`
+        .gtk-switch.small-slider { min-width: 22px; padding: 0; }
+        .gtk-switch.small-slider > .gtk-slider { min-width: 12px; min-height: 12px; margin: 5px; }
+      `}</style>
+      <GtkSwitch
+        active
+        className="small-slider"
+        halign="center"
+        valign="center"
+        data-testid="target"
+      />
+    </>
+  ),
 
   // GtkTextView cases
   "text-view-default": () => <GtkTextView ref={textViewTarget} />,
@@ -631,6 +729,53 @@ const cases: Record<string, () => React.ReactElement> = {
   ),
 
   // GtkFlowBox cases
+  "flow-box-aligned": () => (
+    <GtkFlowBox
+      selectionMode="none"
+      minChildrenPerLine={3}
+      maxChildrenPerLine={3}
+      valign="start"
+      style={{ width: 300 }}
+      data-testid="target"
+    >
+      {["A", "Bravo", "Charlie charlie", "D", "Echo", "Foxtrot", "G"].map((label) => (
+        <GtkFlowBoxChild key={label}>
+          <GtkLabel label={label} />
+        </GtkFlowBoxChild>
+      ))}
+    </GtkFlowBox>
+  ),
+  "flow-box-behavior": () => (
+    <GtkBox orientation="vertical" spacing={12}>
+      <GtkEntry />
+      <GtkFlowBox
+        id="flow-box-single"
+        minChildrenPerLine={3}
+        maxChildrenPerLine={3}
+        onChildActivated={(i) => flowBoxEvents.push(`activated ${i}`)}
+      >
+        {[0, 1, 2, 3, 4, 5].map((i) => (
+          <GtkLabel key={i} label={`C${i}`} />
+        ))}
+      </GtkFlowBox>
+      <GtkFlowBox
+        id="flow-box-multiple"
+        selectionMode="multiple"
+        activateOnSingleClick={false}
+        onChildActivated={(i) => flowBoxEvents.push(`activated ${i}`)}
+        onSelectedChildrenChanged={(s) => flowBoxEvents.push(`selected [${s}]`)}
+      >
+        <GtkLabel label="M0" />
+        <GtkLabel label="M1" />
+        <GtkLabel label="M2" />
+        <GtkLabel label="M3" />
+        <GtkButton label="M4" onClicked={() => flowBoxEvents.push("button clicked")} />
+        <GtkFlowBoxChild disabled>
+          <GtkLabel label="M5" />
+        </GtkFlowBoxChild>
+      </GtkFlowBox>
+    </GtkBox>
+  ),
   "flow-box-default": () => (
     <GtkFlowBox selectionMode="none" data-testid="target">
       <GtkFlowBoxChild>
@@ -644,6 +789,37 @@ const cases: Record<string, () => React.ReactElement> = {
       </GtkFlowBoxChild>
       <GtkFlowBoxChild>
         <GtkLabel label="Four" />
+      </GtkFlowBoxChild>
+    </GtkFlowBox>
+  ),
+  "flow-box-homogeneous": () => (
+    <GtkFlowBox
+      selectionMode="none"
+      homogeneous
+      maxChildrenPerLine={3}
+      columnSpacing={6}
+      rowSpacing={6}
+      valign="start"
+      style={{ width: 300 }}
+      data-testid="target"
+    >
+      {["A", "Bravo", "Charlie charlie", "D", "Echo"].map((label) => (
+        <GtkFlowBoxChild key={label}>
+          <GtkLabel label={label} />
+        </GtkFlowBoxChild>
+      ))}
+    </GtkFlowBox>
+  ),
+  "flow-box-selected": () => (
+    <GtkFlowBox valign="start" halign="start" selectedChildren={[1]} data-testid="target">
+      <GtkFlowBoxChild>
+        <GtkLabel label="One" />
+      </GtkFlowBoxChild>
+      <GtkFlowBoxChild>
+        <GtkLabel label="Two" />
+      </GtkFlowBoxChild>
+      <GtkFlowBoxChild>
+        <GtkLabel label="Three" />
       </GtkFlowBoxChild>
     </GtkFlowBox>
   ),
@@ -711,6 +887,13 @@ const cases: Record<string, () => React.ReactElement> = {
   ),
 
   // GtkStack cases
+  "stack-child-align": () => (
+    <GtkStack style={{ minWidth: 300, minHeight: 80 }} data-testid="target">
+      <GtkStackPage name="page">
+        <GtkButton label="Centered" halign="center" valign="center" />
+      </GtkStackPage>
+    </GtkStack>
+  ),
   "stack-default": () => (
     <GtkStack visibleChildName="page1" data-testid="target">
       <GtkStackPage name="page1" title="Page 1">
@@ -718,6 +901,16 @@ const cases: Record<string, () => React.ReactElement> = {
       </GtkStackPage>
       <GtkStackPage name="page2" title="Page 2">
         <GtkLabel label="Second" />
+      </GtkStackPage>
+    </GtkStack>
+  ),
+  "stack-hhomogeneous-false": () => (
+    <GtkStack visibleChildName="short" hhomogeneous={false} data-testid="target">
+      <GtkStackPage name="short">
+        <GtkLabel label="Short visible page" />
+      </GtkStackPage>
+      <GtkStackPage name="long">
+        <GtkLabel label="A few words" wrap />
       </GtkStackPage>
     </GtkStack>
   ),
@@ -733,6 +926,42 @@ const cases: Record<string, () => React.ReactElement> = {
       </GtkStack>
       <GtkLabel label="A much longer page" />
     </GtkBox>
+  ),
+  "stack-switcher-expand": () => (
+    <GtkBox orientation="vertical" spacing={8} style={{ minWidth: 500 }} data-testid="target">
+      <GtkStackSwitcher
+        pages={[
+          { name: "page1", title: "First" },
+          { name: "page2", title: "Second" },
+          { name: "page3", title: "Third" },
+        ]}
+        activePageName="page1"
+      />
+      <GtkStack visibleChildName="page1">
+        <GtkStackPage name="page1">
+          <GtkLabel label="One" />
+        </GtkStackPage>
+        <GtkStackPage name="page2">
+          <GtkLabel label="Two" />
+        </GtkStackPage>
+        <GtkStackPage name="page3">
+          <GtkLabel label="Three" />
+        </GtkStackPage>
+      </GtkStack>
+    </GtkBox>
+  ),
+  "stack-switcher-icons": () => (
+    <GtkStackSwitcher
+      halign="start"
+      pages={[
+        { name: "open", title: "Open", iconName: "DocumentOpen" },
+        { name: "find", iconName: "EditFind" },
+        { name: "text", title: "Attention", needsAttention: true },
+        { name: "untitled" },
+      ]}
+      activePageName="open"
+      data-testid="target"
+    />
   ),
 
   // GtkNotebook cases
@@ -768,6 +997,13 @@ const cases: Record<string, () => React.ReactElement> = {
   ),
 
   // GtkListBox cases
+  "listbox-bare-labels": () => (
+    <GtkListBox selectionMode="none" data-testid="target">
+      <GtkLabel label="Row 1" />
+      <GtkLabel label="Row 2" />
+      <GtkLabel label="Row 3" />
+    </GtkListBox>
+  ),
   "listbox-default": () => (
     <GtkListBox selectionMode="none" data-testid="target">
       <GtkListBoxRow>
@@ -778,6 +1014,19 @@ const cases: Record<string, () => React.ReactElement> = {
       </GtkListBoxRow>
       <GtkListBoxRow>
         <GtkLabel label="Row 3" />
+      </GtkListBoxRow>
+    </GtkListBox>
+  ),
+  "listbox-selection": () => (
+    <GtkListBox selectedRows={[2]} data-testid="target">
+      <GtkListBoxRow activatable={false}>
+        <GtkLabel label="Selectable" />
+      </GtkListBoxRow>
+      <GtkListBoxRow activatable={false} selectable={false}>
+        <GtkLabel label="Neither" />
+      </GtkListBoxRow>
+      <GtkListBoxRow>
+        <GtkLabel label="Selected" />
       </GtkListBoxRow>
     </GtkListBox>
   ),
@@ -797,6 +1046,18 @@ const cases: Record<string, () => React.ReactElement> = {
 
   // GtkHeaderBar cases
   "headerbar-default": () => <GtkHeaderBar showWindowControls={false} data-testid="target" />,
+  // The native case fills the test window, which AdwWindow's minimum size makes
+  // 352px wide for the bar (its -1px margins included).
+  "headerbar-narrow-title": () => (
+    <GtkHeaderBar
+      showWindowControls={false}
+      start={<GtkButton label="Start" />}
+      end={<GtkButton label="End" />}
+      titleWidget={<GtkWindowTitle title="A Very Long Window Title Here" />}
+      style={{ width: 352 }}
+      data-testid="target"
+    />
+  ),
   "headerbar-with-title": () => (
     <GtkHeaderBar
       showWindowControls={false}
@@ -843,9 +1104,35 @@ const cases: Record<string, () => React.ReactElement> = {
   "avatar-small": () => <AdwAvatar size={24} text="Alice" showInitials ref={avatarGizmoTarget} />,
 
   // AdwBanner cases
-  "banner-revealed": () => <AdwBanner title="This is a banner" revealed data-testid="target" />,
+  "banner-revealed": () => (
+    <AdwBanner title="This is a banner" revealed style={{ width: 200 }} data-testid="target" />
+  ),
+  "banner-start": () => (
+    <AdwBanner
+      title="You are offline"
+      buttonLabel="Retry"
+      revealed
+      style={{ width: 300 }}
+      data-testid="target"
+    />
+  ),
+  "banner-wide": () => (
+    <AdwBanner
+      title="You are offline"
+      buttonLabel="Retry"
+      revealed
+      style={{ width: 600 }}
+      data-testid="target"
+    />
+  ),
   "banner-with-button": () => (
-    <AdwBanner title="Update available" buttonLabel="Update" revealed data-testid="target" />
+    <AdwBanner
+      title="You are offline"
+      buttonLabel="Retry"
+      revealed
+      style={{ width: 200 }}
+      data-testid="target"
+    />
   ),
 
   // AdwStatusPage cases
@@ -880,6 +1167,25 @@ const cases: Record<string, () => React.ReactElement> = {
       <GtkLabel label="Page 3" />
     </AdwCarousel>
   ),
+  "carousel-natural-pages": () => (
+    <AdwCarousel spacing={12} style={{ width: 300, height: 100 }} data-testid="target">
+      <GtkBox orientation="vertical" style={{ minWidth: 100 }} />
+      <GtkBox orientation="vertical" style={{ minWidth: 80 }} />
+      <GtkBox orientation="vertical" style={{ minWidth: 60 }} />
+    </AdwCarousel>
+  ),
+  "carousel-vertical": () => (
+    <AdwCarousel
+      orientation="vertical"
+      spacing={12}
+      style={{ width: 240, height: 100 }}
+      data-testid="target"
+    >
+      <GtkLabel label="Page 1" vexpand />
+      <GtkLabel label="Page 2" vexpand />
+      <GtkLabel label="Page 3" vexpand />
+    </AdwCarousel>
+  ),
 
   // AdwToastOverlay cases
   "toast-overlay-default": () => (
@@ -889,19 +1195,58 @@ const cases: Record<string, () => React.ReactElement> = {
   ),
 
   // AdwButtonContent cases
+  "button-content-button": () => (
+    <GtkButton style={{ width: 150, boxSizing: "border-box" }} data-testid="target">
+      <AdwButtonContent iconName="DocumentOpen" label="Open" />
+    </GtkButton>
+  ),
   "button-content-icon-label": () => (
-    <AdwButtonContent iconName="open-menu-symbolic" label="Open" data-testid="target" />
+    <AdwButtonContent iconName="OpenMenu" label="Open" data-testid="target" />
   ),
   "button-content-label-only": () => <AdwButtonContent label="Open" data-testid="target" />,
-  "button-content-icon-only": () => (
-    <AdwButtonContent iconName="open-menu-symbolic" data-testid="target" />
-  ),
+  "button-content-icon-only": () => <AdwButtonContent iconName="OpenMenu" data-testid="target" />,
 
   // AdwSplitButton cases
-  "split-button-text-default": () => <AdwSplitButton label="Button" data-testid="target" />,
-  "split-button-icon": () => <AdwSplitButton iconName="open-menu-symbolic" data-testid="target" />,
+  "split-button-text-default": () => (
+    <AdwSplitButton label="Button" popover={<GtkLabel label="Popover" />} data-testid="target" />
+  ),
+  "split-button-icon": () => (
+    <AdwSplitButton
+      iconName="OpenMenu"
+      popover={<GtkLabel label="Popover" />}
+      data-testid="target"
+    />
+  ),
   "split-button-flat": () => (
-    <AdwSplitButton label="Button" className="flat" data-testid="target" />
+    <AdwSplitButton
+      label="Button"
+      className="flat"
+      popover={<GtkLabel label="Popover" />}
+      data-testid="target"
+    />
+  ),
+  "split-button-open": () => <OpenSplitButton />,
+  "split-button-tall": () => (
+    <AdwSplitButton
+      child={<GtkLabel label="Tall" style={{ minHeight: 50 }} />}
+      popover={<GtkLabel label="Popover" />}
+      data-testid="target"
+    />
+  ),
+  "split-button-fill": () => (
+    <GtkBox orientation="vertical" style={{ width: 200 }}>
+      <AdwSplitButton label="Fill" popover={<GtkLabel label="Popover" />} data-testid="target" />
+    </GtkBox>
+  ),
+  "split-button-can-shrink": () => (
+    <div style={{ display: "flex", width: 100 }}>
+      <AdwSplitButton
+        label="Save document as"
+        canShrink
+        popover={<GtkLabel label="Popover" />}
+        data-testid="target"
+      />
+    </div>
   ),
 
   // AdwButtonRow cases — inside GtkListBox to match native structure
@@ -979,6 +1324,22 @@ const cases: Record<string, () => React.ReactElement> = {
       <AdwEntryRow title="Entry Row" />
     </GtkListBox>
   ),
+  "adw-entry-row-disabled": () => (
+    <GtkListBox selectionMode="none" className="boxed-list" data-testid="target">
+      <AdwEntryRow title="Entry Row" text="Hello World" disabled />
+    </GtkListBox>
+  ),
+  // As wide as the native list (the window's minimum width).
+  "adw-entry-row-long-title": () => (
+    <GtkListBox
+      selectionMode="none"
+      className="boxed-list"
+      style={{ width: 350 }}
+      data-testid="target"
+    >
+      <AdwEntryRow title="A very long entry row title that cannot possibly fit in the row at all" />
+    </GtkListBox>
+  ),
   "adw-entry-row-with-text": () => (
     <GtkListBox selectionMode="none" className="boxed-list" data-testid="target">
       <AdwEntryRow title="Entry Row" text="Hello World" />
@@ -1005,6 +1366,25 @@ const cases: Record<string, () => React.ReactElement> = {
       <AdwComboRow title="Combo Row" items={["Option 1", "Option 2", "Option 3"]} selected={0} />
     </GtkListBox>
   ),
+  "adw-combo-row-long-value": () => (
+    <GtkListBox
+      selectionMode="none"
+      className="boxed-list"
+      style={{ width: 360 }}
+      data-testid="target"
+    >
+      <AdwComboRow
+        title="Appearance"
+        items={["Automatic (follow the system setting when possible)", "Light", "Dark"]}
+        selected={0}
+      />
+    </GtkListBox>
+  ),
+  "adw-combo-row-single-item": () => (
+    <GtkListBox selectionMode="none" className="boxed-list" data-testid="target">
+      <AdwComboRow title="Combo Row" items={["Only"]} selected={0} />
+    </GtkListBox>
+  ),
 
   // AdwSwitchRow cases
   "adw-switch-row-default": () => (
@@ -1015,6 +1395,15 @@ const cases: Record<string, () => React.ReactElement> = {
   "adw-switch-row-active": () => (
     <GtkListBox selectionMode="none" className="boxed-list" data-testid="target">
       <AdwSwitchRow title="Switch Row" active />
+    </GtkListBox>
+  ),
+  "adw-switch-row-prefix-suffix": () => (
+    <GtkListBox selectionMode="none" className="boxed-list" data-testid="target">
+      <AdwSwitchRow
+        title="Switch Row"
+        prefixWidget={<GtkImage iconName="AirplaneMode" />}
+        suffixWidget={<GtkButton iconName="DocumentEdit" className="flat" valign="center" />}
+      />
     </GtkListBox>
   ),
 
@@ -1034,6 +1423,28 @@ const cases: Record<string, () => React.ReactElement> = {
         <AdwActionRow title="Child Row 2" />
       </AdwExpanderRow>
     </GtkListBox>
+  ),
+  "adw-expander-row-widgets": () => (
+    <div style={{ width: 360 }}>
+      <GtkListBox selectionMode="none" className="boxed-list" data-testid="target">
+        <AdwExpanderRow
+          title="A very long expander row title that should be ellipsized after one line"
+          subtitle="A very long subtitle that should also be ellipsized after one line"
+          titleLines={1}
+          subtitleLines={1}
+          showEnableSwitch
+          prefixWidget={
+            <>
+              <GtkImage iconName="EditFind" />
+              <GtkImage iconName="EditFind" />
+            </>
+          }
+          suffixWidget={<GtkButton iconName="EditDelete" className="flat" valign="center" />}
+        >
+          <AdwActionRow title="Child Row" />
+        </AdwExpanderRow>
+      </GtkListBox>
+    </div>
   ),
 
   // AdwPreferencesRow cases
@@ -1101,6 +1512,19 @@ const cases: Record<string, () => React.ReactElement> = {
       data-testid="target"
     />
   ),
+  // The native case fills the test window, which AdwWindow's minimum size makes
+  // 352px wide for the bar (its -1px margins included).
+  "adw-headerbar-narrow-title": () => (
+    <AdwHeaderBar
+      showStartTitleButtons={false}
+      showEndTitleButtons={false}
+      showBackButton={false}
+      end={<GtkButton label="End" />}
+      titleWidget={<GtkWindowTitle title="A Very Long Window Title That Goes On" />}
+      style={{ width: 352 }}
+      data-testid="target"
+    />
+  ),
   "adw-headerbar-with-title": () => (
     <AdwHeaderBar
       showStartTitleButtons={false}
@@ -1151,14 +1575,54 @@ const cases: Record<string, () => React.ReactElement> = {
   ),
 
   // AdwViewSwitcher cases
+  "adw-view-switcher-attention": () => (
+    <AdwViewSwitcher
+      pages={[
+        { name: "home", title: "Home", iconName: "GoHome" },
+        { name: "mail", title: "Mail", iconName: "MailUnread", needsAttention: true },
+        {
+          name: "chat",
+          title: "Chat",
+          iconName: "UserAvailable",
+          badgeNumber: 5,
+          needsAttention: true,
+        },
+      ]}
+      policy="wide"
+      data-testid="target"
+    />
+  ),
+  "adw-view-switcher-bar": () => (
+    <AdwViewSwitcherBar
+      reveal
+      pages={[
+        { name: "home", title: "Home", iconName: "GoHome" },
+        { name: "search", title: "Search", iconName: "SystemSearch" },
+        { name: "settings", title: "Settings", iconName: "PreferencesSystem" },
+      ]}
+      style={{ width: 400 }}
+      data-testid="target"
+    />
+  ),
   "adw-view-switcher-default": () => (
     <AdwViewSwitcher
       pages={[
-        { name: "page1", title: "Page 1", iconName: "open-menu-symbolic" },
-        { name: "page2", title: "Page 2", iconName: "open-menu-symbolic" },
+        { name: "page1", title: "Page 1", iconName: "OpenMenu" },
+        { name: "page2", title: "Page 2", iconName: "OpenMenu" },
       ]}
       activePageName="page1"
       policy="wide"
+      data-testid="target"
+    />
+  ),
+  "adw-view-switcher-narrow": () => (
+    <AdwViewSwitcher
+      pages={[
+        { name: "home", title: "Home", iconName: "GoHome" },
+        { name: "search", title: "Search", iconName: "SystemSearch" },
+        { name: "other", title: "Other" },
+      ]}
+      policy="narrow"
       data-testid="target"
     />
   ),
