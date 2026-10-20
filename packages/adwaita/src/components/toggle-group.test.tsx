@@ -113,7 +113,7 @@ describe("AdwToggleGroup toggles", () => {
     const html = render({ toggles: [{ name: "list", iconName: "ViewList", label: "List" }] });
     expect(toggles(html)[0]).toContain("image-text-button");
     expect(html).toMatch(
-      /<div class="gtk-buttoncontent[^"]*"><div class="gtk-box[^"]*"><span class="gtk-image"><svg data-icon="ViewList"/,
+      /<div [^>]*class="gtk-buttoncontent[^"]*"[^>]*><div class="gtk-box[^"]*"[^>]*><span class="gtk-image"[^>]*><svg data-icon="ViewList"/,
     );
   });
 

@@ -1,4 +1,4 @@
-import { GtkImage, GtkLabel, type GtkOrientation, GtkSeparator } from "@gtk-js/gtk4";
+import { GtkImage, GtkLabel, type GtkOrientation, GtkSeparator, tooltipAttrs } from "@gtk-js/gtk4";
 import React, {
   forwardRef,
   type HTMLAttributes,
@@ -247,7 +247,7 @@ export const AdwToggleGroup = forwardRef<HTMLDivElement, AdwToggleGroupProps>(
                 data-vexpand="true"
                 disabled={insensitive}
                 tabIndex={i === tabStop ? 0 : -1}
-                title={toggle.tooltip}
+                {...tooltipAttrs(toggle.tooltip)}
                 onClick={() => select(i)}
                 onKeyDown={(e) => handleKeyDown(e, i)}
                 onKeyUp={(e) => handleKeyUp(e, i)}

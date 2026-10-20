@@ -38,6 +38,7 @@ button[.flat][.text-button][.image-button][.image-text-button]
 
 ## Keyboard
 
-- **Space / Enter** — Activates the button (adds `.keyboard-activating` class while held)
+- **Space / Enter** — Activates the button: it shows `.keyboard-activating` until the key is released (250 ms at most), then is clicked
+- **Alt + mnemonic** — With `useUnderline`, `_` marks the next character of the label (`"_Save"`). Holding Alt underlines it, and Alt with that key activates the button
 
 [GTK4 Documentation →](https://docs.gtk.org/gtk4/class.Button.html)
