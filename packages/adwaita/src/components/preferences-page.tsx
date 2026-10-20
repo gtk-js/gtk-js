@@ -44,7 +44,11 @@ export const AdwPreferencesPage = forwardRef<HTMLDivElement, AdwPreferencesPageP
         style={{ flex: 1, minHeight: 0, ...style }}
         {...rest}
       >
-        <GtkScrolledWindow hscrollbarPolicy="never" style={{ flex: 1, minHeight: 0 }}>
+        <GtkScrolledWindow
+          hscrollbarPolicy="never"
+          propagateNaturalHeight
+          style={{ flex: 1, minHeight: 0 }}
+        >
           <div className="gtk-viewport">
             <AdwClamp>
               <div
