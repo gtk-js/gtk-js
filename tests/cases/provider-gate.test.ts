@@ -71,8 +71,12 @@ for (const [browserName, browser] of Object.entries(globalThis.__testBrowsers)) 
         "gtk-js-reset",
         "gtk-js-theme",
       ]);
+      // (#132's transient gtk-js-switching style aside.)
       expect(
-        await page.$$eval("style", (s) => s.filter((e) => e.id.startsWith("gtk-js")).length),
+        await page.$$eval(
+          "style",
+          (s) => s.filter((e) => e.id.startsWith("gtk-js") && e.id !== "gtk-js-switching").length,
+        ),
       ).toBe(2);
       const after = await state(page);
       expect(after).toMatchObject({
