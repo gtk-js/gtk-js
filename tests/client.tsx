@@ -529,11 +529,23 @@ const cases: Record<string, () => React.ReactElement> = {
   "levelbar-continuous-default": () => <GtkLevelBar value={0.5} data-testid="target" />,
   "levelbar-continuous-low": () => <GtkLevelBar value={0.1} data-testid="target" />,
   "levelbar-continuous-full": () => <GtkLevelBar value={1} data-testid="target" />,
+  "levelbar-continuous-inverted": () => (
+    <GtkLevelBar value={0.3} inverted style={{ width: "200px" }} data-testid="target" />
+  ),
   "levelbar-continuous-vertical": () => (
     <GtkLevelBar
       value={0.4}
       orientation="vertical"
       style={{ height: "200px" }}
+      data-testid="target"
+    />
+  ),
+  "levelbar-discrete-1-of-5": () => (
+    <GtkLevelBar
+      value={1}
+      maxValue={5}
+      mode="discrete"
+      style={{ width: "200px" }}
       data-testid="target"
     />
   ),
@@ -603,6 +615,18 @@ const cases: Record<string, () => React.ReactElement> = {
       style={{ height: "200px" }}
       data-testid="target"
     />
+  ),
+  "progressbar-vertical-inverted": () => (
+    <GtkProgressBar
+      fraction={0.3}
+      orientation="vertical"
+      inverted
+      style={{ height: "200px" }}
+      data-testid="target"
+    />
+  ),
+  "progressbar-inverted-30": () => (
+    <GtkProgressBar fraction={0.3} inverted style={{ width: "200px" }} data-testid="target" />
   ),
   "progressbar-inverted-50": () => <GtkProgressBar fraction={0.5} inverted data-testid="target" />,
   "progressbar-text-custom": () => (

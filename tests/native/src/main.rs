@@ -207,7 +207,10 @@ enum Command {
     LevelbarContinuousDefault,
     LevelbarContinuousLow,
     LevelbarContinuousFull,
+    LevelbarContinuousInverted,
     LevelbarContinuousVertical,
+    #[clap(name = "levelbar-discrete-1-of-5")]
+    LevelbarDiscrete1Of5,
     LevelbarDiscreteDefault,
     LevelbarDiscreteInverted,
     LevelbarDisabled,
@@ -241,6 +244,9 @@ enum Command {
     ProgressbarHorizontal100,
     #[clap(name = "progressbar-vertical-50")]
     ProgressbarVertical50,
+    ProgressbarVerticalInverted,
+    #[clap(name = "progressbar-inverted-30")]
+    ProgressbarInverted30,
     #[clap(name = "progressbar-inverted-50")]
     ProgressbarInverted50,
     ProgressbarTextCustom,
@@ -530,7 +536,9 @@ impl Command {
             Self::LevelbarContinuousDefault => Some("levelbar-continuous-default"),
             Self::LevelbarContinuousLow => Some("levelbar-continuous-low"),
             Self::LevelbarContinuousFull => Some("levelbar-continuous-full"),
+            Self::LevelbarContinuousInverted => Some("levelbar-continuous-inverted"),
             Self::LevelbarContinuousVertical => Some("levelbar-continuous-vertical"),
+            Self::LevelbarDiscrete1Of5 => Some("levelbar-discrete-1-of-5"),
             Self::LevelbarDiscreteDefault => Some("levelbar-discrete-default"),
             Self::LevelbarDiscreteInverted => Some("levelbar-discrete-inverted"),
             Self::LevelbarDisabled => Some("levelbar-disabled"),
@@ -560,6 +568,8 @@ impl Command {
             Self::ProgressbarHorizontal0 => Some("progressbar-horizontal-0"),
             Self::ProgressbarHorizontal100 => Some("progressbar-horizontal-100"),
             Self::ProgressbarVertical50 => Some("progressbar-vertical-50"),
+            Self::ProgressbarVerticalInverted => Some("progressbar-vertical-inverted"),
+            Self::ProgressbarInverted30 => Some("progressbar-inverted-30"),
             Self::ProgressbarInverted50 => Some("progressbar-inverted-50"),
             Self::ProgressbarTextCustom => Some("progressbar-text-custom"),
             Self::ProgressbarOsdHorizontal => Some("progressbar-osd-horizontal"),
@@ -1072,11 +1082,20 @@ fn create_widget_for_case(name: &str) -> Option<(gtk::Widget, bool)> {
                 false
             )
         }
+        "levelbar-continuous-inverted" => {
+            widget_case!(
+                cases::levelbar_continuous_inverted::LevelbarContinuousInverted,
+                false
+            )
+        }
         "levelbar-continuous-vertical" => {
             widget_case!(
                 cases::levelbar_continuous_vertical::LevelbarContinuousVertical,
                 false
             )
+        }
+        "levelbar-discrete-1-of-5" => {
+            widget_case!(cases::levelbar_discrete_1_of_5::LevelbarDiscrete1Of5, false)
         }
         "levelbar-discrete-default" => {
             widget_case!(
@@ -1154,6 +1173,15 @@ fn create_widget_for_case(name: &str) -> Option<(gtk::Widget, bool)> {
         }
         "progressbar-vertical-50" => {
             widget_case!(cases::progressbar_vertical_50::ProgressbarVertical50, false)
+        }
+        "progressbar-vertical-inverted" => {
+            widget_case!(
+                cases::progressbar_vertical_inverted::ProgressbarVerticalInverted,
+                false
+            )
+        }
+        "progressbar-inverted-30" => {
+            widget_case!(cases::progressbar_inverted_30::ProgressbarInverted30, false)
         }
         "progressbar-inverted-50" => {
             widget_case!(cases::progressbar_inverted_50::ProgressbarInverted50, false)
@@ -1546,7 +1574,9 @@ fn is_known_case(name: &str) -> bool {
             | "levelbar-continuous-default"
             | "levelbar-continuous-low"
             | "levelbar-continuous-full"
+            | "levelbar-continuous-inverted"
             | "levelbar-continuous-vertical"
+            | "levelbar-discrete-1-of-5"
             | "levelbar-discrete-default"
             | "levelbar-discrete-inverted"
             | "levelbar-disabled"
@@ -1569,6 +1599,8 @@ fn is_known_case(name: &str) -> bool {
             | "progressbar-horizontal-0"
             | "progressbar-horizontal-100"
             | "progressbar-vertical-50"
+            | "progressbar-vertical-inverted"
+            | "progressbar-inverted-30"
             | "progressbar-inverted-50"
             | "progressbar-text-custom"
             | "progressbar-osd-horizontal"
