@@ -40,3 +40,29 @@ test("a page has a back button when there's a page below it, like AdwBackButton"
     grandchild: true,
   });
 });
+
+test("the view and its pages are groups, labelled by the page title", () => {
+  const html = renderToStaticMarkup(
+    <IconProvider value={icons as never}>
+      <AdwNavigationView stack={["root", "child"]} pages={["root", "child"].map(page)} />
+    </IconProvider>,
+  );
+  expect(html).toMatch(/^<div class="gtk-navigation-view gtk-bin-layout" role="group"/);
+  expect(
+    html.match(/class="gtk-navigation-view-page[^"]*" role="group" aria-label="[^"]*"/g),
+  ).toEqual([
+    'class="gtk-navigation-view-page gtk-bin-layout" role="group" aria-label="root"',
+    'class="gtk-navigation-view-page gtk-bin-layout" role="group" aria-label="child"',
+  ]);
+});
+
+test("the back button is an AdwBackButton: a widget holding button.image-button.back with a menu", () => {
+  const html = renderToStaticMarkup(
+    <IconProvider value={icons as never}>
+      <AdwNavigationView stack={["root", "child"]} pages={["root", "child"].map(page)} />
+    </IconProvider>,
+  );
+  expect(html).toContain(
+    '<div class="gtk-widget gtk-bin-layout"><button class="gtk-button image-button back" type="button" aria-label="Back" aria-haspopup="menu" data-gtk-tooltip="root" aria-description="root">',
+  );
+});
