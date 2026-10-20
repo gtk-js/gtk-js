@@ -135,6 +135,8 @@ enum Command {
     ButtonIcon,
     ButtonCircular,
     ButtonContentButton,
+    ButtonIconLabel,
+    ButtonCanShrink,
     ButtonContentIconLabel,
     ButtonContentLabelOnly,
     ButtonContentIconOnly,
@@ -267,6 +269,9 @@ enum Command {
     ToggleTextChecked,
     ToggleTextFlat,
     ToggleDisabled,
+    ToggleIcon,
+    ToggleLabelChild,
+    ToggleGrouped,
     ToggleGroupTextDefault,
     ToggleGroupIcon,
     ToggleGroupHomogeneous,
@@ -416,6 +421,8 @@ impl Command {
             Self::ButtonIcon => Some("button-icon"),
             Self::ButtonCircular => Some("button-circular"),
             Self::ButtonContentButton => Some("button-content-button"),
+            Self::ButtonIconLabel => Some("button-icon-label"),
+            Self::ButtonCanShrink => Some("button-can-shrink"),
             Self::ButtonContentIconLabel => Some("button-content-icon-label"),
             Self::ButtonContentLabelOnly => Some("button-content-label-only"),
             Self::ButtonContentIconOnly => Some("button-content-icon-only"),
@@ -542,6 +549,9 @@ impl Command {
             Self::ToggleTextChecked => Some("toggle-text-checked"),
             Self::ToggleTextFlat => Some("toggle-text-flat"),
             Self::ToggleDisabled => Some("toggle-disabled"),
+            Self::ToggleIcon => Some("toggle-icon"),
+            Self::ToggleLabelChild => Some("toggle-label-child"),
+            Self::ToggleGrouped => Some("toggle-grouped"),
             Self::ToggleGroupTextDefault => Some("toggle-group-text-default"),
             Self::ToggleGroupIcon => Some("toggle-group-icon"),
             Self::ToggleGroupHomogeneous => Some("toggle-group-homogeneous"),
@@ -814,6 +824,8 @@ fn create_widget_for_case(name: &str) -> Option<(gtk::Widget, bool)> {
         "button-content-button" => {
             widget_case!(cases::button_content_button::ButtonContentButton, false)
         }
+        "button-icon-label" => widget_case!(cases::button_icon_label::ButtonIconLabel, false),
+        "button-can-shrink" => widget_case!(cases::button_can_shrink::ButtonCanShrink, true),
         "button-content-icon-label" => {
             widget_case!(cases::button_content_icon_label::ButtonContentIconLabel, false)
         }
@@ -1136,6 +1148,11 @@ fn create_widget_for_case(name: &str) -> Option<(gtk::Widget, bool)> {
         "toggle-text-checked" => widget_case!(cases::toggle_text_checked::ToggleTextChecked, false),
         "toggle-text-flat" => widget_case!(cases::toggle_text_flat::ToggleTextFlat, false),
         "toggle-disabled" => widget_case!(cases::toggle_disabled::ToggleDisabled, false),
+        "toggle-icon" => widget_case!(cases::toggle_icon::ToggleIcon, false),
+        "toggle-label-child" => {
+            widget_case!(cases::toggle_label_child::ToggleLabelChild, false)
+        }
+        "toggle-grouped" => widget_case!(cases::toggle_grouped::ToggleGrouped, false),
         "toggle-group-text-default" => {
             widget_case!(cases::toggle_group_text_default::ToggleGroupTextDefault, false)
         }
@@ -1280,6 +1297,8 @@ fn is_known_case(name: &str) -> bool {
             | "button-icon"
             | "button-circular"
             | "button-content-button"
+            | "button-icon-label"
+            | "button-can-shrink"
             | "button-content-icon-label"
             | "button-content-label-only"
             | "button-content-icon-only"
@@ -1400,6 +1419,9 @@ fn is_known_case(name: &str) -> bool {
             | "toggle-text-checked"
             | "toggle-text-flat"
             | "toggle-disabled"
+            | "toggle-icon"
+            | "toggle-label-child"
+            | "toggle-grouped"
             | "toggle-group-text-default"
             | "toggle-group-icon"
             | "toggle-group-homogeneous"

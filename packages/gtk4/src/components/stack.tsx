@@ -456,8 +456,8 @@ export const GtkStackSwitcher = forwardRef<HTMLDivElement, GtkStackSwitcherProps
           if (page.visible === false || (page.title == null && page.iconName == null)) return null;
           const isActive = page.name === activePageName;
           // rebuild_child(): an icon (the title is its tooltip), or else the title.
-          const btnClasses = [page.iconName != null ? "image-button" : "text-button"];
-          if (page.needsAttention) btnClasses.push("needs-attention");
+          // GtkButton makes it an .image-button or .text-button from that child.
+          const btnClasses = page.needsAttention ? ["needs-attention"] : [];
 
           return (
             <GtkToggleButton
@@ -468,7 +468,7 @@ export const GtkStackSwitcher = forwardRef<HTMLDivElement, GtkStackSwitcherProps
               aria-pressed={undefined}
               aria-label={page.title}
               tooltipText={page.iconName != null ? page.title : undefined}
-              className={btnClasses.join(" ")}
+              className={btnClasses.join(" ") || undefined}
               // add_child(): the tabs expand and don't take the focus on click.
               hexpand
               vexpand

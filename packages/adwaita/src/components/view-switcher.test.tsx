@@ -43,7 +43,7 @@ describe("AdwViewSwitcher", () => {
       ["narrow", "vertical"],
     ] as const) {
       const html = render(<AdwViewSwitcher policy={policy} pages={PAGES} />);
-      expect(attr(html, "class")[0]).toBe(`gtk-button toggle flat ${orientation}`);
+      expect(attr(html, "class")[0]).toBe(`gtk-button flat toggle ${orientation}`);
       expect(attr(html, "type")[0]).toBe("button");
       expect(attr(html, "aria-pressed")[0]).toBeNull();
       expect(buttons(html)[0]).toMatch(
