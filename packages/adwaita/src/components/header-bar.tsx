@@ -1,6 +1,7 @@
 import { GtkLabel, useIcon, useWindowControls } from "@gtk-js/gtk4";
 import { forwardRef, type HTMLAttributes, type ReactNode, useCallback } from "react";
 import type { AdwCenteringPolicy } from "../types.ts";
+import { AdwBackButton } from "./back-button.tsx";
 import { useHeaderBarTitle } from "./header-bar-title.ts";
 import { useNavigation } from "./navigation-view.tsx";
 
@@ -55,11 +56,21 @@ function WindowControlButton({ name, onClick }: { name: string; onClick?: () => 
   );
 }
 
-function WindowControls({ side, layout }: { side: "start" | "end"; layout: string }) {
-  const controls = useWindowControls();
+/** The window control buttons on one side of a decoration layout. */
+function controlButtons(layout: string, side: "start" | "end"): string[] {
   const [startPart = "", endPart = ""] = layout.split(":");
   const part = side === "start" ? startPart : endPart;
-  const buttons = part.split(",").filter((b) => b && b !== "appmenu" && b !== "icon");
+  return part.split(",").filter((b) => b && b !== "appmenu" && b !== "icon");
+}
+
+/** Whether a start/end prop holds a child. */
+function hasChild(node: ReactNode): boolean {
+  return node !== undefined && node !== null && node !== false && node !== "";
+}
+
+function WindowControls({ side, layout }: { side: "start" | "end"; layout: string }) {
+  const controls = useWindowControls();
+  const buttons = controlButtons(layout, side);
   // Empty controls are hidden, as AdwHeaderBar binds their visibility to "empty".
   if (buttons.length === 0) return null;
 
@@ -104,6 +115,8 @@ export const AdwHeaderBar = forwardRef<HTMLDivElement, AdwHeaderBarProps>(functi
   },
   ref,
 ) {
+  // AdwBackButton shows when it can pop and has its icon; the start box needs
+  // to know (update_box_visibility()).
   const BackIcon = useIcon("GoPrevious");
   const controls = useWindowControls();
   const decorationLayout =
@@ -143,39 +156,39 @@ export const AdwHeaderBar = forwardRef<HTMLDivElement, AdwHeaderBarProps>(functi
     [controls],
   );
 
+  // A box with nothing in it is hidden, so its theme margin takes no space,
+  // like update_box_visibility().
+  const showStartBox =
+    (showStartTitleButtons && controlButtons(decorationLayout, "start").length > 0) ||
+    (showBackButton && nav.canPop && BackIcon !== undefined) ||
+    hasChild(start);
+  const showEndBox =
+    (showEndTitleButtons && controlButtons(decorationLayout, "end").length > 0) || hasChild(end);
+
   return (
     <div ref={ref} className={classes.join(" ")} {...rest}>
       <div className="gtk-windowhandle gtk-bin-layout" onPointerDown={handleDrag}>
-        {/* The start and end boxes always exist, as in AdwHeaderBar. */}
+        {/* The start and end bins always exist, as in AdwHeaderBar. */}
         <div
           className="gtk-box gtk-center-layout"
           data-start=""
           data-center={showTitle && title ? "" : undefined}
           data-end=""
         >
-          <div className="gtk-box gtk-box-layout horizontal start gtk-center-layout-start">
-            {showStartTitleButtons && <WindowControls side="start" layout={decorationLayout} />}
-            {showBackButton && nav.canPop && BackIcon && (
-              <button
-                className="gtk-button image-button back flat"
-                type="button"
-                aria-label="Back"
-                title={nav.previousTitle || "Back"}
-                onClick={() => nav.pop()}
-                onPointerDown={(e) => e.stopPropagation()}
-              >
-                <span className="gtk-image">
-                  <BackIcon size={16} />
-                </span>
-              </button>
-            )}
-            {start}
-          </div>
+          {showStartBox && (
+            <div className="gtk-box gtk-box-layout horizontal start gtk-center-layout-start">
+              {showStartTitleButtons && <WindowControls side="start" layout={decorationLayout} />}
+              {showBackButton && <AdwBackButton />}
+              {start}
+            </div>
+          )}
           <div className="gtk-center-layout-center">{showTitle && title}</div>
-          <div className="gtk-box gtk-box-layout horizontal end gtk-center-layout-end">
-            {end}
-            {showEndTitleButtons && <WindowControls side="end" layout={decorationLayout} />}
-          </div>
+          {showEndBox && (
+            <div className="gtk-box gtk-box-layout horizontal end gtk-center-layout-end">
+              {end}
+              {showEndTitleButtons && <WindowControls side="end" layout={decorationLayout} />}
+            </div>
+          )}
         </div>
       </div>
     </div>

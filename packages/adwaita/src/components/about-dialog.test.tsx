@@ -41,6 +41,28 @@ describe("AdwAboutDialog main page", () => {
     expect(mainRows({ creditSections: [{ people: [] }], acknowledgementSections: [] })).toEqual([]);
   });
 
+  test("ignores the untranslated translator-credits placeholder", () => {
+    // update_credits(): either spelling means there are no translators.
+    expect(mainRows({ translatorCredits: "translator_credits" })).toEqual([]);
+    expect(mainRows({ translatorCredits: "translator-credits" })).toEqual([]);
+    expect(mainRows({ translatorCredits: "Someone\n" })).toEqual(["Credits"]);
+  });
+
+  test("copies the version from a shrinking text button, confirmed by a toast", () => {
+    const html = renderToStaticMarkup(
+      <AdwAboutDialog applicationName="App" version="1.2.3-beta" visible />,
+    );
+    // adw-about-dialog.ui: toast_overlay > navigation_view, and version_button
+    // (can-shrink, no tooltip).
+    expect(html).toMatch(/class="gtk-toastoverlay"[^>]*><div[^>]*class="gtk-navigation-view /);
+    const button = html.match(/<button[^>]*class="gtk-button text-button app-version"[^>]*>/);
+    expect(button?.[0]).not.toContain("title=");
+    expect(button?.[0]).not.toContain("data-gtk-tooltip");
+    expect(html).toMatch(
+      /app-version"[^>]*><span class="gtk-label"[^>]*><span style="[^"]*text-overflow:ellipsis[^"]*">1\.2\.3-beta</,
+    );
+  });
+
   test("lists other apps under the developer's name", () => {
     const html = renderToStaticMarkup(
       <AdwAboutDialog
@@ -51,7 +73,7 @@ describe("AdwAboutDialog main page", () => {
       />,
     );
     expect(html).toContain("Other Apps by Someone");
-    expect(html).toContain('title="appstream:org.example.Other"');
+    expect(html).toContain('data-gtk-tooltip="appstream:org.example.Other"');
     expect(html).toContain("Does other things");
   });
 });
