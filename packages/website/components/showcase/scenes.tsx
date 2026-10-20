@@ -195,7 +195,6 @@ function LiveProgress({ showLabels }: { showLabels: boolean }) {
         value={scaleValue}
         min={0}
         max={100}
-        style={{ width: "100%" }}
         onValueChanged={onSeek}
         onPointerUp={(e) => {
           if (e.button === 0) onSeekCommit(scaleValue);

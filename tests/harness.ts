@@ -29,6 +29,8 @@ export interface WidgetSnapshot {
   css_name?: string;
   css_classes?: string[];
   children?: WidgetSnapshot[];
+  /** The colors of the widget's text runs, in drawing order (native only). */
+  text_colors?: Color[];
 }
 
 export interface Sides {
