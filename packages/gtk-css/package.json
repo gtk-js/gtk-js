@@ -18,9 +18,6 @@
     "./build": "./src/build.ts",
     "./compile": "./src/compile.ts"
   },
-  "scripts": {
-    "build": "vp pack"
-  },
   "dependencies": {
     "postcss": "^8.5.8"
   }

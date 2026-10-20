@@ -17,9 +17,6 @@
     },
     "./adwaita.css": "./dist/adwaita.css"
   },
-  "scripts": {
-    "build": "node build.ts && vp pack"
-  },
   "dependencies": {
     "@gtk-js/icons-adwaita": "0.1.6",
     "@gtk-js/gtk4": "0.1.8",

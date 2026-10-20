@@ -17,9 +17,6 @@
     },
     "./build": "./src/build-helpers.ts"
   },
-  "scripts": {
-    "build": "vp pack"
-  },
   "peerDependencies": {
     "react": "^18 || ^19"
   },

@@ -17,9 +17,6 @@
     },
     "./gtk4.css": "./dist/gtk4.css"
   },
-  "scripts": {
-    "build": "node build.ts && vp pack"
-  },
   "dependencies": {
     "@gtk-js/gtk-css": "0.1.7",
     "@gtk-js/icon-helpers": "0.1.6",
