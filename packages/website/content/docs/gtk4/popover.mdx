@@ -28,8 +28,10 @@ popover.background
 
 ## Behavior
 
-- Positioned relative to its anchor element using fixed coordinates.
-- Slides along the cross-axis to stay within the viewport.
-- With `autohide`, closes on click outside or Escape.
+- Positioned relative to its anchor (`pointingTo`, or the element it's rendered in) using fixed coordinates, and follows it while open.
+- Flips to the other side when the preferred one has no room, slides along the cross-axis to stay within the viewport, and shrinks to what's left.
+- Escape closes it while the focus is inside it.
+- With `autohide` it's modal: it takes the focus when it opens, Tab cycles inside it, and Escape (wherever the focus is) or a click outside closes it. That click doesn't reach what's under the pointer.
+- Closing with the focus inside gives the focus back to the anchor.
 
 [GTK4 Documentation →](https://docs.gtk.org/gtk4/class.Popover.html)

@@ -1,6 +1,7 @@
 import {
   GtkSpinButton,
   type GtkSpinButtonUpdatePolicy,
+  tooltipAttrs,
   useListBoxRow,
   wrapStyle,
 } from "@gtk-js/gtk4";
@@ -157,7 +158,7 @@ export const AdwSpinRow = forwardRef<HTMLDivElement, AdwSpinRowProps>(function A
     <div
       ref={ref}
       className={classes.join(" ")}
-      title={tooltipText}
+      {...tooltipAttrs(tooltipText)}
       aria-disabled={insensitive}
       data-disabled={insensitive}
       onMouseDown={(e) => {
