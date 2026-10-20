@@ -16,6 +16,7 @@
     "entry-row",
     "expander-row",
     "header-bar",
+    "navigation-split-view",
     "navigation-view",
     "overlay-split-view",
     "password-entry-row",

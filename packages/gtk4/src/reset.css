@@ -6,9 +6,9 @@
  * specificity so theme rules always win.
  */
 
-html:has(body > [data-gtk-provider]),
+html:has(body > [data-gtk-provider]:not([data-gtk-portal])),
 html:has(body > :first-child:has([data-gtk-provider])),
-body:has(> [data-gtk-provider]),
+body:has(> [data-gtk-provider]:not([data-gtk-portal])),
 body:has(> :first-child:has([data-gtk-provider])) {
   margin: 0;
   padding: 0;
@@ -18,7 +18,7 @@ body:has(> :first-child:has([data-gtk-provider])) {
 /* The provider or mount point (e.g. #root) also needs full height so GtkWindow
    can fill the viewport. Covers common React/Vue/Svelte mount patterns while
    avoiding host-page resets when gtk-js is mounted deeper in the DOM. */
-body:has(> [data-gtk-provider]) > [data-gtk-provider],
+body:has(> [data-gtk-provider]:not([data-gtk-portal])) > [data-gtk-provider]:not([data-gtk-portal]),
 body:has(> :first-child:has([data-gtk-provider])) > :first-child {
   height: 100%;
 }
@@ -35,7 +35,10 @@ body:has(> :first-child:has([data-gtk-provider])) > :first-child {
 :where([data-gtk-provider] *) {
   margin: 0;
   padding: 0;
-  border: none;
+  /* GTK's initial border-width is 0 (gtkcssstylepropertyimpl.c), not the
+     browser's `medium`, so theme rules that only set a style, like the spin
+     button's `border-style: solid`, draw only the widths they set. */
+  border: 0 none;
   background: transparent;
   box-sizing: content-box;
   /* Inherited, like in GTK CSS: the root sets them (below). */
@@ -78,6 +81,10 @@ body:has(> :first-child:has([data-gtk-provider])) > :first-child {
   font-family: var(--gtk-font-family);
   font-size: var(--gtk-font-size);
   line-height: var(--gtk-line-height);
+  /* GTK shows the default arrow unless a widget sets a cursor
+     (gtk_widget_set_cursor_from_name()). Set once here and inherited, so
+     the cursors widgets and links set still reach their descendants. */
+  cursor: default;
 }
 
 /* GtkText: one line of text, as tall as its layout in whole pixels
@@ -85,6 +92,13 @@ body:has(> :first-child:has([data-gtk-provider])) > :first-child {
    selected; GTK fills the same whole-pixel line. */
 :where([data-gtk-provider] input.gtk-text) {
   line-height: round(up, 1lh, 1px);
+}
+
+/* GtkText's placeholder is a plain label (gtk_text_set_placeholder_text()):
+   the text's color, unless the theme dims it. */
+:where([data-gtk-provider] .gtk-text)::placeholder {
+  color: inherit;
+  opacity: 1;
 }
 
 /* Re-enable text selection for editable widgets */
@@ -96,9 +110,42 @@ body:has(> :first-child:has([data-gtk-provider])) > :first-child {
   user-select: text;
 }
 
+/* GtkText masks hidden text with U+25CF (BLACK CIRCLE) from its own font
+   (find_invisible_char() in gtktext.c); browsers mask with U+2022, about half
+   its size. This font draws both as Cantarell's black circle, at its size and
+   advance, so masked text looks native while the input stays a password field.
+   Anything else (a placeholder) is in the GTK font. */
+@font-face {
+  font-family: "gtk-js invisible char";
+  src: url("data:font/ttf;base64,AAEAAAAKAIAAAwAgT1MvMoTV6lMAAAEoAAAAYGNtYXArjhrRAAABkAAAADxnbHlmXwdQTgAAAdQAAAA6aGVhZC+WhyQAAACsAAAANmhoZWEGZgITAAAA5AAAACRobXR4BIMAWAAAAYgAAAAIbG9jYQAdAAAAAAHMAAAABm1heHAABAASAAABCAAAACBuYW1llue/jwAAAhAAAACKcG9zdM94ac8AAAKcAAAALQABAAAAAQAARMCLEF8PPPUAAQPoAAAAAOb5occAAAAA5vmhxwBZAGwCNgJKAAAAAwACAAAAAAAAAAEAAAPX/ycAAAKPAFgAWgI1AAEAAAAAAAAAAAAAAAAAAAACAAEAAAACABAAAQAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAwJCAZAABQAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAAgAAAAAAAAAAAAPz8/PwAAICIlzwLj/ycAAAPXANkAAAAAAAAAAAAAAAAAAAAgAAAB9AAAAo8AWAAAAAIAAAADAAAAFAADAAEAAAAUAAQAKAAAAAYABAABAAIgIiXP//8AACAiJc///9/f2jIAAQAAAAAAAAAAAAAAHQAAAAEAWQBsAjYCSgAPAAABNCcmIyIHBhUUFxYzMjc2AjZGRmJjRkZGRmJjRkYBW2NGRkZGY2NGRkZGAAAAAAAABAA2AAEAAAAAAAEAFQAAAAEAAAAAAAIABwAVAAMAAQQJAAEAKgAcAAMAAQQJAAIADgBGZ3RrLWpzIGludmlzaWJsZSBjaGFyUmVndWxhcgBnAHQAawAtAGoAcwAgAGkAbgB2AGkAcwBpAGIAbABlACAAYwBoAGEAcgBSAGUAZwB1AGwAYQByAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAABAgZjaXJjbGUAAAA=")
+    format("truetype");
+  unicode-range: U+2022, U+25CF;
+}
+
+:where([data-gtk-provider] input[type="password"]) {
+  font-family: "gtk-js invisible char", var(--gtk-font-family);
+}
+
+/* GtkText and GtkTextView show the text cursor (set_text_cursor(),
+   gtk_text_view_init()); insensitive ones aren't picked
+   (gtk_widget_can_be_picked()), so the arrow shows through. */
+:where([data-gtk-provider] :is(.gtk-text, .gtk-textview, [contenteditable="true"])) {
+  cursor: text;
+}
+
+:where([data-gtk-provider] :is(:disabled, [data-disabled], [data-disabled] *)) {
+  cursor: default;
+}
+
 :where([data-gtk-provider] button) {
   appearance: none;
   cursor: default;
+  outline: none;
+}
+
+/* A dialog's sheet takes the focus when nothing in it can; GTK draws no ring
+   for it (the floating sheet's theme outline still applies). */
+:where([data-gtk-provider] .gtk-sheet) {
   outline: none;
 }
 
@@ -107,11 +154,39 @@ body:has(> :first-child:has([data-gtk-provider])) > :first-child {
   outline: none;
 }
 
+/* A notebook takes the focus for its tabs; the theme draws the ring on the
+   current tab. */
+:where([data-gtk-provider] .gtk-notebook) {
+  outline: none;
+}
+
+/* A scale's focus ring is the theme's, on its slider (_scale.scss). */
+:where([data-gtk-provider] .gtk-scale) {
+  outline: none;
+}
+
+/* A focused expander's ring is drawn on its title (_expanders.scss). */
+:where([data-gtk-provider] .gtk-expander-widget) {
+  outline: none;
+}
+
+/* GtkEditableLabel is focused itself, outside of editing; Adwaita draws no ring for it. */
+:where([data-gtk-provider] .gtk-editablelabel) {
+  outline: none;
+}
+
 :where([data-gtk-provider] input),
 :where([data-gtk-provider] textarea),
 :where([data-gtk-provider] select) {
   appearance: none;
   outline: none;
+}
+
+/* GtkSearchEntry draws its own clear icon: no browser cancel button. */
+:where([data-gtk-provider] input)::-webkit-search-cancel-button,
+:where([data-gtk-provider] input)::-webkit-search-decoration {
+  appearance: none;
+  display: none;
 }
 
 :where([data-gtk-provider] svg) {
@@ -123,11 +198,13 @@ body:has(> :first-child:has([data-gtk-provider])) > :first-child {
    titlebar takes its natural height and the content div (flex:1) fills the rest.
    In native GTK the window manager supplies the size constraint; on the web the
    container must provide a bounded height (e.g. html/body at 100%).
-   @see upstream/gtk/gtk/gtkwindow.c — _gtk_window_set_allocation */
+   @see upstream/gtk/gtk/gtkwindow.c — _gtk_window_set_allocation
+   Dialogs hosted in the window (WindowElementContext) cover it, not the page. */
 :where([data-gtk-provider] .gtk-window.csd) {
   display: flex;
   flex-direction: column;
   overflow: clip;
+  position: relative;
 }
 
 /* GtkWindow draggableRegions: GtkWindowHandle moves the window. Hosts that move
@@ -139,10 +216,32 @@ body:has(> :first-child:has([data-gtk-provider])) > :first-child {
   app-region: drag;
 }
 
+/* The widgets that claim presses with a gesture of their own, as in
+   window-handle.tsx's CLAIMS_PRESS. */
 :where(
     [data-draggable-regions]
       .gtk-windowhandle
-      :is(button, input, textarea, select, a[href], [role="button"], .gtk-menubutton, .gtk-entry)
+      :is(
+        a[href],
+        button,
+        input,
+        select,
+        textarea,
+        [contenteditable="true"],
+        [role="button"],
+        [role="checkbox"],
+        [role="radio"],
+        [role="slider"],
+        [role="spinbutton"],
+        [role="switch"],
+        [role="tab"],
+        .gtk-checkbutton,
+        .gtk-entry,
+        .gtk-menubutton,
+        .gtk-scale,
+        .gtk-spinbutton,
+        .gtk-switch
+      )
   ) {
   -webkit-app-region: no-drag;
   app-region: no-drag;
@@ -167,10 +266,27 @@ body:has(> :first-child:has([data-gtk-provider])) > :first-child {
   align-self: auto;
 }
 
-/* GtkSpinner — its icon (process-working-symbolic) centered in the space it
-   gets, like gtk_spinner_snapshot(). The spin keyframe and opacity/animation
-   are provided by Adwaita CSS. */
+/* GtkSpinner — 16px (the icon size, gtk_spinner_measure()) unless given more
+   room, where its icon (process-working-symbolic) is drawn at the smaller side,
+   centered, like gtk_spinner_snapshot(). The spin keyframe and
+   opacity/animation are provided by Adwaita CSS. */
 :where([data-gtk-provider] .gtk-spinner) {
+  display: inline-flex;
+  position: relative;
+  min-width: 16px;
+  min-height: 16px;
+}
+
+:where([data-gtk-provider] .gtk-spinner > svg) {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* So does the arrow next to a menu button's label, icon or child, which its box
+   stretches to the box's height (gtk_menu_button_set_label()). */
+:where([data-gtk-provider] .gtk-menubutton .gtk-box > .gtk-arrow) {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -184,22 +300,47 @@ body:has(> :first-child:has([data-gtk-provider])) > :first-child {
   justify-content: center;
 }
 
+/* A button's arrow, a GtkBuiltinIcon like a menu button's, draws its icon
+   centered in its allocation too (gtk_builtin_icon_snapshot()). */
+:where([data-gtk-provider] .gtk-button > .gtk-arrow) {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* GtkBuiltinIcon (an expander's arrow) draws its icon centered in the space it
+   gets too (gtk_css_style_snapshot_icon()). */
+:where([data-gtk-provider] .gtk-expander) {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
 /* GtkLabel: inline text that vertically centers when stretched by a parent box.
    In native GTK, GtkLabel defaults to valign=CENTER. Widget sizes are whole
-   pixels: a line of text is at least one line height rounded up, as in
-   gtk_label_measure(). */
+   pixels: gtk_label_measure() rounds the text's size up (PANGO_PIXELS_CEIL),
+   and a line of text is at least one line height rounded up. The max sizes
+   keep a label that a fractional box stretches at that box's size. Browsers
+   without calc-size() keep fractional sizes. */
 :where([data-gtk-provider] .gtk-label) {
   display: inline-flex;
   align-items: center;
+  width: calc-size(auto, round(up, size, 1px));
+  height: calc-size(auto, round(up, size, 1px));
+  max-width: calc-size(max-content, max(round(up, size, 1px), 100%));
+  max-height: calc-size(max-content, max(round(up, size, 1px), 100%));
   min-height: round(up, 1lh, 1px);
+  /* A selectable label takes the focus, but GTK draws no focus ring on it. */
+  outline: none;
+  --gtk-label-color: var(--gtk-current-color, currentColor);
 }
 
-/* GtkViewport: a scrolled window's child that doesn't scroll itself is put in a
-   viewport, which allocates it at least the visible area
-   (gtk_viewport_size_allocate()). It fills it, or its halign/valign place it
-   there (the viewport is a bin layout). */
-:where([data-gtk-provider] .gtk-scrolledwindow > .gtk-viewport.gtk-bin-layout) {
-  min-height: 100%;
+/* GtkLabel draws a link's text in the link's color but with the label's
+   alpha: GTK's Pango renderer takes a foreground color's alpha from the
+   label's color (get_color() in gskpango.c), 80% in light Adwaita. The mask
+   is on the text, not the link node, which keeps its focus ring. */
+:where([data-gtk-provider] .gtk-label .gtk-link > span) {
+  mask-image: linear-gradient(var(--gtk-label-color), var(--gtk-label-color));
 }
 
 /* GtkTextView: the text node fills the widget, as its text window does
@@ -208,98 +349,191 @@ body:has(> :first-child:has([data-gtk-provider])) > :first-child {
   display: inline-grid;
 }
 
-/* GtkTextView in a GtkScrolledWindow: a text view scrolls its own text
-   (GtkScrollable), so the scrolled window allocates it the whole viewport
-   (gtk_scrolled_window_allocate_child). A <textarea> keeps its intrinsic
-   `cols` and `rows` size; a one-cell grid stretches it in both directions. */
-:where([data-gtk-provider] .gtk-scrolledwindow:has(> .gtk-textview)) {
-  display: grid;
-  grid-template: minmax(0, 1fr) / minmax(0, 1fr);
+/* It's as tall as its text and as wide as its margins (gtk_text_view_measure()),
+   not the size a <textarea> takes from `rows` and `cols`; text-view.tsx
+   measures it where `field-sizing` isn't supported. The text never scrolls
+   itself: a GtkScrolledWindow scrolls it. Its lines are whole pixels tall, as
+   GtkTextLayout's are. The indent is each paragraph's where `each-line` is
+   supported (gtk_text_view_set_indent()). */
+:where([data-gtk-provider] .gtk-textview > .gtk-text) {
+  line-height: round(up, 1lh, 1px);
+  field-sizing: content;
+  contain: inline-size;
+  overflow: hidden;
+  text-indent: var(--gtk-textview-indent, 0);
+}
+
+@supports (text-indent: 1px each-line) {
+  :where([data-gtk-provider] .gtk-textview > .gtk-text) {
+    text-indent: var(--gtk-textview-indent, 0) each-line;
+  }
+}
+
+/* Typing hides the pointer until it moves (gtk_text_view_obscure_mouse_cursor()). */
+:where([data-gtk-provider] .gtk-textview[data-cursor-obscured] > .gtk-text) {
+  cursor: none;
+}
+
+/* A GtkTextView is a GtkScrollable: a GtkScrolledWindow allocates it its
+   viewport (gtk_scrolled_window_allocate_child()) and its text, which fills
+   it, scrolls itself (the GtkScrolledWindow rules below). */
+:where([data-gtk-provider] .gtk-scrolledwindow > .gtk-textview > .gtk-text) {
+  min-height: 100%;
 }
 
 /* GtkEntry / GtkSearchEntry: the entry's custom size_allocate lays out children
    (image.left, text, image.right) horizontally at the full widget height.
-   We replicate this with flexbox. The text node (input) fills remaining width. */
+   We replicate this with flexbox. The text node (input) fills remaining width;
+   its natural width is GtkText's NAT_ENTRY_WIDTH (gtk_text_measure()). */
 :where([data-gtk-provider] .gtk-entry) {
   display: flex;
-  align-items: center;
+  position: relative;
 }
 
 :where([data-gtk-provider] .gtk-entry > .gtk-text) {
   flex: 1;
   min-width: 0;
+  width: 150px;
 }
 
-/* GtkScrolledWindow — style the browser scrollbar to match Adwaita's overlay
-   indicator: thin rounded thumb, transparent track, 8px wide, fully rounded.
-   Uses both standard properties (Firefox) and webkit pseudo-elements
-   (Chrome, Safari, Electron, Tauri/WebKitGTK) for cross-browser coverage.
-   @see upstream/libadwaita/src/stylesheet/widgets/_scrolling.scss
-   Dimensions: slider 8px wide, 40px min length, border-radius 99px
-   Colors: currentColor at 20% idle, 40% hover, 60% active
-   Transition: 200ms linear */
+/* GtkEntry's progress spans its content box at the bottom, under the text
+   (gtk_entry_size_allocate()); the entry's padding insets it to it. */
+:where([data-gtk-provider] .gtk-entry > .gtk-progress) {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding-right: inherit;
+  padding-bottom: inherit;
+  padding-left: inherit;
+}
+
+/* Insensitive widgets are never picked (gtk_widget_can_be_picked()), so the
+   icons of a disabled entry get no :hover/:active and no clicks. */
+:where([data-gtk-provider] .gtk-entry[data-disabled] > .gtk-image) {
+  pointer-events: none;
+}
+
+/* GtkPasswordEntry measures only its text (gtk_password_entry_measure()), and
+   its size_allocate() takes the visible icons, each after the entry's
+   border-spacing, out of the text's width: showing an icon doesn't widen the
+   entry. The text's natural width is GtkText's NAT_ENTRY_WIDTH, 150px. The
+   registered --gtk-border-spacing-x isn't inherited, so pass it on. */
+:where([data-gtk-provider] .gtk-entry.password) {
+  --gtk-password-icon-width: calc(16px + var(--gtk-border-spacing-x));
+  column-gap: var(--gtk-border-spacing-x);
+}
+
+:where([data-gtk-provider] .gtk-entry.password > .gtk-text) {
+  width: 150px;
+}
+
+:where([data-gtk-provider] .gtk-entry.password:has(> .gtk-image) > .gtk-text) {
+  width: calc(150px - var(--gtk-password-icon-width));
+}
+
+:where([data-gtk-provider] .gtk-entry.password:has(> .gtk-image + .gtk-image) > .gtk-text) {
+  width: calc(150px - 2 * var(--gtk-password-icon-width));
+}
+
+/* The caps-lock indicator has the text's cursor (gtk_password_entry_init()). */
+:where([data-gtk-provider] .gtk-entry.password > .caps-lock-indicator) {
+  cursor: text;
+}
+
+/* GtkScrolledWindow: the window doesn't scroll, its child does (a viewport,
+   or a GtkScrollable such as a text view), allocated the whole window with the
+   overlay scrollbars and undershoots over it (gtk_scrolled_window_allocate_child(),
+   gtk_scrolled_window_allocate_scrollbar()). Everything shares one grid cell,
+   at least as large as the minimum sizes they contribute. */
+:where([data-gtk-provider] .gtk-scrolledwindow) {
+  position: relative;
+  display: grid;
+  grid-template: 1fr / 1fr;
+}
+
+:where([data-gtk-provider] .gtk-scrolledwindow > *) {
+  grid-area: 1 / 1;
+}
+
+/* The child adds to the window's size only as gtk_scrolled_window_measure()
+   asks for it (see childSizing() in scrolled-window.tsx), and fills it. A
+   GtkViewport allocates its own child at least the visible area
+   (gtk_viewport_size_allocate()): it fills it, or its halign/valign place it
+   (the viewport is a bin layout). */
+:where([data-gtk-provider] .gtk-scrolledwindow > :not(.gtk-scrollbar, .gtk-undershoot)) {
+  width: var(--gtk-scrolled-child-width);
+  min-width: var(--gtk-scrolled-child-min-width);
+  max-width: var(--gtk-scrolled-child-max-width);
+  height: var(--gtk-scrolled-child-height);
+  min-height: var(--gtk-scrolled-child-min-height);
+  max-height: var(--gtk-scrolled-child-max-height);
+}
+
+/* The element that scrolls hides the browser's scrollbar: the scrolled window
+   draws its own. Adwaita draws no focus ring on a focused scrolled window. */
+:where([data-gtk-provider] .gtk-scrolledwindow > :is(.gtk-viewport, .gtk-listview)),
+:where([data-gtk-provider] .gtk-scrolledwindow > .gtk-textview > .gtk-text) {
+  overflow-x: var(--gtk-scrolled-overflow-x);
+  overflow-y: var(--gtk-scrolled-overflow-y);
+  scrollbar-width: none;
+  outline: none;
+}
+
+:where(
+    [data-gtk-provider] .gtk-scrolledwindow > :is(.gtk-viewport, .gtk-listview)
+  )::-webkit-scrollbar,
+:where([data-gtk-provider] .gtk-scrolledwindow > .gtk-textview > .gtk-text)::-webkit-scrollbar {
+  display: none;
+}
+
+/* Overlay indicators along the end edges, fading in and out over 1s
+   (indicator_start_fade(): INDICATOR_FADE_OUT_DURATION, ease-out-cubic). */
+:where([data-gtk-provider] .gtk-scrolledwindow > .gtk-scrollbar) {
+  z-index: 1;
+  transition: opacity 1s cubic-bezier(0.215, 0.61, 0.355, 1);
+}
+
+:where([data-gtk-provider] .gtk-scrolledwindow > .gtk-scrollbar.vertical) {
+  justify-self: end;
+}
+
+:where([data-gtk-provider] .gtk-scrolledwindow > .gtk-scrollbar.horizontal) {
+  align-self: end;
+}
 
 /* GtkScrolledWindow's undershoot nodes, drawn over the content along an edge
-   it isn't scrolled to (gtk_scrolled_window_snapshot_undershoot(), 40px). The
-   scrolled window is the scroll container, so they stick to its edges, and
-   their negative margins give back the space they take in the flow. */
+   it isn't scrolled to (gtk_scrolled_window_snapshot_undershoot(), 40px). */
 :where([data-gtk-provider] .gtk-scrolledwindow > .gtk-undershoot) {
-  position: sticky;
+  position: absolute;
   z-index: 1;
-  height: 40px;
   pointer-events: none;
+}
+
+:where([data-gtk-provider] .gtk-scrolledwindow > .gtk-undershoot:is(.top, .bottom)) {
+  left: 0;
+  right: 0;
+  height: 40px;
+}
+
+:where([data-gtk-provider] .gtk-scrolledwindow > .gtk-undershoot:is(.left, .right)) {
+  top: 0;
+  bottom: 0;
+  width: 40px;
 }
 
 :where([data-gtk-provider] .gtk-scrolledwindow > .gtk-undershoot.top) {
   top: 0;
-  margin-bottom: -40px;
 }
 
 :where([data-gtk-provider] .gtk-scrolledwindow > .gtk-undershoot.bottom) {
   bottom: 0;
-  margin-top: -40px;
 }
 
-/* Standard scrollbar properties (Firefox) */
-:where([data-gtk-provider] .gtk-scrolledwindow) {
-  scrollbar-width: thin;
-  scrollbar-color: color-mix(in srgb, currentColor 20%, transparent) transparent;
+:where([data-gtk-provider] .gtk-scrolledwindow > .gtk-undershoot.left) {
+  left: 0;
 }
 
-:where([data-gtk-provider] .gtk-scrolledwindow:hover) {
-  scrollbar-color: color-mix(in srgb, currentColor 40%, transparent) transparent;
-}
-
-/* Webkit/Blink scrollbar (Chrome, Safari, Electron, Tauri) */
-:where([data-gtk-provider] .gtk-scrolledwindow::-webkit-scrollbar) {
-  width: 8px;
-  height: 8px;
-}
-
-:where([data-gtk-provider] .gtk-scrolledwindow::-webkit-scrollbar-track) {
-  background: transparent;
-}
-
-:where([data-gtk-provider] .gtk-scrolledwindow::-webkit-scrollbar-thumb) {
-  background-color: color-mix(in srgb, currentColor 20%, transparent);
-  border-radius: 99px;
-  border: 2px solid transparent;
-  background-clip: padding-box;
-  transition: background-color 200ms linear;
-}
-
-:where([data-gtk-provider] .gtk-scrolledwindow::-webkit-scrollbar-thumb:hover) {
-  background-color: color-mix(in srgb, currentColor 40%, transparent);
-}
-
-:where([data-gtk-provider] .gtk-scrolledwindow::-webkit-scrollbar-thumb:active) {
-  background-color: color-mix(in srgb, currentColor 60%, transparent);
-}
-
-:where([data-gtk-provider] .gtk-scrolledwindow::-webkit-scrollbar-button) {
-  display: none;
-}
-
-:where([data-gtk-provider] .gtk-scrolledwindow::-webkit-scrollbar-corner) {
-  background: transparent;
+:where([data-gtk-provider] .gtk-scrolledwindow > .gtk-undershoot.right) {
+  right: 0;
 }

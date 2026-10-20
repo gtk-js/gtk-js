@@ -7,7 +7,12 @@ export default function Example() {
     <GtkBox orientation="vertical" spacing={4}>
       <GtkLabel label="Title" className="title-1" />
       <GtkLabel label="This is body text in a GtkLabel." />
-      <GtkLabel label="Dimmed caption" className="dim-label caption" />
+      <GtkLabel
+        label='Text with <b>markup</b> and a <a href="https://gnome.org">link</a>'
+        useMarkup
+      />
+      <GtkLabel label="Selectable text" selectable />
+      <GtkLabel label="Dimmed caption" className="dimmed caption" />
     </GtkBox>
   );
 }

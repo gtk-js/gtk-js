@@ -15,6 +15,9 @@ import Example from "./examples/window";
 
 ```
 window.background.csd
+  └── dialog-host
+        └── widget (AdwBreakpointBin)
+              └── [content]
 ```
 
 ## Props
@@ -26,7 +29,9 @@ window.background.csd
 
 ## Behavior
 
-- Extends `GtkWindow` with dialog hosting and breakpoint system.
-- Content is managed via the `content` prop rather than a traditional titlebar.
+- A `GtkWindow` without a titlebar: it takes the same props (`title`, `onClose`, `maximized`, `allocateShadow`, …), and the `content` prop gets the whole window.
+- Header bars in it show the window's title when they have no title widget.
+- Dialogs presented in it cover the window, not the page.
+- `breakpoints` apply for the window's size, as in `AdwBreakpointBin`.
 
 [Adwaita Documentation →](https://gnome.pages.gitlab.gnome.org/libadwaita/doc/1-latest/class.Window.html)
