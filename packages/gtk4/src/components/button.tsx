@@ -7,6 +7,7 @@ import React, {
   useState,
 } from "react";
 import { useIcon } from "../icon-context.tsx";
+import { tooltipAttrs } from "../tooltip.tsx";
 import { alignAttrs, type GtkAlignProps } from "../types.ts";
 import { GtkImage } from "./image.tsx";
 import { GtkLabel } from "./label.tsx";
@@ -45,6 +46,21 @@ export interface GtkButtonProps
   onClicked?: () => void;
   /** Custom child widget. Overrides label/iconName if provided. */
   children?: ReactNode;
+  /**
+   * @internal The button of an AdwSplitButton, which takes the style classes
+   * of its content itself (update_style_classes() in adw-split-button.c).
+   */
+  splitButton?: boolean;
+}
+
+/**
+ * The style class a child widget gives the button it's in: AdwButtonContent
+ * marks its component with `gtkButtonClass` for .image-text-button
+ * (adw_button_content_root()).
+ */
+export function childButtonClass(children: ReactNode): string | undefined {
+  if (!isValidElement(children)) return undefined;
+  return (children.type as { gtkButtonClass?: string }).gtkButtonClass;
 }
 
 /**
@@ -66,6 +82,7 @@ export const GtkButton = forwardRef<HTMLButtonElement, GtkButtonProps>(function 
     tooltipText,
     onClicked,
     children,
+    splitButton = false,
     halign,
     valign,
     hexpand,
@@ -93,9 +110,13 @@ export const GtkButton = forwardRef<HTMLButtonElement, GtkButtonProps>(function 
 
   const classes = ["gtk-button"];
   if (!hasFrame) classes.push("flat");
-  if (textButton) classes.push("text-button");
-  if (imageButton) classes.push("image-button");
-  if (hasIcon && hasLabel) classes.push("image-text-button");
+  if (!splitButton) {
+    if (textButton) classes.push("text-button");
+    if (imageButton) classes.push("image-button");
+    if (hasIcon && hasLabel) classes.push("image-text-button");
+    const childClass = childButtonClass(children);
+    if (childClass) classes.push(childClass);
+  }
   if (keyboardActivating) classes.push("keyboard-activating");
   if (className) classes.push(className);
 
@@ -131,7 +152,7 @@ export const GtkButton = forwardRef<HTMLButtonElement, GtkButtonProps>(function 
     <button
       ref={ref}
       className={classes.join(" ")}
-      title={tooltipText}
+      {...tooltipAttrs(tooltipText)}
       {...alignAttrs(halign, valign, hexpand, vexpand)}
       onClick={handleClick}
       onKeyDown={handleKeyDown}
