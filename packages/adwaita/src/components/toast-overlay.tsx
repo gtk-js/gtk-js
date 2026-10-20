@@ -1,4 +1,4 @@
-import { tooltipAttrs, useIcon } from "@gtk-js/gtk4";
+import { GtkButton, GtkLabel } from "@gtk-js/gtk4";
 import React, {
   forwardRef,
   type HTMLAttributes,
@@ -18,6 +18,7 @@ export interface AdwToast {
   buttonLabel?: string;
   timeout?: number;
   priority?: AdwToastPriority;
+  /** Not supported yet: the title is shown as plain text. */
   useMarkup?: boolean;
   onButtonClicked?: () => void;
   onDismissed?: () => void;
@@ -28,7 +29,13 @@ export interface AdwToastOverlayProps extends HTMLAttributes<HTMLDivElement> {
 }
 
 export interface AdwToastOverlayRef {
+  /**
+   * Shows a toast, or queues it. Adding the toast that's shown restarts its
+   * timeout, and adding a queued one moves it to the front of the queue.
+   */
   addToast: (toast: AdwToast) => void;
+  /** Dismisses the shown toast and every queued one. */
+  dismissAll: () => void;
 }
 
 // adw-toast-overlay.c
@@ -39,14 +46,16 @@ const SCALE_AMOUNT = 0.05;
 const NATURAL_WIDTH = 450;
 
 /** A toast being shown; `key` changes each time it's shown again after being postponed. */
-interface Shown {
+export interface Shown {
   key: number;
   toast: AdwToast;
   /** Shown while other toasts were still hiding (REPLACE_DURATION). */
   replacing: boolean;
+  /** How many times the toast was added again while shown, restarting its timeout. */
+  resets: number;
 }
 
-interface OverlayState {
+export interface OverlayState {
   current: Shown | null;
   hiding: Shown[];
   queue: AdwToast[];
@@ -58,6 +67,35 @@ function duration(ms: number): number {
   return prefersReducedMotion() ? 0 : ms * animationSlowdown();
 }
 
+function show(s: OverlayState, toast: AdwToast | undefined): Shown | null {
+  return toast ? { key: ++nextKey, toast, replacing: s.hiding.length > 0, resets: 0 } : null;
+}
+
+/** The overlay's state once `toast` is added, like adw_toast_overlay_add_toast(). */
+export function addToastTo(s: OverlayState, toast: AdwToast): OverlayState {
+  // The shown toast restarts its timeout.
+  if (s.current?.toast === toast)
+    return { ...s, current: { ...s.current, resets: s.current.resets + 1 } };
+  // A queued toast is bumped: to the front if it's high priority, otherwise
+  // after the high-priority toasts at the front (bump_toast()).
+  if (s.queue.includes(toast)) {
+    const queue = s.queue.filter((t) => t !== toast);
+    const at = toast.priority === "high" ? 0 : queue.findIndex((t) => t.priority !== "high");
+    queue.splice(at === -1 ? queue.length : at, 0, toast);
+    return { ...s, queue };
+  }
+  if (!s.current) return { ...s, current: show(s, toast) };
+  if (toast.priority === "high") {
+    // Postpone the current toast: it hides, and shows again next.
+    return {
+      current: { key: ++nextKey, toast, replacing: true, resets: 0 },
+      hiding: [...s.hiding, s.current],
+      queue: [s.current.toast, ...s.queue],
+    };
+  }
+  return { ...s, queue: [...s.queue, toast] };
+}
+
 /**
  * AdwToastOverlay — A container that displays toast notifications.
  *
@@ -66,7 +104,7 @@ function duration(ms: number): number {
  * cubic) while shrinking to 95% (300ms), staying on screen until then. Its
  * timeout restarts after the pointer leaves it, focus leaves it or a press
  * ends. A high-priority toast postpones the current one to the front of the
- * queue.
+ * queue. Escape dismisses the shown toast.
  *
  * CSS node:
  *   toastoverlay
@@ -82,29 +120,14 @@ function duration(ms: number): number {
 export const AdwToastOverlay = forwardRef<
   HTMLDivElement,
   AdwToastOverlayProps & { toastRef?: React.Ref<AdwToastOverlayRef> }
->(function AdwToastOverlay({ children, toastRef, className, style, ...rest }, ref) {
+>(function AdwToastOverlay({ children, toastRef, className, style, onKeyDown, ...rest }, ref) {
   const [state, setState] = useState<OverlayState>({ current: null, hiding: [], queue: [] });
-  const show = (s: OverlayState, toast: AdwToast | undefined): Shown | null =>
-    toast ? { key: ++nextKey, toast, replacing: s.hiding.length > 0 } : null;
+  const latest = useRef(state);
+  latest.current = state;
 
   const addToast = useCallback((toast: AdwToast) => {
-    setState((s) => {
-      if (s.current?.toast === toast || s.queue.includes(toast)) return s;
-      if (!s.current) return { ...s, current: show(s, toast) };
-      if (toast.priority === "high") {
-        // Postpone the current toast: it hides, and shows again next.
-        const hiding = [...s.hiding, s.current];
-        return {
-          current: { key: ++nextKey, toast, replacing: true },
-          hiding,
-          queue: [s.current.toast, ...s.queue],
-        };
-      }
-      return { ...s, queue: [...s.queue, toast] };
-    });
+    setState((s) => addToastTo(s, toast));
   }, []);
-
-  React.useImperativeHandle(toastRef, () => ({ addToast }), [addToast]);
 
   // A shown toast is dismissed once, whether by its timeout, its close button
   // or its action.
@@ -121,54 +144,61 @@ export const AdwToastOverlay = forwardRef<
     toast.onDismissed?.();
   }, []);
 
+  // Like adw_toast_overlay_dismiss_all(): the queued toasts, then the shown one.
+  const dismissAll = useCallback(() => {
+    const { current, queue } = latest.current;
+    latest.current = { ...latest.current, queue: [] };
+    setState((s) => ({ ...s, queue: s.queue.filter((t) => !queue.includes(t)) }));
+    for (const toast of queue) toast.onDismissed?.();
+    if (current) dismiss(current.key, current.toast);
+  }, [dismiss]);
+
+  React.useImperativeHandle(toastRef, () => ({ addToast, dismissAll }), [addToast, dismissAll]);
+
   const hidden = useCallback((key: number) => {
     dismissed.current.delete(key);
     setState((s) => ({ ...s, hiding: s.hiding.filter((t) => t.key !== key) }));
   }, []);
 
-  const classes = ["gtk-toastoverlay"];
+  const classes = ["gtk-toastoverlay", "gtk-bin-layout"];
   if (className) classes.push(className);
 
+  // The child and the toasts share one cell, so the toasts count toward the
+  // overlay's size like adw_toast_overlay_measure(), and the overlay clips
+  // them (GTK_OVERFLOW_HIDDEN).
   return (
     <div
       ref={ref}
+      role="group"
       className={classes.join(" ")}
-      style={{ position: "relative", ...style }}
+      style={{ overflow: "clip", ...style }}
+      onKeyDown={(e) => {
+        onKeyDown?.(e);
+        // The Escape binding, dismiss_cb().
+        const plain = !e.shiftKey && !e.ctrlKey && !e.altKey && !e.metaKey;
+        if (e.key !== "Escape" || !plain || e.defaultPrevented || !state.current) return;
+        e.preventDefault();
+        e.stopPropagation();
+        dismiss(state.current.key, state.current.toast);
+      }}
       {...rest}
     >
       {children}
-      {(state.current || state.hiding.length > 0) && (
-        // Toasts share one cell at the bottom center, over the child.
-        <div
-          style={{
-            position: "absolute",
-            inset: 0,
-            display: "grid",
-            gridTemplate: "minmax(0, 1fr) / minmax(0, 1fr)",
-            overflow: "hidden",
-            pointerEvents: "none",
-            zIndex: 100,
-          }}
-        >
-          {state.hiding.map((t) => (
-            <ToastWidget key={t.key} shown={t} hiding onDismiss={dismiss} onHidden={hidden} />
-          ))}
-          {state.current && (
-            <ToastWidget
-              key={state.current.key}
-              shown={state.current}
-              hiding={false}
-              onDismiss={dismiss}
-              onHidden={hidden}
-            />
-          )}
-        </div>
-      )}
+      {/* One list, so a toast keeps its widget when it starts hiding. */}
+      {[...state.hiding, ...(state.current ? [state.current] : [])].map((t) => (
+        <ToastWidget
+          key={t.key}
+          shown={t}
+          hiding={t !== state.current}
+          onDismiss={dismiss}
+          onHidden={hidden}
+        />
+      ))}
     </div>
   );
 });
 
-interface ToastWidgetProps {
+export interface ToastWidgetProps {
   shown: Shown;
   hiding: boolean;
   onDismiss: (key: number, toast: AdwToast) => void;
@@ -176,11 +206,10 @@ interface ToastWidgetProps {
 }
 
 /** AdwToastWidget: the toast node, its animations and its timeout. */
-function ToastWidget({ shown, hiding, onDismiss, onHidden }: ToastWidgetProps) {
-  const { key, toast, replacing } = shown;
+export function ToastWidget({ shown, hiding, onDismiss, onHidden }: ToastWidgetProps) {
+  const { key, toast, replacing, resets } = shown;
   const ref = useRef<HTMLDivElement>(null);
   const showAnimation = useRef<Animation | null>(null);
-  const CloseIcon = useIcon("WindowClose");
 
   // Slide up by its full height, margins included, like allocate_toast().
   useLayoutEffect(() => {
@@ -194,6 +223,29 @@ function ToastWidget({ shown, hiding, onDismiss, onHidden }: ToastWidgetProps) {
       { duration: ms, easing: ADW_EASE_CSS },
     );
   }, [replacing]);
+
+  // allocate_toast() centers the toast with integer division, so it starts on
+  // a whole pixel: move it left by the fraction CSS centering leaves.
+  useLayoutEffect(() => {
+    const el = ref.current;
+    const overlay = el?.parentElement;
+    if (!el || !overlay || typeof ResizeObserver !== "function") return;
+    let overlayWidth = 0;
+    let toastWidth = 0;
+    const observer = new ResizeObserver((entries) => {
+      for (const entry of entries) {
+        if (entry.target === overlay) overlayWidth = entry.contentRect.width;
+        else toastWidth = entry.borderBoxSize[0]?.inlineSize ?? 0;
+      }
+      const css = getComputedStyle(el);
+      const margins = parseFloat(css.marginLeft) + parseFloat(css.marginRight);
+      const x = (overlayWidth - toastWidth - margins) / 2;
+      el.style.translate = x > Math.floor(x) ? `${Math.floor(x) - x}px` : "";
+    });
+    observer.observe(overlay);
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
 
   // Fade out with ease-out cubic on top of the timed animation's own ease,
   // shrinking around the toast's center, like hide_value_cb() and
@@ -222,15 +274,18 @@ function ToastWidget({ shown, hiding, onDismiss, onHidden }: ToastWidgetProps) {
 
   // The timeout runs while the toast isn't hovered, focused or pressed
   // (inhibit_hide() / uninhibit_hide()), and restarts in full afterwards.
+  // Adding the toast again restarts it too (adw_toast_widget_reset_timeout()).
   const inhibit = useRef(0);
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const isHiding = useRef(hiding);
+  isHiding.current = hiding;
   const endTimeout = useCallback(() => {
     if (timer.current) clearTimeout(timer.current);
     timer.current = null;
   }, []);
   const startTimeout = useCallback(() => {
     const seconds = toast.timeout ?? 5;
-    if (!timer.current && seconds > 0)
+    if (!timer.current && !isHiding.current && seconds > 0)
       timer.current = setTimeout(() => onDismiss(key, toast), seconds * 1000);
   }, [toast, key, onDismiss]);
   useEffect(() => {
@@ -238,12 +293,47 @@ function ToastWidget({ shown, hiding, onDismiss, onHidden }: ToastWidgetProps) {
     startTimeout();
     return endTimeout;
   }, [hiding, startTimeout, endTimeout]);
+  const lastResets = useRef(resets);
+  useEffect(() => {
+    if (resets === lastResets.current) return;
+    lastResets.current = resets;
+    endTimeout();
+    startTimeout();
+  }, [resets, startTimeout, endTimeout]);
   const inhibitHide = () => {
     if (inhibit.current++ === 0) endTimeout();
   };
   const uninhibitHide = () => {
-    if (inhibit.current > 0 && --inhibit.current === 0 && !hiding) startTimeout();
+    if (inhibit.current > 0 && --inhibit.current === 0) startTimeout();
   };
+
+  // A press lasts until its pointer is released or cancelled, wherever that
+  // happens, like the GtkGestureClick's pressed and released signals.
+  const endPress = useRef<(() => void) | null>(null);
+  useEffect(() => () => endPress.current?.(), []);
+  const onPointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (endPress.current) return;
+    const view = e.currentTarget.ownerDocument.defaultView;
+    if (!view) return;
+    const { pointerId } = e;
+    const released = (event: Event) => {
+      if ((event as PointerEvent).pointerId === pointerId) endPress.current?.();
+    };
+    endPress.current = () => {
+      view.removeEventListener("pointerup", released, true);
+      view.removeEventListener("pointercancel", released, true);
+      endPress.current = null;
+      uninhibitHide();
+    };
+    view.addEventListener("pointerup", released, true);
+    view.addEventListener("pointercancel", released, true);
+    inhibitHide();
+  };
+
+  // The action button turns insensitive once clicked, like action_clicked_cb().
+  const [activated, setActivated] = useState(false);
+  // Both buttons have focus-on-click=FALSE.
+  const keepFocus = (e: React.MouseEvent) => e.preventDefault();
 
   return (
     <div
@@ -258,50 +348,52 @@ function ToastWidget({ shown, hiding, onDismiss, onHidden }: ToastWidgetProps) {
       onBlur={(e) => {
         if (!e.currentTarget.contains(e.relatedTarget as Node | null)) uninhibitHide();
       }}
-      onPointerDown={inhibitHide}
-      onPointerUp={uninhibitHide}
+      onPointerDown={onPointerDown}
       style={{
-        gridArea: "1 / 1",
         alignSelf: "end",
         justifySelf: "center",
         alignItems: "center",
         boxSizing: "border-box",
-        // A toast with a button is at least NATURAL_WIDTH wide, its 12px side
-        // margins included, as far as the overlay allows.
-        minWidth: toast.buttonLabel ? `min(${NATURAL_WIDTH - 24}px, calc(100% - 24px))` : undefined,
+        // As wide as the overlay allows, its 12px side margins included
+        // (allocate_toast()); a toast with a button is at least NATURAL_WIDTH.
+        // Its title ellipsizes, so it doesn't widen the overlay's cell.
+        maxWidth: "calc(100% - 24px)",
+        minWidth: toast.buttonLabel ? `min(${NATURAL_WIDTH - 24}px, calc(100% - 24px))` : 0,
         pointerEvents: hiding ? "none" : "auto",
+        zIndex: 100,
       }}
     >
       <div className="gtk-widget" style={{ flex: 1, minWidth: 0, display: "flex" }}>
-        <span
-          className="gtk-label heading"
-          style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}
-        >
-          {toast.title}
-        </span>
+        <GtkLabel label={toast.title} ellipsize="end" xalign={0} className="heading" />
       </div>
       {toast.buttonLabel && (
-        <button
+        <GtkButton
           type="button"
-          className="gtk-button text-button gtk-bin-layout"
+          label={toast.buttonLabel}
+          useUnderline
+          canShrink
+          valign="center"
+          disabled={activated}
           tabIndex={hiding ? -1 : undefined}
-          onClick={() => {
+          onMouseDown={keepFocus}
+          onClicked={() => {
+            setActivated(true);
             toast.onButtonClicked?.();
             onDismiss(key, toast);
           }}
-        >
-          <span className="gtk-label">{toast.buttonLabel}</span>
-        </button>
+        />
       )}
-      <button
+      <GtkButton
         type="button"
-        className="gtk-button circular flat image-button gtk-bin-layout"
-        {...tooltipAttrs("Dismiss")}
+        iconName="WindowClose"
+        hasFrame={false}
+        className="circular"
+        valign="center"
+        tooltipText="Dismiss"
         tabIndex={hiding ? -1 : undefined}
-        onClick={() => onDismiss(key, toast)}
-      >
-        <span className="gtk-image">{CloseIcon && <CloseIcon size={16} />}</span>
-      </button>
+        onMouseDown={keepFocus}
+        onClicked={() => onDismiss(key, toast)}
+      />
     </div>
   );
 }
