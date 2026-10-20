@@ -1,3 +1,4 @@
+use gtk::prelude::*;
 use relm4::adw;
 use relm4::prelude::*;
 
@@ -10,8 +11,8 @@ impl SimpleComponent for ToggleGroupIcon {
     type Output = ();
 
     view! {
-        adw::ToggleGroup {
-            set_active: 0,
+        gtk::Box {
+            set_orientation: gtk::Orientation::Vertical,
         }
     }
 
@@ -19,11 +20,12 @@ impl SimpleComponent for ToggleGroupIcon {
         let model = Self;
         let widgets = view_output!();
 
-        let t1 = adw::Toggle::builder().name("list").icon_name("view-list-symbolic").build();
-        root.add(t1);
-
-        let t2 = adw::Toggle::builder().name("grid").icon_name("view-grid-symbolic").build();
-        root.add(t2);
+        // At its natural size, as the web case: the window would stretch it.
+        let group = adw::ToggleGroup::builder().halign(gtk::Align::Start).build();
+        group.add(adw::Toggle::builder().name("list").icon_name("view-list-symbolic").build());
+        group.add(adw::Toggle::builder().name("grid").icon_name("view-grid-symbolic").build());
+        group.set_active(0);
+        root.append(&group);
 
         ComponentParts { model, widgets }
     }
