@@ -361,13 +361,14 @@ export function ShowcasePlayer({
     codeBadge === "docked" ? (
       <CodeBadge code={FULL_CODE} animateIn />
     ) : (
-      <div
-        style={{
-          opacity: wrapperOpacity,
-          transition: wrapperTransition,
-          display: "flex",
-          alignItems: "center",
-        }}
+      // In a flat header bar button, sized by the theme like the buttons
+      // beside it, which takes neither the pointer nor the focus: it only
+      // shows progress.
+      <GtkButton
+        hasFrame={false}
+        canTarget={false}
+        focusable={false}
+        style={{ opacity: wrapperOpacity, transition: wrapperTransition }}
       >
         <div style={{ display: showCheck ? "none" : "flex" }}>
           <GtkSpinner spinning={!showCheck} />
@@ -375,7 +376,7 @@ export function ShowcasePlayer({
         <div style={{ display: showCheck ? "flex" : "none" }}>
           <ObjectSelect size={16} />
         </div>
-      </div>
+      </GtkButton>
     )
   ) : undefined;
 
