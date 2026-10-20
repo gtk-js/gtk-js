@@ -2669,7 +2669,24 @@ const cases: Record<string, () => React.ReactElement> = {
 
 const container = document.getElementById("root")!;
 
-if (caseName.startsWith("provider-gate-")) {
+if (caseName === "alert-dialog-body") {
+  // Page for tests/cases/alert-dialog-body.test.ts: a modal dialog would cover the gallery.
+  void import("@gtk-js/adwaita").then(({ AdwAlertDialog }) =>
+    createRoot(container).render(
+      <AdwaitaProvider colorScheme="light">
+        <AdwAlertDialog
+          visible
+          heading="Delete File?"
+          body="This action cannot be undone."
+          responses={[
+            { id: "cancel", label: "Cancel" },
+            { id: "delete", label: "Delete", appearance: "destructive" },
+          ]}
+        />
+      </AdwaitaProvider>,
+    ),
+  );
+} else if (caseName.startsWith("provider-gate-")) {
   // Pages for tests/cases/provider-gate.test.ts, which set up their own provider.
   void import("./provider-gate.tsx").then((m) => m.render(caseName, container));
 } else if (isGallery) {
