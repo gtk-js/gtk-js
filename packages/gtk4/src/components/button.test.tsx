@@ -127,6 +127,26 @@ describe("disabled", () => {
   });
 });
 
+describe("canTarget and focusable", () => {
+  test("default to true: the button takes the pointer and the focus", () => {
+    const html = renderToStaticMarkup(<GtkButton label="Add" />);
+    expect(html).not.toContain("data-can-target");
+    expect(html).not.toContain("tabindex");
+  });
+
+  test("canTarget false lets the pointer through, like GtkWidget:can-target", () => {
+    const html = renderToStaticMarkup(<GtkButton label="Add" canTarget={false} />);
+    expect(html).toContain('data-can-target="false"');
+    expect(html).not.toContain("disabled");
+  });
+
+  test("focusable false takes the button out of the focus chain, like GtkWidget:focusable", () => {
+    const html = renderToStaticMarkup(<GtkButton label="Add" focusable={false} />);
+    expect(html).toContain('tabindex="-1"');
+    expect(html).not.toContain("disabled");
+  });
+});
+
 describe("tooltipText", () => {
   test("is the button's tooltip and accessible description, not a browser tooltip", () => {
     const html = renderToStaticMarkup(<GtkButton label="Add" tooltipText="Add a folder" />);

@@ -11,6 +11,7 @@ import {
   useRef,
   useState,
 } from "react";
+import { noFocusOnClick } from "../focus-on-click.ts";
 import { useWidgetActivate } from "../mnemonic.tsx";
 import { tooltipAttrs } from "../tooltip.tsx";
 import { alignAttrs, type GtkAlignProps } from "../types.ts";
@@ -41,6 +42,17 @@ export interface GtkButtonProps
   useUnderline?: boolean;
   /** Whether the button is insensitive (GtkWidget:sensitive = false). Default: false. */
   disabled?: boolean;
+  /**
+   * Whether the button takes pointer events (GtkWidget:can-target). When false,
+   * it can't be hovered, pressed or clicked, and the pointer reaches what's
+   * under it instead, like gtk_widget_pick() skipping it. Default: true.
+   */
+  canTarget?: boolean;
+  /**
+   * Whether the button can take the keyboard focus (GtkWidget:focusable).
+   * When false, Tab skips it and a click doesn't focus it. Default: true.
+   */
+  focusable?: boolean;
   /** Tooltip shown when hovering the button (GtkWidget:tooltip-text). */
   tooltipText?: string;
   /** Callback when the button is clicked. */
@@ -81,6 +93,8 @@ export const GtkButton = forwardRef<HTMLButtonElement, GtkButtonProps>(function 
     canShrink = false,
     useUnderline = false,
     disabled = false,
+    canTarget = true,
+    focusable = true,
     tooltipText,
     onClicked,
     children,
@@ -93,6 +107,8 @@ export const GtkButton = forwardRef<HTMLButtonElement, GtkButtonProps>(function 
     onKeyDown,
     onKeyUp,
     onClick,
+    onMouseDown,
+    onPointerDown,
     ...rest
   },
   ref,
@@ -185,8 +201,14 @@ export const GtkButton = forwardRef<HTMLButtonElement, GtkButtonProps>(function 
       {...tooltipAttrs(tooltipText)}
       disabled={disabled}
       data-disabled={disabled || undefined}
+      data-can-target={canTarget ? undefined : "false"}
+      // A negative tabIndex is can-focus FALSE (see FOCUSABLE).
+      tabIndex={focusable ? undefined : -1}
       {...alignAttrs(halign, valign, hexpand, vexpand)}
       onClick={handleClick}
+      {...(focusable
+        ? { onMouseDown, onPointerDown }
+        : noFocusOnClick({ onMouseDown, onPointerDown }))}
       onKeyDown={handleKeyDown}
       onKeyUp={handleKeyUp}
       {...rest}

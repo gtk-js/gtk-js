@@ -146,6 +146,12 @@ body:has(> :first-child:has([data-gtk-provider])) > :first-child {
   outline: none;
 }
 
+/* GtkWidget:can-target FALSE: gtk_widget_pick() skips the widget and its
+   children, so the pointer reaches what's under them. */
+:where([data-gtk-provider] [data-can-target="false"]) {
+  pointer-events: none;
+}
+
 /* A dialog's sheet takes the focus when nothing in it can; GTK draws no ring
    for it (the floating sheet's theme outline still applies). */
 :where([data-gtk-provider] .gtk-sheet) {
