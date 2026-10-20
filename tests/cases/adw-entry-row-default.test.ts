@@ -1,5 +1,5 @@
 import { expect } from "vite-plus/test";
-import { compare, gtkTest } from "../harness";
+import { compare, findChild, gtkTest } from "../harness";
 
 // Filtered: opacity — native empty-state animation bleed.
 //
@@ -13,4 +13,7 @@ import { compare, gtkTest } from "../harness";
 gtkTest("adw-entry-row-default", (native, web) => {
   const { failures } = compare(native, web);
   expect(failures.filter((f) => f.property !== "opacity")).toEqual([]);
+  // Even while the row is empty, its text fills the editable area's height
+  // (allocate_editable_area()), so the pointer is an I-beam all over it.
+  expect(findChild(web, "text").height).toBeCloseTo(findChild(native, "text").height, 0);
 });

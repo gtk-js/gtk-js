@@ -1,6 +1,13 @@
-import { forwardRef, type HTMLAttributes, type PointerEvent, type ReactNode } from "react";
-import { useIcon } from "../icon-context.tsx";
+import { forwardRef, type HTMLAttributes, type PointerEvent, type ReactNode, useMemo } from "react";
 import { alignAttrs, centerSlotAttrs, type GtkAlignProps } from "../types.ts";
+import {
+  useWindowControls,
+  type WindowControlsAPI,
+  WindowControlsContext,
+} from "../window-controls-context.tsx";
+import { GtkLabel } from "./label.tsx";
+import { GtkWindowControls } from "./window-controls.tsx";
+import { GtkWindowHandle } from "./window-handle.tsx";
 
 export interface GtkHeaderBarProps extends HTMLAttributes<HTMLDivElement>, GtkAlignProps {
   /** Widget displayed in the title position (center). */
@@ -9,7 +16,9 @@ export interface GtkHeaderBarProps extends HTMLAttributes<HTMLDivElement>, GtkAl
   showWindowControls?: boolean;
   /**
    * Window button layout string, matching GTK's decoration-layout format.
-   * Colon separates start from end. Default: "appmenu:minimize,maximize,close".
+   * Colon separates start from end; without one, both sides use the whole
+   * string. Default: the window's (or dialog's), else
+   * "appmenu:minimize,maximize,close".
    */
   decorationLayout?: string;
   /** Start-side children (before title). */
@@ -17,96 +26,27 @@ export interface GtkHeaderBarProps extends HTMLAttributes<HTMLDivElement>, GtkAl
   /** End-side children (after title). */
   end?: ReactNode;
   /**
-   * Called when the close button is clicked.
-   * Mirrors GTK's window.close action registered on GtkWindow.
+   * Called when the close button is clicked, instead of the enclosing
+   * GtkWindow's `onClose` (GTK's window.close action).
    */
   onWindowClose?: () => void;
   /**
-   * Called when the maximize/restore button is clicked.
-   * Mirrors GTK's window.toggle-maximized action registered on GtkWindow.
+   * Called when the maximize/restore button is clicked or the title bar is
+   * double-clicked, instead of the enclosing GtkWindow's `onMaximize` (GTK's
+   * window.toggle-maximized action).
    */
   onWindowToggleMaximized?: () => void;
   /**
-   * Called when the minimize button is clicked.
-   * Mirrors GTK's window.minimize action registered on GtkWindow.
+   * Called when the minimize button is clicked, instead of the enclosing
+   * GtkWindow's `onMinimize` (GTK's window.minimize action).
    */
   onWindowMinimize?: () => void;
   /**
-   * Called on pointerdown on the windowhandle (drag region).
-   * Mirrors GTK's GtkWindowHandle drag-begin signal.
+   * Called when a press on the window handle passes the drag threshold, with
+   * that pointer move, instead of the enclosing GtkWindow's `onDrag`
+   * (GtkWindowHandle's gdk_toplevel_begin_move()).
    */
   onWindowHandleDragStart?: (e: PointerEvent<HTMLDivElement>) => void;
-}
-
-/** The window controls' accessible labels (gtkwindowcontrols.c). */
-const controlLabels: Record<string, string> = {
-  close: "Close",
-  minimize: "Minimize",
-  maximize: "Maximize",
-};
-
-/** Maps decoration-layout button names to icon component PascalCase names. */
-const controlIconNames: Record<string, string> = {
-  close: "WindowClose",
-  minimize: "WindowMinimize",
-  maximize: "WindowMaximize",
-};
-
-function WindowControlButton({ name, onClick }: { name: string; onClick?: () => void }) {
-  const iconName = controlIconNames[name];
-  const Icon = useIcon(iconName ?? "");
-
-  if (!Icon) return null;
-
-  return (
-    <button
-      className={`gtk-button image-button ${name}`}
-      type="button"
-      tabIndex={-1}
-      aria-label={controlLabels[name]}
-      onMouseDown={(e) => e.preventDefault()}
-      onClick={onClick}
-    >
-      <span className="gtk-image">
-        <Icon size={16} />
-      </span>
-    </button>
-  );
-}
-
-function WindowControls({
-  side,
-  layout,
-  onWindowClose,
-  onWindowToggleMaximized,
-  onWindowMinimize,
-}: {
-  side: "start" | "end";
-  layout: string;
-  onWindowClose?: () => void;
-  onWindowToggleMaximized?: () => void;
-  onWindowMinimize?: () => void;
-}) {
-  const [startPart = "", endPart = ""] = layout.split(":");
-  const part = side === "start" ? startPart : endPart;
-  const buttons = part.split(",").filter((b) => b && b !== "appmenu");
-
-  const clickHandlers: Record<string, (() => void) | undefined> = {
-    close: onWindowClose,
-    maximize: onWindowToggleMaximized,
-    minimize: onWindowMinimize,
-  };
-
-  // Empty controls are hidden, as GtkHeaderBar binds their visibility to "empty".
-  if (buttons.length === 0) return null;
-
-  return (
-    <div className={`gtk-windowcontrols gtk-box-layout horizontal ${side}`}>
-      {buttons.map((name) => (
-        <WindowControlButton key={name} name={name} onClick={clickHandlers[name]} />
-      ))}
-    </div>
-  );
 }
 
 /**
@@ -122,10 +62,13 @@ function WindowControls({
  *             ├── <title widget>
  *             └── box.end
  *
- * Window control buttons mirror GTK's action system:
+ * Window control buttons mirror GTK's action system, acting on the enclosing
+ * GtkWindow (or the header bar's own handlers):
  *   - close     → window.close action
  *   - maximize  → window.toggle-maximized action
  *   - minimize  → window.minimize action
+ * The window handle moves the window, maximizes it on a double click and
+ * opens the window menu on a right click (GtkWindowHandle).
  *
  * @see https://docs.gtk.org/gtk4/class.HeaderBar.html
  * @see upstream/gtk/gtk/gtkwindowcontrols.c
@@ -134,7 +77,7 @@ export const GtkHeaderBar = forwardRef<HTMLDivElement, GtkHeaderBarProps>(functi
   {
     titleWidget,
     showWindowControls = true,
-    decorationLayout = "appmenu:minimize,maximize,close",
+    decorationLayout,
     start,
     end,
     halign,
@@ -154,6 +97,44 @@ export const GtkHeaderBar = forwardRef<HTMLDivElement, GtkHeaderBarProps>(functi
   const classes = ["gtk-headerbar", "gtk-bin-layout"];
   if (className) classes.push(className);
 
+  // The header bar's own handlers take the place of the window's actions for
+  // its controls and handle.
+  const windowControls = useWindowControls();
+  const controls = useMemo<WindowControlsAPI | undefined>(
+    () =>
+      onWindowClose || onWindowMinimize || onWindowToggleMaximized || onWindowHandleDragStart
+        ? {
+            ...windowControls,
+            close: onWindowClose ?? windowControls?.close,
+            minimize: onWindowMinimize ?? windowControls?.minimize,
+            maximize: onWindowToggleMaximized ?? windowControls?.maximize,
+            drag: onWindowHandleDragStart ?? windowControls?.drag,
+          }
+        : windowControls,
+    [
+      windowControls,
+      onWindowClose,
+      onWindowMinimize,
+      onWindowToggleMaximized,
+      onWindowHandleDragStart,
+    ],
+  );
+
+  // Without a title widget, a label with the window's title
+  // (construct_title_label(), update_title()).
+  const title =
+    titleWidget ??
+    children ??
+    (controls?.title ? (
+      <GtkLabel
+        label={controls.title}
+        className="title"
+        valign="center"
+        ellipsize="end"
+        widthChars={5}
+      />
+    ) : undefined);
+
   return (
     <div
       ref={ref}
@@ -161,41 +142,28 @@ export const GtkHeaderBar = forwardRef<HTMLDivElement, GtkHeaderBarProps>(functi
       {...alignAttrs(halign, valign, hexpand, vexpand)}
       {...rest}
     >
-      <div className="gtk-windowhandle gtk-bin-layout" onPointerDown={onWindowHandleDragStart}>
-        {/* The start and end boxes always exist, as in GtkHeaderBar. */}
-        <div
-          className="gtk-box gtk-center-layout"
-          {...centerSlotAttrs(true, titleWidget ?? children, true)}
-        >
-          <div className="gtk-box gtk-box-layout horizontal start gtk-center-layout-start">
-            {showWindowControls && (
-              <WindowControls
-                side="start"
-                layout={decorationLayout}
-                onWindowClose={onWindowClose}
-                onWindowToggleMaximized={onWindowToggleMaximized}
-                onWindowMinimize={onWindowMinimize}
-              />
-            )}
-            {start}
-          </div>
+      <WindowControlsContext.Provider value={controls}>
+        <GtkWindowHandle>
+          {/* The start and end boxes always exist, as in GtkHeaderBar. */}
+          <div className="gtk-box gtk-center-layout" {...centerSlotAttrs(true, title, true)}>
+            <div className="gtk-box gtk-box-layout horizontal start gtk-center-layout-start">
+              {showWindowControls && (
+                <GtkWindowControls side="start" decorationLayout={decorationLayout} />
+              )}
+              {start}
+            </div>
 
-          <div className="gtk-center-layout-center">{titleWidget ?? children}</div>
+            <div className="gtk-center-layout-center">{title}</div>
 
-          <div className="gtk-box gtk-box-layout horizontal end gtk-center-layout-end">
-            {end}
-            {showWindowControls && (
-              <WindowControls
-                side="end"
-                layout={decorationLayout}
-                onWindowClose={onWindowClose}
-                onWindowToggleMaximized={onWindowToggleMaximized}
-                onWindowMinimize={onWindowMinimize}
-              />
-            )}
+            <div className="gtk-box gtk-box-layout horizontal end gtk-center-layout-end">
+              {end}
+              {showWindowControls && (
+                <GtkWindowControls side="end" decorationLayout={decorationLayout} />
+              )}
+            </div>
           </div>
-        </div>
-      </div>
+        </GtkWindowHandle>
+      </WindowControlsContext.Provider>
     </div>
   );
 });

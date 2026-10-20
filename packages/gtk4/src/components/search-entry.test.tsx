@@ -9,10 +9,10 @@ const clearIcon = (html: string) => html.match(/<span class="gtk-image right"[^>
 describe("GtkSearchEntry", () => {
   test("the clear icon is always measured, and only drawn with text (gtk_search_entry_measure())", () => {
     expect(clearIcon(renderToStaticMarkup(<GtkSearchEntry />))).toBe(
-      '<span class="gtk-image right" title="Clear Entry" style="visibility:hidden">',
+      '<span class="gtk-image right" data-gtk-tooltip="Clear Entry" aria-description="Clear Entry" style="visibility:hidden">',
     );
     expect(clearIcon(renderToStaticMarkup(<GtkSearchEntry text="abc" />))).toBe(
-      '<span class="gtk-image right" title="Clear Entry">',
+      '<span class="gtk-image right" data-gtk-tooltip="Clear Entry" aria-description="Clear Entry">',
     );
   });
 

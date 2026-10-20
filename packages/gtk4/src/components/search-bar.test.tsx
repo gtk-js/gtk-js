@@ -19,7 +19,7 @@ describe("GtkSearchBar", () => {
     );
     expect(html).toMatch(/<div class="gtk-center-layout-center"><div class="gtk-entry search"/);
     expect(html).toMatch(
-      /<div class="gtk-center-layout-end"><button class="gtk-button image-button close" data-valign="center"/,
+      /<div class="gtk-center-layout-end"><button type="button" class="gtk-button image-button close" data-valign="center"/,
     );
   });
 });

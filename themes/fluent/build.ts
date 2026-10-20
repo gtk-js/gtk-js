@@ -18,23 +18,6 @@ const ACCENT_HEX: Record<"light" | "dark", { hex: string; r: number; g: number; 
 };
 
 /**
- * Adjust .gtk-switch min-width/min-height to match native GTK layout manager.
- *
- * Native GTK computes: switch_width = 2 × slider_measured_width (content + margin).
- * The upstream SCSS sets switch min-width to $small-size (22px), but the native
- * layout manager overrides this to 2 × (12px slider + 5px margin × 2) = 44px.
- * The switch min-height is slider_measured_height = 12px + 5px × 2 = 22px.
- */
-function fixSwitchLayout(css: string): string {
-  // Match the first .gtk-switch { ... } block and fix min-width inside it.
-  // The compiled CSS has exactly one `.gtk-switch {` rule with min-width: 22px.
-  return css.replace(
-    /(\.gtk-switch\s*\{[^}]*?)min-width:\s*22px/,
-    "$1min-width: 44px;\n  min-height: 22px",
-  );
-}
-
-/**
  * Post-process compiled CSS to replace the baked-in accent hex and all
  * rgba(R,G,B,A) derived forms with CSS custom property references.
  * This allows the accent color to be overridden at runtime.
@@ -76,7 +59,6 @@ $titlebutton: '${titlebutton}';
       try {
         let css = await compileGtkCSS(scssEntry, { scheme });
         css = replaceAccentWithVar(css, scheme);
-        css = fixSwitchLayout(css);
 
         const key = `${scheme}_${titlebutton}_${win}`;
         results[key] = css;

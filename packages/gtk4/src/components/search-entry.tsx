@@ -12,6 +12,7 @@ import React, {
   useState,
 } from "react";
 import { useIcon } from "../icon-context.tsx";
+import { tooltipAttrs } from "../tooltip.tsx";
 import { alignAttrs, type GtkAlignProps } from "../types.ts";
 
 export interface GtkSearchEntryProps
@@ -256,7 +257,7 @@ export const GtkSearchEntry = forwardRef<HTMLInputElement, GtkSearchEntryProps>(
             (gtk_search_entry_measure(), gtk_widget_set_child_visible()). */}
         <span
           className="gtk-image right"
-          title="Clear Entry"
+          {...tooltipAttrs("Clear Entry")}
           style={currentText === "" ? { visibility: "hidden" } : undefined}
           onClick={disabled ? undefined : clear}
         >
