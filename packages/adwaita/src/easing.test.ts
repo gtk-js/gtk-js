@@ -1,5 +1,5 @@
 import { describe, expect, test } from "vite-plus/test";
-import { adwEase, easeOutCubic, lerp } from "./easing.ts";
+import { adwEase, lerp } from "./easing.ts";
 
 describe("adwEase", () => {
   test("follows CSS ease, which ADW_EASE is", () => {
@@ -19,12 +19,6 @@ describe("adwEase", () => {
       last = value;
     }
   });
-});
-
-test("easeOutCubic", () => {
-  expect(easeOutCubic(0)).toBe(0);
-  expect(easeOutCubic(0.5)).toBe(0.875);
-  expect(easeOutCubic(1)).toBe(1);
 });
 
 test("lerp", () => {

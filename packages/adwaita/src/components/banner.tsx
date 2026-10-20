@@ -1,4 +1,4 @@
-import { GtkButton, GtkLabel, prefersReducedMotion } from "@gtk-js/gtk4";
+import { EASE_OUT_CUBIC, GtkButton, GtkLabel, prefersReducedMotion } from "@gtk-js/gtk4";
 import {
   type CSSProperties,
   forwardRef,
@@ -31,10 +31,9 @@ const HORZ_PADDING = 6;
 const BUTTON_HORZ_MIN_WIDTH = 84;
 const BUTTON_VERT_MIN_WIDTH = 160;
 
-// GtkRevealer's default transition-duration and its ease-out cubic
-// (gtk_progress_tracker_get_ease_out_cubic(): 1 - (1 - t)³).
+// GtkRevealer's default transition-duration; it eases out cubic
+// (gtk_progress_tracker_get_ease_out_cubic()).
 const REVEAL_DURATION = 250;
-const EASE_OUT_CUBIC_CSS = "cubic-bezier(0.33333, 1, 0.66667, 1)";
 
 /**
  * How the banner's gizmo places its title and button (layout.css), as
@@ -203,7 +202,7 @@ export const AdwBanner = forwardRef<HTMLDivElement, AdwBannerProps>(function Adw
         { height: `${revealed ? full : 0}px`, overflow: "clip" },
       ],
       // A hidden revealer keeps its end height until the child is hidden.
-      { duration: ms, easing: EASE_OUT_CUBIC_CSS, fill: revealed ? "none" : "forwards" },
+      { duration: ms, easing: EASE_OUT_CUBIC, fill: revealed ? "none" : "forwards" },
     );
     animation.current = anim;
     anim.onfinish = () => {

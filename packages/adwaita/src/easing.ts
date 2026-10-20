@@ -29,11 +29,6 @@ export function adwEase(t: number): number {
   return cubicBezier(t, 0.25, 0.1, 0.25, 1);
 }
 
-/** ADW_EASE_OUT_CUBIC. */
-export function easeOutCubic(t: number): number {
-  return (t - 1) ** 3 + 1;
-}
-
 export function lerp(a: number, b: number, t: number): number {
   return a + (b - a) * t;
 }

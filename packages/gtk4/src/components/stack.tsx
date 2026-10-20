@@ -13,7 +13,7 @@ import React, {
   useRef,
   useState,
 } from "react";
-import { prefersReducedMotion } from "../animation.ts";
+import { EASE_OUT_CUBIC, prefersReducedMotion } from "../animation.ts";
 import { FOCUSABLE } from "../focusable.ts";
 import {
   alignAttrs,
@@ -126,9 +126,6 @@ function stackTransition(
   const byOrder = BY_PAGE_ORDER[type];
   return { from: from!, type: byOrder ? byOrder[toIndex < fromIndex ? 0 : 1] : type };
 }
-
-/** ease-out-cubic, as gtk_progress_tracker_get_ease_out_cubic(). */
-const EASE_OUT_CUBIC = "cubic-bezier(0.215, 0.61, 0.355, 1)";
 
 interface TransitionFrames {
   easing: string;

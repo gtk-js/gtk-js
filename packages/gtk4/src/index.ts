@@ -1,7 +1,7 @@
 // Provider
 
 export { GtkTheme, type SystemColorScheme } from "@gtk-js/gtk-css";
-export { prefersReducedMotion } from "./animation.ts";
+export { EASE_OUT_CUBIC, easeOutCubic, prefersReducedMotion } from "./animation.ts";
 export type { GtkActionBarProps } from "./components/action-bar.tsx";
 export { GtkActionBar } from "./components/action-bar.tsx";
 export type { GtkBoxProps } from "./components/box.tsx";

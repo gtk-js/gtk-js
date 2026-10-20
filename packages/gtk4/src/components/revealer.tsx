@@ -8,7 +8,7 @@ import {
   useRef,
   useState,
 } from "react";
-import { prefersReducedMotion } from "../animation.ts";
+import { EASE_OUT_CUBIC, prefersReducedMotion } from "../animation.ts";
 import { alignAttrs, type GtkAlignProps } from "../types.ts";
 
 /** The GtkRevealerTransitionType values gtk-js implements. */
@@ -23,10 +23,6 @@ export interface GtkRevealerProps extends HTMLAttributes<HTMLDivElement>, GtkAli
   transitionDuration?: number;
   children?: ReactNode;
 }
-
-// gtk_progress_tracker_get_ease_out_cubic(): 1 - (1 - t)³ is the cubic bezier
-// (1/3, 1), (2/3, 1).
-const EASE_OUT_CUBIC = "cubic-bezier(0.3333, 1, 0.6667, 1)";
 
 /**
  * GtkRevealer — Animates the showing and hiding of its child.
