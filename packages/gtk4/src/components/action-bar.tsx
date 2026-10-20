@@ -1,5 +1,7 @@
 import { forwardRef, type HTMLAttributes, type ReactNode } from "react";
-import { alignAttrs, centerSlotAttrs, type GtkAlignProps } from "../types.ts";
+import { alignAttrs, type GtkAlignProps } from "../types.ts";
+import { GtkCenterBox } from "./center-box.tsx";
+import { GtkRevealer } from "./revealer.tsx";
 
 export interface GtkActionBarProps extends HTMLAttributes<HTMLDivElement>, GtkAlignProps {
   /** Whether the action bar is visible. Default: true. */
@@ -23,6 +25,8 @@ export interface GtkActionBarProps extends HTMLAttributes<HTMLDivElement>, GtkAl
  *             ├── [center widget]
  *             └── box.end
  *
+ * `revealed` slides the bar in and out over 250ms (GtkRevealer, slide-up).
+ *
  * @see https://docs.gtk.org/gtk4/class.ActionBar.html
  */
 export const GtkActionBar = forwardRef<HTMLDivElement, GtkActionBarProps>(function GtkActionBar(
@@ -43,18 +47,6 @@ export const GtkActionBar = forwardRef<HTMLDivElement, GtkActionBarProps>(functi
   const classes = ["gtk-actionbar"];
   if (className) classes.push(className);
 
-  if (!revealed) {
-    return (
-      <div
-        ref={ref}
-        className={classes.join(" ")}
-        {...alignAttrs(halign, valign, hexpand, vexpand)}
-        style={{ display: "none" }}
-        {...rest}
-      />
-    );
-  }
-
   return (
     <div
       ref={ref}
@@ -62,16 +54,15 @@ export const GtkActionBar = forwardRef<HTMLDivElement, GtkActionBarProps>(functi
       {...alignAttrs(halign, valign, hexpand, vexpand)}
       {...rest}
     >
-      <div className="gtk-revealer">
-        {/* The start and end boxes always exist, as in GtkActionBar. */}
-        <div className="gtk-box gtk-center-layout" {...centerSlotAttrs(true, centerWidget, true)}>
-          <div className="gtk-box gtk-box-layout horizontal start gtk-center-layout-start">
-            {start}
-          </div>
-          <div className="gtk-center-layout-center">{centerWidget}</div>
-          <div className="gtk-box gtk-box-layout horizontal end gtk-center-layout-end">{end}</div>
-        </div>
-      </div>
+      {/* gtk_action_bar_set_revealed() slides the bar up and down, keeping its children. */}
+      <GtkRevealer revealChild={revealed} transitionType="slide-up">
+        {/* A GtkCenterBox whose start and end boxes always exist, as in GtkActionBar. */}
+        <GtkCenterBox
+          startWidget={<div className="gtk-box gtk-box-layout horizontal start">{start}</div>}
+          centerWidget={centerWidget}
+          endWidget={<div className="gtk-box gtk-box-layout horizontal end">{end}</div>}
+        />
+      </GtkRevealer>
     </div>
   );
 });

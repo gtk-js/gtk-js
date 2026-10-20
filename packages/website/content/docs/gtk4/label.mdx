@@ -14,7 +14,8 @@ import Example from "./examples/label";
 ## CSS Node Tree
 
 ```
-label
+label[.link]
+  └── [link[:link|:visited]] (one per <a> in the markup)
 ```
 
 ## Props
@@ -28,12 +29,15 @@ label
 
 | Class | Effect |
 |-------|--------|
-| `.title-1` through `.title-4` | Heading sizes |
+| `.title-1` through `.title-4` | Title sizes |
 | `.heading` | Standard heading style |
-| `.body` | Body text |
-| `.caption` | Small caption text |
+| `.caption-heading`, `.caption` | Smaller text that accompanies body text |
+| `.body` | Increased line height for wrapping UI text |
+| `.document` | The document font, for an app's main content |
 | `.monospace` | Monospace font |
-| `.dim-label` | Dimmed text |
 | `.numeric` | Tabular number spacing |
+| `.dimmed` | Dimmed text (`.dim-label` is the deprecated name) |
+| `.accent` | Accent color |
+| `.success`, `.warning`, `.error` | Success, warning or error color |
 
 [GTK4 Documentation →](https://docs.gtk.org/gtk4/class.Label.html)

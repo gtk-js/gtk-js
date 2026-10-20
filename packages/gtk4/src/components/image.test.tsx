@@ -80,4 +80,11 @@ describe("GtkImage", () => {
     expect(ids).toHaveLength(4);
     expect(new Set(ids).size).toBe(4);
   });
+
+  test("sizes the icon from the inherited -gtk-icon-size without a pixel size", () => {
+    expect(render("ComExampleApp")).toContain(
+      'style="width:var(--gtk-icon-size, 16px);height:var(--gtk-icon-size, 16px)"',
+    );
+    expect(render("ComExampleApp", 24)).not.toContain("--gtk-icon-size");
+  });
 });

@@ -15,6 +15,10 @@ import Example from "./examples/scrolled-window";
 
 ```
 scrolledwindow[.frame]
+  ├── [child]
+  ├── scrollbar.horizontal.bottom.overlay-indicator[.hovering]
+  ├── scrollbar.vertical.right.overlay-indicator[.hovering]
+  └── undershoot.top / .bottom / .left / .right
 ```
 
 ## Props
@@ -29,5 +33,6 @@ scrolledwindow[.frame]
 | Class | Effect |
 |-------|--------|
 | `.frame` | Visible border frame (same as `hasFrame`) |
+| `.undershoot-top`, `.undershoot-bottom`, `.undershoot-start`, `.undershoot-end` | Shade along an edge with more content beyond it |
 
 [GTK4 Documentation →](https://docs.gtk.org/gtk4/class.ScrolledWindow.html)

@@ -1,3 +1,4 @@
+use gtk::prelude::*;
 use relm4::prelude::*;
 
 pub struct ScaleDefault;
@@ -12,7 +13,10 @@ impl SimpleComponent for ScaleDefault {
         gtk::Scale::new(
             gtk::Orientation::Horizontal,
             Some(&gtk::Adjustment::new(50.0, 0.0, 100.0, 1.0, 10.0, 0.0))
-        ) {}
+        ) {
+            set_halign: gtk::Align::Start,
+            set_valign: gtk::Align::Start,
+        }
     }
 
     fn init(_: (), root: Self::Root, _sender: ComponentSender<Self>) -> ComponentParts<Self> {

@@ -27,5 +27,6 @@ overlay
 ## Behavior
 
 - The `child` prop is the base layer; `overlays` are stacked on top using CSS Grid.
+- By default only the `child` sizes the overlay: pass an overlay as `{ child, measure: true }` to count it too (`gtk_overlay_set_measure_overlay()`). An overlay bigger than the overlay overflows it unless `clipOverlay: true` clips it.
 
 [GTK4 Documentation →](https://docs.gtk.org/gtk4/class.Overlay.html)
