@@ -13,6 +13,9 @@ impl SimpleComponent for ProgressbarVertical50 {
         gtk::ProgressBar {
             set_fraction: 0.5,
             set_orientation: gtk::Orientation::Vertical,
+            set_height_request: 200,
+            set_halign: gtk::Align::Start,
+            set_valign: gtk::Align::Start,
         }
     }
 

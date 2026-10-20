@@ -17,9 +17,9 @@ export interface GtkSpinnerProps extends HTMLAttributes<HTMLSpanElement>, GtkAli
  * Uses :disabled pseudo-class when insensitive (remapped to [data-disabled] attribute
  * by the CSS transform pipeline, since <span> does not support :disabled natively).
  * Animation: 1s linear infinite rotation (defined in Adwaita CSS via spin keyframe).
- * Visual: the theme's -gtk-icon-source, process-working-symbolic, at the icon
- * size (16px, gtk_spinner_measure()) and centered in the space the spinner
- * gets, like gtk_spinner_snapshot().
+ * Visual: the theme's -gtk-icon-source, process-working-symbolic. The spinner
+ * is the icon size (16px, gtk_spinner_measure()) unless given more room, where
+ * the icon is drawn at its smaller side, centered, like gtk_spinner_snapshot().
  *
  * @see https://docs.gtk.org/gtk4/class.Spinner.html
  * @see upstream/libadwaita/src/stylesheet/widgets/_spinner.scss

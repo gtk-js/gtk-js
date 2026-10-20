@@ -11,7 +11,12 @@
  * and `data-computed-vexpand` on the elements that expand, for layout.css.
  * Elements that aren't widgets (an app's own markup, say) pass their
  * children's expand on.
+ *
+ * The same pass writes the grid tracks of the boxes flexbox can't lay out
+ * (see boxTracks()), from those flags alone: nothing is measured.
  */
+
+import { CENTER_EXPAND_CHANGE } from "./layouts/center-allocation.ts";
 
 /** Widgets without a compute_expand vfunc, in GTK and libadwaita. */
 const KEEPS_OWN_EXPAND = [
@@ -63,6 +68,63 @@ function computeExpand(element: Element, axis: (typeof AXES)[number]): boolean {
   return false;
 }
 
+const NOT_FILL = ["start", "end", "center"];
+
+/**
+ * gtk_box_layout_allocate() gives every visible child its natural size (or
+ * shrinks them towards their minimum), then each expanding child an equal
+ * share of the extra space, in which the child is placed by its halign/valign.
+ * Flexbox can't give a share to a child that doesn't grow, so a box with both
+ * a filling and a non-filling expanding child becomes a grid (layout.css):
+ * `auto` tracks for the expanding children, which grid stretches by equal
+ * amounts, and natural-size tracks for the rest. Other boxes stay flexbox;
+ * this returns null for them.
+ */
+function boxTracks(box: Element): string | null {
+  const list = box.classList;
+  if (list.contains("homogeneous")) return null;
+  const horizontal = list.contains("horizontal");
+  if (!horizontal && !list.contains("vertical")) return null;
+  const axis = horizontal ? AXES[0] : AXES[1];
+  const align = horizontal ? "data-halign" : "data-valign";
+  // Most boxes have no expanding child with a non-fill alignment: find that
+  // out first, with the cheapest checks.
+  let child = box.firstElementChild;
+  for (; child; child = child.nextElementSibling) {
+    if (child.hasAttribute(axis.computed) && NOT_FILL.includes(child.getAttribute(align) ?? "")) {
+      break;
+    }
+  }
+  if (!child) return null;
+  let fill = false;
+  let notFill = false;
+  for (child = box.firstElementChild; child; child = child.nextElementSibling) {
+    if (!child.hasAttribute(axis.computed) || child.matches(NOT_COUNTED)) continue;
+    if (NOT_FILL.includes(child.getAttribute(align) ?? "")) notFill = true;
+    else fill = true;
+  }
+  if (!fill || !notFill) return null;
+  const tracks: string[] = [];
+  for (child = box.firstElementChild; child; child = child.nextElementSibling) {
+    if (child.matches(NOT_COUNTED)) continue;
+    tracks.push(child.hasAttribute(axis.computed) ? "auto" : "minmax(min-content, max-content)");
+  }
+  return tracks.join(" ");
+}
+
+function updateBoxTracks(box: Element): void {
+  const tracks = boxTracks(box);
+  if (tracks === null && !box.hasAttribute("data-box-tracks")) return;
+  const style = (box as HTMLElement).style;
+  if (tracks === null) {
+    box.removeAttribute("data-box-tracks");
+    style.removeProperty("--gtk-box-tracks");
+  } else if (style.getPropertyValue("--gtk-box-tracks") !== tracks) {
+    style.setProperty("--gtk-box-tracks", tracks);
+    box.setAttribute("data-box-tracks", "");
+  }
+}
+
 /** Updates the element's computed expand; returns whether it changed. */
 function update(element: Element): boolean {
   let changed = false;
@@ -72,6 +134,12 @@ function update(element: Element): boolean {
       element.toggleAttribute(axis.computed, expands);
       changed = true;
     }
+  }
+  if (element.classList.contains("gtk-box-layout")) updateBoxTracks(element);
+  // An expanding center child changes how its center layout allocates.
+  const parent = element.parentElement;
+  if (changed && parent?.classList.contains("gtk-center-layout")) {
+    parent.dispatchEvent(new Event(CENTER_EXPAND_CHANGE));
   }
   return changed;
 }
@@ -112,7 +180,14 @@ export function trackExpand(): () => void {
       subtree: true,
       childList: true,
       attributes: true,
-      attributeFilter: ["data-hexpand", "data-vexpand", "class", "hidden"],
+      attributeFilter: [
+        "data-hexpand",
+        "data-vexpand",
+        "data-halign",
+        "data-valign",
+        "class",
+        "hidden",
+      ],
     });
   }
   return () => {

@@ -5,10 +5,11 @@
  * (`row` → `:where(.gtk-row):not(_)`, see gtkNodeSelector() in @gtk-js/gtk-css),
  * as GTK weighs them. Rules here that style the same nodes get the same
  * treatment, so they compare with the theme's rules as before. The layout
- * managers' classes (.gtk-box-layout, .gtk-bin-layout, .gtk-center-layout*)
+ * managers' classes (.gtk-box-layout, .gtk-bin-layout, .gtk-center-layout*,
+ * .gtk-grid-layout)
  * aren't GTK nodes and keep their weight.
  */
-const NODE_CLASS_RE = /(?<![\w-])\.(gtk-(?!(?:box|bin|center)-layout)[\w-]+)/g;
+const NODE_CLASS_RE = /(?<![\w-])\.(gtk-(?!(?:box|bin|center|grid)-layout)[\w-]+)/g;
 const PRELUDE_RE = /(^|[{};])([^{};@]*)\{/g;
 
 export function weighGtkNodeClasses(css: string): string {
