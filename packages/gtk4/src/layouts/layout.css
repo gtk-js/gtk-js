@@ -556,6 +556,74 @@
   visibility: hidden;
 }
 
+/* === GtkPaned === */
+/* gtk_paned_size_allocate(): the start child gets the position (set by
+   paned.tsx), the handle its size and the end child the rest. Each child gets
+   its whole pane, and a lone child the whole paned. */
+.gtk-paned {
+  display: grid;
+  overflow: clip; /* gtk_widget_set_overflow (GTK_OVERFLOW_HIDDEN) */
+}
+.gtk-paned.horizontal {
+  grid-template-columns: minmax(0, var(--gtk-paned-position, 1fr)) auto minmax(0, 1fr);
+}
+.gtk-paned.vertical {
+  grid-template-rows: minmax(0, var(--gtk-paned-position, 1fr)) auto minmax(0, 1fr);
+}
+.gtk-paned > :only-child {
+  grid-area: 1 / 1 / -1 / -1;
+}
+.gtk-paned > [data-halign="start"] {
+  justify-self: start;
+}
+.gtk-paned > [data-halign="end"] {
+  justify-self: end;
+}
+.gtk-paned > [data-halign="center"] {
+  justify-self: center;
+}
+.gtk-paned > [data-valign="start"] {
+  align-self: start;
+}
+.gtk-paned > [data-valign="end"] {
+  align-self: end;
+}
+.gtk-paned > [data-valign="center"] {
+  align-self: center;
+}
+/* A child allocated less than its minimum size gets its minimum anyway,
+   against the handle. */
+.gtk-paned.horizontal[data-start-overflow] > :first-child {
+  justify-self: unsafe end;
+}
+.gtk-paned.vertical[data-start-overflow] > :first-child {
+  align-self: unsafe end;
+}
+.gtk-paned.horizontal[data-end-overflow] > :last-child {
+  justify-self: unsafe start;
+}
+.gtk-paned.vertical[data-end-overflow] > :last-child {
+  align-self: unsafe start;
+}
+.gtk-paned > .gtk-separator {
+  position: relative;
+  z-index: 1;
+  outline: none; /* _paned.scss has no focus style */
+  touch-action: none;
+}
+.gtk-paned.horizontal > .gtk-separator {
+  cursor: col-resize;
+}
+.gtk-paned.vertical > .gtk-separator {
+  cursor: row-resize;
+}
+/* HANDLE_EXTRA_SIZE: a thin handle is grabbed 6px around it (get_handle_area()). */
+.gtk-paned > .gtk-separator:not(.wide)::before {
+  content: "";
+  position: absolute;
+  inset: -6px;
+}
+
 /* === CenterLayout === */
 /* True centering: center child is always centered relative to the full width,
    regardless of start/end sizes. Uses CSS grid with start | spacing | center |
