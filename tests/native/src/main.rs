@@ -227,6 +227,7 @@ enum Command {
     MenuButtonDirectionNone,
     MenuButtonLabelUp,
     PopoverDefault,
+    PopoverNoArrow,
     PasswordEntryDefault,
     PasswordEntryDisabled,
     PasswordEntryPeekIcon,
@@ -543,6 +544,7 @@ impl Command {
             Self::MenuButtonDirectionNone => Some("menu-button-direction-none"),
             Self::MenuButtonLabelUp => Some("menu-button-label-up"),
             Self::PopoverDefault => Some("popover-default"),
+            Self::PopoverNoArrow => Some("popover-no-arrow"),
             Self::PasswordEntryDefault => Some("password-entry-default"),
             Self::PasswordEntryDisabled => Some("password-entry-disabled"),
             Self::PasswordEntryPeekIcon => Some("password-entry-peek-icon"),
@@ -900,6 +902,7 @@ fn create_widget_for_case(name: &str) -> Option<(gtk::Widget, bool)> {
         "paned-horizontal" => widget_case!(cases::paned_horizontal::PanedHorizontal, false),
         "paned-vertical" => widget_case!(cases::paned_vertical::PanedVertical, false),
         "popover-default" => widget_case!(cases::popover_default::PopoverDefault, false),
+        "popover-no-arrow" => widget_case!(cases::popover_no_arrow::PopoverNoArrow, false),
         "button-valign-center-hbox" => {
             widget_case!(
                 cases::button_valign_center_hbox::ButtonValignCenterHbox,
@@ -1449,6 +1452,7 @@ fn is_known_case(name: &str) -> bool {
             | "paned-horizontal"
             | "paned-vertical"
             | "popover-default"
+            | "popover-no-arrow"
             | "button-valign-center-hbox"
             | "button-valign-end-hbox"
             | "button-halign-center-vbox"

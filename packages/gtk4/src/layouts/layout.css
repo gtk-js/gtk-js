@@ -1055,8 +1055,9 @@
  * sides in the arrow's border color (create_arrow_render_node). Only the
  * contents cast a shadow, their box-shadow; the arrow has none.
  *
- * Here .gtk-arrow spans the edge the arrow is on, 13px deep with Adwaita's
- * 1px border. Its own border fills it in the border color, its ::before in
+ * Here .gtk-arrow spans the edge the arrow is on, as deep as the triangle
+ * (--gtk-arrow-depth: TAIL_HEIGHT plus the contents' border on that side, set
+ * by the JS component). Its own border fills it in the border color, its ::before in
  * the background color, and the JS component clips them to the triangle and
  * to the triangle inside the stroke (--gtk-arrow-fill). It also ignores the
  * theme's `menubutton arrow` minimum size, which GTK never applies to this
@@ -1084,13 +1085,13 @@
   left: 0;
   right: 0;
   height: 0;
-  border-width: 13px 0 0;
+  border-width: var(--gtk-arrow-depth) 0 0;
 }
 .gtk-popover.background:is([data-position="bottom"], [data-position="top"]) > .gtk-arrow::before {
   left: 0;
   right: 0;
-  top: -13px;
-  height: 13px;
+  top: calc(-1 * var(--gtk-arrow-depth));
+  height: var(--gtk-arrow-depth);
 }
 
 /* Horizontal: the arrow box is as tall as the popover. */
@@ -1098,20 +1099,23 @@
   top: 0;
   bottom: 0;
   width: 0;
-  border-width: 0 0 0 13px;
+  border-width: 0 0 0 var(--gtk-arrow-depth);
 }
 .gtk-popover.background:is([data-position="right"], [data-position="left"]) > .gtk-arrow::before {
   top: 0;
   bottom: 0;
-  left: -13px;
-  width: 13px;
+  left: calc(-1 * var(--gtk-arrow-depth));
+  width: var(--gtk-arrow-depth);
 }
+
+/* The contents make room for the arrow, if there is one (tail_height in
+ * gtk_popover_size_allocate()). */
 
 /* Bottom: popover below anchor, arrow points up from top edge */
 .gtk-popover.background[data-position="bottom"] > .gtk-arrow {
   top: 0;
 }
-.gtk-popover.background[data-position="bottom"] > .gtk-contents {
+.gtk-popover.background[data-position="bottom"] > .gtk-arrow + .gtk-contents {
   margin-top: 12px; /* TAIL_HEIGHT */
 }
 
@@ -1119,7 +1123,7 @@
 .gtk-popover.background[data-position="top"] > .gtk-arrow {
   bottom: 0;
 }
-.gtk-popover.background[data-position="top"] > .gtk-contents {
+.gtk-popover.background[data-position="top"] > .gtk-arrow + .gtk-contents {
   margin-bottom: 12px;
 }
 
@@ -1127,7 +1131,7 @@
 .gtk-popover.background[data-position="right"] > .gtk-arrow {
   left: 0;
 }
-.gtk-popover.background[data-position="right"] > .gtk-contents {
+.gtk-popover.background[data-position="right"] > .gtk-arrow + .gtk-contents {
   margin-left: 12px;
 }
 
@@ -1135,7 +1139,7 @@
 .gtk-popover.background[data-position="left"] > .gtk-arrow {
   right: 0;
 }
-.gtk-popover.background[data-position="left"] > .gtk-contents {
+.gtk-popover.background[data-position="left"] > .gtk-arrow + .gtk-contents {
   margin-right: 12px;
 }
 
