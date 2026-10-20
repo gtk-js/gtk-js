@@ -59,6 +59,7 @@ enum Command {
     AdwHeaderbarNarrowTitle,
     AdwHeaderbarWithTitle,
     AdwHeaderbarStartEnd,
+    AdwNavigationViewBackButton,
     AdwNavigationViewDefault,
     AdwNavigationViewScrolled,
     AdwOverlaySplitViewCollapsedRtl,
@@ -349,6 +350,7 @@ impl Command {
             Self::AdwHeaderbarNarrowTitle => Some("adw-headerbar-narrow-title"),
             Self::AdwHeaderbarWithTitle => Some("adw-headerbar-with-title"),
             Self::AdwHeaderbarStartEnd => Some("adw-headerbar-start-end"),
+            Self::AdwNavigationViewBackButton => Some("adw-navigation-view-back-button"),
             Self::AdwNavigationViewDefault => Some("adw-navigation-view-default"),
             Self::AdwNavigationViewScrolled => Some("adw-navigation-view-scrolled"),
             Self::AdwOverlaySplitViewCollapsedRtl => Some("adw-overlay-split-view-collapsed-rtl"),
@@ -651,6 +653,9 @@ fn create_widget_for_case(name: &str) -> Option<(gtk::Widget, bool)> {
         }
         "adw-headerbar-start-end" => {
             widget_case!(cases::adw_headerbar_start_end::AdwHeaderbarStartEnd, false)
+        }
+        "adw-navigation-view-back-button" => {
+            widget_case!(cases::adw_navigation_view_back_button::AdwNavigationViewBackButton, false)
         }
         "adw-navigation-view-default" => {
             widget_case!(cases::adw_navigation_view_default::AdwNavigationViewDefault, false)
@@ -1268,6 +1273,7 @@ fn is_known_case(name: &str) -> bool {
             | "adw-headerbar-narrow-title"
             | "adw-headerbar-with-title"
             | "adw-headerbar-start-end"
+            | "adw-navigation-view-back-button"
             | "adw-navigation-view-default"
             | "adw-navigation-view-scrolled"
             | "adw-overlay-split-view-collapsed-rtl"

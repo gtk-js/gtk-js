@@ -1,6 +1,7 @@
-import { GtkLabel, tooltipAttrs, useIcon, useWindowControls } from "@gtk-js/gtk4";
+import { GtkLabel, useIcon, useWindowControls } from "@gtk-js/gtk4";
 import { forwardRef, type HTMLAttributes, type ReactNode, useCallback } from "react";
 import type { AdwCenteringPolicy } from "../types.ts";
+import { AdwBackButton } from "./back-button.tsx";
 import { useHeaderBarTitle } from "./header-bar-title.ts";
 import { useNavigation } from "./navigation-view.tsx";
 
@@ -114,6 +115,8 @@ export const AdwHeaderBar = forwardRef<HTMLDivElement, AdwHeaderBarProps>(functi
   },
   ref,
 ) {
+  // AdwBackButton shows when it can pop and has its icon; the start box needs
+  // to know (update_box_visibility()).
   const BackIcon = useIcon("GoPrevious");
   const controls = useWindowControls();
   const decorationLayout =
@@ -175,20 +178,7 @@ export const AdwHeaderBar = forwardRef<HTMLDivElement, AdwHeaderBarProps>(functi
           {showStartBox && (
             <div className="gtk-box gtk-box-layout horizontal start gtk-center-layout-start">
               {showStartTitleButtons && <WindowControls side="start" layout={decorationLayout} />}
-              {showBackButton && nav.canPop && BackIcon && (
-                <button
-                  className="gtk-button image-button back flat"
-                  type="button"
-                  aria-label="Back"
-                  {...tooltipAttrs(nav.previousTitle || "Back")}
-                  onClick={() => nav.pop()}
-                  onPointerDown={(e) => e.stopPropagation()}
-                >
-                  <span className="gtk-image">
-                    <BackIcon size={16} />
-                  </span>
-                </button>
-              )}
+              {showBackButton && <AdwBackButton />}
               {start}
             </div>
           )}
