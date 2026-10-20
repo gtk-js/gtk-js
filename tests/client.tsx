@@ -2686,6 +2686,30 @@ if (caseName === "alert-dialog-body") {
       </AdwaitaProvider>,
     ),
   );
+} else if (caseName === "about-dialog-toast") {
+  // Page for tests/cases/about-dialog-toast.test.ts. The copy goes to a stub,
+  // so the toast doesn't depend on the browser granting clipboard access.
+  const copied: string[] = [];
+  Object.defineProperty(navigator, "clipboard", {
+    value: { writeText: (text: string) => (copied.push(text), Promise.resolve()) },
+  });
+  (window as unknown as { __copied: string[] }).__copied = copied;
+  void import("@gtk-js/adwaita").then(({ AdwAboutDialog }) =>
+    createRoot(container).render(
+      <AdwaitaProvider colorScheme="light">
+        <AdwAboutDialog
+          visible
+          applicationName="Typeset"
+          developerName="Angela Avery"
+          version="1.2.3"
+          website="https://example.org"
+          issueUrl="https://example.org/issues"
+          developers={["Angela Avery"]}
+          licenseType="LGPL-2.1-or-later"
+        />
+      </AdwaitaProvider>,
+    ),
+  );
 } else if (caseName.startsWith("provider-gate-")) {
   // Pages for tests/cases/provider-gate.test.ts, which set up their own provider.
   void import("./provider-gate.tsx").then((m) => m.render(caseName, container));

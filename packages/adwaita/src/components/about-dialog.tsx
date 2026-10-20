@@ -896,7 +896,7 @@ export const AdwAboutDialog = forwardRef<HTMLDivElement, AdwAboutDialogProps>(
           {/* toast_overlay > navigation_view, as in adw-about-dialog.ui */}
           <AdwToastOverlay
             toastRef={toasts}
-            style={{ flex: "1 1 auto", minHeight: 0, display: "flex", flexDirection: "column" }}
+            style={{ flex: "1 1 auto", minHeight: 0 }}
             onKeyDown={handleKeyDown}
           >
             <AdwNavigationView
