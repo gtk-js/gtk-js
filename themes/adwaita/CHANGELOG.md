@@ -1,5 +1,20 @@
 # @gtk-js/theme-adwaita
 
+## [0.0.9](https://github.com/gtk-js/gtk-js/compare/theme-adwaita-v0.0.8...theme-adwaita-v0.0.9) (2026-10-20)
+
+
+### Bug Fixes
+
+* derive accent-colored text from a custom accentColor in light and dark ([#136](https://github.com/gtk-js/gtk-js/issues/136)) ([2f95793](https://github.com/gtk-js/gtk-js/commit/2f95793c02dc5620d7a52f0781052b5489890149))
+* follow the OS color scheme without fading, in every auto theme ([#142](https://github.com/gtk-js/gtk-js/issues/142)) ([dd65fa1](https://github.com/gtk-js/gtk-js/commit/dd65fa1ecb0b43291f1a97ec93899f58fe145b1b))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @gtk-js/gtk-css bumped from 0.1.7 to 0.1.8
+
 ## [0.0.8](https://github.com/gtk-js/gtk-js/compare/theme-adwaita-v0.0.7...theme-adwaita-v0.0.8) (2026-10-16)
 
 
