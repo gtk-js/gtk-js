@@ -1,5 +1,5 @@
 import { describe, expect, test } from "vite-plus/test";
-import { parseMnemonic } from "./mnemonic.tsx";
+import { parseMnemonic, stripMnemonic } from "./mnemonic.tsx";
 
 describe("parseMnemonic", () => {
   test("the first underlined character is the key, lowercase", () => {
@@ -23,5 +23,14 @@ describe("parseMnemonic", () => {
 
   test("a trailing underscore stays", () => {
     expect(parseMnemonic("Next_")).toEqual({ segments: ["Next_"], key: null });
+  });
+});
+
+describe("stripMnemonic", () => {
+  test("drops mnemonic underscores and keeps doubled and trailing ones (strip_ulines())", () => {
+    expect(stripMnemonic("_Save")).toBe("Save");
+    expect(stripMnemonic("Save__As")).toBe("Save_As");
+    expect(stripMnemonic("_a_b")).toBe("ab");
+    expect(stripMnemonic("Save_")).toBe("Save_");
   });
 });

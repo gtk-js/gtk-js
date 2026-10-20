@@ -7,6 +7,7 @@ import React, {
   useRef,
   useState,
 } from "react";
+import { noFocusOnClick } from "../focus-on-click.ts";
 import { alignAttrs, type GtkAlignProps, type GtkOrientation } from "../types.ts";
 
 export interface GtkScrollbarProps extends HTMLAttributes<HTMLDivElement>, GtkAlignProps {
@@ -105,6 +106,7 @@ export const GtkScrollbar = forwardRef<HTMLDivElement, GtkScrollbarProps>(functi
     vexpand,
     className,
     onMouseDown,
+    onPointerDown,
     onWheel,
     ...rest
   },
@@ -289,11 +291,8 @@ export const GtkScrollbar = forwardRef<HTMLDivElement, GtkScrollbarProps>(functi
       aria-disabled={disabledAttr}
       data-disabled={disabledAttr}
       {...alignAttrs(halign, valign, hexpand, vexpand)}
-      onMouseDown={(e) => {
-        // The range isn't focusable in a scrollbar: a click keeps the focus where it is.
-        e.preventDefault();
-        onMouseDown?.(e);
-      }}
+      // The range isn't focusable in a scrollbar: a click keeps the focus where it is.
+      {...noFocusOnClick({ onMouseDown, onPointerDown })}
       onWheel={handleWheel}
       {...rest}
     >

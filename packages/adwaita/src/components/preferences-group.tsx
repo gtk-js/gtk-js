@@ -1,4 +1,10 @@
-import { GtkListBoxRowContext, labelText, useRowContainer, wrapStyle } from "@gtk-js/gtk4";
+import {
+  FOCUSABLE,
+  GtkListBoxRowContext,
+  labelText,
+  useRowContainer,
+  wrapStyle,
+} from "@gtk-js/gtk4";
 import {
   type CSSProperties,
   forwardRef,
@@ -57,11 +63,9 @@ export function cursorRow(
   return undefined;
 }
 
-const TAB_STOPS = "a[href], button, input, select, textarea, [tabindex]";
-
 /** Moves focus on from `from` like Tab or Shift+Tab: gtk_widget_child_focus() on the root. */
 function tabFocus(from: HTMLElement, backward: boolean) {
-  const stops = Array.from(from.ownerDocument.querySelectorAll<HTMLElement>(TAB_STOPS)).filter(
+  const stops = Array.from(from.ownerDocument.querySelectorAll<HTMLElement>(FOCUSABLE)).filter(
     (el) =>
       el.tabIndex >= 0 &&
       !el.matches(":disabled") &&

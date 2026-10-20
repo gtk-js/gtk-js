@@ -24,9 +24,16 @@ import { GtkTooltipLayer, trackTooltips } from "./tooltip.tsx";
 export interface GtkProviderProps {
   /** Theme instance. Call theme.getCSS() to get the CSS to inject. */
   theme?: GtkTheme;
-  /** URL to a theme CSS file (loaded via <link> tag). Ignored if theme is set. */
+  /**
+   * URL to a theme CSS file (loaded via <link> tag). Ignored if theme is set. A
+   * new URL replaces the stylesheet once the new one has loaded, with
+   * transitions off, so the page never shows neither or a mix of both.
+   */
   cssHref?: string;
-  /** Theme CSS as a string (injected via <style> tag). Ignored if theme is set. Takes priority over cssHref. */
+  /**
+   * Theme CSS as a string (injected via <style> tag). Ignored if theme is set.
+   * With cssHref, CSS that goes after that stylesheet, e.g. an accent color.
+   */
   cssText?: string;
   /**
    * Icon set to use. Pass the full export of an icon package (e.g. @gtk-js/icons-adwaita).
@@ -89,7 +96,14 @@ export function whenStylesheetLoaded(
 const HOISTS_STYLESHEETS = Number.parseInt(reactVersion, 10) >= 19;
 
 const RESET_ID = "gtk-js-reset";
+/**
+ * The theme's element in <head>. A page can link the theme itself before
+ * React runs, e.g. from a script that picks a saved theme before the first
+ * paint: a provider with that cssHref takes over `<link id="gtk-js-theme">`,
+ * and `<style id="gtk-js-theme-text">` after it for its cssText.
+ */
 const THEME_ID = "gtk-js-theme";
+const THEME_TEXT_ID = "gtk-js-theme-text";
 const BASE_CSS = resetCSS + "\n" + weighGtkNodeClasses(layoutCSS);
 
 /**
@@ -139,6 +153,10 @@ export function suppressTransitions() {
   switchTimer = setTimeout(() => style.remove(), SWITCH_DURATION);
 }
 
+/** The theme stylesheet loading to replace the current one, and the CSS to put after it. */
+let pendingLink: HTMLLinkElement | null = null;
+let pendingText: string | undefined;
+
 /**
  * Puts the theme CSS in <head>, or replaces the CSS there, and returns what removes
  * the element it added.
@@ -148,7 +166,21 @@ export function insertThemeCSS(cssText: string) {
   // to it without fading.
   suppressTransitions();
 
-  const existing = document.getElementById(THEME_ID);
+  // A linked theme (cssHref) before, and the CSS after it: this one replaces them.
+  pendingLink?.remove();
+  pendingLink = null;
+  document.getElementById(THEME_TEXT_ID)?.remove();
+  const linked = document.getElementById(THEME_ID);
+  const existing = linked?.localName === "link" ? null : linked;
+  if (linked && !existing) {
+    const style = document.createElement("style");
+    style.id = THEME_ID;
+    style.textContent = cssText;
+    linked.replaceWith(style);
+    return () => {
+      style.remove();
+    };
+  }
   if (existing) {
     // Only when it changed: parsing a theme takes a while.
     if (existing.textContent !== cssText) existing.textContent = cssText;
@@ -165,6 +197,82 @@ export function insertThemeCSS(cssText: string) {
 
   return () => {
     style.remove();
+  };
+}
+
+/**
+ * Links the theme stylesheet at `href`, with `cssText` after it, or switches to
+ * them. A new stylesheet replaces the old one once it has loaded (or failed, or
+ * timed out), so no frame shows neither or a mix of both, and transitions are
+ * off then, as insertThemeCSS() switches.
+ */
+export function linkThemeCSS(href: string, cssText?: string) {
+  const current = document.getElementById(THEME_ID) ?? adoptStylesheet(THEME_ID);
+  // CSS after the stylesheet, kept right after it.
+  const setText = (link: Element, cssText?: string) => {
+    const text = document.getElementById(THEME_TEXT_ID) ?? adoptStylesheet(THEME_TEXT_ID);
+    if (!cssText) {
+      text?.remove();
+      return;
+    }
+    const style = text ?? document.createElement("style");
+    style.id = THEME_TEXT_ID;
+    if (style.textContent !== cssText) style.textContent = cssText;
+    if (link.nextElementSibling !== style) link.after(style);
+  };
+
+  const url = new URL(href, document.baseURI).href;
+  if (current?.localName === "link" && (current as HTMLLinkElement).href === url) {
+    pendingLink?.remove();
+    pendingLink = null;
+    const text = document.getElementById(THEME_TEXT_ID) ?? adoptStylesheet(THEME_TEXT_ID);
+    if ((text?.textContent ?? "") !== (cssText ?? "")) suppressTransitions();
+    setText(current, cssText);
+    return;
+  }
+  pendingText = cssText;
+  if (pendingLink?.href === url) return;
+
+  pendingLink?.remove();
+  const link = document.createElement("link");
+  link.rel = "stylesheet";
+  link.href = href;
+  if (!current) {
+    // Nothing to keep showing meanwhile.
+    link.id = THEME_ID;
+    document.head.appendChild(link);
+    setText(link, cssText);
+    return;
+  }
+  current.after(link);
+  pendingLink = link;
+  whenStylesheetLoaded(link, () => {
+    if (pendingLink !== link) return;
+    pendingLink = null;
+    suppressTransitions();
+    current.remove();
+    link.id = THEME_ID;
+    setText(link, pendingText);
+  });
+}
+
+/** Providers showing a linked theme (cssHref). */
+let linkedThemeUsers = 0;
+
+/** Keeps the linked theme while a provider shows it; returns what releases it. */
+function holdLinkedTheme() {
+  linkedThemeUsers++;
+  return () => {
+    linkedThemeUsers--;
+    // Once no provider replaces this one in the same commit, e.g. on navigation.
+    queueMicrotask(() => {
+      if (linkedThemeUsers > 0) return;
+      pendingLink?.remove();
+      pendingLink = null;
+      const theme = document.getElementById(THEME_ID);
+      if (theme?.localName === "link") theme.remove();
+      document.getElementById(THEME_TEXT_ID)?.remove();
+    });
   };
 }
 
@@ -233,10 +341,13 @@ export function GtkProvider({
     getServerSystemScheme,
   );
 
-  // Resolve theme CSS — theme takes priority, then cssText, then cssHref.
-  // Only when an input changes: themes are immutable, and their CSS is large.
+  // Resolve theme CSS — theme takes priority, then cssHref (with cssText after
+  // it), then cssText. Only when an input changes: themes are immutable, and
+  // their CSS is large.
   const themeCSS = useMemo(() => theme?.getCSS(systemScheme), [theme, systemScheme]);
-  const resolvedCSSText = theme ? themeCSS : cssText;
+  const linkedHref = theme ? undefined : cssHref;
+  const resolvedCSSText = theme ? themeCSS : linkedHref ? undefined : cssText;
+  const linkedText = linkedHref ? cssText : undefined;
 
   // Inject reset + layout CSS, or take over the server-rendered copy.
   useInsertionEffect(() => {
@@ -259,24 +370,14 @@ export function GtkProvider({
     if (resolvedCSSText) return insertThemeCSS(resolvedCSSText);
   }, [resolvedCSSText]);
 
-  // Inject theme stylesheet via <link> (fallback when no cssText/theme provided)
+  // Link the theme stylesheet (cssHref), or switch to a new one.
   useInsertionEffect(() => {
-    if (resolvedCSSText || !cssHref) return;
-
-    if (document.getElementById(THEME_ID)) return;
-
-    const link = adoptStylesheet(THEME_ID) ?? document.createElement("link");
-    if (!link.id) {
-      link.id = THEME_ID;
-      (link as HTMLLinkElement).rel = "stylesheet";
-      (link as HTMLLinkElement).href = cssHref;
-      document.head.appendChild(link);
-    }
-
-    return () => {
-      link.remove();
-    };
-  }, [resolvedCSSText, cssHref]);
+    if (linkedHref) linkThemeCSS(linkedHref, linkedText);
+  }, [linkedHref, linkedText]);
+  const linked = !!linkedHref;
+  useInsertionEffect(() => {
+    if (linked) return holdLinkedTheme();
+  }, [linked]);
 
   // Layout CSS reads hexpand/vexpand as GTK computes them up the widget tree.
   useLayoutEffect(trackExpand, []);
@@ -308,7 +409,16 @@ export function GtkProvider({
                   {resolvedCSSText}
                 </style>
               ) : (
-                cssHref && <link rel="stylesheet" href={cssHref} precedence={THEME_ID} />
+                linkedHref && (
+                  <>
+                    <link rel="stylesheet" href={linkedHref} precedence={THEME_ID} />
+                    {linkedText && (
+                      <style href={THEME_TEXT_ID} precedence={THEME_TEXT_ID}>
+                        {linkedText}
+                      </style>
+                    )}
+                  </>
+                )
               )}
             </>
           )}

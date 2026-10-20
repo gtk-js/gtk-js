@@ -14,6 +14,7 @@ import React, {
   useRef,
   useState,
 } from "react";
+import { FOCUSABLE } from "../focusable.ts";
 import { alignAttrs, type GtkAlignProps, type GtkPositionType } from "../types.ts";
 import { GtkImage } from "./image.tsx";
 import { GtkLabel } from "./label.tsx";
@@ -82,9 +83,6 @@ const DRAG_THRESHOLD = 8;
 /** The scroll arrows' auto-repeat: TIMEOUT_INITIAL, then TIMEOUT_REPEAT × SCROLL_DELAY_FACTOR. */
 const ARROW_DELAY = 500;
 const ARROW_REPEAT = 250;
-
-const FOCUSABLE =
-  "a[href], button, input, select, textarea, [contenteditable]:not([contenteditable='false']), [tabindex]";
 
 type KeyInput = Pick<KeyboardEvent, "key" | "ctrlKey" | "altKey" | "shiftKey" | "metaKey">;
 

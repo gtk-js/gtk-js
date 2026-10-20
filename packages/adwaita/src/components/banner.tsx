@@ -1,15 +1,13 @@
-import { GtkButton, GtkLabel } from "@gtk-js/gtk4";
+import { GtkButton, GtkLabel, GtkRevealer, noFocusOnClick } from "@gtk-js/gtk4";
 import {
-  type CSSProperties,
   forwardRef,
   type HTMLAttributes,
   useCallback,
   useId,
   useLayoutEffect,
   useRef,
-  useState,
 } from "react";
-import { animationSlowdown, prefersReducedMotion } from "../spring.ts";
+import { animationSlowdown } from "../spring.ts";
 
 export interface AdwBannerProps extends HTMLAttributes<HTMLDivElement> {
   /** Banner title text. */
@@ -31,10 +29,8 @@ const HORZ_PADDING = 6;
 const BUTTON_HORZ_MIN_WIDTH = 84;
 const BUTTON_VERT_MIN_WIDTH = 160;
 
-// GtkRevealer's default transition-duration and its ease-out cubic
-// (gtk_progress_tracker_get_ease_out_cubic(): 1 - (1 - t)³).
+/** GtkRevealer's default transition-duration, which adw-banner.ui keeps. */
 const REVEAL_DURATION = 250;
-const EASE_OUT_CUBIC_CSS = "cubic-bezier(0.33333, 1, 0.66667, 1)";
 
 /**
  * How the banner's gizmo places its title and button (layout.css), as
@@ -75,10 +71,6 @@ function intrinsicWidth(el: HTMLElement, size: "min-content" | "max-content"): n
   return result;
 }
 
-function revealDuration(): number {
-  return prefersReducedMotion() ? 0 : REVEAL_DURATION * animationSlowdown();
-}
-
 /**
  * AdwBanner — A bar with contextual information.
  *
@@ -87,7 +79,7 @@ function revealDuration(): number {
  * button, at least 84px wide, at the end; the title at the start when there
  * isn't room to center it; and the title above the button, at least 160px
  * wide, when they don't fit side by side. `revealed` slides the banner down
- * or up like its GtkRevealer (slide-down, 250ms). The button doesn't take the
+ * or up with its GtkRevealer (slide-down, 250ms). The button doesn't take the
  * focus when clicked (focus-on-click=False in adw-banner.ui).
  *
  * CSS node:
@@ -105,7 +97,6 @@ export const AdwBanner = forwardRef<HTMLDivElement, AdwBannerProps>(function Adw
   ref,
 ) {
   const titleId = useId();
-  const revealerRef = useRef<HTMLDivElement>(null);
   const gizmoRef = useRef<HTMLDivElement>(null);
   const labelRef = useRef<HTMLSpanElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
@@ -167,70 +158,15 @@ export const AdwBanner = forwardRef<HTMLDivElement, AdwBannerProps>(function Adw
     };
   }, [allocate]);
 
-  // The child stays shown until the revealer has slid it out, like
-  // gtk_revealer_set_position() (child-visible = position != 0).
-  const [hiding, setHiding] = useState(false);
-  const [prevRevealed, setPrevRevealed] = useState(revealed);
-  if (prevRevealed !== revealed) {
-    setPrevRevealed(revealed);
-    setHiding(!revealed && revealDuration() > 0);
-  }
-  const childVisible = revealed || hiding;
-
-  // gtk_revealer_start_animation(): from the current height to the target,
-  // over the whole duration. Only changes animate, not the initial state.
-  const animation = useRef<Animation | null>(null);
-  const animatedRevealed = useRef(revealed);
-  useLayoutEffect(() => {
-    if (animatedRevealed.current === revealed) return;
-    animatedRevealed.current = revealed;
-    const revealer = revealerRef.current;
-    const gizmo = gizmoRef.current;
-    if (!revealer || !gizmo) return;
-    const running = animation.current;
-    const from = running ? revealer.getBoundingClientRect().height : null;
-    running?.cancel();
-    animation.current = null;
-    const ms = revealDuration();
-    if (!ms || typeof revealer.animate !== "function") {
-      setHiding(false);
-      return;
-    }
-    const full = gizmo.getBoundingClientRect().height;
-    const anim = revealer.animate(
-      [
-        { height: `${from ?? (revealed ? 0 : full)}px`, overflow: "clip" },
-        { height: `${revealed ? full : 0}px`, overflow: "clip" },
-      ],
-      // A hidden revealer keeps its end height until the child is hidden.
-      { duration: ms, easing: EASE_OUT_CUBIC_CSS, fill: revealed ? "none" : "forwards" },
-    );
-    animation.current = anim;
-    anim.onfinish = () => {
-      if (animation.current !== anim) return;
-      if (revealed) animation.current = null;
-      else setHiding(false);
-    };
-  }, [revealed]);
-
-  useLayoutEffect(() => {
-    if (childVisible) return;
-    animation.current?.cancel();
-    animation.current = null;
-  }, [childVisible]);
-
-  useLayoutEffect(() => () => animation.current?.cancel(), []);
-
   const classes = ["gtk-banner", "gtk-bin-layout"];
   if (className) classes.push(className);
 
-  const revealerStyle: CSSProperties | undefined = childVisible
-    ? undefined
-    : { height: 0, overflow: "clip", visibility: "hidden" };
-
   return (
     <div ref={ref} className={classes.join(" ")} role="group" aria-labelledby={titleId} {...rest}>
-      <div ref={revealerRef} className="gtk-revealer" style={revealerStyle}>
+      <GtkRevealer
+        revealChild={revealed}
+        transitionDuration={REVEAL_DURATION * animationSlowdown()}
+      >
         <div ref={gizmoRef} className="gtk-widget">
           <GtkLabel
             ref={labelRef}
@@ -251,12 +187,13 @@ export const AdwBanner = forwardRef<HTMLDivElement, AdwBannerProps>(function Adw
               useUnderline
               canShrink
               valign="center"
-              onMouseDown={(e) => e.preventDefault()}
+              // focus-on-click is FALSE (adw-banner.ui).
+              {...noFocusOnClick()}
               onClicked={onButtonClicked}
             />
           )}
         </div>
-      </div>
+      </GtkRevealer>
     </div>
   );
 });

@@ -11,6 +11,7 @@ import React, {
 } from "react";
 import { createPortal } from "react-dom";
 import { useEscapeLayer } from "../escape-layers.ts";
+import { FOCUSABLE } from "../focusable.ts";
 import { GtkProviderBoundary } from "../provider.tsx";
 import { alignAttrs, type GtkAlign, type GtkAlignProps, type GtkPositionType } from "../types.ts";
 
@@ -180,11 +181,7 @@ export function resizeToFit({ x, y, width, height }: Rect, viewWidth: number, vi
 
 /** The elements Tab moves the focus between, in order. */
 function tabbables(root: Element): HTMLElement[] {
-  return [
-    ...root.querySelectorAll<HTMLElement>(
-      'a[href], button, input, select, textarea, [tabindex], [contenteditable="true"]',
-    ),
-  ].filter(
+  return [...root.querySelectorAll<HTMLElement>(FOCUSABLE)].filter(
     (el) =>
       el.tabIndex >= 0 &&
       !el.matches(":disabled") &&

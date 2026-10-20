@@ -2,7 +2,7 @@
 
 import { GtkButton, GtkProvider } from "@gtk-js/gtk4";
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { SyntaxHighlight } from "../gtk-demo/syntax-highlight";
 import { ThemeControls } from "../gtk-demo/theme-controls";
@@ -83,7 +83,8 @@ export function ShowcasePage() {
   const [codeBadge, setCodeBadge] = useState<CodeBadgeState>("visible");
 
   // Theme state — extracted to shared hook
-  const { theme, icons, restored, ...controls } = useThemePicker();
+  const { cssHref, cssText, icons, restored, ...controls } = useThemePicker();
+  const theme = useMemo(() => ({ cssHref, cssText }), [cssHref, cssText]);
 
   // Committed theme lags behind `theme`: on change, content slides out over 400ms,
   // the CSS swaps while hidden, waits 1s, then slides back in. Changing theme resets.
@@ -189,7 +190,7 @@ export function ShowcasePage() {
   );
 
   return (
-    <GtkProvider theme={committedTheme} icons={icons} hideUntilReady={false}>
+    <GtkProvider {...committedTheme} icons={icons} hideUntilReady={false}>
       {/* .background paints the window colors, as a GtkWindow does (gtk_window_init());
           the provider's own background stays transparent. */}
       <div
@@ -306,7 +307,7 @@ export function ShowcasePage() {
                 maximized &&
                 createPortal(
                   <GtkProvider
-                    theme={committedTheme}
+                    {...committedTheme}
                     icons={icons}
                     hideUntilReady={false}
                     style={{ position: "fixed", inset: 0, zIndex: 9999 }}

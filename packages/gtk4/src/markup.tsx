@@ -1,4 +1,5 @@
 import { type CSSProperties, createElement, type ReactNode } from "react";
+import { stripMnemonic } from "./mnemonic.tsx";
 
 const has = (table: object, key: string) => Object.hasOwn(table, key);
 
@@ -16,15 +17,6 @@ function unescape(text: string): string | null {
     start = amp + entity[0].length;
   }
   return out + text.slice(start);
-}
-
-/**
- * Hides mnemonic underscores like strip_ulines() in gtklabel.c: an underscore
- * marks the next character as the mnemonic, and "__" is a literal underscore.
- * GTK only underlines the mnemonic while mnemonics are shown (Alt is held).
- */
-function stripUlines(text: string): string {
-  return text.replace(/_([\s\S]|$)/g, (_, next: string) => next || "_");
 }
 
 // Pango's convenience tags (pango-markup.c).
@@ -169,7 +161,7 @@ export function parseMarkup(markup: string, useUnderline = false): ReactNode | n
     if (end > pos) {
       const text = unescape(markup.slice(pos, end));
       if (text === null) return null;
-      current.children.push(useUnderline ? stripUlines(text) : text);
+      current.children.push(useUnderline ? stripMnemonic(text) : text);
     }
     if (lt < 0) break;
     tag.lastIndex = lt;
@@ -206,7 +198,7 @@ export function parseMarkup(markup: string, useUnderline = false): ReactNode | n
  * gtk_label_set_markup_internal().
  */
 export function labelText(text: string, useMarkup: boolean, useUnderline = false): ReactNode {
-  if (!useMarkup) return useUnderline ? stripUlines(text) : text;
+  if (!useMarkup) return useUnderline ? stripMnemonic(text) : text;
   const content = parseMarkup(text, useUnderline);
   if (content === null) {
     console.warn(`Failed to set text '${text}' from markup due to error parsing markup`);

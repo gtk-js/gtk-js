@@ -8,6 +8,7 @@ import {
   useRef,
   useState,
 } from "react";
+import { EASE_OUT_CUBIC, prefersReducedMotion } from "../animation.ts";
 import { alignAttrs, type GtkAlignProps } from "../types.ts";
 
 /** The GtkRevealerTransitionType values gtk-js implements. */
@@ -21,19 +22,6 @@ export interface GtkRevealerProps extends HTMLAttributes<HTMLDivElement>, GtkAli
   /** Duration of the transition, in milliseconds. Default: 250. */
   transitionDuration?: number;
   children?: ReactNode;
-}
-
-// gtk_progress_tracker_get_ease_out_cubic(): 1 - (1 - t)³ is the cubic bezier
-// (1/3, 1), (2/3, 1).
-const EASE_OUT_CUBIC = "cubic-bezier(0.3333, 1, 0.6667, 1)";
-
-/** GtkSettings:gtk-enable-animations. */
-function animationsEnabled(): boolean {
-  return !(
-    typeof window !== "undefined" &&
-    typeof window.matchMedia === "function" &&
-    window.matchMedia("(prefers-reduced-motion: reduce)").matches
-  );
 }
 
 /**
@@ -72,7 +60,7 @@ export const GtkRevealer = forwardRef<HTMLDivElement, GtkRevealerProps>(function
   useImperativeHandle(ref, () => element.current as HTMLDivElement);
   const animation = useRef<Animation | null>(null);
 
-  const animates = transitionType !== "none" && transitionDuration > 0 && animationsEnabled();
+  const animates = transitionType !== "none" && transitionDuration > 0 && !prefersReducedMotion();
   // The child stays visible until the hide transition ends, like
   // gtk_revealer_set_position() (child-visible = position != 0).
   const [hiding, setHiding] = useState(false);
@@ -132,7 +120,9 @@ export const GtkRevealer = forwardRef<HTMLDivElement, GtkRevealerProps>(function
   if (className) classes.push(className);
 
   const revealerStyle: CSSProperties = {
-    ...(transitionType === "slide-down" && { alignContent: "end" }),
+    // The child's bottom edge stays in view, even while the revealer is
+    // shorter than the child.
+    ...(transitionType === "slide-down" && { alignContent: "unsafe end" }),
     ...(!childVisible && { height: 0, overflow: "clip", visibility: "hidden" }),
     ...style,
   };

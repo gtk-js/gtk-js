@@ -6,6 +6,7 @@ import React, {
   useRef,
   useState,
 } from "react";
+import { noFocusOnClick } from "../focus-on-click.ts";
 import { useIcon } from "../icon-context.tsx";
 import { tooltipAttrs } from "../tooltip.tsx";
 import { alignAttrs, type GtkAlignProps } from "../types.ts";
@@ -153,9 +154,7 @@ export const GtkPasswordEntry = forwardRef<HTMLInputElement, GtkPasswordEntryPro
 
     // Like the entry's catch-all click gesture and the peek icon's, which claim
     // the press: clicking outside the text doesn't take the focus away from it.
-    const handleEntryMouseDown = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
-      if (e.target !== inputRef.current) e.preventDefault();
-    }, []);
+    const entryPress = noFocusOnClick<HTMLDivElement>({}, (e) => e.target !== inputRef.current);
 
     const toggleVisibility = useCallback(() => {
       // gtk_text_set_visibility() keeps the cursor and selection, but browsers
@@ -185,7 +184,7 @@ export const GtkPasswordEntry = forwardRef<HTMLInputElement, GtkPasswordEntryPro
       <div
         className={classes.join(" ")}
         data-disabled={disabled || undefined}
-        onMouseDown={handleEntryMouseDown}
+        {...entryPress}
         {...alignAttrs(halign, valign, hexpand, vexpand)}
       >
         <input

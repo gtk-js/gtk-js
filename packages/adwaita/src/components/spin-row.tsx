@@ -1,9 +1,10 @@
 import {
   GtkSpinButton,
   type GtkSpinButtonUpdatePolicy,
+  linesStyle,
+  noFocusOnClick,
   tooltipAttrs,
   useListBoxRow,
-  wrapStyle,
 } from "@gtk-js/gtk4";
 import {
   forwardRef,
@@ -66,17 +67,6 @@ export interface AdwSpinRowProps extends HTMLAttributes<HTMLDivElement> {
 
 // The labels wrap word-char, and ellipsize after `lines` lines when set
 // (adw_action_row_set_title_lines()).
-function linesStyle(lines: number): React.CSSProperties {
-  if (lines <= 0) return wrapStyle("word-char");
-  return {
-    display: "-webkit-box",
-    WebkitLineClamp: lines,
-    WebkitBoxOrient: "vertical",
-    overflow: "hidden",
-    ...wrapStyle("word-char"),
-  };
-}
-
 // Widgets that take their own clicks, so the row doesn't get them.
 const CLAIMS = ".gtk-spinbutton, button, input, textarea, select, a[href], [tabindex]";
 
@@ -122,6 +112,7 @@ export const AdwSpinRow = forwardRef<HTMLDivElement, AdwSpinRowProps>(function A
     children,
     className,
     onMouseDown,
+    onPointerDown,
     onClick,
     ...rest
   },
@@ -161,15 +152,18 @@ export const AdwSpinRow = forwardRef<HTMLDivElement, AdwSpinRowProps>(function A
       {...tooltipAttrs(tooltipText)}
       aria-disabled={insensitive}
       data-disabled={insensitive}
-      onMouseDown={(e) => {
-        if (!disabled && !claimed(e)) {
-          // The focus stays in the text, and a press on the row's frame moves
-          // it there without selecting (gtk_text_grab_focus_without_selecting()).
-          e.preventDefault();
-          if (onFrame(e)) text()?.focus();
-        }
-        onMouseDown?.(e);
-      }}
+      // The focus stays in the text, and a press on the row's frame moves it
+      // there without selecting (gtk_text_grab_focus_without_selecting()).
+      {...noFocusOnClick(
+        {
+          onMouseDown: (e) => {
+            if (!disabled && !claimed(e) && onFrame(e)) text()?.focus();
+            onMouseDown?.(e);
+          },
+          onPointerDown,
+        },
+        (e) => !disabled && !claimed(e),
+      )}
       onClick={(e) => {
         // Elsewhere, like on the title, GtkListBox activates the row on the
         // first click and focuses it, i.e. its text, which selects it

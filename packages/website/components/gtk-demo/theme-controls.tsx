@@ -1,6 +1,6 @@
 "use client";
 
-import { GtkBox, GtkButton, GtkLabel, GtkPopover } from "@gtk-js/gtk4";
+import { GtkBox, GtkButton, GtkLabel, GtkPopover, tooltipAttrs } from "@gtk-js/gtk4";
 import { ApplicationsSystem } from "@gtk-js/icons-adwaita";
 import { useRef, useState } from "react";
 import {
@@ -10,7 +10,7 @@ import {
   type ThemePickerState,
 } from "./use-theme-picker";
 
-type ThemeControlsProps = Omit<ThemePickerState, "theme" | "icons" | "restored">;
+type ThemeControlsProps = Omit<ThemePickerState, "cssHref" | "cssText" | "icons" | "restored">;
 
 function AccentPicker({
   presets,
@@ -26,7 +26,9 @@ function AccentPicker({
       {presets.map((color) => (
         <button
           key={color}
-          title={color}
+          type="button"
+          // A GTK tooltip, like the widgets' tooltipText.
+          {...tooltipAttrs(color)}
           aria-label={color}
           aria-pressed={value === color}
           onClick={() => onChange(color)}
@@ -60,6 +62,7 @@ export function ThemeControls({
   setFluentTitlebutton,
   fluentWindow,
   setFluentWindow,
+  preloadOptions,
 }: ThemeControlsProps) {
   const [open, setOpen] = useState(false);
   const btnRef = useRef<HTMLButtonElement>(null);
@@ -72,7 +75,14 @@ export function ThemeControls({
 
   return (
     <div style={{ position: "relative" }}>
-      <GtkButton ref={btnRef} hasFrame={false} onClicked={() => setOpen((o) => !o)}>
+      <GtkButton
+        ref={btnRef}
+        hasFrame={false}
+        onClicked={() => {
+          if (!open) preloadOptions();
+          setOpen(!open);
+        }}
+      >
         <ApplicationsSystem size={20} />
       </GtkButton>
       <GtkPopover

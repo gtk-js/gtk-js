@@ -11,7 +11,6 @@ import {
   useRef,
   useState,
 } from "react";
-import { stripMnemonic } from "../mnemonic.ts";
 import { AdwButtonContent } from "./button-content.tsx";
 
 export interface AdwSplitButtonProps extends Omit<HTMLAttributes<HTMLDivElement>, "popover"> {
@@ -142,7 +141,8 @@ export const AdwSplitButton = forwardRef<HTMLDivElement, AdwSplitButtonProps>(
               <GtkImage iconName={iconName} valign="center" />
             ) : hasLabel ? (
               <GtkLabel
-                label={useUnderline ? stripMnemonic(label) : label}
+                label={label}
+                useUnderline={useUnderline}
                 ellipsize={canShrink ? "end" : "none"}
               />
             ) : null)}

@@ -1,4 +1,4 @@
-import { GtkImage, labelText, tooltipAttrs, useListBoxRow, wrapStyle } from "@gtk-js/gtk4";
+import { GtkImage, labelText, linesStyle, tooltipAttrs, useListBoxRow } from "@gtk-js/gtk4";
 import {
   forwardRef,
   type HTMLAttributes,
@@ -68,21 +68,11 @@ export interface AdwActionRowProps extends HTMLAttributes<HTMLDivElement> {
   children?: ReactNode;
 }
 
-/** A label style that ellipsizes after `lines` lines, or wraps (word-char) when 0. */
-function labelStyle(lines: number, selectable: boolean): React.CSSProperties {
-  return {
-    ...(lines > 0 && {
-      display: "-webkit-box",
-      WebkitLineClamp: lines,
-      WebkitBoxOrient: "vertical",
-      overflow: "hidden",
-    }),
-    ...wrapStyle("word-char"),
-    // A selectable GtkLabel shows the text cursor (gtk_label_update_cursor())
-    // and takes the focus, with no focus ring.
-    ...(selectable && { userSelect: "text", cursor: "text", outline: "none" }),
-  };
-}
+/**
+ * A selectable GtkLabel shows the text cursor (gtk_label_update_cursor()) and
+ * takes the focus, with no focus ring.
+ */
+const SELECTABLE: React.CSSProperties = { userSelect: "text", cursor: "text", outline: "none" };
 
 /**
  * AdwActionRow — A preferences list row with title, subtitle, prefix, suffix.
@@ -221,7 +211,7 @@ export const AdwActionRow = forwardRef<HTMLDivElement, AdwActionRowProps>(functi
               className="gtk-label title"
               id={titleId}
               tabIndex={titleCanSelect ? 0 : undefined}
-              style={labelStyle(titleLines, titleCanSelect)}
+              style={{ ...linesStyle(titleLines), ...(titleCanSelect && SELECTABLE) }}
               {...insensitive}
             >
               {labelText(title, useMarkup, useUnderline)}
@@ -232,7 +222,7 @@ export const AdwActionRow = forwardRef<HTMLDivElement, AdwActionRowProps>(functi
               className="gtk-label subtitle"
               id={subtitleId}
               tabIndex={subtitleCanSelect ? 0 : undefined}
-              style={labelStyle(subtitleLines, subtitleCanSelect)}
+              style={{ ...linesStyle(subtitleLines), ...(subtitleCanSelect && SELECTABLE) }}
               {...insensitive}
             >
               {labelText(subtitle, useMarkup)}

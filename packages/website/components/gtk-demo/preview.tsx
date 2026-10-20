@@ -21,7 +21,12 @@ export function Preview({ source, children }: PreviewProps) {
     // not-prose: the docs body's typography styles (link underline offset and
     // hover fade, margins on p/ul/li, code backticks) must not reach the widgets.
     <div className="not-prose my-4 rounded-lg overflow-hidden border border-fd-border">
-      <GtkProvider theme={state.theme} icons={state.icons} hideUntilReady={false}>
+      <GtkProvider
+        cssHref={state.cssHref}
+        cssText={state.cssText}
+        icons={state.icons}
+        hideUntilReady={false}
+      >
         {/* .background paints the window colors behind the tab bar and the example,
             as the GtkWindow they would live in does (gtk_window_init()); the
             provider's own background stays transparent. */}

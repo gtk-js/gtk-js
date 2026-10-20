@@ -78,6 +78,9 @@ body:has(> :first-child:has([data-gtk-provider])) > :first-child {
      `normal` (17px lines instead of 17.6px at 11pt). Set this along with
      --gtk-font-family. */
   --gtk-line-height: 1.2;
+  /* GTK's ease_out_cubic() (gtkprogresstracker.c), 1 - (1 - t)³, which is
+     exactly this Bézier: EASE_OUT_CUBIC in animation.ts. */
+  --gtk-ease-out-cubic: cubic-bezier(0.3333333, 1, 0.6666667, 1);
   font-family: var(--gtk-font-family);
   font-size: var(--gtk-font-size);
   line-height: var(--gtk-line-height);
@@ -491,7 +494,7 @@ body:has(> :first-child:has([data-gtk-provider])) > :first-child {
    (indicator_start_fade(): INDICATOR_FADE_OUT_DURATION, ease-out-cubic). */
 :where([data-gtk-provider] .gtk-scrolledwindow > .gtk-scrollbar) {
   z-index: 1;
-  transition: opacity 1s cubic-bezier(0.215, 0.61, 0.355, 1);
+  transition: opacity 1s var(--gtk-ease-out-cubic);
 }
 
 :where([data-gtk-provider] .gtk-scrolledwindow > .gtk-scrollbar.vertical) {

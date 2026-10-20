@@ -80,6 +80,15 @@ export function wrapStyle(mode: GtkWrapMode = "word"): React.CSSProperties {
 }
 
 /**
+ * The style of a label that wraps (word-char) and, with `lines` above 0,
+ * ellipsizes at the end of that many lines: a row's title or subtitle, as
+ * adw_action_row_set_title_lines() sets its label's lines and ellipsize.
+ */
+export function linesStyle(lines: number): React.CSSProperties {
+  return { ...(lines > 0 && lineClamp(lines)), ...wrapStyle("word-char") };
+}
+
+/**
  * GtkLabel — A widget that displays text.
  *
  * CSS node:

@@ -11,6 +11,7 @@ import React, {
   useRef,
   useState,
 } from "react";
+import { noFocusOnClick } from "../focus-on-click.ts";
 import { useIcon } from "../icon-context.tsx";
 import { tooltipAttrs } from "../tooltip.tsx";
 import { alignAttrs, type GtkAlignProps } from "../types.ts";
@@ -236,9 +237,7 @@ export const GtkSearchEntry = forwardRef<HTMLInputElement, GtkSearchEntryProps>(
         {...alignAttrs(halign, valign, hexpand, vexpand)}
         data-disabled={disabled || undefined}
         // The icons claim presses without taking the focus (catchall_click_press()).
-        onMouseDown={(e) => {
-          if (e.target !== inputRef.current) e.preventDefault();
-        }}
+        {...noFocusOnClick({}, (e) => e.target !== inputRef.current)}
       >
         <span className="gtk-image left">{SearchIcon && <SearchIcon size={16} />}</span>
         <input

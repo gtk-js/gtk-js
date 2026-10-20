@@ -88,7 +88,7 @@ describe("AdwToggleGroup separators", () => {
   });
 
   test("hide next to the checked toggle, like should_hide_separators()", () => {
-    const hidden = (html: string) => separators(html).map((tag) => tag.includes("hidden"));
+    const hidden = (html: string) => separators(html).map((tag) => tag.includes("gtk-hidden"));
     expect(hidden(render({ toggles: text, active: 0 }))).toEqual([true, false]);
     expect(hidden(render({ toggles: text, active: 1 }))).toEqual([true, true]);
     expect(hidden(render({ toggles: text, active: 2 }))).toEqual([false, true]);

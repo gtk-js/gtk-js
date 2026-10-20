@@ -50,6 +50,17 @@ export function parseMnemonic(text: string): { segments: MnemonicSegment[]; key:
   return { segments, key };
 }
 
+/**
+ * A mnemonic label's text as GTK shows it while mnemonics are hidden: the
+ * marked characters without their underscores, like strip_ulines() in
+ * gtklabel.c.
+ */
+export function stripMnemonic(text: string): string {
+  return parseMnemonic(text)
+    .segments.map((segment) => (typeof segment === "string" ? segment : segment.mnemonic))
+    .join("");
+}
+
 // -- Visibility ----------------------------------------------------------------
 
 /** MNEMONICS_DELAY in gtkwindow.c. */
@@ -254,7 +265,10 @@ function useMnemonic(key: string | null, ref: RefObject<HTMLElement | null>): bo
 }
 
 /** PANGO_UNDERLINE_LOW, which GTK draws at the font's underline position, through descenders. */
-const UNDERLINE: CSSProperties = { textDecorationLine: "underline", textDecorationSkipInk: "none" };
+export const MNEMONIC_UNDERLINE: CSSProperties = {
+  textDecorationLine: "underline",
+  textDecorationSkipInk: "none",
+};
 
 /** The text of a label with use-underline, its mnemonic drawn and active. */
 export function MnemonicText({ text }: { text: string }): ReactNode {
@@ -268,7 +282,7 @@ export function MnemonicText({ text }: { text: string }): ReactNode {
         typeof segment === "string" ? (
           segment
         ) : (
-          <span key={i} style={underline ? UNDERLINE : undefined}>
+          <span key={i} style={underline ? MNEMONIC_UNDERLINE : undefined}>
             {segment.mnemonic}
           </span>
         ),

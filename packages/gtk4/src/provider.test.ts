@@ -8,6 +8,7 @@ import {
   GtkProvider,
   getSystemScheme,
   insertThemeCSS,
+  linkThemeCSS,
   subscribeSystemScheme,
   suppressTransitions,
 } from "./provider.tsx";
@@ -143,4 +144,133 @@ test("the server doesn't know the system scheme, so auto themes keep following t
   const theme = new SchemeTheme();
   renderToStaticMarkup(createElement(GtkProvider, { theme, children: null }));
   expect(theme.calls).toEqual([undefined]);
+});
+
+/** Just enough of a <head> for linkThemeCSS(): elements in order, and <link> loads. */
+function fakeHead() {
+  type Element = {
+    localName: string;
+    id: string;
+    textContent: string;
+    href: string;
+    rel: string;
+    sheet: object | null;
+    listeners: Map<string, () => void>;
+    readonly nextElementSibling: Element | null;
+    after(element: Element): void;
+    remove(): void;
+    replaceWith(element: Element): void;
+    addEventListener(type: string, listener: () => void): void;
+    removeEventListener(type: string): void;
+    load(): void;
+  };
+  const head: Element[] = [];
+  const createElement = (localName: string): Element => {
+    let href = "";
+    const element: Element = {
+      localName,
+      id: "",
+      textContent: "",
+      rel: "",
+      sheet: null,
+      listeners: new Map(),
+      get href() {
+        return href;
+      },
+      set href(value: string) {
+        href = new URL(value, "https://example.com/docs/").href;
+      },
+      get nextElementSibling() {
+        return head[head.indexOf(element) + 1] ?? null;
+      },
+      after(other) {
+        if (head.includes(other)) head.splice(head.indexOf(other), 1);
+        head.splice(head.indexOf(element) + 1, 0, other);
+      },
+      remove() {
+        if (head.includes(element)) head.splice(head.indexOf(element), 1);
+      },
+      replaceWith(other) {
+        head.splice(head.indexOf(element), 1, other);
+      },
+      addEventListener(type, listener) {
+        element.listeners.set(type, listener);
+      },
+      removeEventListener(type) {
+        element.listeners.delete(type);
+      },
+      load() {
+        element.sheet = {};
+        element.listeners.get("load")?.();
+      },
+    };
+    return element;
+  };
+  vi.stubGlobal("document", {
+    baseURI: "https://example.com/docs/",
+    head: { appendChild: (element: Element) => head.push(element) },
+    getElementById: (id: string) => head.find((element) => element.id === id) ?? null,
+    querySelector: () => null,
+    createElement,
+  });
+  /** The <head> as `id:href-or-text`, without the transient switching style. */
+  const contents = () =>
+    head
+      .filter((element) => element.id !== "gtk-js-switching")
+      .map((element) => `${element.id || "?"}:${element.href || element.textContent}`);
+  const switching = () => head.some((element) => element.id === "gtk-js-switching");
+  return { head, contents, switching };
+}
+
+test("a linked theme goes in <head>, with its cssText after it", () => {
+  const { contents } = fakeHead();
+  linkThemeCSS("/themes/light.css", ":root { --accent: red; }");
+  expect(contents()).toEqual([
+    "gtk-js-theme:https://example.com/themes/light.css",
+    "gtk-js-theme-text::root { --accent: red; }",
+  ]);
+});
+
+test("a new cssText for the same stylesheet applies at once, without transitions", () => {
+  const { contents, switching } = fakeHead();
+  linkThemeCSS("/themes/light.css", "a");
+  vi.useFakeTimers();
+  linkThemeCSS("/themes/light.css", "b");
+  expect(contents()).toEqual([
+    "gtk-js-theme:https://example.com/themes/light.css",
+    "gtk-js-theme-text:b",
+  ]);
+  expect(switching()).toBe(true);
+});
+
+test("a new stylesheet replaces the old one once it has loaded, not before", () => {
+  const { head, contents, switching } = fakeHead();
+  linkThemeCSS("/themes/light.css", "a");
+  vi.useFakeTimers();
+  vi.advanceTimersByTime(250);
+  linkThemeCSS("/themes/dark.css", "b");
+  // Until then the old theme shows, with its own CSS after it.
+  expect(contents()).toEqual([
+    "gtk-js-theme:https://example.com/themes/light.css",
+    "?:https://example.com/themes/dark.css",
+    "gtk-js-theme-text:a",
+  ]);
+  expect(switching()).toBe(false);
+  head.find((element) => element.href.endsWith("dark.css"))!.load();
+  expect(contents()).toEqual([
+    "gtk-js-theme:https://example.com/themes/dark.css",
+    "gtk-js-theme-text:b",
+  ]);
+  expect(switching()).toBe(true);
+});
+
+test("a stylesheet already in <head>, e.g. linked by a script before the first paint, is taken over", () => {
+  const { head, contents } = fakeHead();
+  const link = document.createElement("link") as unknown as (typeof head)[number];
+  link.id = "gtk-js-theme";
+  link.href = "../themes/dark.css";
+  head.push(link);
+  linkThemeCSS("/themes/dark.css");
+  expect(contents()).toEqual(["gtk-js-theme:https://example.com/themes/dark.css"]);
+  expect(head[0]).toBe(link);
 });

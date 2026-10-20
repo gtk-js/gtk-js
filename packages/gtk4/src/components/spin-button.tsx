@@ -6,6 +6,7 @@ import React, {
   useRef,
   useState,
 } from "react";
+import { noFocusOnClick } from "../focus-on-click.ts";
 import { useIcon } from "../icon-context.tsx";
 import {
   alignAttrs,
@@ -441,10 +442,9 @@ export const GtkSpinButton = forwardRef<HTMLDivElement, GtkSpinButtonProps>(func
         tabIndex={-1}
         aria-hidden
         disabled={direction > 0 ? !canUp : !canDown}
-        onMouseDown={(e) => e.preventDefault()}
+        {...noFocusOnClick({ onPointerDown: (e) => pressButton(e, direction) })}
         // No middle-click paste into the text.
         onMouseUp={(e) => e.preventDefault()}
-        onPointerDown={(e) => pressButton(e, direction)}
         onContextMenu={(e) => e.preventDefault()}
       >
         <span className="gtk-image">{Icon && <Icon size={16} />}</span>

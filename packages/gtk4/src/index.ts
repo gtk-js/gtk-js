@@ -1,6 +1,7 @@
 // Provider
 
 export { GtkTheme, type SystemColorScheme } from "@gtk-js/gtk-css";
+export { EASE_OUT_CUBIC, easeOutCubic, prefersReducedMotion } from "./animation.ts";
 export type { GtkActionBarProps } from "./components/action-bar.tsx";
 export { GtkActionBar } from "./components/action-bar.tsx";
 export type { GtkBoxProps } from "./components/box.tsx";
@@ -34,7 +35,7 @@ export type { GtkImageProps } from "./components/image.tsx";
 // Phase 1: Foundation Components
 export { GtkImage } from "./components/image.tsx";
 export type { GtkLabelProps } from "./components/label.tsx";
-export { GtkLabel, wrapStyle } from "./components/label.tsx";
+export { GtkLabel, linesStyle, wrapStyle } from "./components/label.tsx";
 export type { GtkLevelBarOffset, GtkLevelBarProps } from "./components/level-bar.tsx";
 export { GtkLevelBar } from "./components/level-bar.tsx";
 export type { GtkLinkButtonProps } from "./components/link-button.tsx";
@@ -103,6 +104,7 @@ export type { GtkWindowTitleProps } from "./components/window-title.tsx";
 export { GtkWindowTitle } from "./components/window-title.tsx";
 export { isCoveredByLayer, useEscapeLayer } from "./escape-layers.ts";
 export { noFocusOnClick } from "./focus-on-click.ts";
+export { FOCUSABLE } from "./focusable.ts";
 export type { IconMap } from "./icon-context.tsx";
 // Icon context
 export { IconProvider, useIcon, useIcons } from "./icon-context.tsx";

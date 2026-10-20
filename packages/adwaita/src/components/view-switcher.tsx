@@ -1,4 +1,11 @@
-import { GtkActionBar, GtkBox, GtkImage, GtkLabel, GtkToggleButton } from "@gtk-js/gtk4";
+import {
+  GtkActionBar,
+  GtkBox,
+  GtkImage,
+  GtkLabel,
+  GtkToggleButton,
+  noFocusOnClick,
+} from "@gtk-js/gtk4";
 import {
   type FocusEvent,
   forwardRef,
@@ -186,7 +193,7 @@ function AdwViewSwitcherButton({
       tabIndex={tabIndex}
       disabled={disabled}
       // focus-on-click is FALSE (adw_view_switcher_button_init()).
-      onMouseDown={(e) => e.preventDefault()}
+      {...noFocusOnClick()}
       onToggled={onActivate}
       onDragEnter={() => {
         if (drag.current.depth++ > 0 || active || disabled) return;

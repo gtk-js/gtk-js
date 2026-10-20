@@ -6,6 +6,8 @@ import React, {
   useRef,
   useState,
 } from "react";
+import { prefersReducedMotion } from "../animation.ts";
+import { noFocusOnClick } from "../focus-on-click.ts";
 import { alignAttrs, type GtkAlignProps } from "../types.ts";
 
 export interface GtkSwitchProps extends HTMLAttributes<HTMLDivElement>, GtkAlignProps {
@@ -84,6 +86,8 @@ export const GtkSwitch = forwardRef<HTMLDivElement, GtkSwitchProps>(function Gtk
     vexpand,
     className,
     onClick,
+    onMouseDown,
+    onPointerDown,
     ...rest
   },
   ref,
@@ -120,7 +124,7 @@ export const GtkSwitch = forwardRef<HTMLDivElement, GtkSwitchProps>(function Gtk
   // Like gtk_switch_begin_toggle_animation(): `active` changes once the slider gets
   // there, or right away when animations are off.
   const toggle = useCallback(() => {
-    if (window.matchMedia?.("(prefers-reduced-motion: reduce)").matches) {
+    if (prefersReducedMotion()) {
       setActive(!active);
       return;
     }
@@ -230,9 +234,14 @@ export const GtkSwitch = forwardRef<HTMLDivElement, GtkSwitchProps>(function Gtk
       data-checked={state || undefined}
       data-disabled={disabled || undefined}
       // GtkSwitch never grabs the focus on click.
-      onMouseDown={(e) => e.preventDefault()}
+      {...noFocusOnClick({
+        onMouseDown,
+        onPointerDown: (e) => {
+          handlePointerDown(e);
+          onPointerDown?.(e);
+        },
+      })}
       onClick={handleClick}
-      onPointerDown={handlePointerDown}
       onPointerMove={handlePointerMove}
       onPointerUp={handlePointerUp}
       onPointerCancel={handlePointerCancel}

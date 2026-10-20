@@ -36,17 +36,19 @@ function scene() {
   const provider = new FakeElement("provider", body, doc);
   const headerbar = new FakeElement("headerbar", provider, doc);
   const button = new FakeElement("button", headerbar, doc);
+  const image = new FakeElement("image", button, doc);
   const pressed = () =>
-    [body, provider, headerbar, button].filter((el) => el.attributes.has("data-pressed"));
+    [body, provider, headerbar, button, image].filter((el) => el.attributes.has("data-pressed"));
   const pointer = (type: string, pointerId: number) =>
     view.dispatchEvent(Object.assign(new Event(type), { pointerId }));
-  const press = (which: number, pointerId = 1) =>
+  const press = (which: number, pointerId = 1, target: FakeElement = button) =>
     noFocusOnClick().onPointerDown({
       button: which,
       pointerId,
+      target,
       currentTarget: button,
     } as unknown as PointerEvent<Element>);
-  return { view, provider, headerbar, button, pressed, pointer, press };
+  return { view, provider, headerbar, button, image, pressed, pointer, press };
 }
 
 describe("noFocusOnClick", () => {
@@ -69,6 +71,38 @@ describe("noFocusOnClick", () => {
     expect(pressed()).toHaveLength(3);
     pointer("pointerup", 1);
     expect(pressed()).toEqual([]);
+  });
+
+  test("the element pressed inside the widget is pressed too, like the widget GTK picks", () => {
+    const { provider, headerbar, button, image, pressed, pointer, press } = scene();
+    press(0, 1, image);
+    expect(pressed()).toEqual([provider, headerbar, button, image]);
+    pointer("pointerup", 1);
+    expect(pressed()).toEqual([]);
+  });
+
+  test("only the presses `claims` takes keep the focus and press", () => {
+    const { button, image, pressed } = scene();
+    const handlers = noFocusOnClick({}, (e) => (e.target as unknown) !== image);
+    let prevented = false;
+    handlers.onMouseDown({
+      target: image,
+      currentTarget: button,
+      preventDefault: () => (prevented = true),
+    } as unknown as MouseEvent<Element>);
+    handlers.onPointerDown({
+      button: 0,
+      pointerId: 1,
+      target: image,
+      currentTarget: button,
+    } as unknown as PointerEvent<Element>);
+    expect([prevented, pressed()]).toEqual([false, []]);
+    handlers.onMouseDown({
+      target: button,
+      currentTarget: button,
+      preventDefault: () => (prevented = true),
+    } as unknown as MouseEvent<Element>);
+    expect(prevented).toBe(true);
   });
 
   test("a cancelled press or the window losing the pointer ends it too", () => {

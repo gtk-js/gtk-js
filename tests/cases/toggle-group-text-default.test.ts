@@ -29,7 +29,11 @@ gtkTest("toggle-group-text-default", (native, web) => {
   // Separators have the group's orientation (add_toggle()), and the ones next
   // to the checked toggle are .hidden (should_hide_separators()).
   const separators = (s: WidgetSnapshot) => s.children!.filter((c) => c.css_name === "separator");
-  const classes = (s: WidgetSnapshot) => s.css_classes!.filter((c) => !c.startsWith("gtk-"));
+  // GTK's .hidden is .gtk-hidden on the web (STYLE_CLASS_SELECTORS in gtk-css).
+  const classes = (s: WidgetSnapshot) =>
+    s
+      .css_classes!.map((c) => (c === "gtk-hidden" ? "hidden" : c))
+      .filter((c) => !c.startsWith("gtk-"));
   expect(separators(web).map(classes)).toEqual(separators(native).map(classes));
   separators(native).forEach((n, i) => {
     const w = separators(web)[i]!;

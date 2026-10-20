@@ -1,4 +1,4 @@
-import { GtkButton, useIcon } from "@gtk-js/gtk4";
+import { GtkButton, noFocusOnClick, useIcon } from "@gtk-js/gtk4";
 import { forwardRef, useState } from "react";
 import { AdwEntryRow, type AdwEntryRowProps } from "./entry-row.tsx";
 
@@ -52,7 +52,7 @@ export const AdwPasswordEntryRow = forwardRef<HTMLDivElement, AdwPasswordEntryRo
               hasFrame={false}
               valign="center"
               tooltipText={visible ? "Hide Password" : "Show Password"}
-              onMouseDown={(e) => e.preventDefault()}
+              {...noFocusOnClick()}
               onClick={(e) => {
                 e.stopPropagation();
                 setVisible(!visible);

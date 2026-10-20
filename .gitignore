@@ -15,6 +15,9 @@ packages/gtk4-icons/src/index.ts
 # Next.js generated
 packages/website/next-env.d.ts
 
+# Theme stylesheets the website copies from the theme packages
+packages/website/public/themes/
+
 # code coverage
 coverage
 *.lcov

@@ -14,12 +14,3 @@ body {
   padding: 0;
   height: 100%;
 }
-
-/*
- * GTK's .hidden style class only fades a node out (AdwToggleGroup's
- * separators next to a checked or hovered toggle), but it shares its name
- * with Tailwind's `hidden` utility, which would drop the node from the layout.
- */
-[data-gtk-provider] .hidden {
-  display: revert;
-}

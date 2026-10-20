@@ -1,6 +1,13 @@
-import { GtkBox, GtkRevealer, GtkSwitch, useIcon, useListBoxRow, wrapStyle } from "@gtk-js/gtk4";
+import {
+  FOCUSABLE,
+  GtkBox,
+  GtkRevealer,
+  GtkSwitch,
+  linesStyle,
+  useIcon,
+  useListBoxRow,
+} from "@gtk-js/gtk4";
 import React, {
-  type CSSProperties,
   forwardRef,
   type HTMLAttributes,
   type KeyboardEvent,
@@ -33,20 +40,6 @@ export interface AdwExpanderRowProps extends HTMLAttributes<HTMLDivElement> {
   onExpandedChanged?: (expanded: boolean) => void;
   onEnableExpansionChanged?: (enabled: boolean) => void;
 }
-
-/** Wraps word-char, ellipsizing after `lines` lines if set, like AdwActionRow's labels. */
-function labelStyle(lines: number): CSSProperties {
-  if (lines <= 0) return wrapStyle("word-char");
-  return {
-    display: "-webkit-box",
-    WebkitLineClamp: lines,
-    WebkitBoxOrient: "vertical",
-    overflow: "hidden",
-    ...wrapStyle("word-char"),
-  };
-}
-
-const FOCUSABLE = "a[href], button, input, select, textarea, [tabindex]";
 
 /**
  * Moves the focus to the previous or next widget in the focus chain, like
@@ -225,7 +218,7 @@ export const AdwExpanderRow = forwardRef<HTMLDivElement, AdwExpanderRowProps>(
                   <span
                     className="gtk-label title"
                     data-disabled={disabled || undefined}
-                    style={labelStyle(titleLines)}
+                    style={linesStyle(titleLines)}
                   >
                     {title}
                   </span>
@@ -233,7 +226,7 @@ export const AdwExpanderRow = forwardRef<HTMLDivElement, AdwExpanderRowProps>(
                     <span
                       className="gtk-label subtitle"
                       data-disabled={disabled || undefined}
-                      style={labelStyle(subtitleLines)}
+                      style={linesStyle(subtitleLines)}
                     >
                       {subtitle}
                     </span>

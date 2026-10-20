@@ -1191,14 +1191,6 @@
 }
 
 /* === AdwBanner === */
-/* The revealer slides the banner down (transition-type slide-down in
- * adw-banner.ui): while AdwBanner animates its height, the gizmo keeps its
- * own and stays at the bottom edge, like gtk_revealer_size_allocate(). */
-.gtk-banner > .gtk-revealer {
-  display: grid;
-  align-content: unsafe end;
-}
-
 /* The gizmo's custom layout (measure_content() / allocate_content() in
  * adw-banner.c), which AdwBanner picks in data-layout. The title is centered
  * on the whole width unless the layout places it otherwise. */
@@ -1688,7 +1680,7 @@
   grid-area: 1 / 1;
   position: relative;
   inset-inline-start: 0;
-  transition: inset-inline-start 100ms cubic-bezier(0.215, 0.61, 0.355, 1);
+  transition: inset-inline-start 100ms var(--gtk-ease-out-cubic);
 }
 
 .gtk-switch[data-switch-active] > .gtk-slider {

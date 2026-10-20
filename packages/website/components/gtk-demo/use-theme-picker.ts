@@ -1,45 +1,37 @@
 "use client";
 
-import type { GtkTheme, IconMap } from "@gtk-js/gtk4";
+import type { IconMap } from "@gtk-js/gtk4";
 import * as adwaitaIcons from "@gtk-js/icons-adwaita";
 import * as fluentIcons from "@gtk-js/icons-fluent";
 import * as mactahoeIcons from "@gtk-js/icons-mactahoe";
 import * as whitesurIcons from "@gtk-js/icons-whitesur";
-import { AdwaitaTheme } from "@gtk-js/theme-adwaita";
-import { FluentTheme } from "@gtk-js/theme-fluent";
-import { MacTahoeTheme } from "@gtk-js/theme-mactahoe";
-import { WhiteSurTheme } from "@gtk-js/theme-whitesur";
-import { createContext, useContext, useLayoutEffect, useMemo, useState } from "react";
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useState,
+  useSyncExternalStore,
+} from "react";
+import { preload } from "react-dom";
+import {
+  ALLOWED,
+  BASE_PATH,
+  DEFAULT_CHOICE,
+  readChoice,
+  STORAGE_KEY,
+  type ThemeChoice,
+  type ThemeName,
+  themeStylesheet,
+} from "./theme-stylesheet";
 
-export type ThemeName = "adwaita" | "whitesur" | "mactahoe" | "fluent";
-
-export const THEME_LABELS: Record<ThemeName, string> = {
-  adwaita: "Adwaita",
-  whitesur: "Big Sur",
-  mactahoe: "Tahoe",
-  fluent: "Fluent",
-};
-
-export const ADWAITA_ACCENT_PRESETS = [
-  "#3584e4",
-  "#9141ac",
-  "#e66100",
-  "#2ec27e",
-  "#e01b24",
-  "#f5c211",
-];
-
-export const FLUENT_ACCENT_PRESETS = [
-  "#1A73E8",
-  "#9C27B0",
-  "#E91E63",
-  "#F44336",
-  "#FF9800",
-  "#FFEB3B",
-  "#4CAF50",
-  "#009688",
-  "#9E9E9E",
-];
+export {
+  ADWAITA_ACCENT_PRESETS,
+  FLUENT_ACCENT_PRESETS,
+  THEME_LABELS,
+  type ThemeName,
+} from "./theme-stylesheet";
 
 const THEME_ICONS: Record<ThemeName, IconMap> = {
   adwaita: adwaitaIcons,
@@ -48,49 +40,18 @@ const THEME_ICONS: Record<ThemeName, IconMap> = {
   fluent: fluentIcons,
 };
 
-interface ThemeChoice {
-  themeName: ThemeName;
-  colorScheme: "light" | "dark" | "auto";
-  adwaitaAccent: string;
-  fluentAccent: string;
-  fluentTitlebutton: "circular" | "square";
-  fluentWindow: "default" | "round";
-}
-
-const DEFAULT_CHOICE: ThemeChoice = {
-  themeName: "adwaita",
-  colorScheme: "auto",
-  adwaitaAccent: "#3584e4",
-  fluentAccent: "#1A73E8",
-  fluentTitlebutton: "square",
-  fluentWindow: "default",
-};
-
-const ALLOWED: { [K in keyof ThemeChoice]: readonly ThemeChoice[K][] } = {
-  themeName: Object.keys(THEME_LABELS) as ThemeName[],
-  colorScheme: ["light", "dark", "auto"],
-  adwaitaAccent: ADWAITA_ACCENT_PRESETS,
-  fluentAccent: FLUENT_ACCENT_PRESETS,
-  fluentTitlebutton: ["circular", "square"],
-  fluentWindow: ["default", "round"],
-};
-
-const STORAGE_KEY = "gtk-js-docs-theme";
-
 /** The saved choice, keeping only known values. */
 function loadChoice(): ThemeChoice {
-  const choice = { ...DEFAULT_CHOICE };
   try {
-    const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) ?? "{}");
-    for (const key of Object.keys(choice) as (keyof ThemeChoice)[]) {
-      if ((ALLOWED[key] as readonly unknown[]).includes(saved?.[key])) {
-        (choice as Record<keyof ThemeChoice, unknown>)[key] = saved[key];
-      }
-    }
+    return readChoice(
+      JSON.parse(localStorage.getItem(STORAGE_KEY) ?? "{}"),
+      DEFAULT_CHOICE,
+      ALLOWED,
+    );
   } catch {
     // Storage blocked or unreadable: keep the defaults.
+    return DEFAULT_CHOICE;
   }
-  return choice;
 }
 
 function saveChoice(choice: ThemeChoice) {
@@ -101,8 +62,24 @@ function saveChoice(choice: ThemeChoice) {
   }
 }
 
+const DARK_QUERY = "(prefers-color-scheme: dark)";
+
+function subscribeSystemScheme(onChange: () => void) {
+  const query = matchMedia(DARK_QUERY);
+  query.addEventListener("change", onChange);
+  return () => query.removeEventListener("change", onChange);
+}
+
+const systemIsDark = () => matchMedia(DARK_QUERY).matches;
+
 export interface ThemePickerState extends ThemeChoice {
-  theme: GtkTheme;
+  /**
+   * The theme's stylesheet file and the CSS after it, for GtkProvider's
+   * cssHref and cssText. Unset while rendering the server HTML and hydrating
+   * it: the <head> script (themeScript()) has linked the saved theme then.
+   */
+  cssHref: string | undefined;
+  cssText: string | undefined;
   icons: IconMap;
   /** False while rendering the server HTML and hydrating it, true once the saved choice is in. */
   restored: boolean;
@@ -112,12 +89,15 @@ export interface ThemePickerState extends ThemeChoice {
   setFluentAccent: (c: string) => void;
   setFluentTitlebutton: (t: "circular" | "square") => void;
   setFluentWindow: (w: "default" | "round") => void;
+  /** Loads the stylesheets one click in the picker away, so switching to them doesn't wait. */
+  preloadOptions: () => void;
 }
 
 /**
  * The site's theme choice: one stylesheet themes a whole document, so every
  * preview on the site shares it (see ThemePickerProvider). It's saved, and
- * restored before the first paint after hydration.
+ * linked before the first paint by the <head> script; the providers take
+ * that stylesheet over once the saved choice is restored after hydration.
  */
 export function useThemePickerState(): ThemePickerState {
   // null until the saved choice is read: the server HTML has the defaults, and
@@ -140,25 +120,33 @@ export function useThemePickerState(): ThemePickerState {
         return next;
       });
 
-  const theme = useMemo((): GtkTheme => {
-    if (themeName === "adwaita")
-      return new AdwaitaTheme({ colorScheme, accentColor: adwaitaAccent });
-    if (themeName === "whitesur") return new WhiteSurTheme({ colorScheme });
-    if (themeName === "mactahoe") return new MacTahoeTheme({ colorScheme });
-    if (themeName === "fluent") {
-      return new FluentTheme({
-        colorScheme,
-        titlebutton: fluentTitlebutton,
-        window: fluentWindow,
-        accentColor: fluentAccent,
-      });
-    }
-    throw new Error(`Unknown theme: ${themeName satisfies never}`);
-  }, [themeName, colorScheme, adwaitaAccent, fluentAccent, fluentTitlebutton, fluentWindow]);
+  // An "auto" scheme follows the system's, like AdwStyleManager.
+  const dark = useSyncExternalStore(subscribeSystemScheme, systemIsDark, () => false);
+  const scheme = colorScheme === "auto" ? (dark ? "dark" : "light") : colorScheme;
+  const stylesheet = useMemo(
+    () =>
+      themeStylesheet(
+        { themeName, colorScheme, adwaitaAccent, fluentAccent, fluentTitlebutton, fluentWindow },
+        scheme,
+        BASE_PATH,
+      ),
+    [themeName, colorScheme, adwaitaAccent, fluentAccent, fluentTitlebutton, fluentWindow, scheme],
+  );
+
+  // An "auto" scheme switches to the other scheme's file when the system's
+  // changes: load it now, so the switch doesn't wait for it.
+  const otherHref =
+    saved && colorScheme === "auto"
+      ? themeStylesheet(choice, scheme === "dark" ? "light" : "dark", BASE_PATH).href
+      : null;
+  useEffect(() => {
+    if (otherHref) preload(otherHref, { as: "style" });
+  }, [otherHref]);
 
   return {
     ...choice,
-    theme,
+    cssHref: saved ? stylesheet.href : undefined,
+    cssText: saved ? stylesheet.css : undefined,
     icons: THEME_ICONS[themeName],
     restored: saved !== null,
     setThemeName: set("themeName"),
@@ -167,6 +155,26 @@ export function useThemePickerState(): ThemePickerState {
     setFluentAccent: set("fluentAccent"),
     setFluentTitlebutton: set("fluentTitlebutton"),
     setFluentWindow: set("fluentWindow"),
+    preloadOptions: () => {
+      const options: ThemeChoice[] = [
+        ...ALLOWED.themeName.map((name) => ({ ...choice, themeName: name })),
+        { ...choice, colorScheme: scheme === "dark" ? "light" : "dark" },
+      ];
+      if (themeName === "fluent") {
+        options.push(
+          {
+            ...choice,
+            fluentTitlebutton: choice.fluentTitlebutton === "square" ? "circular" : "square",
+          },
+          { ...choice, fluentWindow: choice.fluentWindow === "round" ? "default" : "round" },
+        );
+      }
+      for (const option of options) {
+        const optionScheme =
+          option.colorScheme === "auto" ? scheme : (option.colorScheme as "light" | "dark");
+        preload(themeStylesheet(option, optionScheme, BASE_PATH).href, { as: "style" });
+      }
+    },
   };
 }
 

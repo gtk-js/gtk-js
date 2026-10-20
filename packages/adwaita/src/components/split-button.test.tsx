@@ -4,7 +4,6 @@ import { GtkLabel, IconProvider } from "@gtk-js/gtk4";
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, test } from "vite-plus/test";
-import { stripMnemonic } from "../mnemonic.ts";
 import { AdwButtonContent } from "./button-content.tsx";
 import { AdwSplitButton, type AdwSplitButtonProps } from "./split-button.tsx";
 
@@ -64,8 +63,8 @@ describe("AdwSplitButton", () => {
     expect(classes(main)).toEqual(["gtk-button"]);
   });
 
-  test("useUnderline hides the mnemonic underscore", () => {
-    expect(render({ label: "_Save", useUnderline: true })).toContain(">Save<");
+  test("useUnderline makes the label a mnemonic one, its underscore hidden", () => {
+    expect(render({ label: "_Save", useUnderline: true })).toContain("<span>S</span>ave<");
     expect(render({ label: "_Save" })).toContain(">_Save<");
   });
 
@@ -99,13 +98,5 @@ describe("AdwSplitButton", () => {
     const { root, main } = nodes(render({ label: "Save", "aria-label": "Save file", id: "sb" }));
     expect(root).toContain('id="sb"');
     expect(main).toContain('aria-labelledby="sb"');
-  });
-});
-
-describe("stripMnemonic", () => {
-  test("drops mnemonic underscores and keeps doubled ones (strip_ulines())", () => {
-    expect(stripMnemonic("_Save")).toBe("Save");
-    expect(stripMnemonic("Save__As")).toBe("Save_As");
-    expect(stripMnemonic("Save_")).toBe("Save_");
   });
 });

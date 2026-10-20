@@ -8,7 +8,6 @@ import {
   GtkPopoverMenu,
   matchesAccelerator,
   parseAccelerator,
-  parseMnemonic,
 } from "./popover-menu.tsx";
 
 const key = (key: string, mods: Partial<KeyboardEvent> = {}) =>
@@ -52,10 +51,11 @@ describe("GtkPopoverMenu accelerators", () => {
 
 describe("GtkModelButton", () => {
   test("the label's mnemonic underscore isn't shown (gtk_label_set_text_with_mnemonic())", () => {
-    expect(parseMnemonic("_Quit")).toEqual({ before: "", mnemonic: "Q", after: "uit" });
-    expect(parseMnemonic("Save __As")).toEqual({ before: "Save _As", mnemonic: null, after: "" });
     const html = renderToStaticMarkup(<GtkModelButton label="_Quit" accel="<Control>q" />);
     expect(html.replace(/<[^>]+>/g, "")).toBe("QuitCtrl+Q");
+    // Like strip_ulines(): "__" is an underscore, and every "_x" drops its underscore.
+    const saveAs = renderToStaticMarkup(<GtkModelButton label="Save __As _Copy" />);
+    expect(saveAs.replace(/<[^>]+>/g, "")).toBe("Save _As Copy");
   });
 
   test("an insensitive item's label is insensitive too, so the theme dims it", () => {

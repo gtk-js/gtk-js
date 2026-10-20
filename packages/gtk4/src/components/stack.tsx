@@ -13,6 +13,9 @@ import React, {
   useRef,
   useState,
 } from "react";
+import { EASE_OUT_CUBIC, prefersReducedMotion } from "../animation.ts";
+import { noFocusOnClick } from "../focus-on-click.ts";
+import { FOCUSABLE } from "../focusable.ts";
 import {
   alignAttrs,
   type GtkAlignProps,
@@ -120,15 +123,10 @@ function stackTransition(
   const fromIndex = pages.findIndex((page) => page.name === from);
   const toIndex = pages.findIndex((page) => page.name === to);
   if (type === "none" || duration <= 0 || fromIndex < 0 || toIndex < 0) return null;
-  if (typeof matchMedia === "function" && matchMedia("(prefers-reduced-motion: reduce)").matches) {
-    return null;
-  }
+  if (prefersReducedMotion()) return null;
   const byOrder = BY_PAGE_ORDER[type];
   return { from: from!, type: byOrder ? byOrder[toIndex < fromIndex ? 0 : 1] : type };
 }
-
-/** ease-out-cubic, as gtk_progress_tracker_get_ease_out_cubic(). */
-const EASE_OUT_CUBIC = "cubic-bezier(0.215, 0.61, 0.355, 1)";
 
 interface TransitionFrames {
   easing: string;
@@ -210,8 +208,6 @@ function transitionFrames(type: GtkStackTransitionType, w: number, h: number): T
     }
   }
 }
-
-const FOCUSABLE = "a[href], button, input, select, textarea, [tabindex]";
 
 /** The first element Tab would focus in a page, like gtk_widget_child_focus(). */
 function firstFocusable(page: Element): HTMLElement | undefined {
@@ -472,7 +468,7 @@ export const GtkStackSwitcher = forwardRef<HTMLDivElement, GtkStackSwitcherProps
               // add_child(): the tabs expand and don't take the focus on click.
               hexpand
               vexpand
-              onMouseDown={(e) => e.preventDefault()}
+              {...noFocusOnClick()}
               active={isActive}
               // on_button_toggled(): the active tab can't be toggled off.
               onToggled={(active) => active && onPageChanged?.(page.name)}
