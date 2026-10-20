@@ -109,7 +109,10 @@ enum Command {
     CenterBoxToolbarVerticalStartEndTall,
     ExpanderDefault,
     ExpanderExpanded,
+    FlowBoxAligned,
     FlowBoxDefault,
+    FlowBoxHomogeneous,
+    FlowBoxSelected,
     FrameDefault,
     HeaderbarDefault,
     HeaderbarNarrowTitle,
@@ -383,7 +386,10 @@ impl Command {
             }
             Self::ExpanderDefault => Some("expander-default"),
             Self::ExpanderExpanded => Some("expander-expanded"),
+            Self::FlowBoxAligned => Some("flow-box-aligned"),
             Self::FlowBoxDefault => Some("flow-box-default"),
+            Self::FlowBoxHomogeneous => Some("flow-box-homogeneous"),
+            Self::FlowBoxSelected => Some("flow-box-selected"),
             Self::FrameDefault => Some("frame-default"),
             Self::HeaderbarDefault => Some("headerbar-default"),
             Self::HeaderbarNarrowTitle => Some("headerbar-narrow-title"),
@@ -737,7 +743,12 @@ fn create_widget_for_case(name: &str) -> Option<(gtk::Widget, bool)> {
         "dropdown-default" => widget_case!(cases::dropdown_default::DropdownDefault, true),
         "expander-default" => widget_case!(cases::expander_default::ExpanderDefault, false),
         "expander-expanded" => widget_case!(cases::expander_expanded::ExpanderExpanded, false),
+        "flow-box-aligned" => widget_case!(cases::flow_box_aligned::FlowBoxAligned, true),
         "flow-box-default" => widget_case!(cases::flow_box_default::FlowBoxDefault, false),
+        "flow-box-homogeneous" => {
+            widget_case!(cases::flow_box_homogeneous::FlowBoxHomogeneous, true)
+        }
+        "flow-box-selected" => widget_case!(cases::flow_box_selected::FlowBoxSelected, false),
         "frame-default" => widget_case!(cases::frame_default::FrameDefault, false),
         "headerbar-default" => {
             widget_case!(cases::headerbar_default::HeaderbarDefault, false)
@@ -1222,7 +1233,10 @@ fn is_known_case(name: &str) -> bool {
             | "dropdown-default"
             | "expander-default"
             | "expander-expanded"
+            | "flow-box-aligned"
             | "flow-box-default"
+            | "flow-box-homogeneous"
+            | "flow-box-selected"
             | "frame-default"
             | "frame-no-label"
             | "headerbar-default"
