@@ -1,9 +1,12 @@
-import { useIcon } from "@gtk-js/gtk4";
+import { GtkButton, useIcon } from "@gtk-js/gtk4";
 import { forwardRef, useState } from "react";
 import { AdwEntryRow, type AdwEntryRowProps } from "./entry-row.tsx";
 
 export interface AdwPasswordEntryRowProps
-  extends Omit<AdwEntryRowProps, "inputPurpose" | "visibility" | "editableSuffix"> {}
+  extends Omit<
+    AdwEntryRowProps,
+    "inputPurpose" | "visibility" | "indicator" | "indicatorTooltip"
+  > {}
 
 /**
  * AdwPasswordEntryRow — An AdwEntryRow tailored for entering secrets.
@@ -21,10 +24,7 @@ export const AdwPasswordEntryRow = forwardRef<HTMLDivElement, AdwPasswordEntryRo
   function AdwPasswordEntryRow({ suffixWidget, className, onEntryKeyDown, ...rest }, ref) {
     const [visible, setVisible] = useState(false);
     const [capsLock, setCapsLock] = useState(false);
-    const RevealIcon = useIcon("ViewReveal");
-    const ConcealIcon = useIcon("ViewConceal");
     const CapsLockIcon = useIcon("CapsLock");
-    const PeekIcon = visible ? ConcealIcon : RevealIcon;
 
     const classes = ["password"];
     if (className) classes.push(className);
@@ -39,34 +39,39 @@ export const AdwPasswordEntryRow = forwardRef<HTMLDivElement, AdwPasswordEntryRo
           setCapsLock(e.getModifierState("CapsLock"));
           onEntryKeyDown?.(e);
         }}
-        editableSuffix={
-          capsLock && !visible && CapsLockIcon ? (
-            <span className="gtk-image caps-lock-indicator">
-              <CapsLockIcon size={16} />
-            </span>
-          ) : undefined
-        }
+        // adw_entry_row_set_indicator_*(): the row shows it while editing.
+        indicator={capsLock && !visible && CapsLockIcon ? <CapsLockIcon size={16} /> : undefined}
+        indicatorTooltip="Caps Lock is on"
         suffixWidget={
           <>
-            {PeekIcon && (
-              <button
-                type="button"
-                className="gtk-button flat"
-                title={visible ? "Hide Text" : "Show Text"}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setVisible(!visible);
-                }}
-              >
-                <span className="gtk-image">
-                  <PeekIcon size={16} />
-                </span>
-              </button>
-            )}
+            {/* show_text_toggle in adw_password_entry_row_init(): a flat image
+                button that doesn't take the focus from the text when clicked. */}
+            <GtkButton
+              type="button"
+              iconName={visible ? "ViewConceal" : "ViewReveal"}
+              hasFrame={false}
+              valign="center"
+              tooltipText={visible ? "Hide Password" : "Show Password"}
+              onMouseDown={(e) => e.preventDefault()}
+              onClick={(e) => {
+                e.stopPropagation();
+                setVisible(!visible);
+              }}
+            />
             {suffixWidget}
           </>
         }
         {...rest}
+        // gdk_device_get_caps_lock_state(): browsers tell it with each key and
+        // press, so read it when the row is focused with either too.
+        onKeyUp={(e) => {
+          setCapsLock(e.getModifierState("CapsLock"));
+          rest.onKeyUp?.(e);
+        }}
+        onMouseDown={(e) => {
+          setCapsLock(e.getModifierState("CapsLock"));
+          rest.onMouseDown?.(e);
+        }}
       />
     );
   },

@@ -1,3 +1,4 @@
+use gtk::prelude::*;
 use relm4::adw;
 use relm4::prelude::*;
 
@@ -10,9 +11,8 @@ impl SimpleComponent for ToggleGroupHomogeneous {
     type Output = ();
 
     view! {
-        adw::ToggleGroup {
-            set_active: 1,
-            set_homogeneous: true,
+        gtk::Box {
+            set_orientation: gtk::Orientation::Vertical,
         }
     }
 
@@ -20,14 +20,18 @@ impl SimpleComponent for ToggleGroupHomogeneous {
         let model = Self;
         let widgets = view_output!();
 
-        let t1 = adw::Toggle::builder().name("a").label("Short").build();
-        root.add(t1);
-
-        let t2 = adw::Toggle::builder().name("b").label("Medium Text").build();
-        root.add(t2);
-
-        let t3 = adw::Toggle::builder().name("c").label("Long Label Here").build();
-        root.add(t3);
+        // At its natural size, as the web case: the window would stretch it, and
+        // without can-shrink so that it doesn't squeeze it into its ~350px either.
+        let group = adw::ToggleGroup::builder()
+            .halign(gtk::Align::Start)
+            .homogeneous(true)
+            .can_shrink(false)
+            .build();
+        group.add(adw::Toggle::builder().name("a").label("Short").build());
+        group.add(adw::Toggle::builder().name("b").label("Medium Text").build());
+        group.add(adw::Toggle::builder().name("c").label("Long Label Here").build());
+        group.set_active(1);
+        root.append(&group);
 
         ComponentParts { model, widgets }
     }

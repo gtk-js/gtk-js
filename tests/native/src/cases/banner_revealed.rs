@@ -1,4 +1,5 @@
 use relm4::adw;
+use relm4::adw::prelude::*;
 use relm4::prelude::*;
 
 pub struct BannerRevealed;
@@ -9,10 +10,15 @@ impl SimpleComponent for BannerRevealed {
     type Input = ();
     type Output = ();
 
+    // Start-aligned, the banner gets its natural height and the larger of its
+    // natural width and the width it requests.
     view! {
         adw::Banner {
             set_title: "This is a banner",
             set_revealed: true,
+            set_halign: gtk::Align::Start,
+            set_valign: gtk::Align::Start,
+            set_width_request: 200,
         }
     }
 
