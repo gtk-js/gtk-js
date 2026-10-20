@@ -1,36 +1,41 @@
-import { forwardRef, type HTMLAttributes, type ReactNode } from "react";
+import { GtkWindow, type GtkWindowProps } from "@gtk-js/gtk4";
+import { forwardRef, type ReactNode } from "react";
+import { type AdwBreakpoint, AdwBreakpointBin } from "./breakpoint-bin.tsx";
 
-export interface AdwWindowProps extends Omit<HTMLAttributes<HTMLDivElement>, "content"> {
+export interface AdwWindowProps extends Omit<GtkWindowProps, "titlebar" | "content"> {
+  /** The window's content (AdwWindow:content); `children` when not set. */
   content?: ReactNode;
+  /** The window's breakpoints (adw_window_add_breakpoint()); the last matching one wins. */
+  breakpoints?: AdwBreakpoint[];
 }
 
 /**
- * AdwWindow — An Adwaita-styled top-level window.
+ * AdwWindow — A freeform window.
  *
- * Extends GtkWindow with: dialog hosting, breakpoint system,
- * no traditional titlebar (managed by content).
+ * A GtkWindow (its title, window controls, maximized state, resize edges)
+ * without a titlebar: the content gets the whole window. Dialogs presented in
+ * it cover the window, and it applies breakpoints for its size.
  *
- * CSS node: window.background.csd (inherited from GtkWindow)
+ * CSS node:
+ *   window.background.csd
+ *     └── dialog-host
+ *           └── widget (AdwBreakpointBin)
+ *                 └── [content]
  *
  * @see https://gnome.pages.gitlab.gnome.org/libadwaita/doc/1-latest/class.Window.html
+ * @see upstream/libadwaita/src/adw-window.c — adw_window_init()
  */
 export const AdwWindow = forwardRef<HTMLDivElement, AdwWindowProps>(function AdwWindow(
-  { content, children, className, style, ...rest },
+  { content, breakpoints, children, ...rest },
   ref,
 ) {
-  const classes = ["gtk-window", "background", "csd"];
-  if (className) classes.push(className);
-
   return (
-    <div ref={ref} className={classes.join(" ")} style={style} {...rest}>
-      <div className="gtk-dialog-host">
-        <div
-          className="gtk-breakpointbin"
-          style={{ display: "flex", flexDirection: "column", flex: 1 }}
-        >
+    <GtkWindow ref={ref} {...rest}>
+      <div className="gtk-dialog-host gtk-bin-layout">
+        <AdwBreakpointBin className="gtk-bin-layout" breakpoints={breakpoints}>
           {content ?? children}
-        </div>
+        </AdwBreakpointBin>
       </div>
-    </div>
+    </GtkWindow>
   );
 });
