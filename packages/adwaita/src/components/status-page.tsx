@@ -46,7 +46,7 @@ export const AdwStatusPage = forwardRef<HTMLDivElement, AdwStatusPageProps>(func
       className={classes.join(" ")}
       {...rest}
     >
-      <GtkScrolledWindow hscrollbarPolicy="never" style={{ height: "100%" }}>
+      <GtkScrolledWindow hscrollbarPolicy="never" propagateNaturalHeight style={{ height: "100%" }}>
         <div
           className="gtk-viewport"
           style={{ minHeight: "100%", display: "flex", flexDirection: "column" }}

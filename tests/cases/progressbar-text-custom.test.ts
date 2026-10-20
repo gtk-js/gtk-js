@@ -1,4 +1,5 @@
 import { expect } from "vite-plus/test";
+import { gtkAssert } from "../assert";
 import { compare, findChild, gtkTest } from "../harness";
 
 gtkTest("progressbar-text-custom", (native, web) => {
@@ -14,4 +15,11 @@ gtkTest("progressbar-text-custom", (native, web) => {
   const nativeTrough = findChild(native, "trough");
   const webTrough = findChild(web, "trough");
   expect(compare(nativeTrough, webTrough).failures).toEqual([]);
+
+  // The text node is dimmed (_progress-bar.scss) and one whole-pixel line tall.
+  const nativeText = findChild(native, "text");
+  const webText = findChild(web, "text");
+  expect(compare(nativeText, webText).failures).toEqual([]);
+  gtkAssert.numbersEqual(nativeText.height, webText.height, "text height");
+  gtkAssert.numbersEqual(nativeText.x ?? 0, webText.x ?? 0, "text x");
 });

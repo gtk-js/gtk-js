@@ -17,7 +17,9 @@ export function Preview({ source, children }: PreviewProps) {
   const [tab, setTab] = useState<"preview" | "code">("preview");
 
   return (
-    <div className="my-4 rounded-lg overflow-hidden border border-fd-border">
+    // not-prose: the docs body's typography styles (link underline offset and
+    // hover fade, margins on p/ul/li, code backticks) must not reach the widgets.
+    <div className="not-prose my-4 rounded-lg overflow-hidden border border-fd-border">
       <GtkProvider theme={state.theme} icons={state.icons}>
         {/* Tab bar */}
         <div
@@ -46,7 +48,10 @@ export function Preview({ source, children }: PreviewProps) {
 
         {/* Content */}
         {tab === "preview" ? (
+          // .background paints the window colors behind the example, as the
+          // GtkWindow it would live in does (_common.scss).
           <div
+            className="background"
             style={{
               padding: 24,
               display: "flex",
