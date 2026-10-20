@@ -42,3 +42,12 @@ The provider:
 - Injects layout CSS (flexbox/grid classes for GTK layout managers)
 - Provides icon context (widgets load icons from the provider's icon set)
 - Provides theme context (accent color, color scheme, high contrast)
+- Hides its content until it's ready (see below)
+
+### Server rendering
+
+With React 19, the provider renders the reset, layout and theme CSS into server-rendered or static HTML (as hoisted `<style>` elements, once per page), so the content is styled from its first paint; on hydration the provider takes those elements over. React 18 can't hoist them, so there the CSS is injected from JavaScript.
+
+Part of GTK's layout (computed expand) runs in JavaScript too, so the provider keeps server-rendered content laid out but invisible (`visibility: hidden`, `aria-busy`) until it has hydrated, and reveals it before the next paint. With the CSS in the HTML, the hidden content already has its final size. A client-only render is ready before its first paint, so it's never hidden; only a `cssHref` stylesheet that's still loading holds it back (for up to 3 seconds). With JavaScript disabled, a `<noscript>` style shows the content as is.
+
+To paint server-rendered content right away instead, pass `hideUntilReady={false}`.

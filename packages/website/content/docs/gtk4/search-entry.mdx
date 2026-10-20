@@ -30,8 +30,10 @@ entry.search
 ## Keyboard
 
 - **Enter** — fires `onActivate`
-- **Escape** — fires `onStopSearch`
-- **Ctrl+G** — fires `onNextMatch`
-- **Ctrl+Shift+G** — fires `onPreviousMatch`
+- **Escape** — fires `onStopSearch` (and hides a surrounding `GtkSearchBar`)
+- **Ctrl+G** (⌘G on macOS) — fires `onNextMatch`
+- **Ctrl+Shift+G** (⇧⌘G on macOS) — fires `onPreviousMatch`
+
+Emptying the entry fires `onSearchChanged("")` at once; other changes wait `searchDelay` ms. The clear icon empties it through `onChanged`.
 
 [GTK4 Documentation →](https://docs.gtk.org/gtk4/class.SearchEntry.html)

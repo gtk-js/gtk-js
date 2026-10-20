@@ -25,13 +25,11 @@ gtkTest("center-box-toolbar-vertical-start-end-tall", (native, web) => {
   const placement = (box: WidgetSnapshot, isWeb: boolean) => {
     const size = content(box, isWeb);
     const [start, end] = children(box);
-    // The web's slots hold the labels.
-    const label = (slot: WidgetSnapshot) => (isWeb ? slot.children![0]! : slot);
     return {
       startTop: start!.y ?? Number.NaN,
       endBottom: size.height - ((end!.y ?? Number.NaN) + end!.height),
-      startFill: size.width - label(start!).width,
-      endFill: size.width - label(end!).width,
+      startFill: size.width - start!.width,
+      endFill: size.width - end!.width,
     };
   };
   const n = placement(native, false);

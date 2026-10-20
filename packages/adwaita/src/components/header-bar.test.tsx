@@ -48,3 +48,17 @@ test("a title widget replaces the title, and a header bar elsewhere shows none",
   expect(titles(render(<AdwHeaderBar titleWidget={<span>Custom</span>} />))).toEqual([]);
   expect(render(<AdwHeaderBar />)).not.toContain('class="gtk-label title"');
 });
+
+test("an empty start or end box is hidden, theme margin and all, like update_box_visibility()", () => {
+  const boxes = (html: string) =>
+    [...html.matchAll(/horizontal (start|end) gtk-center-layout/g)].map((m) => m[1]);
+  // The default decoration layout puts no buttons at the start.
+  expect(boxes(render(<AdwHeaderBar showBackButton={false} />))).toEqual(["end"]);
+  expect(
+    boxes(render(<AdwHeaderBar showEndTitleButtons={false} start={<span>Start</span>} />)),
+  ).toEqual(["start"]);
+  expect(
+    boxes(render(<AdwHeaderBar showStartTitleButtons={false} showEndTitleButtons={false} />)),
+  ).toEqual([]);
+  expect(boxes(render(<AdwHeaderBar decorationLayout="close:" />))).toEqual(["start"]);
+});
