@@ -18,12 +18,27 @@ list[.separators][.boxed-list][.navigation-sidebar][.rich-list]
   └── row[.activatable] (per child)
 ```
 
+A child that isn't a row (a `GtkListBoxRow`, or a component that renders one, like `AdwActionRow`) is put in a `GtkListBoxRow`. A row is `.activatable` when it's activatable or the list can select it.
+
 ## Props
 
 <AutoTypeTable
   path="../gtk4/src/components/list-box.tsx"
   name="GtkListBoxProps"
 />
+
+### GtkListBoxRow
+
+<AutoTypeTable
+  path="../gtk4/src/components/list-box.tsx"
+  name="GtkListBoxRowProps"
+/>
+
+## Behavior
+
+- A click selects a row and activates it. With `activateOnSingleClick={false}`, a click selects it (Ctrl toggles, Shift selects a range) and a double click activates it. Clicks on buttons, entries and other controls in a row are theirs alone.
+- The arrows, Home, End, Page Up and Page Down move between rows and select the new one (Shift selects a range, Ctrl only moves). Enter and Space activate a row, Ctrl+Space toggles its selection, Ctrl+A selects every row in `multiple` mode, and Shift+Ctrl+A unselects them.
+- Tab enters the list at its selected row, and moving between rows with Tab selects them.
 
 ## Style Classes
 

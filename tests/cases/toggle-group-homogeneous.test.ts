@@ -1,5 +1,12 @@
 import { expect } from "vite-plus/test";
-import { compare, gtkTest } from "../harness";
+import { gtkAssert } from "../assert";
+import { compare, gtkTest, type WidgetSnapshot } from "../harness";
+
+// Native sizes are content sizes, web ones border-box sizes.
+const outerWidth = (s: WidgetSnapshot) =>
+  s.width + s.padding.left + s.padding.right + s.border_widths.left + s.border_widths.right;
+const outerHeight = (s: WidgetSnapshot) =>
+  s.height + s.padding.top + s.padding.bottom + s.border_widths.top + s.border_widths.bottom;
 
 // Filtered: font_weight, shadows — inner toggle child bleed.
 //
@@ -15,4 +22,25 @@ gtkTest("toggle-group-homogeneous", (native, web) => {
   expect(
     failures.filter((f) => f.property !== "font_weight" && !f.property.startsWith("shadows")),
   ).toEqual([]);
+
+  // A size group makes every toggle as large as the largest one, on one line
+  // (adw_toggle_group_set_homogeneous()).
+  const toggles = (s: WidgetSnapshot) => s.children!.filter((c) => c.css_name === "toggle");
+  const [first] = toggles(web);
+  toggles(native).forEach((n, i) => {
+    const w = toggles(web)[i]!;
+    gtkAssert.numbersEqual(first!.width, w.width, `toggle ${i} width, web`);
+    gtkAssert.numbersClose(
+      outerWidth(n),
+      w.width,
+      {
+        tolerance: 6,
+        reason:
+          "text widths: GTK rounds labels up to whole pixels, and Firefox measures bold text up to ~5px off Pango",
+      },
+      `toggle ${i} width`,
+    );
+    gtkAssert.numbersEqual(outerHeight(n), w.height, `toggle ${i} height`);
+  });
+  gtkAssert.numbersEqual(outerHeight(native), web.height, "height");
 });
