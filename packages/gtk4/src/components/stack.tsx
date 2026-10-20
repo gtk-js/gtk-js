@@ -13,6 +13,7 @@ import React, {
   useRef,
   useState,
 } from "react";
+import { prefersReducedMotion } from "../animation.ts";
 import { FOCUSABLE } from "../focusable.ts";
 import {
   alignAttrs,
@@ -121,9 +122,7 @@ function stackTransition(
   const fromIndex = pages.findIndex((page) => page.name === from);
   const toIndex = pages.findIndex((page) => page.name === to);
   if (type === "none" || duration <= 0 || fromIndex < 0 || toIndex < 0) return null;
-  if (typeof matchMedia === "function" && matchMedia("(prefers-reduced-motion: reduce)").matches) {
-    return null;
-  }
+  if (prefersReducedMotion()) return null;
   const byOrder = BY_PAGE_ORDER[type];
   return { from: from!, type: byOrder ? byOrder[toIndex < fromIndex ? 0 : 1] : type };
 }

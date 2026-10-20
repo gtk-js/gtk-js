@@ -1,4 +1,4 @@
-import { GtkButton, GtkLabel } from "@gtk-js/gtk4";
+import { GtkButton, GtkLabel, prefersReducedMotion } from "@gtk-js/gtk4";
 import React, {
   forwardRef,
   type HTMLAttributes,
@@ -10,7 +10,7 @@ import React, {
   useState,
 } from "react";
 import { ADW_EASE_CSS, adwEase, easeOutCubic, lerp } from "../easing.ts";
-import { animationSlowdown, prefersReducedMotion } from "../spring.ts";
+import { animationSlowdown } from "../spring.ts";
 import type { AdwToastPriority } from "../types.ts";
 
 export interface AdwToast {

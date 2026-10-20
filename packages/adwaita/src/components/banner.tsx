@@ -1,4 +1,4 @@
-import { GtkButton, GtkLabel } from "@gtk-js/gtk4";
+import { GtkButton, GtkLabel, prefersReducedMotion } from "@gtk-js/gtk4";
 import {
   type CSSProperties,
   forwardRef,
@@ -9,7 +9,7 @@ import {
   useRef,
   useState,
 } from "react";
-import { animationSlowdown, prefersReducedMotion } from "../spring.ts";
+import { animationSlowdown } from "../spring.ts";
 
 export interface AdwBannerProps extends HTMLAttributes<HTMLDivElement> {
   /** Banner title text. */

@@ -10,6 +10,8 @@
  * @see upstream/libadwaita/src/adw-spring-params.c
  */
 
+import { prefersReducedMotion } from "@gtk-js/gtk4";
+
 export interface SpringParams {
   /** Damping ratio: 1 = critically damped, < 1 underdamped (bouncy), > 1 overdamped. */
   dampingRatio: number;
@@ -167,15 +169,6 @@ export function setAnimationSlowdown(factor: number): void {
 /** The factor set by {@link setAnimationSlowdown}. */
 export function animationSlowdown(): number {
   return slowdown;
-}
-
-/** Whether the user asked for reduced motion (GTK's `gtk-enable-animations`). */
-export function prefersReducedMotion(): boolean {
-  return (
-    typeof window !== "undefined" &&
-    typeof window.matchMedia === "function" &&
-    window.matchMedia("(prefers-reduced-motion: reduce)").matches
-  );
 }
 
 export interface SpringAnimationHandle {
