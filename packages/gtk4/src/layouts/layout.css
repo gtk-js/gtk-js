@@ -737,6 +737,17 @@
   justify-content: center;
 }
 
+/* === AdwOverlaySplitView === */
+/* The sidebar pane (the view's last child) is never narrower than
+ * min-sidebar-width or its child's minimum width (get_sidebar_width()): with
+ * a spacer of the former in its cell, its min-content width is the larger of
+ * the two, which the pane's `min-width: min-content` keeps. */
+.gtk-overlay-split-view > .gtk-widget:last-child::before {
+  content: "";
+  grid-area: 1 / 1;
+  width: var(--gtk-min-sidebar-width, 0px);
+}
+
 /* === Scale (GtkRange / GtkScale) === */
 /* GtkProgressBar: a vertical box layout whatever its orientation, with the
  * text above the trough. A horizontal bar's trough fills the width, a vertical
