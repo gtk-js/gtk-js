@@ -1,4 +1,4 @@
-import { type GtkOrientation, useIcon } from "@gtk-js/gtk4";
+import { type GtkOrientation, tooltipAttrs, useIcon } from "@gtk-js/gtk4";
 import React, { forwardRef, type HTMLAttributes, type ReactNode } from "react";
 
 export interface AdwToggle {
@@ -87,7 +87,7 @@ export const AdwToggleGroup = forwardRef<HTMLDivElement, AdwToggleGroupProps>(
                 aria-checked={isActive}
                 data-checked={isActive || undefined}
                 disabled={toggle.enabled === false}
-                title={toggle.tooltip}
+                {...tooltipAttrs(toggle.tooltip)}
                 style={homogeneous ? { flex: 1 } : undefined}
                 onClick={() => onToggleChanged?.(i, toggle.name)}
               >
