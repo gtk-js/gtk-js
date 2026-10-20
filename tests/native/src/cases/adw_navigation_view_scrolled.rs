@@ -27,8 +27,7 @@ impl SimpleComponent for AdwNavigationViewScrolled {
         for i in 1..=12 {
             rows.append(&gtk::Label::new(Some(&format!("Row {i}"))));
         }
-        // It fills the box, as a page's scrolled window does. (gtk-js's fills
-        // it by shrinking from its content's height.)
+        // It fills the box, as a page's scrolled window does.
         let scrolled = gtk::ScrolledWindow::builder()
             .child(&rows)
             .vexpand(true)

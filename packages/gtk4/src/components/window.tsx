@@ -2,6 +2,7 @@ import {
   type CSSProperties,
   forwardRef,
   type HTMLAttributes,
+  type PointerEvent,
   type ReactNode,
   useCallback,
   useEffect,
@@ -17,10 +18,20 @@ import {
   WindowElementContext,
 } from "../window-controls-context.tsx";
 
-export interface GtkWindowProps extends HTMLAttributes<HTMLDivElement>, GtkAlignProps {
+export interface GtkWindowProps
+  extends Omit<HTMLAttributes<HTMLDivElement>, "title" | "onDrag">,
+    GtkAlignProps {
+  /**
+   * The window's title. Header bars without a title widget show it; it isn't
+   * a tooltip.
+   */
+  title?: string;
   /** The titlebar widget (typically a GtkHeaderBar). */
   titlebar?: ReactNode;
-  /** Main content of the window. */
+  /**
+   * The window's child. It gets the whole area below the titlebar, where its
+   * halign/valign place it (a window has one child: use a box for several).
+   */
   children?: ReactNode;
   /**
    * Whether the window is maximized.
@@ -30,27 +41,46 @@ export interface GtkWindowProps extends HTMLAttributes<HTMLDivElement>, GtkAlign
    */
   maximized?: boolean;
   /**
+   * Whether the window is fullscreen: the .fullscreen class, no rounded
+   * corners, shadow or resize handles.
+   */
+  fullscreen?: boolean;
+  /**
+   * Whether the window is tiled (snapped to a screen edge): the .tiled class,
+   * square corners and no resize handles.
+   */
+  tiled?: boolean;
+  /**
    * Whether to allocate space around the window for CSD box-shadow, and
-   * render client-side resize handles on the visible window edges.
+   * render client-side resize handles in it, just outside the window's edges.
    *
    * In native GTK, the window manager allocates extra surface space for
    * shadows and uses the shadow region as the resize handle area. In
    * Tauri/Electron, the OS window boundary determines resize handles,
-   * so this prop adds padding for the shadow AND renders invisible
-   * resize handles at the visible window edges that call `onResize`.
+   * so this prop adds padding for the shadow (at least 12px) AND renders
+   * invisible resize handles in its 12px next to the window's edges (and in
+   * its rounded corners) that call `onResize`.
    *
-   * When maximized, shadow padding and resize handles are removed.
+   * When maximized or fullscreen, shadow padding and resize handles are
+   * removed; when tiled, the resize handles.
    * @default false
    */
   allocateShadow?: boolean;
-  /** Called when the close button is clicked. */
+  /** Called when a close button is clicked (the window.close action). */
   onClose?: () => void;
-  /** Called when the minimize button is clicked. */
+  /** Called when a minimize button is clicked (the window.minimize action). */
   onMinimize?: () => void;
-  /** Called when the maximize button is clicked. */
+  /**
+   * Called when a maximize/restore button is clicked or a title bar is
+   * double-clicked (the window.toggle-maximized action).
+   */
   onMaximize?: () => void;
-  /** Called when the titlebar is dragged (for window move). */
-  onDrag?: () => void;
+  /**
+   * Called when a press on a title bar (a window handle) is dragged past the
+   * drag threshold, with that pointer move, to start moving the window (e.g.
+   * Tauri's `startDragging()`).
+   */
+  onDrag?: (event: PointerEvent<HTMLDivElement>) => void;
   /**
    * Make window handles (header bars) draggable regions, for hosts that move
    * frameless windows through CSS `app-region` (Electron, installed web apps
@@ -103,6 +133,9 @@ function measureShadowExtent(el: HTMLElement): number {
 /** Resize handle size in px — matches GTK's RESIZE_HANDLE_SIZE (12px). */
 const HANDLE_SIZE = 12;
 
+/** How far corner handles reach along each edge — RESIZE_HANDLE_CORNER_SIZE. */
+const HANDLE_CORNER_SIZE = 24;
+
 type ResizeDirection =
   | "North"
   | "South"
@@ -113,90 +146,39 @@ type ResizeDirection =
   | "SouthEast"
   | "SouthWest";
 
-const HANDLE_EDGES: { direction: ResizeDirection; style: CSSProperties }[] = [
-  // Edges
-  {
-    direction: "North",
-    style: {
-      top: -HANDLE_SIZE / 2,
-      left: HANDLE_SIZE,
-      right: HANDLE_SIZE,
-      height: HANDLE_SIZE,
-      cursor: "n-resize",
-    },
-  },
-  {
-    direction: "South",
-    style: {
-      bottom: -HANDLE_SIZE / 2,
-      left: HANDLE_SIZE,
-      right: HANDLE_SIZE,
-      height: HANDLE_SIZE,
-      cursor: "s-resize",
-    },
-  },
-  {
-    direction: "West",
-    style: {
-      left: -HANDLE_SIZE / 2,
-      top: HANDLE_SIZE,
-      bottom: HANDLE_SIZE,
-      width: HANDLE_SIZE,
-      cursor: "w-resize",
-    },
-  },
-  {
-    direction: "East",
-    style: {
-      right: -HANDLE_SIZE / 2,
-      top: HANDLE_SIZE,
-      bottom: HANDLE_SIZE,
-      width: HANDLE_SIZE,
-      cursor: "e-resize",
-    },
-  },
-  // Corners
-  {
-    direction: "NorthWest",
-    style: {
-      top: -HANDLE_SIZE / 2,
-      left: -HANDLE_SIZE / 2,
-      width: HANDLE_SIZE * 2,
-      height: HANDLE_SIZE * 2,
-      cursor: "nw-resize",
-    },
-  },
-  {
-    direction: "NorthEast",
-    style: {
-      top: -HANDLE_SIZE / 2,
-      right: -HANDLE_SIZE / 2,
-      width: HANDLE_SIZE * 2,
-      height: HANDLE_SIZE * 2,
-      cursor: "ne-resize",
-    },
-  },
-  {
-    direction: "SouthWest",
-    style: {
-      bottom: -HANDLE_SIZE / 2,
-      left: -HANDLE_SIZE / 2,
-      width: HANDLE_SIZE * 2,
-      height: HANDLE_SIZE * 2,
-      cursor: "sw-resize",
-    },
-  },
-  {
-    direction: "SouthEast",
-    style: {
-      bottom: -HANDLE_SIZE / 2,
-      right: -HANDLE_SIZE / 2,
-      width: HANDLE_SIZE * 2,
-      height: HANDLE_SIZE * 2,
-      cursor: "se-resize",
-    },
-  },
-];
+const RESIZE_CURSORS: Record<ResizeDirection, string> = {
+  North: "n-resize",
+  South: "s-resize",
+  East: "e-resize",
+  West: "w-resize",
+  NorthEast: "ne-resize",
+  NorthWest: "nw-resize",
+  SouthEast: "se-resize",
+  SouthWest: "sw-resize",
+};
+
+/**
+ * The resize handles around a window `inset` px inside its shadow allocation,
+ * like get_edge_for_coordinates(): edges are HANDLE_SIZE px outside the
+ * window's box (the input region past it), corners reach `corner` px along
+ * each edge. Corner handles also cover the window's corners, under it, so
+ * they're hit only where its rounded corners leave them uncovered.
+ */
+function resizeHandles(inset: number, corner: number): [ResizeDirection, CSSProperties][] {
+  const out = inset - HANDLE_SIZE;
+  const along = inset + corner;
+  const square = HANDLE_SIZE + corner;
+  return [
+    ["North", { top: out, left: along, right: along, height: HANDLE_SIZE }],
+    ["South", { bottom: out, left: along, right: along, height: HANDLE_SIZE }],
+    ["West", { left: out, top: along, bottom: along, width: HANDLE_SIZE }],
+    ["East", { right: out, top: along, bottom: along, width: HANDLE_SIZE }],
+    ["NorthWest", { top: out, left: out, width: square, height: square }],
+    ["NorthEast", { top: out, right: out, width: square, height: square }],
+    ["SouthWest", { bottom: out, left: out, width: square, height: square }],
+    ["SouthEast", { bottom: out, right: out, width: square, height: square }],
+  ];
+}
 
 /**
  * GtkWindow — A top-level window.
@@ -207,8 +189,8 @@ const HANDLE_EDGES: { direction: ResizeDirection; style: CSSProperties }[] = [
  *
  * Use `allocateShadow` to automatically:
  * 1. Add padding around the window for the CSD box-shadow (measured from CSS)
- * 2. Render invisible resize handles at the visible window edges
- * 3. Remove both when maximized
+ * 2. Render invisible resize handles in that shadow, around the window's edges
+ * 3. Remove both when maximized or fullscreen (and the handles when tiled)
  *
  * The resize handles call `onResize(direction)` which should invoke
  * Tauri's `startResizeDragging(direction)`.
@@ -225,7 +207,10 @@ export const GtkWindow = forwardRef<HTMLDivElement, GtkWindowProps>(function Gtk
     vexpand,
     className,
     style,
+    title,
     maximized,
+    fullscreen,
+    tiled,
     allocateShadow = false,
     onClose,
     onMinimize,
@@ -239,16 +224,27 @@ export const GtkWindow = forwardRef<HTMLDivElement, GtkWindowProps>(function Gtk
   ref,
 ) {
   const classes = ["gtk-window", "background", "csd"];
+  // update_window_style_classes()
   if (maximized) classes.push("maximized");
+  if (fullscreen) classes.push("fullscreen");
+  if (tiled) classes.push("tiled");
   if (className) classes.push(className);
 
   const windowControls = useMemo<WindowControlsAPI>(
-    () => ({ close: onClose, minimize: onMinimize, maximize: onMaximize, drag: onDrag }),
-    [onClose, onMinimize, onMaximize, onDrag],
+    () => ({
+      close: onClose,
+      minimize: onMinimize,
+      maximize: onMaximize,
+      drag: onDrag,
+      maximized: !!maximized,
+      title,
+    }),
+    [onClose, onMinimize, onMaximize, onDrag, maximized, title],
   );
 
   const windowRef = useRef<HTMLDivElement>(null);
   const [shadowPadding, setShadowPadding] = useState(0);
+  const [cornerSize, setCornerSize] = useState(HANDLE_CORNER_SIZE);
   const [windowElement, setWindowElement] = useState<HTMLDivElement | null>(null);
 
   // Report changes of the shadow width only, whatever the callback's identity.
@@ -269,7 +265,8 @@ export const GtkWindow = forwardRef<HTMLDivElement, GtkWindowProps>(function Gtk
   );
 
   useLayoutEffect(() => {
-    if (!allocateShadow || maximized) {
+    // get_shadow_width(): none when maximized or fullscreen.
+    if (!allocateShadow || maximized || fullscreen) {
       setShadowPadding(0);
       return;
     }
@@ -278,8 +275,20 @@ export const GtkWindow = forwardRef<HTMLDivElement, GtkWindowProps>(function Gtk
 
     let frame = 0;
     const updateShadowPadding = () => {
-      const extent = measureShadowExtent(el);
+      // At least RESIZE_HANDLE_SIZE, room for the resize handles.
+      const extent = Math.max(measureShadowExtent(el), HANDLE_SIZE);
       setShadowPadding((current) => (current === extent ? current : extent));
+      // Corner handles reach at least as far as the window's corner radius.
+      const cs = getComputedStyle(el);
+      const radius = Math.max(
+        ...[
+          cs.borderTopLeftRadius,
+          cs.borderTopRightRadius,
+          cs.borderBottomRightRadius,
+          cs.borderBottomLeftRadius,
+        ].map((r) => parseFloat(r) || 0),
+      );
+      setCornerSize(Math.max(HANDLE_CORNER_SIZE, Math.ceil(radius)));
     };
 
     updateShadowPadding();
@@ -344,9 +353,11 @@ export const GtkWindow = forwardRef<HTMLDivElement, GtkWindowProps>(function Gtk
       if (themeNode.tagName === "LINK") themeNode.removeEventListener("load", scheduleUpdate);
       if (frame) window.cancelAnimationFrame(frame);
     };
-  }, [allocateShadow, maximized]);
+  }, [allocateShadow, maximized, fullscreen, tiled]);
 
-  const showHandles = allocateShadow && !maximized && !!onResize;
+  // get_edge_for_coordinates(): no resize edges when maximized, fullscreen or
+  // tiled.
+  const showHandles = allocateShadow && !maximized && !fullscreen && !tiled && !!onResize;
 
   const windowNode = (
     <div
@@ -360,21 +371,11 @@ export const GtkWindow = forwardRef<HTMLDivElement, GtkWindowProps>(function Gtk
       {...rest}
     >
       {titlebar && <div className="titlebar">{titlebar}</div>}
-      <div className="gtk-box gtk-box-layout vertical" style={{ flex: 1, minHeight: 0 }}>
+      {/* The child gets the whole area below the titlebar, placed by its
+          halign/valign (_gtk_window_set_allocation()). */}
+      <div className="gtk-bin-layout" style={{ flex: 1, minHeight: 0 }}>
         {children}
       </div>
-      {showHandles &&
-        HANDLE_EDGES.map(({ direction, style: handleStyle }) => (
-          <div
-            key={direction}
-            onPointerDown={() => onResize?.(direction)}
-            style={{
-              position: "absolute",
-              ...handleStyle,
-              zIndex: 9999,
-            }}
-          />
-        ))}
     </div>
   );
 
@@ -398,8 +399,20 @@ export const GtkWindow = forwardRef<HTMLDivElement, GtkWindowProps>(function Gtk
           width: "100%",
           height: "100%",
           boxSizing: "border-box",
+          position: "relative",
         }}
       >
+        {/* In the shadow around the window, painted under it. */}
+        {showHandles &&
+          resizeHandles(shadowPadding, cornerSize).map(([direction, handleStyle]) => (
+            <div
+              key={direction}
+              onPointerDown={(e) => {
+                if (e.button === 0) onResize?.(direction);
+              }}
+              style={{ position: "absolute", cursor: RESIZE_CURSORS[direction], ...handleStyle }}
+            />
+          ))}
         <WindowElementContext.Provider value={windowElement}>
           {windowNode}
         </WindowElementContext.Provider>

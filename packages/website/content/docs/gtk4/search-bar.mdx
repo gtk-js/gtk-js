@@ -18,7 +18,7 @@ searchbar
   └── revealer
       └── box
           ├── [child]
-          └── [button.close]
+          └── [button.image-button.close]
 ```
 
 ## Props
@@ -30,7 +30,8 @@ searchbar
 
 ## Behavior
 
-- Hidden when `searchModeEnabled` is false.
-- Typically contains a `GtkSearchEntry` as its child.
+- Slides in when `searchModeEnabled` turns true and focuses its `GtkSearchEntry`; hiding it clears the entry.
+- Escape in the entry and the close button hide it (`onSearchModeChanged(false)`). Without `searchModeEnabled` the bar keeps its own state.
+- With `keyCaptureRef`, typing a printable key elsewhere in that element reveals the bar and types the key into the entry.
 
 [GTK4 Documentation →](https://docs.gtk.org/gtk4/class.SearchBar.html)
