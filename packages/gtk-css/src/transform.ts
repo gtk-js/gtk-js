@@ -488,12 +488,13 @@ const handleGtkProperties: Plugin = {
       case "-gtk-icon-source": {
         // A theme's own symbolic image, recolored to the node's color, like a
         // check's mark: kept for layout.css to paint (see --gtk-icon-source
-        // there). Icon theme icons, -gtk-icontheme(), come from the
+        // there), as -gtk-scaled(url(…), …) when the theme has one per scale
+        // (WhiteSur's). Icon theme icons, -gtk-icontheme(), come from the
         // components' icon set instead.
-        const url = recoloredImageUrl(decl.value);
-        if (url || decl.value.trim() === "none") {
+        const image = recoloredImage(decl.value);
+        if (image || decl.value.trim() === "none") {
           decl.prop = "--gtk-icon-source";
-          decl.value = url ?? "none";
+          decl.value = image ?? "none";
         } else {
           decl.remove();
         }
@@ -518,9 +519,19 @@ const handleGtkProperties: Plugin = {
   },
 };
 
-/** The url() of `-gtk-recolor(url(…))`, a symbolic image in the node's colors; null otherwise. */
-function recoloredImageUrl(value: string): string | null {
-  return value.trim().match(/^-gtk-recolor\(\s*(url\([^()]*\))\s*\)$/)?.[1] ?? null;
+/**
+ * The url() of `-gtk-recolor(url(…))`, a symbolic image in the node's colors,
+ * or `-gtk-scaled(url(…), …)` for a -gtk-scaled() of those; null otherwise.
+ */
+function recoloredImage(value: string): string | null {
+  const recolored = /-gtk-recolor\(\s*(url\([^()]*\))\s*\)/g;
+  const unwrapped = value.trim().replace(recolored, "$1");
+  if (unwrapped === value.trim()) return null;
+  return /^(url\([^()]*\)|-gtk-scaled\(\s*url\([^()]*\)(\s*,\s*url\([^()]*\))*\s*\))$/.test(
+    unwrapped,
+  )
+    ? unwrapped
+    : null;
 }
 
 /**

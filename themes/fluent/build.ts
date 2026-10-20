@@ -1,11 +1,21 @@
 import { compileGtkCSS } from "@gtk-js/gtk-css/compile";
-import { mkdirSync, unlinkSync, writeFileSync } from "fs";
+import { mkdirSync, readdirSync, unlinkSync, writeFileSync } from "fs";
 
 const upstreamDir = new URL("../../upstream/fluent-gtk-theme/src", import.meta.url).pathname;
 const outDir = new URL("dist/", import.meta.url).pathname;
 mkdirSync(outDir, { recursive: true });
 
 const sassDir = `${upstreamDir}/_sass`;
+
+// The url()s are relative to gtk-4.0/, where install.sh copies gtk/assets as
+// assets/ and gtk/scalable into it as assets/scalable/.
+const assetMap = new Map<string, string>();
+for (const [dir, prefix] of [
+  [`${upstreamDir}/gtk/assets`, "assets/"],
+  [`${upstreamDir}/gtk/scalable`, "assets/scalable/"],
+]) {
+  for (const name of readdirSync(dir)) assetMap.set(prefix + name, `${dir}/${name}`);
+}
 
 const schemes = ["light", "dark"] as const;
 const titlebuttons = ["circular", "square"] as const;
@@ -57,7 +67,7 @@ $titlebutton: '${titlebutton}';
       writeFileSync(`${sassDir}/_tweaks-temp.scss`, tweaksTempContent);
 
       try {
-        let css = await compileGtkCSS(scssEntry, { scheme });
+        let css = await compileGtkCSS(scssEntry, { scheme, assetMap });
         css = replaceAccentWithVar(css, scheme);
 
         const key = `${scheme}_${titlebutton}_${win}`;

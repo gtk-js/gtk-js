@@ -19,59 +19,51 @@ export interface CompileOptions {
    */
   accentColor?: string;
   /**
-   * Maps virtual URL paths (as used in CSS url()) to absolute filesystem paths.
-   * When provided, -gtk-scaled(url('path.png'), ...) declarations are replaced
-   * with embedded base64 data URIs by reading from the mapped filesystem path.
-   *
-   * Build this from the theme's gtk.gresource.xml — each <file> entry's virtual
-   * path maps to the corresponding physical file on disk.
+   * Maps the theme's url() paths to absolute filesystem paths, for themes whose
+   * images aren't where the url()s point from the SCSS, e.g. ones a theme's
+   * install script copies next to its gtk.css or bundles in its gresource.
+   * Paths missing from the map are resolved against the SCSS file's directory.
    *
    * Example: { "windows-assets/titlebutton-close.png": "/abs/path/to/titlebutton-close.png" }
    */
   assetMap?: Map<string, string>;
 }
 
-function makeGtkAssetPlugin(assetMap: Map<string, string>): Plugin {
-  return {
-    postcssPlugin: "gtk-embed-asset-functions",
-    Declaration(decl) {
-      if (!decl.value.includes("-gtk-scaled(")) return;
-      const scaledMatch = decl.value.match(/-gtk-scaled\(\s*url\(['"]?([^'")\s]+)['"]?\)/);
-      if (!scaledMatch || !scaledMatch[1]) {
-        decl.remove();
-        return;
-      }
-      const virtualPath = scaledMatch[1];
-      const absPath = assetMap.get(virtualPath);
-      if (!absPath) {
-        throw new Error(`Asset not found in assetMap: ${virtualPath}`);
-      }
-      const b64 = readFileSync(absPath).toString("base64");
-      decl.value = `url('data:image/png;base64,${b64}')`;
-    },
-  };
-}
-
 /**
- * Embeds the images of theme-drawn icons (--gtk-icon-source, see transform.ts),
- * like Adwaita's check marks, as data URIs. GTK resolves their url() against
- * the stylesheet, which is where the SCSS is; an image that isn't there is
- * dropped.
+ * Embeds the theme's images as data URIs: the stylesheet is injected as text,
+ * so a relative url() would resolve against the page. GTK resolves it against
+ * the stylesheet (gtk_css_parser_resolve_url()). -gtk-scaled(), whose images
+ * GTK picks by the display's scale (gtk_css_image_scaled_compute()), becomes
+ * image-set(). A missing image fails the build instead of leaving a widget
+ * undrawn.
  */
-function makeGtkIconSourcePlugin(scssDir: string, assetMap?: Map<string, string>): Plugin {
+function makeGtkAssetPlugin(scssDir: string, assetMap?: Map<string, string>): Plugin {
+  const embed = (path: string) => {
+    const absPath = assetMap?.get(path) ?? resolve(scssDir, path);
+    if (!existsSync(absPath)) throw new Error(`Theme image not found: ${path} (${absPath})`);
+    const type = extname(absPath) === ".svg" ? "image/svg+xml" : "image/png";
+    return `url("data:${type};base64,${readFileSync(absPath).toString("base64")}")`;
+  };
   return {
-    postcssPlugin: "gtk-embed-icon-sources",
+    postcssPlugin: "gtk-embed-assets",
     Declaration(decl) {
-      if (decl.prop !== "--gtk-icon-source") return;
-      const path = decl.value.match(/^url\(\s*['"]?([^'")]+)['"]?\s*\)$/)?.[1];
-      if (!path || path.startsWith("data:")) return;
-      const absPath = assetMap?.get(path) ?? resolve(scssDir, path);
-      if (!existsSync(absPath)) {
+      if (!decl.value.includes("url(") && !decl.value.includes("-gtk-scaled(")) return;
+      const value = decl.value.replace(
+        /-gtk-scaled\(\s*(url\([^()]*\)(?:\s*,\s*url\([^()]*\))*)\s*\)/g,
+        (_, images: string) =>
+          `image-set(${images
+            .split(/\s*,\s*/)
+            .map((image, i) => `${image} ${i + 1}x`)
+            .join(", ")})`,
+      );
+      // Other -gtk-scaled() images, e.g. recolored ones, have no web equivalent.
+      if (value.includes("-gtk-scaled(")) {
         decl.remove();
         return;
       }
-      const type = extname(absPath) === ".svg" ? "image/svg+xml" : "image/png";
-      decl.value = `url("data:${type};base64,${readFileSync(absPath).toString("base64")}")`;
+      decl.value = value.replace(/url\(\s*(['"]?)([^'")\s]+)\1\s*\)/g, (url, _, path: string) =>
+        /^[a-z][a-z0-9+.-]*:/i.test(path) ? url : embed(path),
+      );
     },
   };
 }
@@ -100,10 +92,8 @@ export async function compileGtkCSS(scssPath: string, options?: CompileOptions):
   const preprocessed = preprocess(rawCSS, options);
 
   // Step 3: PostCSS transforms — remap selectors, pseudo-classes, properties
-  const assetPlugin = options?.assetMap ? makeGtkAssetPlugin(options.assetMap) : undefined;
-  const pipeline = buildGtkToWeb(assetPlugin, options?.scheme).use(
-    makeGtkIconSourcePlugin(dirname(scssPath), options?.assetMap),
-  );
+  const assetPlugin = makeGtkAssetPlugin(dirname(scssPath), options?.assetMap);
+  const pipeline = buildGtkToWeb(assetPlugin, options?.scheme);
   const transformed = await pipeline.process(preprocessed, { from: scssPath });
 
   return transformed.css;

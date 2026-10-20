@@ -10,20 +10,26 @@ mkdirSync(outDir, { recursive: true });
 const sassDir = `${upstreamDir}/sass`;
 
 // Parse gtk.gresource.xml to build a map of virtual CSS url() paths → physical file paths.
-// The gresource XML lists paths relative to gtk-4.0/, and make_gresource_xml.sh maps them:
-//   assets/         → src/assets/gtk/common-assets/assets/
-//   windows-assets/ → src/assets/gtk/windows-assets/titlebutton/
+// The gresource XML lists paths relative to gtk-4.0/, and lib-install.sh maps them:
+//   assets/          → src/assets/gtk/common-assets/assets/
+//   assets/scalable/ → src/assets/gtk/scalable/
+//   windows-assets/  → src/assets/gtk/windows-assets/titlebutton/
+// A <file alias="…"> is served at its alias instead.
 const gresourceXml = readFileSync(`${upstreamDir}/main/gtk-4.0/gtk.gresource.xml`, "utf8");
-const parsed = new XMLParser({ isArray: () => true }).parse(gresourceXml);
+const parsed = new XMLParser({ isArray: () => true, ignoreAttributes: false }).parse(gresourceXml);
 const assetMap = new Map<string, string>();
-const files: string[] = parsed?.gresources?.[0]?.gresource?.[0]?.file ?? [];
-for (const virtualPath of files) {
-  if (!virtualPath.endsWith(".png")) continue;
-  const filename = virtualPath.split("/").pop()!;
+const files: (string | { "#text": string; "@_alias": string[] })[] =
+  parsed?.gresources?.[0]?.gresource?.[0]?.file ?? [];
+for (const file of files) {
+  const path = typeof file === "string" ? file : file["#text"];
+  const virtualPath = typeof file === "string" ? file : file["@_alias"][0]!;
+  const filename = path.split("/").pop()!;
   let physicalPath: string;
-  if (virtualPath.startsWith("windows-assets/")) {
+  if (path.startsWith("windows-assets/")) {
     physicalPath = `${upstreamDir}/assets/gtk/windows-assets/titlebutton/${filename}`;
-  } else if (virtualPath.startsWith("assets/")) {
+  } else if (path.startsWith("assets/scalable/")) {
+    physicalPath = `${upstreamDir}/assets/gtk/scalable/${filename}`;
+  } else if (path.startsWith("assets/")) {
     physicalPath = `${upstreamDir}/assets/gtk/common-assets/assets/${filename}`;
   } else {
     continue;

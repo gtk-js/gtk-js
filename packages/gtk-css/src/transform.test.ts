@@ -351,6 +351,19 @@ describe("check and radio indicators", () => {
     expect(out).not.toContain("-gtk-recolor");
   });
 
+  test("a -gtk-scaled() of recolored images is kept, for compile.ts to embed", async () => {
+    const css =
+      'check:checked { -gtk-icon-source: -gtk-scaled(-gtk-recolor(url("a.svg")), -gtk-recolor(url("a@2.svg"))); }' +
+      ' check:indeterminate { -gtk-icon-source: -gtk-scaled(url("b.png"), url("b@2.png")); }';
+    // compile.ts's asset plugin replaces the default one, which drops -gtk-scaled().
+    const keep = { postcssPlugin: "keep-assets" };
+    const out = (await buildGtkToWeb(keep).process(css, { from: undefined })).css;
+    expect(out).toContain('--gtk-icon-source: -gtk-scaled(url("a.svg"), url("a@2.svg"))');
+    // Images that aren't recolored aren't symbolic icons.
+    expect(out).not.toContain("b.png");
+    expect(await transform(css)).not.toContain("icon-source");
+  });
+
   test("icon theme icons are left to the components", async () => {
     const out = await transform(
       "expander { -gtk-icon-source: -gtk-icontheme('pan-end-symbolic'); } spinner { -gtk-icon-source: -gtk-icontheme('process-working-symbolic'); }",
