@@ -12,7 +12,7 @@ import React, {
 import { createPortal } from "react-dom";
 import { useEscapeLayer } from "../escape-layers.ts";
 import { GtkProviderBoundary } from "../provider.tsx";
-import { alignAttrs, type GtkAlignProps, type GtkPositionType } from "../types.ts";
+import { alignAttrs, type GtkAlign, type GtkAlignProps, type GtkPositionType } from "../types.ts";
 
 // GTK constants from gtkpopover.c lines 162-163
 const TAIL_GAP_WIDTH = 24;
@@ -239,13 +239,32 @@ function consumePress(e: PointerEvent) {
 }
 
 /**
+ * Where a popover of `popSize` starts along an anchor at `start` of `size`, as
+ * create_popup_layout() picks the gravities from its halign (top/bottom) or
+ * valign (left/right): START lines its start edge up with the anchor's, END
+ * its end edge, anything else centers it. In RTL the start is on the right.
+ */
+export function alignAlong(
+  align: GtkAlign | undefined,
+  rtl: boolean,
+  start: number,
+  size: number,
+  popSize: number,
+) {
+  if (align === (rtl ? "end" : "start")) return start;
+  if (align === (rtl ? "start" : "end")) return start + size - popSize;
+  return start + size / 2 - popSize / 2;
+}
+
+/**
  * GtkPopover — A floating popup attached to a widget.
  *
  * Uses position: fixed to avoid causing document scrollbars (matching
- * GTK's separate-surface behavior). Centers on the anchor, flips to the
- * other side when the preferred one has no room (GDK_ANCHOR_FLIP), then
- * slides along the cross-axis to stay within the viewport (GDK_ANCHOR_SLIDE),
- * and shrinks its contents to what's left (GDK_ANCHOR_RESIZE). Like
+ * GTK's separate-surface behavior). Centers on the anchor, or lines up with
+ * its start or end edge (alignAlong()), flips to the other side when the
+ * preferred one has no room (GDK_ANCHOR_FLIP), then slides along the
+ * cross-axis to stay within the viewport (GDK_ANCHOR_SLIDE), and shrinks its
+ * contents to what's left (GDK_ANCHOR_RESIZE). Like
  * gdk_surface_layout_popup_helper(), only its shadow may leave the viewport.
  * The arrow points at the anchor's center (arrowGap()). It follows its anchor
  * while open, as GTK re-presents it when its parent moves.
@@ -339,18 +358,22 @@ export const GtkPopover = forwardRef<HTMLDivElement, GtkPopoverProps>(function G
     popEl.dataset.position = side;
     const isVertical = side === "top" || side === "bottom";
 
+    // Along the anchor's side, halign (top/bottom) or valign (left/right)
+    // picks the gravities (alignAlong()).
+    const rtl = getComputedStyle(popEl).direction === "rtl";
+
     if (side === "bottom") {
-      x = anchorRect.left + anchorRect.width / 2 - popWidth / 2;
+      x = alignAlong(halign, rtl, anchorRect.left, anchorRect.width, popWidth);
       y = anchorRect.bottom;
     } else if (side === "top") {
-      x = anchorRect.left + anchorRect.width / 2 - popWidth / 2;
+      x = alignAlong(halign, rtl, anchorRect.left, anchorRect.width, popWidth);
       y = anchorRect.top - popHeight;
     } else if (side === "right") {
       x = anchorRect.right;
-      y = anchorRect.top + anchorRect.height / 2 - popHeight / 2;
+      y = alignAlong(valign, false, anchorRect.top, anchorRect.height, popHeight);
     } else {
       x = anchorRect.left - popWidth;
-      y = anchorRect.top + anchorRect.height / 2 - popHeight / 2;
+      y = alignAlong(valign, false, anchorRect.top, anchorRect.height, popHeight);
     }
 
     // Slide: keep within viewport (GTK's GDK_ANCHOR_SLIDE)
@@ -422,7 +445,7 @@ export const GtkPopover = forwardRef<HTMLDivElement, GtkPopoverProps>(function G
       arrowRef.current.style.clipPath = polygon(outer);
       arrowRef.current.style.setProperty("--gtk-arrow-fill", polygon(insetTriangle(outer, stroke)));
     }
-  }, [position, hasArrow, pointingTo, resolvedRef]);
+  }, [position, halign, valign, hasArrow, pointingTo, resolvedRef]);
 
   // Position on mount/update and observe size changes (theme switches
   // change CSS without triggering a React re-render of this component).

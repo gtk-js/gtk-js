@@ -13,7 +13,7 @@ import {
   useRef,
   useState,
 } from "react";
-import { GtkScrolledWindow } from "./scrolled-window.tsx";
+import { GtkScrolledWindow, type GtkScrolledWindowProps } from "./scrolled-window.tsx";
 
 /** One entry of a menu model (like a GMenuItem with an action). */
 export interface GtkMenuItem {
@@ -303,9 +303,11 @@ export function GtkModelButton({
   );
 }
 
-export interface GtkPopoverMenuProps extends HTMLAttributes<HTMLDivElement> {
+export interface GtkPopoverMenuProps extends Omit<HTMLAttributes<HTMLDivElement>, "onScroll"> {
   /** Menu model to render. */
   model?: GtkMenuModel;
+  /** Fires when the menu scrolls, from its scrolled window (GtkScrolledWindow's onScroll). */
+  onScroll?: GtkScrolledWindowProps["onScroll"];
   /** Extra content appended after the model (custom widgets). */
   children?: ReactNode;
 }
@@ -406,6 +408,8 @@ export const GtkPopoverMenu = forwardRef<HTMLDivElement, GtkPopoverMenuProps>(
         role="menu"
         tabIndex={-1}
         hscrollbarPolicy="never"
+        propagateNaturalWidth
+        propagateNaturalHeight
         className={className}
         {...rest}
         onKeyDown={handleKeyDown}

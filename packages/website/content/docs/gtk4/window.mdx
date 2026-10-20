@@ -16,7 +16,7 @@ import Example from "./examples/window";
 ```
 window.background.csd
   ├── .titlebar
-  └── box (vertical content area)
+  └── <child>
 ```
 
 ## Props
@@ -30,6 +30,9 @@ window.background.csd
 
 - On the web, the window takes the size of its content by default. Use `style` or `className` to control sizing.
 - The `.csd` class enables client-side decorations (border-radius, shadow).
-- The `maximized` prop removes border-radius and shadows, matching native window manager behavior.
+- The `maximized`, `fullscreen` and `tiled` props add those classes: square corners, and no shadow when maximized or fullscreen. The maximize button shows the restore icon while `maximized`.
+- The child gets the whole area below the titlebar; its `halign`/`valign` place it. A window has one child: put several in a `GtkBox`.
+- `title` is shown by a `GtkHeaderBar` without a title widget.
+- The window controls and title bars of header bars inside it call `onClose`, `onMinimize`, `onMaximize` and `onDrag`: a title bar starts a move once dragged past the drag threshold, toggles maximization on a double click, and opens a window menu on a right click.
 
 [GTK4 Documentation →](https://docs.gtk.org/gtk4/class.Window.html)
