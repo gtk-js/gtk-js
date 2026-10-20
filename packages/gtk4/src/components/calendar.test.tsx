@@ -100,7 +100,7 @@ describe("GtkCalendar header", () => {
   test("image buttons with GTK's tooltips, and the month in a stack", () => {
     const html = renderToStaticMarkup(<GtkCalendar year={2026} month={8} day={1} />);
     const buttons = html.match(/<button[^>]*>/g) ?? [];
-    expect(buttons.map((b) => b.match(/title="([^"]*)"/)?.[1])).toEqual([
+    expect(buttons.map((b) => b.match(/data-gtk-tooltip="([^"]*)"/)?.[1])).toEqual([
       "Previous Month",
       "Next Month",
       "Previous Year",
