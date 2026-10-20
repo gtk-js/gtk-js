@@ -185,9 +185,12 @@
 }
 
 /* GtkMenuButton measures and allocates only its button, which fills it; its
- * popover is a surface of its own (gtk_menu_button_size_allocate()). */
+ * popover is a surface of its own (gtk_menu_button_size_allocate()). Its
+ * minimum is the button's: its content's, not just the theme's min-width,
+ * which a plain 1fr track would take as the button's minimum. */
 .gtk-menubutton {
   display: inline-grid;
+  grid-template: minmax(min-content, 1fr) / minmax(min-content, 1fr);
 }
 
 :is(.gtk-bin-layout, .gtk-button) > * {

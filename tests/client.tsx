@@ -470,11 +470,36 @@ const cases: Record<string, () => React.ReactElement> = {
   ),
 
   // GtkMenuButton cases
-  "menu-button-text-default": () => <GtkMenuButton label="Button" data-testid="target" />,
-  "menu-button-icon": () => <GtkMenuButton iconName="open-menu-symbolic" data-testid="target" />,
-  "menu-button-flat": () => <GtkMenuButton label="Button" hasFrame={false} data-testid="target" />,
-  "menu-button-circular": () => <GtkMenuButton className="circular" data-testid="target" />,
-  "menu-button-disabled": () => <GtkMenuButton label="Button" disabled data-testid="target" />,
+  "menu-button-text-default": () => (
+    <GtkMenuButton label="Button" popover={<div />} data-testid="target" />
+  ),
+  "menu-button-icon": () => (
+    <GtkMenuButton iconName="OpenMenu" popover={<div />} data-testid="target" />
+  ),
+  "menu-button-flat": () => (
+    <GtkMenuButton label="Button" hasFrame={false} popover={<div />} data-testid="target" />
+  ),
+  "menu-button-circular": () => (
+    <GtkMenuButton className="circular" popover={<div />} data-testid="target" />
+  ),
+  "menu-button-disabled": () => (
+    <GtkMenuButton label="Button" disabled popover={<div />} data-testid="target" />
+  ),
+  "menu-button-always-show-arrow": () => (
+    <GtkMenuButton iconName="OpenMenu" alwaysShowArrow popover={<div />} data-testid="target" />
+  ),
+  "menu-button-circular-box": () => (
+    <GtkBox spacing={6} data-testid="target">
+      <GtkButton iconName="ListAdd" />
+      <GtkMenuButton className="circular" popover={<div />} />
+    </GtkBox>
+  ),
+  "menu-button-direction-none": () => (
+    <GtkMenuButton label="None" direction="none" popover={<div />} data-testid="target" />
+  ),
+  "menu-button-label-up": () => (
+    <GtkMenuButton label="Up" direction="up" popover={<div />} data-testid="target" />
+  ),
 
   // GtkProgressBar cases
   "progressbar-horizontal-50": () => <GtkProgressBar fraction={0.5} data-testid="target" />,

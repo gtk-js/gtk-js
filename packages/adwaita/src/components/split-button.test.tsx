@@ -88,8 +88,10 @@ describe("AdwSplitButton", () => {
   });
 
   test("the arrow follows the direction; none is pan-down", () => {
-    expect(render({ label: "Save", direction: "up" })).toContain('class="gtk-arrow up"><svg');
-    expect(render({ label: "Save", direction: "none" })).toContain('class="gtk-arrow none"><svg');
+    expect(render({ label: "Save", direction: "up" })).toMatch(/class="gtk-arrow up"[^>]*><svg/);
+    expect(render({ label: "Save", direction: "none" })).toMatch(
+      /class="gtk-arrow none"[^>]*><svg/,
+    );
   });
 
   test("its button is labelled by the group when the group has a label", () => {
