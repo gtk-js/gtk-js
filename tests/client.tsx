@@ -1014,6 +1014,51 @@ const cases: Record<string, () => React.ReactElement> = {
       </GtkNotebookPage>
     </GtkNotebook>
   ),
+  "notebook-homogeneous": () => (
+    <GtkNotebook page={1} data-testid="target">
+      <GtkNotebookPage tabLabel="Large">
+        <GtkBox style={{ width: 200, height: 120 }} />
+      </GtkNotebookPage>
+      <GtkNotebookPage tabLabel="Small">
+        <GtkLabel label="Small page" />
+      </GtkNotebookPage>
+    </GtkNotebook>
+  ),
+  "notebook-scrollable": () => (
+    <GtkNotebook page={5} scrollable style={{ width: 240 }} data-testid="target">
+      {["Alpha", "Beta", "Gamma", "Delta", "Epsilon", "Zeta", "Eta", "Theta"].map((name) => (
+        <GtkNotebookPage key={name} tabLabel={name}>
+          <GtkLabel label={`${name} content`} />
+        </GtkNotebookPage>
+      ))}
+    </GtkNotebook>
+  ),
+  "notebook-tab-pos-left": () => (
+    <GtkNotebook tabPos="left" style={{ width: 348, height: 188 }} data-testid="target">
+      <GtkNotebookPage tabLabel="One">
+        <GtkLabel label="Page 1" />
+      </GtkNotebookPage>
+      <GtkNotebookPage tabLabel="Two">
+        <GtkLabel label="Page 2" />
+      </GtkNotebookPage>
+      <GtkNotebookPage tabLabel="Three">
+        <GtkLabel label="Page 3" />
+      </GtkNotebookPage>
+    </GtkNotebook>
+  ),
+  "notebook-tabs": () => (
+    <GtkNotebook style={{ width: 348, height: 188 }} data-testid="target">
+      <GtkNotebookPage tabLabel="One">
+        <GtkLabel label="Page 1" />
+      </GtkNotebookPage>
+      <GtkNotebookPage tabLabel="Two">
+        <GtkLabel label="Page 2" />
+      </GtkNotebookPage>
+      <GtkNotebookPage tabLabel="Three">
+        <GtkLabel label="Page 3" />
+      </GtkNotebookPage>
+    </GtkNotebook>
+  ),
 
   // GtkPopover cases
   "popover-default": () => (
