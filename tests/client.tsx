@@ -877,6 +877,14 @@ const cases: Record<string, () => React.ReactElement> = {
       <GtkLabel label="C" />
     </GtkBox>
   ),
+  // Insensitive like gtk_widget_set_sensitive(FALSE), which GtkBox has no prop for.
+  "box-disabled": () => (
+    <GtkBox orientation="horizontal" spacing={6} data-disabled data-testid="target">
+      <GtkLabel label="Label" />
+      <GtkButton label="Button" />
+      <GtkSwitch />
+    </GtkBox>
+  ),
 
   // GtkCenterBox cases
   "center-box-default": () => (
