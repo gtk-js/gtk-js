@@ -144,6 +144,10 @@ enum Command {
     ButtonRowStartIcon,
     ButtonRowDestructive,
     CalendarDefault,
+    CalendarDisabled,
+    CalendarMarked,
+    CalendarNoDayNames,
+    CalendarWeekNumbers,
     CheckButtonDefault,
     CheckButtonChecked,
     CheckButtonIndeterminate,
@@ -421,6 +425,10 @@ impl Command {
             Self::ButtonRowStartIcon => Some("button-row-start-icon"),
             Self::ButtonRowDestructive => Some("button-row-destructive"),
             Self::CalendarDefault => Some("calendar-default"),
+            Self::CalendarDisabled => Some("calendar-disabled"),
+            Self::CalendarMarked => Some("calendar-marked"),
+            Self::CalendarNoDayNames => Some("calendar-no-day-names"),
+            Self::CalendarWeekNumbers => Some("calendar-week-numbers"),
             Self::CheckButtonDefault => Some("check-button-default"),
             Self::CheckButtonChecked => Some("check-button-checked"),
             Self::CheckButtonIndeterminate => Some("check-button-indeterminate"),
@@ -827,6 +835,14 @@ fn create_widget_for_case(name: &str) -> Option<(gtk::Widget, bool)> {
             widget_case!(cases::button_row_destructive::ButtonRowDestructive, true)
         }
         "calendar-default" => widget_case!(cases::calendar_default::CalendarDefault, false),
+        "calendar-disabled" => widget_case!(cases::calendar_disabled::CalendarDisabled, false),
+        "calendar-marked" => widget_case!(cases::calendar_marked::CalendarMarked, false),
+        "calendar-no-day-names" => {
+            widget_case!(cases::calendar_no_day_names::CalendarNoDayNames, false)
+        }
+        "calendar-week-numbers" => {
+            widget_case!(cases::calendar_week_numbers::CalendarWeekNumbers, false)
+        }
         "check-button-default" => {
             widget_case!(cases::check_button_default::CheckButtonDefault, false)
         }
@@ -1273,6 +1289,10 @@ fn is_known_case(name: &str) -> bool {
             | "button-row-start-icon"
             | "button-row-destructive"
             | "calendar-default"
+            | "calendar-disabled"
+            | "calendar-marked"
+            | "calendar-no-day-names"
+            | "calendar-week-numbers"
             | "check-button-default"
             | "check-button-checked"
             | "check-button-indeterminate"

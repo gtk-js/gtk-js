@@ -282,6 +282,10 @@ const remapPseudoClasses: Plugin = {
     // (Idempotent: PostCSS revisits rules whose selector changed.)
     sel = sel.replace(/(?<!\[data-disabled\], ):disabled/g, ":is([data-disabled], :disabled)");
 
+    // :focus → also [data-focus]: a widget can give a child that doesn't have
+    // the keyboard focus GTK's focused state (GtkCalendar's cursor day).
+    sel = sel.replace(/(?<!\[data-focus\], ):focus(?![\w-])/g, ":is([data-focus], :focus)");
+
     if (sel !== rule.selector) {
       rule.selector = sel;
     }
