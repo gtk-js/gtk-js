@@ -319,6 +319,8 @@ export const AdwAlertDialog = forwardRef<HTMLDivElement, AdwAlertDialogProps>(
                 <GtkScrolledWindow
                   className="body-scrolled-window undershoot-bottom"
                   hscrollbarPolicy="never"
+                  propagateNaturalWidth
+                  propagateNaturalHeight
                   style={{ flex: "0 1 auto", minHeight: 0 }}
                 >
                   <div className={messageAreaClasses.join(" ")}>
