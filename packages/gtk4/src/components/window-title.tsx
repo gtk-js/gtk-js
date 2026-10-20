@@ -34,7 +34,12 @@ export const GtkWindowTitle = forwardRef<HTMLDivElement, GtkWindowTitleProps>(
         {...alignAttrs(halign, valign, hexpand, vexpand)}
         {...rest}
       >
-        {title && <span className="gtk-label title">{title}</span>}
+        {/* width-chars=5 (adw-window-title.ui), as GtkLabel's widthChars. */}
+        {title && (
+          <span className="gtk-label title" style={{ minWidth: "5ch" }}>
+            {title}
+          </span>
+        )}
         {subtitle && <span className="gtk-label subtitle">{subtitle}</span>}
       </div>
     );

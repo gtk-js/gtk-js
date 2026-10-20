@@ -1,5 +1,6 @@
 import { spawnSync } from "child_process";
-import { readFileSync } from "fs";
+import { existsSync, readFileSync } from "fs";
+import { dirname, extname, resolve } from "path";
 import { type Plugin } from "postcss";
 import { buildGtkToWeb, preprocess } from "./transform.ts";
 
@@ -51,6 +52,30 @@ function makeGtkAssetPlugin(assetMap: Map<string, string>): Plugin {
 }
 
 /**
+ * Embeds the images of theme-drawn icons (--gtk-icon-source, see transform.ts),
+ * like Adwaita's check marks, as data URIs. GTK resolves their url() against
+ * the stylesheet, which is where the SCSS is; an image that isn't there is
+ * dropped.
+ */
+function makeGtkIconSourcePlugin(scssDir: string, assetMap?: Map<string, string>): Plugin {
+  return {
+    postcssPlugin: "gtk-embed-icon-sources",
+    Declaration(decl) {
+      if (decl.prop !== "--gtk-icon-source") return;
+      const path = decl.value.match(/^url\(\s*['"]?([^'")]+)['"]?\s*\)$/)?.[1];
+      if (!path || path.startsWith("data:")) return;
+      const absPath = assetMap?.get(path) ?? resolve(scssDir, path);
+      if (!existsSync(absPath)) {
+        decl.remove();
+        return;
+      }
+      const type = extname(absPath) === ".svg" ? "image/svg+xml" : "image/png";
+      decl.value = `url("data:${type};base64,${readFileSync(absPath).toString("base64")}")`;
+    },
+  };
+}
+
+/**
  * Compiles a GTK/libadwaita SCSS file to web-compatible CSS.
  *
  * Uses sassc (the C implementation of Sass) to match upstream's build system,
@@ -75,7 +100,9 @@ export async function compileGtkCSS(scssPath: string, options?: CompileOptions):
 
   // Step 3: PostCSS transforms — remap selectors, pseudo-classes, properties
   const assetPlugin = options?.assetMap ? makeGtkAssetPlugin(options.assetMap) : undefined;
-  const pipeline = buildGtkToWeb(assetPlugin);
+  const pipeline = buildGtkToWeb(assetPlugin).use(
+    makeGtkIconSourcePlugin(dirname(scssPath), options?.assetMap),
+  );
   const transformed = await pipeline.process(preprocessed, { from: scssPath });
 
   return transformed.css;

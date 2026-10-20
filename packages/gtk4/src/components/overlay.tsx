@@ -25,12 +25,15 @@ export interface GtkOverlayProps extends HTMLAttributes<HTMLDivElement>, GtkAlig
  *
  * CSS node: overlay
  *
- * Uses CSS Grid with all children in the same cell for stacking.
+ * The child and the overlays share one grid cell, each placed in it by its
+ * own halign and valign, as gtk_overlay_get_child_position() does (see
+ * layout.css). They're wrapped only to tell them apart: the wrappers take
+ * no part in the layout.
  *
  * @see https://docs.gtk.org/gtk4/class.Overlay.html
  */
 export const GtkOverlay = forwardRef<HTMLDivElement, GtkOverlayProps>(function GtkOverlay(
-  { child, overlays, children, halign, valign, hexpand, vexpand, className, style, ...rest },
+  { child, overlays, children, halign, valign, hexpand, vexpand, className, ...rest },
   ref,
 ) {
   const classes = ["gtk-overlay"];
@@ -41,22 +44,13 @@ export const GtkOverlay = forwardRef<HTMLDivElement, GtkOverlayProps>(function G
       ref={ref}
       className={classes.join(" ")}
       {...alignAttrs(halign, valign, hexpand, vexpand)}
-      style={{
-        display: "grid",
-        gridTemplate: "1fr / 1fr",
-        ...style,
-      }}
       {...rest}
     >
-      {child && <div style={{ gridColumn: 1, gridRow: 1 }}>{child}</div>}
+      {child && <div className="gtk-overlay-child">{child}</div>}
       {overlays?.map((overlay, i) => (
         // Only the main child counts for the overlay's expand (gtk_overlay_compute_expand()).
-        <div
-          key={i}
-          data-expand-ignored=""
-          style={{ gridColumn: 1, gridRow: 1, pointerEvents: "none" }}
-        >
-          <div style={{ pointerEvents: "auto" }}>{overlay}</div>
+        <div key={i} className="gtk-overlay-child" data-expand-ignored="">
+          {overlay}
         </div>
       ))}
       {children}
