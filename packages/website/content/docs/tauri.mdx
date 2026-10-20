@@ -32,10 +32,10 @@ Disable Tauri's native decorations and enable a transparent background so `GtkWi
 
 ## Wiring Window Controls
 
-`GtkWindow` provides close/minimize/maximize/drag callbacks to descendant `AdwHeaderBar` components via `WindowControlsContext`. Wire these to the Tauri window API:
+`GtkWindow` provides close/minimize/maximize/drag callbacks to descendant `GtkHeaderBar` and `AdwHeaderBar` components via `WindowControlsContext`. Wire these to the Tauri window API:
 
 ```tsx
-import { AdwaitaProvider, GtkWindow, AdwHeaderBar } from "@gtk-js/adwaita";
+import { AdwaitaProvider, AdwHeaderBar, GtkWindow, GtkWindowTitle } from "@gtk-js/adwaita";
 import { getCurrentWindow } from "@tauri-apps/api/window";
 import { useCallback, useEffect, useState } from "react";
 
@@ -70,8 +70,8 @@ function App() {
         onMaximize={handleMaximize}
         onDrag={handleDrag}
         onResize={handleResize}
+        titlebar={<AdwHeaderBar titleWidget={<GtkWindowTitle title="My App" />} />}
       >
-        <AdwHeaderBar>My App</AdwHeaderBar>
         {/* Your content here */}
       </GtkWindow>
     </AdwaitaProvider>
@@ -85,10 +85,10 @@ function App() {
 |------|---------|
 | `maximized` | Adds the `.maximized` CSS class, removing border-radius and shadows (matching native GTK behavior). You must track this from Tauri's API. |
 | `allocateShadow` | Adds padding around the window for the CSD box-shadow. When used together with `onResize`, it also provides the visible edge area needed for client-side resize handles. |
-| `onClose` | Passed to `AdwHeaderBar`'s close button via context. |
-| `onMinimize` | Passed to `AdwHeaderBar`'s minimize button via context. |
-| `onMaximize` | Passed to `AdwHeaderBar`'s maximize button via context. |
-| `onDrag` | Passed to `AdwHeaderBar`'s titlebar drag region via context. |
+| `onClose` | Passed to header bars' close button via context. |
+| `onMinimize` | Passed to header bars' minimize button via context. |
+| `onMaximize` | Passed to header bars' maximize button via context. |
+| `onDrag` | Called by header bars' title bar once a press is dragged past the drag threshold (8px), not for presses on their buttons or entries. Double-clicking the title bar calls `onMaximize`. |
 | `onResize` | Called with a direction string (`"North"`, `"SouthEast"`, etc.) when a resize handle is dragged. Resize handles are only rendered when both `allocateShadow` and `onResize` are provided. Pass this to Tauri's `startResizeDragging()`. |
 
 ## Maximized State
@@ -120,9 +120,9 @@ In Tauri, the OS window boundary determines where resize handles appear. Without
 `allocateShadow` solves the shadow-clipping side by itself, and enables resize handles when paired with `onResize`:
 
 1. **Shadow padding** — Measures the theme's `box-shadow` extent from CSS and adds matching padding so shadows render without clipping. This is theme-agnostic.
-2. **Resize handles** — When `onResize` is provided, renders invisible resize zones at the visible window edges (not the OS window edge), with correct resize cursors. The callback receives a direction string you pass to Tauri's `startResizeDragging()`.
+2. **Resize handles** — When `onResize` is provided, renders invisible resize zones in the shadow, just outside the visible window edges (not at the OS window edge), with correct resize cursors. The callback receives a direction string you pass to Tauri's `startResizeDragging()`.
 
-Both are automatically removed when `maximized` is `true`.
+Both are automatically removed when `maximized` or `fullscreen` is `true`; the resize handles also when `tiled` is.
 
 ## Required Tauri Permissions
 
