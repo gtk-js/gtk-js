@@ -24,4 +24,10 @@ dialog.alert
   name="AdwAlertDialogProps"
 />
 
+## Behavior
+
+- A response closes the dialog and calls `onResponse`. Escape answers `closeResponse`.
+- When presented, the default response has the focus, or else the last enabled one, so Enter answers it.
+- Underscores in response labels mark mnemonics (`"_Cancel"`).
+
 [Adwaita Documentation →](https://gnome.pages.gitlab.gnome.org/libadwaita/doc/1-latest/class.AlertDialog.html)

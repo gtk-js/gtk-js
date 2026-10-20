@@ -15,7 +15,7 @@ describe("GtkLinkButton", () => {
   test("the tooltip shows the URI when the label is another text", () => {
     const tooltip = (props: { label?: string; tooltipText?: string }) =>
       renderToStaticMarkup(<GtkLinkButton uri="https://gtk.org" {...props} />).match(
-        /title="([^"]*)"/,
+        /data-gtk-tooltip="([^"]*)"/,
       )?.[1];
     expect(tooltip({ label: "GTK" })).toBe("https://gtk.org");
     expect(tooltip({})).toBeUndefined();

@@ -9,6 +9,7 @@ import {
   useRef,
   useState,
 } from "react";
+import { tooltipAttrs } from "../tooltip.tsx";
 import { alignAttrs, type GtkAlignProps } from "../types.ts";
 import { GtkLabel } from "./label.tsx";
 
@@ -166,7 +167,7 @@ export const GtkLinkButton = forwardRef<HTMLAnchorElement, GtkLinkButtonProps>(
         rel="noopener noreferrer"
         className={classes.join(" ")}
         // gtk_link_button_query_tooltip_cb() shows the URI if the label is another text.
-        title={tooltipText ?? (text && text !== uri ? uri : undefined)}
+        {...tooltipAttrs(tooltipText ?? (text && text !== uri ? uri : undefined))}
         {...alignAttrs(halign, valign, hexpand, vexpand)}
         data-visited={visited || undefined}
         data-disabled={disabled || undefined}

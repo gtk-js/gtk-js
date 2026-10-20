@@ -14,7 +14,13 @@ import Example from "./examples/dialog";
 ## CSS Node Tree
 
 ```
-dialog[.floating|.bottom-sheet]
+dialog[.floating|.bottom-sheet][.narrow][.short]
+├── floating-sheet
+│   ├── dimming
+│   └── sheet.background
+└── bottom-sheet
+    ├── dimming
+    └── sheet.background[.flush-left][.flush-right]
 ```
 
 ## Props
@@ -26,7 +32,8 @@ dialog[.floating|.bottom-sheet]
 
 ## Behavior
 
-- Closes on Escape key when `canClose` is true.
-- Click outside the dialog dismisses it.
+- Escape or the header bar's close button close it. When `canClose` is false, they call `onCloseAttempt` instead.
+- `presentationMode="auto"` shows a bottom sheet while the window (or viewport) is at most 450px wide or 360px tall. In bottom-sheet mode, clicking the dimmed area also closes it.
+- While it's open, Tab and the arrow keys move the focus within the dialog, and the page behind it doesn't scroll.
 
 [Adwaita Documentation →](https://gnome.pages.gitlab.gnome.org/libadwaita/doc/1-latest/class.Dialog.html)
