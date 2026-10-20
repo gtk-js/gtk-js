@@ -1403,6 +1403,37 @@
   margin-right: 12px;
 }
 
+/* === GridLayout === */
+/* GtkGrid's children are the grid items and fill their cells (GtkGridLayout
+ * allocates each one its cells' whole area). grid.tsx sets the line tracks:
+ * only `auto` ones, for lines that expand, get the extra space; lines it
+ * doesn't know about, from children without placement, don't. */
+.gtk-grid-layout {
+  display: grid;
+  grid-auto-columns: minmax(auto, max-content);
+  grid-auto-rows: minmax(auto, max-content);
+}
+
+/* -- Widget alignment in GridLayout: both axes independent -- */
+.gtk-grid-layout > [data-halign="start"] {
+  justify-self: start;
+}
+.gtk-grid-layout > [data-halign="end"] {
+  justify-self: end;
+}
+.gtk-grid-layout > [data-halign="center"] {
+  justify-self: center;
+}
+.gtk-grid-layout > [data-valign="start"] {
+  align-self: start;
+}
+.gtk-grid-layout > [data-valign="end"] {
+  align-self: end;
+}
+.gtk-grid-layout > [data-valign="center"] {
+  align-self: center;
+}
+
 /* === GtkCalendar ===
  * A vertical GtkBoxLayout: the header at its natural height, then the grid
  * (vexpand) in the rest. The grid's sizer (below) shares the grid's place, so

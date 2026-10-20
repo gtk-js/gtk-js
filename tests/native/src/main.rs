@@ -145,6 +145,8 @@ enum Command {
     HeaderbarWindowTitle,
     FrameNoLabel,
     GridDefault,
+    GridHexpand,
+    GridSpan,
     OverlayDefault,
     PanedHorizontal,
     PanedMinSize,
@@ -503,6 +505,8 @@ impl Command {
             Self::HeaderbarWindowTitle => Some("headerbar-window-title"),
             Self::FrameNoLabel => Some("frame-no-label"),
             Self::GridDefault => Some("grid-default"),
+            Self::GridHexpand => Some("grid-hexpand"),
+            Self::GridSpan => Some("grid-span"),
             Self::OverlayDefault => Some("overlay-default"),
             Self::PanedHorizontal => Some("paned-horizontal"),
             Self::PanedMinSize => Some("paned-min-size"),
@@ -999,6 +1003,8 @@ fn create_widget_for_case(name: &str) -> Option<(gtk::Widget, bool)> {
         "listbox-bare-labels" => {
             widget_case!(cases::listbox_bare_labels::ListboxBareLabels, false)
         }
+        "grid-hexpand" => widget_case!(cases::grid_hexpand::GridHexpand, false),
+        "grid-span" => widget_case!(cases::grid_span::GridSpan, false),
         "listbox-default" => widget_case!(cases::listbox_default::ListboxDefault, false),
         "listbox-selection" => widget_case!(cases::listbox_selection::ListboxSelection, false),
         "listbox-separators" => widget_case!(cases::listbox_separators::ListboxSeparators, false),
@@ -1624,6 +1630,8 @@ fn is_known_case(name: &str) -> bool {
             | "headerbar-window-title"
             | "grid-default"
             | "listbox-bare-labels"
+            | "grid-hexpand"
+            | "grid-span"
             | "listbox-default"
             | "listbox-selection"
             | "listbox-separators"
