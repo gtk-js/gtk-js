@@ -36,6 +36,8 @@ export interface GtkProviderProps {
 }
 
 const ThemeContext = createContext<GtkTheme | undefined>(undefined);
+/** The provider's `style`, for GtkProviderBoundary. */
+const ProviderStyleContext = createContext<CSSProperties | undefined>(undefined);
 
 export function useGtkTheme() {
   return useContext(ThemeContext);
@@ -134,12 +136,33 @@ export function GtkProvider({
 
   return (
     <ThemeContext.Provider value={theme}>
-      <IconProvider value={iconMap}>
-        <div ref={rootRef} data-gtk-provider="" className="background" style={style}>
-          {children}
-          <GtkTooltipLayer rootRef={rootRef} />
-        </div>
-      </IconProvider>
+      <ProviderStyleContext.Provider value={style}>
+        <IconProvider value={iconMap}>
+          <div ref={rootRef} data-gtk-provider="" className="background" style={style}>
+            {children}
+            <GtkTooltipLayer rootRef={rootRef} />
+          </div>
+        </IconProvider>
+      </ProviderStyleContext.Provider>
     </ThemeContext.Provider>
+  );
+}
+
+/**
+ * Re-establishes the provider's scope (reset, default font, theme variables)
+ * around content portaled out of it, e.g. a dialog rendered into
+ * document.body. It generates no box of its own.
+ */
+export function GtkProviderBoundary({ children }: { children: ReactNode }) {
+  const style = useContext(ProviderStyleContext);
+  return (
+    <div
+      data-gtk-provider=""
+      data-gtk-portal=""
+      className="background"
+      style={{ ...style, display: "contents" }}
+    >
+      {children}
+    </div>
   );
 }

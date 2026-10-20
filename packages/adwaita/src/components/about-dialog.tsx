@@ -873,7 +873,7 @@ export const AdwAboutDialog = forwardRef<HTMLDivElement, AdwAboutDialogProps>(
       <FloatingSheet
         ref={ref}
         open={visible}
-        dialogClasses={["about", "background", "floating"]}
+        dialogClasses={["about"]}
         className={className}
         // Upstream: content-width 360; the height is the main page's natural height.
         sheetStyle={{

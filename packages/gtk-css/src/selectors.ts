@@ -192,6 +192,8 @@ export const INTERNAL_SELECTORS: Record<string, string> = {
   widget: ".gtk-widget",
   "cursor-handle": ".gtk-cursor-handle",
   "drag-handle": ".gtk-drag-handle",
+  // AdwBottomSheet's outline, drawn over the sheet.
+  outline: ".gtk-outline",
   dndtarget: ".gtk-dndtarget",
   drawing: ".gtk-drawing",
   magnifier: ".gtk-magnifier",
