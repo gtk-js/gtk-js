@@ -2,8 +2,8 @@
 import { AdwaitaTheme } from "@gtk-js/theme-adwaita";
 import { expect, test } from "vite-plus/test";
 
-/** Only auto.css switches by itself, through `prefers-color-scheme`. */
-const isAuto = (css: string) => css.includes('[data-color-scheme="dark"]');
+/** Only auto.css switches by itself, through `prefers-color-scheme` (#135 resolves it in the others). */
+const isAuto = (css: string) => css.includes("prefers-color-scheme");
 
 test("an auto theme follows the system scheme through the light and dark builds", () => {
   const theme = new AdwaitaTheme();

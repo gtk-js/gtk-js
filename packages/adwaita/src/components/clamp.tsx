@@ -8,6 +8,7 @@ import {
   useLayoutEffect,
   useRef,
 } from "react";
+import { lengthUnitToPx } from "../length-unit.ts";
 import type { AdwLengthUnit } from "../types.ts";
 
 export interface AdwClampProps extends HTMLAttributes<HTMLDivElement> {
@@ -22,23 +23,21 @@ export interface AdwClampProps extends HTMLAttributes<HTMLDivElement> {
   children?: ReactNode;
 }
 
-/** adw_length_unit_to_px() at the default text scaling factor. */
-function toPx(value: number, unit: AdwLengthUnit): number {
-  return unit === "pt" ? (value * 96) / 72 : value;
-}
-
 /**
  * child_size_from_clamp() in adw-clamp-layout.c: the size given to the child
  * for `forSize` available pixels. Up to the tightening threshold the child
  * gets everything; from there it approaches the maximum size on an ease-out
  * cubic curve, reaching it when 3× the remaining distance is available.
+ * Neither the threshold nor the maximum size go below the child's minimum
+ * size.
  */
 export function clampChildSize(
   forSize: number,
   maximumSize = 600,
   tighteningThreshold = 400,
+  childMinimum = 0,
 ): { size: number; sizeClass: "small" | "medium" | "large" } {
-  const lower = Math.min(tighteningThreshold, maximumSize);
+  const lower = Math.max(Math.min(tighteningThreshold, maximumSize), childMinimum);
   const max = Math.max(lower, maximumSize);
   const upper = lower + 3 * (max - lower); // ADW_EASE_OUT_TAN_CUBIC
   let size: number;
@@ -58,8 +57,9 @@ export function clampChildSize(
  *
  * Like AdwClampLayout, the child (the clamp's direct child, so theme
  * selectors such as `clamp > box` match) is allocated the eased size from
- * clampChildSize() along the clamp's orientation, including its margins, and
- * gets the `.small`, `.medium` or `.large` style class.
+ * clampChildSize() along the clamp's orientation, including its margins (in
+ * CSS, see layout.css), and gets the `.small`, `.medium` or `.large` style
+ * class.
  *
  * CSS node:
  *   clamp
@@ -86,39 +86,69 @@ export const AdwClamp = forwardRef<HTMLDivElement, AdwClampProps>(function AdwCl
   ref,
 ) {
   const containerRef = useRef<HTMLDivElement | null>(null);
-  const sizeClassRef = useRef<string | null>(null);
   const horizontal = orientation === "horizontal";
 
+  const lower = Math.min(
+    lengthUnitToPx(tighteningThreshold, unit),
+    lengthUnitToPx(maximumSize, unit),
+  );
+  const range = Math.max(0, lengthUnitToPx(maximumSize, unit) - lower);
+
+  // The child's size is CSS (layout.css), so it's right before hydration too.
+  // Once mounted, the allocation also takes the child's minimum size and
+  // GTK's whole-pixel centering into account, and sets the style classes,
+  // which CSS can't do.
   const allocate = useCallback(() => {
     const clamp = containerRef.current;
     const child = clamp?.firstElementChild as HTMLElement | null | undefined;
     if (!clamp || !child) return;
     const cs = getComputedStyle(clamp);
-    const available = horizontal
-      ? clamp.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight)
-      : clamp.clientHeight - parseFloat(cs.paddingTop) - parseFloat(cs.paddingBottom);
-    const { size, sizeClass } = clampChildSize(
-      available,
-      toPx(maximumSize, unit),
-      toPx(tighteningThreshold, unit),
-    );
-    // GTK allocations include the child's margins (and, being content-box
-    // here, its border and padding): subtract them to get the CSS size.
-    const ccs = getComputedStyle(child);
-    const extra = (a: string, b: string) =>
-      ["margin", "border", "padding"].reduce(
-        (sum, box) =>
+    const [a, b] = horizontal ? ["left", "right"] : ["top", "bottom"];
+    const edges = (style: CSSStyleDeclaration, boxes: string[]) =>
+      boxes.reduce((sum, box) => {
+        const suffix = box === "border" ? "-width" : "";
+        return (
           sum +
-          parseFloat(ccs.getPropertyValue(`${box}-${a}${box === "border" ? "-width" : ""}`)) +
-          parseFloat(ccs.getPropertyValue(`${box}-${b}${box === "border" ? "-width" : ""}`)),
-        0,
-      );
-    const cssSize = `${Math.max(0, size - (horizontal ? extra("left", "right") : extra("top", "bottom")))}px`;
-    if (horizontal) child.style.width = cssSize;
-    else child.style.height = cssSize;
-    sizeClassRef.current = sizeClass;
+          parseFloat(style.getPropertyValue(`${box}-${a}${suffix}`)) +
+          parseFloat(style.getPropertyValue(`${box}-${b}${suffix}`))
+        );
+      }, 0);
+    const dimension = horizontal ? "width" : "height";
+    // The clamp's content size, unrounded: clientWidth rounds to a whole
+    // pixel, and in a parent that gives the clamp a fractional size (a grid
+    // track, a percentage) the child would take the fraction on top of its
+    // size from the spacers below.
+    const available =
+      parseFloat(cs[dimension]) -
+      (cs.boxSizing === "border-box" ? edges(cs, ["border", "padding"]) : 0);
+    // GTK allocations include the child's margins (and, being content-box
+    // here, its border and padding).
+    const ccs = getComputedStyle(child);
+    const extra = edges(ccs, ["margin", "border", "padding"]);
+    // The child's minimum size along the orientation (gtk_widget_measure()):
+    // its min-content size, in whole pixels, measured out of the flex layout.
+    const { flex, [dimension]: size0 } = child.style;
+    child.style.flex = "none";
+    child.style[dimension] = "min-content";
+    const minimum = Math.ceil(parseFloat(ccs[dimension]) + extra);
+    child.style.flex = flex;
+    child.style[dimension] = size0;
+    const { size, sizeClass } = clampChildSize(available, lower + range, lower, minimum);
     applySizeClass(child, sizeClass);
-  }, [horizontal, maximumSize, tighteningThreshold, unit]);
+    // The clamp is never smaller than its child's minimum size
+    // (clamp_size_from_child()).
+    clamp.style[horizontal ? "minWidth" : "minHeight"] = `${minimum}px`;
+    // adw_clamp_layout_allocate() centers the child at (size - child size) / 2
+    // in whole pixels: an odd pixel left over goes after the child (to its
+    // right, in RTL too), not half a pixel to each side. The ::before and
+    // ::after spacers (layout.css) take the leftover, the one on the right
+    // also any fraction of a pixel, so the child gets exactly `size`.
+    const leftover = Math.max(0, available - size);
+    const left = Math.floor(leftover / 2);
+    const rtl = horizontal && cs.direction === "rtl";
+    clamp.style.setProperty("--adw-clamp-before", `${rtl ? leftover - left : left}px`);
+    clamp.style.setProperty("--adw-clamp-after", `${rtl ? left : leftover - left}px`);
+  }, [horizontal, lower, range]);
 
   // Children can change on any render.
   useLayoutEffect(allocate);
@@ -128,18 +158,19 @@ export const AdwClamp = forwardRef<HTMLDivElement, AdwClampProps>(function AdwCl
     if (!clamp) return;
     const observer = new ResizeObserver(allocate);
     observer.observe(clamp);
-    // The size class isn't in the child's className: React drops it when the
-    // child's own className changes, so put it back.
-    const classes = new MutationObserver((records) => {
-      const child = clamp.firstElementChild;
-      if (child && sizeClassRef.current && records.some((r) => r.target === child)) {
-        applySizeClass(child, sizeClassRef.current);
-      }
+    // Allocate again when the child is replaced or its content changes, which
+    // can change its minimum size, and put back the size class, which isn't
+    // in the child's className: React drops it when that changes.
+    const mutations = new MutationObserver(allocate);
+    mutations.observe(clamp, {
+      subtree: true,
+      childList: true,
+      characterData: true,
+      attributeFilter: ["class"],
     });
-    classes.observe(clamp, { subtree: true, attributeFilter: ["class"] });
     return () => {
       observer.disconnect();
-      classes.disconnect();
+      mutations.disconnect();
     };
   }, [allocate]);
 
@@ -158,8 +189,9 @@ export const AdwClamp = forwardRef<HTMLDivElement, AdwClampProps>(function AdwCl
     // Always centered along the orientation; the child fills the other axis.
     justifyContent: "center",
     alignItems: "stretch",
-    minWidth: 0,
-    minHeight: 0,
+    // allocate() sets the minimum size along the orientation.
+    [horizontal ? "minHeight" : "minWidth"]: 0,
+    ...({ "--adw-clamp-lower": `${lower}px`, "--adw-clamp-range": `${range}px` } as CSSProperties),
     ...style,
   };
 

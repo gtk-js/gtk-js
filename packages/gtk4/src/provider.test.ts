@@ -18,6 +18,8 @@ function fakeDocument() {
   const document = {
     head: { appendChild: (element: (typeof head)[number]) => head.push(element) },
     getElementById: (id: string) => head.find((element) => element.id === id) ?? null,
+    // No server-rendered stylesheets to take over (#131's adoptStylesheet()).
+    querySelector: () => null,
     createElement: () => {
       const element = {
         id: "",

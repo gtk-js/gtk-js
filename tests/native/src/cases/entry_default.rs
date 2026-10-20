@@ -11,6 +11,9 @@ impl SimpleComponent for EntryDefault {
 
     view! {
         gtk::Entry {
+            // At its natural size, not the test window's.
+            set_halign: gtk::Align::Start,
+            set_valign: gtk::Align::Start,
             set_text: "Hello",
         }
     }

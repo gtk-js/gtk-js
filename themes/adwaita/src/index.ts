@@ -42,10 +42,9 @@ export class AdwaitaTheme extends GtkTheme {
     // build, with transitions off, like AdwStyleManager's update_stylesheet().
     const base = scheme === "dark" ? darkCSS : scheme === "light" ? lightCSS : autoCSS;
 
-    // Append accent override on top of the default baked into the CSS
-    return (
-      base +
-      `\n[data-gtk-provider] { --accent-bg-color: ${this.accentColor}; --accent-fg-color: white; }\n`
-    );
+    // Like adw_style_manager's generate_accent_css(): replace the accent the
+    // stylesheet's :root reads, so the colors it derives in CSS
+    // (--accent-color) follow it too.
+    return base + `\n:root { --accent-bg-color: ${this.accentColor}; --accent-fg-color: white; }\n`;
   }
 }
