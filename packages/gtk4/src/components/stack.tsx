@@ -14,6 +14,7 @@ import React, {
   useState,
 } from "react";
 import { EASE_OUT_CUBIC, prefersReducedMotion } from "../animation.ts";
+import { noFocusOnClick } from "../focus-on-click.ts";
 import { FOCUSABLE } from "../focusable.ts";
 import {
   alignAttrs,
@@ -467,7 +468,7 @@ export const GtkStackSwitcher = forwardRef<HTMLDivElement, GtkStackSwitcherProps
               // add_child(): the tabs expand and don't take the focus on click.
               hexpand
               vexpand
-              onMouseDown={(e) => e.preventDefault()}
+              {...noFocusOnClick()}
               active={isActive}
               // on_button_toggled(): the active tab can't be toggled off.
               onToggled={(active) => active && onPageChanged?.(page.name)}

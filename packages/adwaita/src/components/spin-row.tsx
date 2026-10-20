@@ -2,6 +2,7 @@ import {
   GtkSpinButton,
   type GtkSpinButtonUpdatePolicy,
   linesStyle,
+  noFocusOnClick,
   tooltipAttrs,
   useListBoxRow,
 } from "@gtk-js/gtk4";
@@ -111,6 +112,7 @@ export const AdwSpinRow = forwardRef<HTMLDivElement, AdwSpinRowProps>(function A
     children,
     className,
     onMouseDown,
+    onPointerDown,
     onClick,
     ...rest
   },
@@ -150,15 +152,18 @@ export const AdwSpinRow = forwardRef<HTMLDivElement, AdwSpinRowProps>(function A
       {...tooltipAttrs(tooltipText)}
       aria-disabled={insensitive}
       data-disabled={insensitive}
-      onMouseDown={(e) => {
-        if (!disabled && !claimed(e)) {
-          // The focus stays in the text, and a press on the row's frame moves
-          // it there without selecting (gtk_text_grab_focus_without_selecting()).
-          e.preventDefault();
-          if (onFrame(e)) text()?.focus();
-        }
-        onMouseDown?.(e);
-      }}
+      // The focus stays in the text, and a press on the row's frame moves it
+      // there without selecting (gtk_text_grab_focus_without_selecting()).
+      {...noFocusOnClick(
+        {
+          onMouseDown: (e) => {
+            if (!disabled && !claimed(e) && onFrame(e)) text()?.focus();
+            onMouseDown?.(e);
+          },
+          onPointerDown,
+        },
+        (e) => !disabled && !claimed(e),
+      )}
       onClick={(e) => {
         // Elsewhere, like on the title, GtkListBox activates the row on the
         // first click and focuses it, i.e. its text, which selects it

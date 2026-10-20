@@ -7,6 +7,7 @@ import {
   useId,
   useState,
 } from "react";
+import { noFocusOnClick } from "../focus-on-click.ts";
 import { useIcon } from "../icon-context.tsx";
 import { labelText } from "../markup.tsx";
 import { alignAttrs, type GtkAlignProps } from "../types.ts";
@@ -130,9 +131,7 @@ export const GtkExpander = forwardRef<HTMLDivElement, GtkExpanderProps>(function
           data-disabled={disabled || undefined}
           data-expand-ignored=""
           // A click activates the expander without focusing it (gesture_click_released_cb()).
-          onMouseDown={(e) => {
-            if (!onInnerWidget(e)) e.preventDefault();
-          }}
+          {...noFocusOnClick({}, (e) => !onInnerWidget(e))}
           onClick={(e) => {
             if (!onInnerWidget(e)) toggle();
           }}

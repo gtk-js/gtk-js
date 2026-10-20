@@ -6,6 +6,7 @@ import React, {
   useRef,
   useState,
 } from "react";
+import { noFocusOnClick } from "../focus-on-click.ts";
 import { useIcon } from "../icon-context.tsx";
 import { alignAttrs, type GtkAlignProps, type GtkInputPurpose } from "../types.ts";
 
@@ -200,9 +201,7 @@ export const GtkEntry = forwardRef<HTMLInputElement, GtkEntryProps>(function Gtk
       data-disabled={disabled || undefined}
       // The entry claims presses outside its text (catchall_click_press()):
       // they don't take the focus from it, or give it.
-      onMouseDown={(e) => {
-        if (!(e.target as Element).closest("input")) e.preventDefault();
-      }}
+      {...noFocusOnClick({}, (e) => !(e.target as Element).closest("input"))}
     >
       {PrimaryIcon && (
         <span className={`gtk-image ${leftSide}`} {...iconProps("primary")}>

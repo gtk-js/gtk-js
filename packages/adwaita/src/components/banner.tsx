@@ -1,4 +1,4 @@
-import { GtkButton, GtkLabel, GtkRevealer } from "@gtk-js/gtk4";
+import { GtkButton, GtkLabel, GtkRevealer, noFocusOnClick } from "@gtk-js/gtk4";
 import {
   forwardRef,
   type HTMLAttributes,
@@ -187,7 +187,8 @@ export const AdwBanner = forwardRef<HTMLDivElement, AdwBannerProps>(function Adw
               useUnderline
               canShrink
               valign="center"
-              onMouseDown={(e) => e.preventDefault()}
+              // focus-on-click is FALSE (adw-banner.ui).
+              {...noFocusOnClick()}
               onClicked={onButtonClicked}
             />
           )}

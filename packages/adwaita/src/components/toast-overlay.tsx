@@ -1,4 +1,10 @@
-import { easeOutCubic, GtkButton, GtkLabel, prefersReducedMotion } from "@gtk-js/gtk4";
+import {
+  easeOutCubic,
+  GtkButton,
+  GtkLabel,
+  noFocusOnClick,
+  prefersReducedMotion,
+} from "@gtk-js/gtk4";
 import React, {
   forwardRef,
   type HTMLAttributes,
@@ -332,8 +338,6 @@ export function ToastWidget({ shown, hiding, onDismiss, onHidden }: ToastWidgetP
 
   // The action button turns insensitive once clicked, like action_clicked_cb().
   const [activated, setActivated] = useState(false);
-  // Both buttons have focus-on-click=FALSE.
-  const keepFocus = (e: React.MouseEvent) => e.preventDefault();
 
   return (
     <div
@@ -375,7 +379,8 @@ export function ToastWidget({ shown, hiding, onDismiss, onHidden }: ToastWidgetP
           valign="center"
           disabled={activated}
           tabIndex={hiding ? -1 : undefined}
-          onMouseDown={keepFocus}
+          // focus-on-click is FALSE, for both buttons (adw-toast-widget.ui).
+          {...noFocusOnClick()}
           onClicked={() => {
             setActivated(true);
             toast.onButtonClicked?.();
@@ -391,7 +396,7 @@ export function ToastWidget({ shown, hiding, onDismiss, onHidden }: ToastWidgetP
         valign="center"
         tooltipText="Dismiss"
         tabIndex={hiding ? -1 : undefined}
-        onMouseDown={keepFocus}
+        {...noFocusOnClick()}
         onClicked={() => onDismiss(key, toast)}
       />
     </div>

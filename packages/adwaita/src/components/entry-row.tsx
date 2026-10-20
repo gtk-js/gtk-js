@@ -3,6 +3,7 @@ import {
   GtkButton,
   type GtkInputPurpose,
   GtkLabel,
+  noFocusOnClick,
   tooltipAttrs,
   useIcon,
   useListBoxRow,
@@ -94,6 +95,7 @@ export const AdwEntryRow = forwardRef<HTMLDivElement, AdwEntryRowProps>(function
     onEntryKeyDown,
     className,
     onMouseDown,
+    onPointerDown,
     onClick,
     ...rest
   },
@@ -210,28 +212,36 @@ export const AdwEntryRow = forwardRef<HTMLDivElement, AdwEntryRowProps>(function
     [textChanged, onApply, onEntryActivated, onEntryKeyDown],
   );
 
+  // pressed_cb(): a press on the row itself, its header, its prefix and
+  // suffix boxes or the indicator focuses the text. Its widgets, the text
+  // included, take their own presses.
+  const ownPress = (e: React.MouseEvent<HTMLDivElement>) => {
+    const target = e.target as Element;
+    const header = e.currentTarget.firstElementChild;
+    const own =
+      target === e.currentTarget ||
+      target === header ||
+      (target.parentElement === header && target.matches(".prefixes, .suffixes")) ||
+      target.closest(".editable-area > .indicator");
+    return !disabled && e.button === 0 && !!own;
+  };
+
   return placeRow(
     <div
       ref={ref}
       className={classes.join(" ")}
       {...tooltipAttrs(tooltipText)}
       data-disabled={disabled || undefined}
-      // pressed_cb(): a press on the row itself, its header, its prefix and
-      // suffix boxes or the indicator focuses the text. Its widgets, the text
-      // included, take their own presses.
-      onMouseDown={(e) => {
-        onMouseDown?.(e);
-        const target = e.target as Element;
-        const header = e.currentTarget.firstElementChild;
-        const own =
-          target === e.currentTarget ||
-          target === header ||
-          (target.parentElement === header && target.matches(".prefixes, .suffixes")) ||
-          target.closest(".editable-area > .indicator");
-        if (disabled || e.button !== 0 || !own) return;
-        e.preventDefault();
-        inputRef.current?.focus();
-      }}
+      {...noFocusOnClick(
+        {
+          onMouseDown: (e) => {
+            onMouseDown?.(e);
+            if (ownPress(e)) inputRef.current?.focus();
+          },
+          onPointerDown,
+        },
+        ownPress,
+      )}
       // GtkListBox activates the row on the other clicks no widget takes,
       // which focuses the text (adw_entry_row_grab_focus()).
       onClick={(e) => {
@@ -357,7 +367,7 @@ export const AdwEntryRow = forwardRef<HTMLDivElement, AdwEntryRowProps>(function
               tooltipText="Apply"
               // It doesn't take the focus when clicked, and gives it back to
               // the text when it has it (apply_button_clicked_cb()).
-              onMouseDown={(e) => e.preventDefault()}
+              {...noFocusOnClick()}
               onClick={(e) => {
                 if (document.activeElement === e.currentTarget) inputRef.current?.focus();
                 setTextChanged(false);

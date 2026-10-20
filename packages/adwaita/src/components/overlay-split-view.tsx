@@ -1,4 +1,4 @@
-import { FOCUSABLE, isCoveredByLayer } from "@gtk-js/gtk4";
+import { FOCUSABLE, isCoveredByLayer, noFocusOnClick } from "@gtk-js/gtk4";
 import {
   type CSSProperties,
   forwardRef,
@@ -545,7 +545,7 @@ export const AdwOverlaySplitView = forwardRef<HTMLDivElement, AdwOverlaySplitVie
             zIndex: 1,
             display: overlaid ? undefined : "none",
           }}
-          onMouseDown={(e) => e.preventDefault()}
+          {...noFocusOnClick()}
           onClick={() => requestShow(false)}
         />
         <div

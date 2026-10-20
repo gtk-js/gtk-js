@@ -9,6 +9,7 @@ import React, {
   useRef,
   useState,
 } from "react";
+import { noFocusOnClick } from "../focus-on-click.ts";
 import { alignAttrs, type GtkAlignProps, type GtkOrientation } from "../types.ts";
 
 export interface GtkPanedProps extends HTMLAttributes<HTMLDivElement>, GtkAlignProps {
@@ -404,8 +405,7 @@ export const GtkPaned = forwardRef<HTMLDivElement, GtkPanedProps>(function GtkPa
           aria-valuemax={layout?.size}
           aria-valuenow={position}
           tabIndex={-1}
-          onMouseDown={(e) => e.preventDefault()}
-          onPointerDown={handlePointerDown}
+          {...noFocusOnClick({ onPointerDown: handlePointerDown })}
           onPointerMove={handlePointerMove}
           onPointerUp={endDrag}
           onPointerCancel={endDrag}
