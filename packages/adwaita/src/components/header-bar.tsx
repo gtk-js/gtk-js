@@ -4,9 +4,11 @@ import {
   GtkWindowHandle,
   useIcon,
   useWindowControls,
+  windowControlButtons,
 } from "@gtk-js/gtk4";
 import { forwardRef, type HTMLAttributes, type ReactNode } from "react";
 import type { AdwCenteringPolicy } from "../types.ts";
+import { AdwBackButton } from "./back-button.tsx";
 import { useHeaderBarTitle } from "./header-bar-title.ts";
 import { useNavigation } from "./navigation-view.tsx";
 
@@ -20,6 +22,11 @@ export interface AdwHeaderBarProps extends HTMLAttributes<HTMLDivElement> {
   centeringPolicy?: AdwCenteringPolicy;
   start?: ReactNode;
   end?: ReactNode;
+}
+
+/** Whether a start/end prop holds a child. */
+function hasChild(node: ReactNode): boolean {
+  return node !== undefined && node !== null && node !== false && node !== "";
 }
 
 /**
@@ -49,6 +56,8 @@ export const AdwHeaderBar = forwardRef<HTMLDivElement, AdwHeaderBarProps>(functi
   },
   ref,
 ) {
+  // AdwBackButton shows when it can pop and has its icon; the start box needs
+  // to know (update_box_visibility()).
   const BackIcon = useIcon("GoPrevious");
   const controls = useWindowControls();
   const decorationLayout =
@@ -75,6 +84,16 @@ export const AdwHeaderBar = forwardRef<HTMLDivElement, AdwHeaderBarProps>(functi
       />
     ) : undefined);
 
+  // A box with nothing in it is hidden, so its theme margin takes no space,
+  // like update_box_visibility().
+  const showStartBox =
+    (showStartTitleButtons && windowControlButtons(decorationLayout, "start").length > 0) ||
+    (showBackButton && nav.canPop && BackIcon !== undefined) ||
+    hasChild(start);
+  const showEndBox =
+    (showEndTitleButtons && windowControlButtons(decorationLayout, "end").length > 0) ||
+    hasChild(end);
+
   return (
     <div ref={ref} className={classes.join(" ")} {...rest}>
       <GtkWindowHandle>
@@ -85,33 +104,24 @@ export const AdwHeaderBar = forwardRef<HTMLDivElement, AdwHeaderBarProps>(functi
           data-center={showTitle && title ? "" : undefined}
           data-end=""
         >
-          <div className="gtk-box gtk-box-layout horizontal start gtk-center-layout-start">
-            {showStartTitleButtons && (
-              <GtkWindowControls side="start" decorationLayout={decorationLayout} />
-            )}
-            {showBackButton && nav.canPop && BackIcon && (
-              <button
-                className="gtk-button image-button back flat"
-                type="button"
-                aria-label="Back"
-                title={nav.previousTitle || "Back"}
-                onClick={() => nav.pop()}
-                onPointerDown={(e) => e.stopPropagation()}
-              >
-                <span className="gtk-image">
-                  <BackIcon size={16} />
-                </span>
-              </button>
-            )}
-            {start}
-          </div>
+          {showStartBox && (
+            <div className="gtk-box gtk-box-layout horizontal start gtk-center-layout-start">
+              {showStartTitleButtons && (
+                <GtkWindowControls side="start" decorationLayout={decorationLayout} />
+              )}
+              {showBackButton && <AdwBackButton />}
+              {start}
+            </div>
+          )}
           <div className="gtk-center-layout-center">{showTitle && title}</div>
-          <div className="gtk-box gtk-box-layout horizontal end gtk-center-layout-end">
-            {end}
-            {showEndTitleButtons && (
-              <GtkWindowControls side="end" decorationLayout={decorationLayout} />
-            )}
-          </div>
+          {showEndBox && (
+            <div className="gtk-box gtk-box-layout horizontal end gtk-center-layout-end">
+              {end}
+              {showEndTitleButtons && (
+                <GtkWindowControls side="end" decorationLayout={decorationLayout} />
+              )}
+            </div>
+          )}
         </div>
       </GtkWindowHandle>
     </div>
