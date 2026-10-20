@@ -1,5 +1,12 @@
 import { expect } from "vite-plus/test";
-import { compare, gtkTest } from "../harness";
+import { gtkAssert } from "../assert";
+import { compare, gtkTest, type WidgetSnapshot } from "../harness";
+
+// Native sizes are content sizes, web ones border-box sizes.
+const outerWidth = (s: WidgetSnapshot) =>
+  s.width + s.padding.left + s.padding.right + s.border_widths.left + s.border_widths.right;
+const outerHeight = (s: WidgetSnapshot) =>
+  s.height + s.padding.top + s.padding.bottom + s.border_widths.top + s.border_widths.bottom;
 
 // Filtered: font_weight, shadows — inner toggle child bleed.
 //
@@ -18,4 +25,18 @@ gtkTest("toggle-group-text-default", (native, web) => {
   expect(
     failures.filter((f) => f.property !== "font_weight" && !f.property.startsWith("shadows")),
   ).toEqual([]);
+
+  // Separators have the group's orientation (add_toggle()), and the ones next
+  // to the checked toggle are .hidden (should_hide_separators()).
+  const separators = (s: WidgetSnapshot) => s.children!.filter((c) => c.css_name === "separator");
+  const classes = (s: WidgetSnapshot) => s.css_classes!.filter((c) => !c.startsWith("gtk-"));
+  expect(separators(web).map(classes)).toEqual(separators(native).map(classes));
+  separators(native).forEach((n, i) => {
+    const w = separators(web)[i]!;
+    gtkAssert.numbersEqual(outerWidth(n), w.width, `separator ${i} width`);
+    gtkAssert.numbersEqual(outerHeight(n), w.height, `separator ${i} height`);
+    gtkAssert.numbersEqual(n.y!, w.y!, `separator ${i} y`);
+  });
+
+  gtkAssert.numbersEqual(outerHeight(native), web.height, "height");
 });

@@ -262,10 +262,10 @@ export const GtkTextView = forwardRef<HTMLTextAreaElement, GtkTextViewProps>(fun
           if (cursorVisible === undefined) setOwnCursorVisible((visible) => !visible);
           break;
         case "scroll": {
-          // The scrolled window's adjustments, else the view's own. A step is a
-          // tenth of the page, a page nine tenths (gtk_text_view_set_vadjustment_values()).
-          const parent = rootRef.current?.parentElement;
-          const scroller = parent?.classList.contains("gtk-scrolledwindow") ? parent : text;
+          // The view's adjustments: it scrolls its own text, in a scrolled window
+          // too (GtkScrollable). A step is a tenth of the page, a page nine
+          // tenths (gtk_text_view_set_vadjustment_values()).
+          const scroller = text;
           const [page, upper] =
             action.axis === "y"
               ? [scroller.clientHeight, scroller.scrollHeight]
@@ -315,6 +315,12 @@ export const GtkTextView = forwardRef<HTMLTextAreaElement, GtkTextViewProps>(fun
   const fitText = useCallback(() => {
     const text = textRef.current;
     if (!text || CSS.supports("field-sizing", "content")) return;
+    // In a GtkScrolledWindow, the window allocates the view and its text
+    // scrolls (GtkScrollable): it isn't fitted to the text.
+    if (rootRef.current?.parentElement?.classList.contains("gtk-scrolledwindow")) {
+      text.style.width = text.style.minWidth = text.style.height = text.style.minHeight = "";
+      return;
+    }
     const css = getComputedStyle(text);
     const paddingX = parseFloat(css.paddingLeft) + parseFloat(css.paddingRight);
     const paddingY = parseFloat(css.paddingTop) + parseFloat(css.paddingBottom);
