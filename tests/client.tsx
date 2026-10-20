@@ -257,6 +257,7 @@ const cases: Record<string, () => React.ReactElement> = {
   "button-text-destructive": () => (
     <GtkButton label="Button" className="destructive-action" data-testid="target" />
   ),
+  "button-text-opaque": () => <GtkButton label="Button" className="opaque" data-testid="target" />,
   "button-icon": () => <GtkButton iconName="OpenMenu" data-testid="target" />,
   "button-circular": () => (
     <GtkButton iconName="OpenMenu" className="circular" data-testid="target" />
@@ -784,6 +785,9 @@ const cases: Record<string, () => React.ReactElement> = {
   "toggle-text-checked": () => <GtkToggleButton label="Toggle" active data-testid="target" />,
   "toggle-text-flat": () => (
     <GtkToggleButton label="Toggle" hasFrame={false} data-testid="target" />
+  ),
+  "toggle-text-osd-checked": () => (
+    <GtkToggleButton label="Toggle" className="osd" active data-testid="target" />
   ),
   "toggle-disabled": () => <GtkToggleButton label="Toggle" disabled data-testid="target" />,
   "toggle-icon": () => <GtkToggleButton iconName="OpenMenu" data-testid="target" />,

@@ -150,6 +150,7 @@ enum Command {
     ButtonTextFlat,
     ButtonTextSuggested,
     ButtonTextDestructive,
+    ButtonTextOpaque,
     ButtonIcon,
     ButtonCircular,
     ButtonContentButton,
@@ -321,6 +322,7 @@ enum Command {
     ToggleTextDefault,
     ToggleTextChecked,
     ToggleTextFlat,
+    ToggleTextOsdChecked,
     ToggleDisabled,
     ToggleIcon,
     ToggleLabelChild,
@@ -492,6 +494,7 @@ impl Command {
             Self::ButtonTextFlat => Some("button-text-flat"),
             Self::ButtonTextSuggested => Some("button-text-suggested"),
             Self::ButtonTextDestructive => Some("button-text-destructive"),
+            Self::ButtonTextOpaque => Some("button-text-opaque"),
             Self::ButtonIcon => Some("button-icon"),
             Self::ButtonCircular => Some("button-circular"),
             Self::ButtonContentButton => Some("button-content-button"),
@@ -655,6 +658,7 @@ impl Command {
             Self::ToggleTextDefault => Some("toggle-text-default"),
             Self::ToggleTextChecked => Some("toggle-text-checked"),
             Self::ToggleTextFlat => Some("toggle-text-flat"),
+            Self::ToggleTextOsdChecked => Some("toggle-text-osd-checked"),
             Self::ToggleDisabled => Some("toggle-disabled"),
             Self::ToggleIcon => Some("toggle-icon"),
             Self::ToggleLabelChild => Some("toggle-label-child"),
@@ -981,6 +985,7 @@ fn create_widget_for_case(name: &str) -> Option<(gtk::Widget, bool)> {
         "button-text-destructive" => {
             widget_case!(cases::button_text_destructive::ButtonTextDestructive, false)
         }
+        "button-text-opaque" => widget_case!(cases::button_text_opaque::ButtonTextOpaque, false),
         "button-icon" => widget_case!(cases::button_icon::ButtonIcon, false),
         "button-circular" => widget_case!(cases::button_circular::ButtonCircular, false),
         "button-content-button" => {
@@ -1391,6 +1396,9 @@ fn create_widget_for_case(name: &str) -> Option<(gtk::Widget, bool)> {
         "toggle-text-default" => widget_case!(cases::toggle_text_default::ToggleTextDefault, false),
         "toggle-text-checked" => widget_case!(cases::toggle_text_checked::ToggleTextChecked, false),
         "toggle-text-flat" => widget_case!(cases::toggle_text_flat::ToggleTextFlat, false),
+        "toggle-text-osd-checked" => {
+            widget_case!(cases::toggle_text_osd_checked::ToggleTextOsdChecked, false)
+        }
         "toggle-disabled" => widget_case!(cases::toggle_disabled::ToggleDisabled, false),
         "toggle-icon" => widget_case!(cases::toggle_icon::ToggleIcon, false),
         "toggle-label-child" => {
@@ -1570,6 +1578,7 @@ fn is_known_case(name: &str) -> bool {
             | "button-text-flat"
             | "button-text-suggested"
             | "button-text-destructive"
+            | "button-text-opaque"
             | "button-icon"
             | "button-circular"
             | "button-content-button"
@@ -1722,6 +1731,7 @@ fn is_known_case(name: &str) -> bool {
             | "toggle-text-default"
             | "toggle-text-checked"
             | "toggle-text-flat"
+            | "toggle-text-osd-checked"
             | "toggle-disabled"
             | "toggle-icon"
             | "toggle-label-child"
