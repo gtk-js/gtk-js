@@ -624,6 +624,19 @@
   inset: -6px;
 }
 
+/* === GtkEditableLabel === */
+/* Its stack is homogeneous, so the hidden page still sizes it: the label, and
+   the text, whose natural width is NAT_ENTRY_WIDTH and minimum 0
+   (gtk_text_measure()). The text fills a wider label's width. */
+.gtk-editablelabel > .gtk-stack > [aria-hidden="true"] {
+  visibility: hidden;
+}
+
+.gtk-editablelabel > .gtk-stack > .gtk-text {
+  width: 150px;
+  min-width: 100%;
+}
+
 /* === CenterLayout === */
 /* True centering: center child is always centered relative to the full width,
    regardless of start/end sizes. Uses CSS grid with start | spacing | center |

@@ -151,6 +151,11 @@ body:has(> :first-child:has([data-gtk-provider])) > :first-child {
   outline: none;
 }
 
+/* GtkEditableLabel is focused itself, outside of editing; Adwaita draws no ring for it. */
+:where([data-gtk-provider] .gtk-editablelabel) {
+  outline: none;
+}
+
 :where([data-gtk-provider] input),
 :where([data-gtk-provider] textarea),
 :where([data-gtk-provider] select) {
