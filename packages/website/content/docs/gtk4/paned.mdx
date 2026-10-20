@@ -29,7 +29,12 @@ paned[.horizontal|.vertical]
 
 ## Behavior
 
-- Drag the separator handle to resize the two panes.
+- Drag the separator handle to resize the two panes. The position is clamped to the
+  children's minimum sizes unless they can shrink (`shrinkStartChild`, `shrinkEndChild`),
+  and `resizeStartChild`/`resizeEndChild` pick which child grows when the paned does.
+- **F8** from a child focuses the handle: the arrow keys move it by 1px (with
+  **Ctrl**, or **Page Up**/**Page Down**, by 75px), **Home**/**End**
+  to the ends, **Enter** keeps the position and **Escape** restores it.
 - `wideHandle` makes the separator easier to grab.
 
 [GTK4 Documentation →](https://docs.gtk.org/gtk4/class.Paned.html)

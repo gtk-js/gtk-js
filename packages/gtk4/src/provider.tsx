@@ -6,9 +6,11 @@ import {
   type ReactNode,
   version as reactVersion,
   useContext,
+  useEffect,
   useInsertionEffect,
   useLayoutEffect,
   useMemo,
+  useRef,
   useState,
   useSyncExternalStore,
 } from "react";
@@ -17,6 +19,7 @@ import { type IconMap, IconProvider } from "./icon-context.tsx";
 import layoutCSS from "./layouts/layout.css?raw";
 import { weighGtkNodeClasses } from "./layouts/specificity.ts";
 import resetCSS from "./reset.css?raw";
+import { GtkTooltipLayer, trackTooltips } from "./tooltip.tsx";
 
 export interface GtkProviderProps {
   /** Theme instance. Call theme.getCSS() to get the CSS to inject. */
@@ -110,7 +113,35 @@ function useServerRender() {
   );
 }
 
+/** How long transitions stay off while the theme switches, AdwStyleManager's SWITCH_DURATION. */
+const SWITCH_DURATION = 250;
+
+const SWITCHING_ID = "gtk-js-switching";
+const SWITCHING_CSS =
+  "[data-gtk-provider], [data-gtk-provider] *, [data-gtk-provider] *::before, [data-gtk-provider] *::after { transition: none !important; }";
+
+let switchTimer: ReturnType<typeof setTimeout> | undefined;
+
+/**
+ * Turns transitions off for a moment while the stylesheet changes, like
+ * update_stylesheet() in adw-style-manager.c: widgets switch to the new theme,
+ * color scheme or accent at once instead of fading between the two.
+ */
+export function suppressTransitions() {
+  let style = document.getElementById(SWITCHING_ID);
+  if (!style) {
+    style = document.createElement("style");
+    style.id = SWITCHING_ID;
+    style.textContent = SWITCHING_CSS;
+    document.head.appendChild(style);
+  }
+  clearTimeout(switchTimer);
+  switchTimer = setTimeout(() => style.remove(), SWITCH_DURATION);
+}
+
 const ThemeContext = createContext<GtkTheme | undefined>(undefined);
+/** The provider's `style`, for GtkProviderBoundary. */
+const ProviderStyleContext = createContext<CSSProperties | undefined>(undefined);
 
 export function useGtkTheme() {
   return useContext(ThemeContext);
@@ -169,6 +200,8 @@ export function GtkProvider({
   // Inject theme CSS inline
   useInsertionEffect(() => {
     if (!resolvedCSSText) return;
+    // A new theme, color scheme or accent: switch to it without fading.
+    suppressTransitions();
 
     const existing = document.getElementById(THEME_ID);
     if (existing) {
@@ -211,6 +244,10 @@ export function GtkProvider({
   // Layout CSS reads hexpand/vexpand as GTK computes them up the widget tree.
   useLayoutEffect(trackExpand, []);
 
+  // Widgets' tooltips (GtkWidget:tooltip-text), shown in this provider.
+  const rootRef = useRef<HTMLDivElement>(null);
+  useEffect(trackTooltips, []);
+
   // Reveal once the theme CSS applies. With inline CSS that's now, before the first
   // paint: a state update from a layout effect renders synchronously.
   useLayoutEffect(() => {
@@ -220,39 +257,62 @@ export function GtkProvider({
 
   return (
     <ThemeContext.Provider value={theme}>
-      <IconProvider value={iconMap}>
-        {/* The CSS in the server HTML, so it's styled at first paint. Rendered while
-            hydrating too, to match; the effects above then take the elements over. */}
-        {HOISTS_STYLESHEETS && serverRender && (
-          <>
-            <style href={RESET_ID} precedence={RESET_ID}>
-              {BASE_CSS}
-            </style>
-            {resolvedCSSText ? (
-              <style href={THEME_ID} precedence={THEME_ID}>
-                {resolvedCSSText}
+      <ProviderStyleContext.Provider value={style}>
+        <IconProvider value={iconMap}>
+          {/* The CSS in the server HTML, so it's styled at first paint. Rendered while
+              hydrating too, to match; the effects above then take the elements over. */}
+          {HOISTS_STYLESHEETS && serverRender && (
+            <>
+              <style href={RESET_ID} precedence={RESET_ID}>
+                {BASE_CSS}
               </style>
-            ) : (
-              cssHref && <link rel="stylesheet" href={cssHref} precedence={THEME_ID} />
-            )}
-          </>
-        )}
-        {!ready && (
-          <noscript>
-            <style>{NOSCRIPT_CSS}</style>
-          </noscript>
-        )}
-        <div
-          data-gtk-provider=""
-          data-gtk-ready={ready ? "" : undefined}
-          aria-busy={ready ? undefined : true}
-          className="background"
-          // Hidden, not display: none, so the content is laid out (and measured) already.
-          style={ready ? style : { ...style, visibility: "hidden" }}
-        >
-          {children}
-        </div>
-      </IconProvider>
+              {resolvedCSSText ? (
+                <style href={THEME_ID} precedence={THEME_ID}>
+                  {resolvedCSSText}
+                </style>
+              ) : (
+                cssHref && <link rel="stylesheet" href={cssHref} precedence={THEME_ID} />
+              )}
+            </>
+          )}
+          {!ready && (
+            <noscript>
+              <style>{NOSCRIPT_CSS}</style>
+            </noscript>
+          )}
+          <div
+            ref={rootRef}
+            data-gtk-provider=""
+            data-gtk-ready={ready ? "" : undefined}
+            aria-busy={ready ? undefined : true}
+            className="background"
+            // Hidden, not display: none, so the content is laid out (and measured) already.
+            style={ready ? style : { ...style, visibility: "hidden" }}
+          >
+            {children}
+            <GtkTooltipLayer rootRef={rootRef} />
+          </div>
+        </IconProvider>
+      </ProviderStyleContext.Provider>
     </ThemeContext.Provider>
+  );
+}
+
+/**
+ * Re-establishes the provider's scope (reset, default font, theme variables)
+ * around content portaled out of it, e.g. a dialog rendered into
+ * document.body. It generates no box of its own.
+ */
+export function GtkProviderBoundary({ children }: { children: ReactNode }) {
+  const style = useContext(ProviderStyleContext);
+  return (
+    <div
+      data-gtk-provider=""
+      data-gtk-portal=""
+      className="background"
+      style={{ ...style, display: "contents" }}
+    >
+      {children}
+    </div>
   );
 }

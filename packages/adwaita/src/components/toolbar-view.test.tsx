@@ -33,3 +33,20 @@ describe("AdwToolbarView undershoots", () => {
     for (const markup of html) expect(classOf(markup)).not.toContain("undershoot-top");
   });
 });
+
+describe("AdwToolbarView bars", () => {
+  test("hidden bars stay mounted, out of view, like a revealer's child", () => {
+    const html = renderToStaticMarkup(
+      <AdwToolbarView topBars={<input />} revealTopBars={false} content="Content" />,
+    );
+    expect(html).toMatch(/class="gtk-revealer gtk-bin-layout top-bar"[^>]*visibility:hidden/);
+    expect(html).toContain("<input/>");
+  });
+
+  test("content extended to an edge spans the bar's row, and is painted under the bars", () => {
+    const html = renderToStaticMarkup(
+      <AdwToolbarView topBars={<div />} extendContentToTopEdge content="Content" />,
+    );
+    expect(html).toContain("grid-row:1 / 3;grid-column:1;order:-1");
+  });
+});
