@@ -122,6 +122,36 @@
   align-self: center;
 }
 
+/* === GtkCheckButton indicator === */
+/* The check or radio is a GtkBuiltinIcon (gtk_check_button_init()): over its
+ * background it draws the theme's -gtk-icon-source, the check mark, bullet or
+ * dash, stretched over its content box (gtk_builtin_icon_snapshot()), which is
+ * -gtk-icon-size big (gtk_builtin_icon_measure()). @gtk-js/gtk-css keeps a
+ * -gtk-recolor()ed image as --gtk-icon-source, painted here in the node's
+ * color like a recolored symbolic image. Like -gtk-icon-source, it isn't
+ * inherited. */
+@property --gtk-icon-source {
+  syntax: "*";
+  inherits: false;
+}
+
+:is(.gtk-check, .gtk-radio) {
+  display: grid;
+}
+
+:is(.gtk-check, .gtk-radio)::before {
+  --gtk-icon-source: inherit;
+  content: "";
+  min-width: var(--gtk-icon-size);
+  min-height: var(--gtk-icon-size);
+  background-color: currentColor;
+  /* `none` is a transparent layer, so without an image nothing is painted;
+     as the only layer, it would mean no mask at all. */
+  mask:
+    var(--gtk-icon-source, none) 0 0 / 100% 100% no-repeat,
+    linear-gradient(transparent, transparent);
+}
+
 /* === BinLayout === */
 /* Single-cell grid overlay. Used by GtkHeaderBar (outer), GtkWindowHandle, etc.
  * GtkButton and the widgets built on it lay out their one child with it too

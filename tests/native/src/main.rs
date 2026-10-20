@@ -145,6 +145,8 @@ enum Command {
     CheckButtonDisabled,
     CheckButtonCheckedDisabled,
     CheckButtonNoLabel,
+    CheckButtonCustomChild,
+    CheckButtonEmptyLabel,
     EditableLabelDisplayDefault,
     EditableLabelDisplayEmpty,
     EditableLabelEditingActive,
@@ -415,6 +417,8 @@ impl Command {
             Self::CheckButtonDisabled => Some("check-button-disabled"),
             Self::CheckButtonCheckedDisabled => Some("check-button-checked-disabled"),
             Self::CheckButtonNoLabel => Some("check-button-no-label"),
+            Self::CheckButtonCustomChild => Some("check-button-custom-child"),
+            Self::CheckButtonEmptyLabel => Some("check-button-empty-label"),
             Self::EditableLabelDisplayDefault => Some("editable-label-display-default"),
             Self::EditableLabelDisplayEmpty => Some("editable-label-display-empty"),
             Self::EditableLabelEditingActive => Some("editable-label-editing-active"),
@@ -825,6 +829,12 @@ fn create_widget_for_case(name: &str) -> Option<(gtk::Widget, bool)> {
         }
         "check-button-no-label" => {
             widget_case!(cases::check_button_no_label::CheckButtonNoLabel, false)
+        }
+        "check-button-custom-child" => {
+            widget_case!(cases::check_button_custom_child::CheckButtonCustomChild, false)
+        }
+        "check-button-empty-label" => {
+            widget_case!(cases::check_button_empty_label::CheckButtonEmptyLabel, false)
         }
         "editable-label-display-default" => {
             widget_case!(
@@ -1243,6 +1253,8 @@ fn is_known_case(name: &str) -> bool {
             | "check-button-disabled"
             | "check-button-checked-disabled"
             | "check-button-no-label"
+            | "check-button-custom-child"
+            | "check-button-empty-label"
             | "editable-label-display-default"
             | "editable-label-display-empty"
             | "editable-label-editing-active"

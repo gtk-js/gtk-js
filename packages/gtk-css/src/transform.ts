@@ -289,6 +289,36 @@ const remapPseudoClasses: Plugin = {
 };
 
 /**
+ * PostCSS plugin: A check button's check or radio is hovered and pressed with
+ * the button.
+ *
+ * gtk_check_button_state_flags_changed() gives the indicator all of the check
+ * button's state flags, so it shows :hover and :active while the pointer is
+ * anywhere on the button, its label included. The indicator carries the
+ * button's :checked, :indeterminate and :disabled itself; the pointer's states
+ * also match through its parent. `:is()` keeps the selector's specificity.
+ */
+const INDICATOR_RE = /^:where\(\.gtk-(?:check|radio)\):not\(_\)/;
+const POINTER_STATE_RE = /:(hover|active)(?![\w-])/g;
+const mirrorIndicatorState: Plugin = {
+  postcssPlugin: "gtk-mirror-indicator-state",
+  Rule(rule) {
+    const selectors = rule.selectors.map((selector) => {
+      const start = lastCompoundStart(selector);
+      const subject = selector.slice(start);
+      // (Idempotent: PostCSS revisits rules whose selector changed.)
+      if (!INDICATOR_RE.test(subject) || subject.includes(".gtk-checkbutton:")) return selector;
+      const mirrored = subject.replace(
+        POINTER_STATE_RE,
+        (_, state: string) => `:is(:${state}, :where(.gtk-checkbutton:${state} > *))`,
+      );
+      return selector.slice(0, start) + mirrored;
+    });
+    if (selectors.some((s, i) => s !== rule.selectors[i])) rule.selectors = selectors;
+  },
+};
+
+/**
  * PostCSS plugin: Handle -gtk-* vendor properties.
  */
 const handleGtkProperties: Plugin = {
@@ -358,8 +388,22 @@ const handleGtkProperties: Plugin = {
         decl.prop = "--gtk-icon-size";
         break;
 
+      case "-gtk-icon-source": {
+        // A theme's own symbolic image, recolored to the node's color, like a
+        // check's mark: kept for layout.css to paint (see --gtk-icon-source
+        // there). Icon theme icons, -gtk-icontheme(), come from the
+        // components' icon set instead.
+        const url = recoloredImageUrl(decl.value);
+        if (url || decl.value.trim() === "none") {
+          decl.prop = "--gtk-icon-source";
+          decl.value = url ?? "none";
+        } else {
+          decl.remove();
+        }
+        break;
+      }
+
       case "-gtk-icon-palette":
-      case "-gtk-icon-source":
       case "-gtk-icon-style":
       case "-gtk-icon-filter":
       case "-gtk-icon-weight":
@@ -376,6 +420,11 @@ const handleGtkProperties: Plugin = {
     }
   },
 };
+
+/** The url() of `-gtk-recolor(url(…))`, a symbolic image in the node's colors; null otherwise. */
+function recoloredImageUrl(value: string): string | null {
+  return value.trim().match(/^-gtk-recolor\(\s*(url\([^()]*\))\s*\)$/)?.[1] ?? null;
+}
 
 /**
  * PostCSS plugin: Replace CSS image() function with linear-gradient() fallback.
@@ -949,6 +998,7 @@ export function buildGtkToWeb(assetPlugin?: Plugin) {
     remapSelectors,
     remapSelectionNode,
     remapPseudoClasses,
+    mirrorIndicatorState,
     handleGtkProperties,
     fixGtkTransitionRefs,
     convertGtkColorFunctions,
