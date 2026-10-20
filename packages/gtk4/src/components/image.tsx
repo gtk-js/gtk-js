@@ -42,7 +42,14 @@ export const GtkImage = forwardRef<HTMLSpanElement, GtkImageProps>(function GtkI
   else if (iconSize === "large") classes.push("large-icons");
   if (className) classes.push(className);
 
+  // Without a pixel size, the icon is the CSS -gtk-icon-size, inherited from
+  // the image's parents or set by its .normal-icons/.large-icons class
+  // (gtk_icon_helper_get_size()).
   const size = pixelSize >= 0 ? pixelSize : iconSize === "large" ? 32 : 16;
+  const iconStyle =
+    pixelSize >= 0
+      ? undefined
+      : { width: `var(--gtk-icon-size, ${size}px)`, height: `var(--gtk-icon-size, ${size}px)` };
 
   return (
     <span
@@ -51,7 +58,7 @@ export const GtkImage = forwardRef<HTMLSpanElement, GtkImageProps>(function GtkI
       {...alignAttrs(halign, valign, hexpand, vexpand)}
       {...rest}
     >
-      {Icon && <Icon size={size} />}
+      {Icon && <Icon size={size} style={iconStyle} />}
     </span>
   );
 });

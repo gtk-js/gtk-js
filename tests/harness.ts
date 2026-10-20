@@ -29,6 +29,8 @@ export interface WidgetSnapshot {
   css_name?: string;
   css_classes?: string[];
   children?: WidgetSnapshot[];
+  /** The colors of the widget's text runs, in drawing order (native only). */
+  text_colors?: Color[];
 }
 
 export interface Sides {
@@ -509,7 +511,10 @@ export function compare(native: WidgetSnapshot, web: WidgetSnapshot): CompareRes
   function normalizeFontFamily(f: string) {
     return f.toLowerCase().replace("adwaita sans", "cantarell");
   }
-  if (native.font_family && web.font_family) {
+  // A generic family (the monospace font's default) is resolved by fontconfig
+  // like Pango's "Monospace" alias, so native reports the font it picked.
+  const genericFamily = ["monospace", "sans-serif", "serif"].includes(web.font_family ?? "");
+  if (native.font_family && web.font_family && !genericFamily) {
     if (normalizeFontFamily(native.font_family) !== normalizeFontFamily(web.font_family)) {
       failures.push({ property: "font_family", native: native.font_family, web: web.font_family });
     }
@@ -579,7 +584,12 @@ export function findChild(tree: WidgetSnapshot, cssName: string, index = 0): Wid
   throw new Error(`Child with css_name="${cssName}" (index ${index}) not found in tree`);
 }
 
-export type GtkTestCallback = (native: WidgetSnapshot, web: WidgetSnapshot) => void;
+export type GtkTestCallback = (
+  native: WidgetSnapshot,
+  web: WidgetSnapshot,
+  /** "chromium" or "firefox", for differences only one engine has. */
+  browserName: string,
+) => void;
 
 export interface GtkTestOptions {
   /** CSS selector for a child element within [data-testid='target'] to extract styles from.
@@ -606,7 +616,7 @@ export function gtkTest(
         ]);
         try {
           if (callback) {
-            callback(native, web);
+            callback(native, web, browserName);
           } else {
             const result = compare(native, web);
             if (result.failures.length > 0) {

@@ -1,5 +1,13 @@
 import { useIcon } from "@gtk-js/gtk4";
-import { forwardRef, type HTMLAttributes, type ReactNode, useMemo } from "react";
+import {
+  forwardRef,
+  type HTMLAttributes,
+  type ReactNode,
+  useId,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+} from "react";
 
 export interface AdwAvatarProps extends HTMLAttributes<HTMLDivElement> {
   /** Text used to generate initials and color. */
@@ -17,14 +25,27 @@ export interface AdwAvatarProps extends HTMLAttributes<HTMLDivElement> {
 // Number of avatar palettes in _avatar.scss (NUMBER_OF_COLORS in adw-avatar.c).
 const NUMBER_OF_COLORS = 14;
 
-// Matches GLib's g_str_hash: DJB2-add seeded at 5381, unsigned 32-bit result.
-// adw-avatar.c:143 uses g_str_hash(text) % NUMBER_OF_COLORS directly.
+const encoder = new TextEncoder();
+
+// Matches GLib's g_str_hash: DJB2-add seeded at 5381 over the UTF-8 bytes read
+// as signed chars, unsigned 32-bit result. adw-avatar.c:143 uses
+// g_str_hash(text) % NUMBER_OF_COLORS directly.
 function hashString(s: string): number {
   let hash = 5381;
-  for (let i = 0; i < s.length; i++) {
-    hash = ((hash << 5) + hash + s.charCodeAt(i)) >>> 0;
+  for (const byte of encoder.encode(s)) {
+    hash = (hash * 33 + ((byte << 24) >> 24)) >>> 0;
   }
   return hash;
+}
+
+/**
+ * The initials' font size in px, like update_font_size(): scales the label's
+ * measured size (at its CSS font) to fit the largest square inside the
+ * circle, minus a padding that grows with the avatar.
+ */
+export function initialsFontSize(width: number, height: number, size: number): number {
+  const maxSize = size / 1.4142 - Math.max(size * 0.4 - 5, 0);
+  return Math.min(Math.max((height * maxSize) / width, 0), maxSize);
 }
 
 function getInitials(text: string): string {
@@ -49,18 +70,42 @@ export const AdwAvatar = forwardRef<HTMLDivElement, AdwAvatarProps>(function Adw
   { text = "", showInitials = false, iconName, customImage, size = 48, className, style, ...rest },
   ref,
 ) {
-  const colorIndex = useMemo(() => {
-    if (!text) return Math.floor(Math.random() * NUMBER_OF_COLORS);
-    return hashString(text) % NUMBER_OF_COLORS;
-  }, [text]);
+  // Without a text, upstream picks g_rand_int_range(1, NUMBER_OF_COLORS), i.e.
+  // never the last color. Seed it from useId() so server and client agree.
+  const id = useId();
+  const colorClass = text
+    ? (hashString(text) % NUMBER_OF_COLORS) + 1
+    : (hashString(id) % (NUMBER_OF_COLORS - 1)) + 1;
 
   const initials = useMemo(() => getInitials(text), [text]);
+  const labelRef = useRef<HTMLSpanElement>(null);
   const FallbackIcon = useIcon(iconName ?? "AvatarDefault");
 
   const showIcon = !customImage && (!showInitials || !initials);
   const showText = !customImage && showInitials && !!initials;
 
-  const classes = ["gtk-avatar", `color${colorIndex + 1}`];
+  // Like update_font_size(), on every text, size or font change.
+  useLayoutEffect(() => {
+    const label = labelRef.current;
+    if (!label) return;
+    let live = true;
+    const fit = () => {
+      if (!live) return;
+      label.style.fontSize = "";
+      // pango_layout_get_pixel_size() rounds the logical extents out.
+      const rect = label.getBoundingClientRect();
+      const width = Math.ceil(rect.width);
+      const height = Math.ceil(rect.height);
+      if (width) label.style.fontSize = `${initialsFontSize(width, height, size)}px`;
+    };
+    fit();
+    document.fonts?.ready.then(fit);
+    return () => {
+      live = false;
+    };
+  }, [initials, size, showText]);
+
+  const classes = ["gtk-avatar", `color${colorClass}`];
   if (size < 25) classes.push("contrasted");
   if (customImage) classes.push("image");
 
@@ -73,7 +118,6 @@ export const AdwAvatar = forwardRef<HTMLDivElement, AdwAvatarProps>(function Adw
     display: "inline-flex",
     alignItems: "center",
     justifyContent: "center",
-    fontSize: size * 0.4,
   };
 
   return (
@@ -92,10 +136,14 @@ export const AdwAvatar = forwardRef<HTMLDivElement, AdwAvatarProps>(function Adw
         style={avatarStyle}
       >
         {customImage}
-        {showText && <span className="gtk-label">{initials}</span>}
+        {showText && (
+          <span ref={labelRef} className="gtk-label">
+            {initials}
+          </span>
+        )}
         {showIcon && FallbackIcon && (
           <span className="gtk-image">
-            <FallbackIcon size={Math.round(size * 0.5)} />
+            <FallbackIcon size={Math.floor(size / 2)} />
           </span>
         )}
       </div>

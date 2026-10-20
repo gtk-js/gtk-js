@@ -24,9 +24,19 @@ grid
   name="GtkGridProps"
 />
 
+### Child placement
+
+GtkGrid reads these from each child's props, like `gtk_grid_attach()`, and doesn't pass them on.
+
+<AutoTypeTable
+  path="../gtk4/src/components/grid.tsx"
+  name="GtkGridChildProps"
+/>
+
 ## Behavior
 
-- Children can specify `column`, `row`, `columnSpan`, and `rowSpan` props for explicit placement.
+- Children fill their cells unless their `halign` / `valign` say otherwise.
+- Only columns (rows) with a child that expands (`hexpand` / `vexpand`, also when something inside it expands) take extra space, unless the grid is homogeneous.
 - Without placement props, children flow naturally.
 - Uses CSS Grid for layout.
 
