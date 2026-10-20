@@ -13,6 +13,9 @@ impl SimpleComponent for LevelbarContinuousVertical {
         gtk::LevelBar {
             set_value: 0.4,
             set_orientation: gtk::Orientation::Vertical,
+            set_height_request: 200,
+            set_halign: gtk::Align::Start,
+            set_valign: gtk::Align::Start,
         }
     }
 

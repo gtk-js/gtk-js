@@ -1,5 +1,12 @@
 import { expect } from "vite-plus/test";
-import { compare, gtkTest } from "../harness";
+import { gtkAssert } from "../assert";
+import { compare, gtkTest, type WidgetSnapshot } from "../harness";
+
+// Native sizes are content sizes, web ones border-box sizes.
+const outerWidth = (s: WidgetSnapshot) =>
+  s.width + s.padding.left + s.padding.right + s.border_widths.left + s.border_widths.right;
+const outerHeight = (s: WidgetSnapshot) =>
+  s.height + s.padding.top + s.padding.bottom + s.border_widths.top + s.border_widths.bottom;
 
 // Filtered: font_weight, shadows — inner toggle child bleed.
 //
@@ -15,4 +22,21 @@ gtkTest("toggle-group-icon", (native, web) => {
   expect(
     failures.filter((f) => f.property !== "font_weight" && !f.property.startsWith("shadows")),
   ).toEqual([]);
+
+  gtkAssert.numbersEqual(outerWidth(native), web.width, "width");
+  gtkAssert.numbersEqual(outerHeight(native), web.height, "height");
+
+  // Each toggle's image fills its width and is centered vertically, like
+  // gtk_button_set_icon_name() lays it out.
+  const toggles = (s: WidgetSnapshot) => s.children!.filter((c) => c.css_name === "toggle");
+  toggles(native).forEach((n, i) => {
+    const w = toggles(web)[i]!;
+    gtkAssert.numbersEqual(n.x!, w.x!, `toggle ${i} x`);
+    gtkAssert.numbersEqual(outerWidth(n), w.width, `toggle ${i} width`);
+    const [nImage, wImage] = [n.children![0]!, w.children![0]!];
+    expect(wImage.css_name).toBe("image");
+    for (const key of ["x", "y", "width", "height"] as const) {
+      gtkAssert.numbersEqual(nImage[key]!, wImage[key]!, `toggle ${i} image ${key}`);
+    }
+  });
 });

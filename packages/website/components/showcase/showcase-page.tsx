@@ -141,9 +141,9 @@ export function ShowcasePage() {
     if (el) el.scrollTop = el.scrollHeight;
   }, [displayCode]);
 
+  // Called once a press on the title bar passes the drag threshold, with that
+  // pointer move (presses on its buttons never start a move).
   const handleWindowHandleDragStart = (e: React.PointerEvent<HTMLDivElement>) => {
-    if ((e.target as HTMLElement).closest("button")) return;
-    if (e.button !== 0) return;
     if (maximized) return;
     e.currentTarget.setPointerCapture(e.pointerId);
     dragRef.current = { startX: e.clientX, startY: e.clientY, origX: pos.x, origY: pos.y };
