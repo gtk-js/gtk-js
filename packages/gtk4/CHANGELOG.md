@@ -1,5 +1,12 @@
 # @gtk-js/gtk4
 
+## [0.1.10](https://github.com/gtk-js/gtk-js/compare/gtk4-v0.1.9...gtk4-v0.1.10) (2026-10-20)
+
+
+### Features
+
+* GtkButton canTarget and focusable, like GtkWidget's can-target and focusable ([055deb0](https://github.com/gtk-js/gtk-js/commit/055deb0342887e498360c3846e5fc97c4879eb34))
+
 ## [0.1.9](https://github.com/gtk-js/gtk-js/compare/gtk4-v0.1.8...gtk4-v0.1.9) (2026-10-20)
 
 
