@@ -1,4 +1,4 @@
-import { useIcon } from "@gtk-js/gtk4";
+import { tooltipAttrs, useIcon } from "@gtk-js/gtk4";
 import React, {
   forwardRef,
   type HTMLAttributes,
@@ -296,7 +296,7 @@ function ToastWidget({ shown, hiding, onDismiss, onHidden }: ToastWidgetProps) {
       <button
         type="button"
         className="gtk-button circular flat image-button gtk-bin-layout"
-        title="Dismiss"
+        {...tooltipAttrs("Dismiss")}
         tabIndex={hiding ? -1 : undefined}
         onClick={() => onDismiss(key, toast)}
       >

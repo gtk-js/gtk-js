@@ -10,7 +10,11 @@ describe("GtkWindowTitle", () => {
       <GtkWindowTitle title="Title" subtitle="Subtitle" style={{ color: "red" }} />,
     );
     expect(html).toContain('<div class="gtk-windowtitle" style="color:red">');
-    expect(html).toContain('<span class="gtk-label title">Title</span>');
     expect(html).toContain('<span class="gtk-label subtitle">Subtitle</span>');
+  });
+
+  test("the title is at least five characters wide, its padding aside (width-chars=5)", () => {
+    const html = renderToStaticMarkup(<GtkWindowTitle title="Title" />);
+    expect(html).toContain('<span class="gtk-label title" style="min-width:5ch">Title</span>');
   });
 });
