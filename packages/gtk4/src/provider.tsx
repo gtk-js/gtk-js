@@ -5,15 +5,18 @@ import {
   createContext,
   type ReactNode,
   useContext,
+  useEffect,
   useInsertionEffect,
   useLayoutEffect,
   useMemo,
+  useRef,
 } from "react";
 import { trackExpand } from "./expand.ts";
 import { type IconMap, IconProvider } from "./icon-context.tsx";
 import layoutCSS from "./layouts/layout.css?raw";
 import { weighGtkNodeClasses } from "./layouts/specificity.ts";
 import resetCSS from "./reset.css?raw";
+import { GtkTooltipLayer, trackTooltips } from "./tooltip.tsx";
 
 export interface GtkProviderProps {
   /** Theme instance. Call theme.getCSS() to get the CSS to inject. */
@@ -33,6 +36,8 @@ export interface GtkProviderProps {
 }
 
 const ThemeContext = createContext<GtkTheme | undefined>(undefined);
+/** The provider's `style`, for GtkProviderBoundary. */
+const ProviderStyleContext = createContext<CSSProperties | undefined>(undefined);
 
 export function useGtkTheme() {
   return useContext(ThemeContext);
@@ -125,13 +130,39 @@ export function GtkProvider({
   // Layout CSS reads hexpand/vexpand as GTK computes them up the widget tree.
   useLayoutEffect(trackExpand, []);
 
+  // Widgets' tooltips (GtkWidget:tooltip-text), shown in this provider.
+  const rootRef = useRef<HTMLDivElement>(null);
+  useEffect(trackTooltips, []);
+
   return (
     <ThemeContext.Provider value={theme}>
-      <IconProvider value={iconMap}>
-        <div data-gtk-provider="" className="background" style={style}>
-          {children}
-        </div>
-      </IconProvider>
+      <ProviderStyleContext.Provider value={style}>
+        <IconProvider value={iconMap}>
+          <div ref={rootRef} data-gtk-provider="" className="background" style={style}>
+            {children}
+            <GtkTooltipLayer rootRef={rootRef} />
+          </div>
+        </IconProvider>
+      </ProviderStyleContext.Provider>
     </ThemeContext.Provider>
+  );
+}
+
+/**
+ * Re-establishes the provider's scope (reset, default font, theme variables)
+ * around content portaled out of it, e.g. a dialog rendered into
+ * document.body. It generates no box of its own.
+ */
+export function GtkProviderBoundary({ children }: { children: ReactNode }) {
+  const style = useContext(ProviderStyleContext);
+  return (
+    <div
+      data-gtk-provider=""
+      data-gtk-portal=""
+      className="background"
+      style={{ ...style, display: "contents" }}
+    >
+      {children}
+    </div>
   );
 }

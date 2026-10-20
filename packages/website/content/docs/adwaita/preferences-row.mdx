@@ -14,7 +14,8 @@ import Example from "./examples/preferences-row";
 ## CSS Node Tree
 
 ```
-row
+row[.activatable]
+  └── <child>
 ```
 
 ## Props
@@ -26,6 +27,8 @@ row
 
 ## Behavior
 
-- Not typically used directly. Subclassed by `AdwActionRow`, `AdwSwitchRow`, `AdwComboRow`, etc.
+- Not typically used directly. Subclassed by `AdwActionRow`, `AdwSwitchRow`, `AdwComboRow`, etc., which show the title.
+- The row shows only its child. The `title` names the preference (`AdwPreferencesDialog` searches it) but isn't displayed.
+- Like any list row, it's activatable and focusable by default.
 
 [Adwaita Documentation →](https://gnome.pages.gitlab.gnome.org/libadwaita/doc/1-latest/class.PreferencesRow.html)
