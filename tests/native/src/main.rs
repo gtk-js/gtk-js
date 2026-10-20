@@ -230,6 +230,7 @@ enum Command {
     PopoverNoArrow,
     PasswordEntryDefault,
     PasswordEntryDisabled,
+    PasswordEntryNaturalWidth,
     PasswordEntryPeekIcon,
     #[clap(name = "progressbar-horizontal-50")]
     ProgressbarHorizontal50,
@@ -547,6 +548,7 @@ impl Command {
             Self::PopoverNoArrow => Some("popover-no-arrow"),
             Self::PasswordEntryDefault => Some("password-entry-default"),
             Self::PasswordEntryDisabled => Some("password-entry-disabled"),
+            Self::PasswordEntryNaturalWidth => Some("password-entry-natural-width"),
             Self::PasswordEntryPeekIcon => Some("password-entry-peek-icon"),
             Self::ProgressbarHorizontal50 => Some("progressbar-horizontal-50"),
             Self::ProgressbarHorizontal0 => Some("progressbar-horizontal-0"),
@@ -1107,6 +1109,12 @@ fn create_widget_for_case(name: &str) -> Option<(gtk::Widget, bool)> {
         "password-entry-disabled" => {
             widget_case!(cases::password_entry_disabled::PasswordEntryDisabled, false)
         }
+        "password-entry-natural-width" => {
+            widget_case!(
+                cases::password_entry_natural_width::PasswordEntryNaturalWidth,
+                false
+            )
+        }
         "password-entry-peek-icon" => {
             widget_case!(
                 cases::password_entry_peek_icon::PasswordEntryPeekIcon,
@@ -1533,6 +1541,7 @@ fn is_known_case(name: &str) -> bool {
             | "menu-button-label-up"
             | "password-entry-default"
             | "password-entry-disabled"
+            | "password-entry-natural-width"
             | "password-entry-peek-icon"
             | "progressbar-horizontal-50"
             | "progressbar-horizontal-0"
