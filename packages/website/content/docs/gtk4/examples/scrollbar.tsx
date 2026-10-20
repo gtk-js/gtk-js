@@ -7,6 +7,12 @@ export default function Example() {
   const [value, setValue] = useState(0.3);
 
   return (
-    <GtkScrollbar value={value} pageSize={0.3} onValueChanged={setValue} style={{ height: 150 }} />
+    <GtkScrollbar
+      orientation="vertical"
+      value={value}
+      pageSize={0.3}
+      onValueChanged={setValue}
+      style={{ height: 150 }}
+    />
   );
 }
