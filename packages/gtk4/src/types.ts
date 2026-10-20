@@ -115,7 +115,14 @@ export type GtkStackTransitionType =
   | "under-up"
   | "under-down"
   | "under-left"
-  | "under-right";
+  | "under-right"
+  | "over-up-down"
+  | "over-down-up"
+  | "over-left-right"
+  | "over-right-left"
+  | "rotate-left"
+  | "rotate-right"
+  | "rotate-left-right";
 
 /** SpinButton update policy. */
 export type GtkSpinButtonUpdatePolicy = "always" | "if-valid";

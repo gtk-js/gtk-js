@@ -15,8 +15,12 @@ import Example from "./examples/drop-down";
 
 ```
 dropdown
-  ├── button.toggle > box > stack + arrow
-  └── popover.menu > scrolledwindow > listview
+  ├── button.toggle > box
+  │     ├── stack > row > box > label
+  │     └── arrow
+  └── popover.menu > contents > box.vertical
+        ├── box.dropdown-searchbar > entry.search
+        └── scrolledwindow > listview.view > row > box > label + image
 ```
 
 ## Props
