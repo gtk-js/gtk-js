@@ -72,6 +72,7 @@ pub mod carousel_natural_pages;
 pub mod carousel_vertical;
 pub mod clamp_child_min;
 pub mod clamp_default;
+pub mod clamp_sizes;
 pub mod status_page_default;
 pub mod status_page_no_icon;
 pub mod toast_overlay_default;

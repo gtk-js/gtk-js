@@ -111,6 +111,7 @@ enum Command {
     CarouselVertical,
     ClampChildMin,
     ClampDefault,
+    ClampSizes,
     StatusPageDefault,
     StatusPageNoIcon,
     ToastOverlayDefault,
@@ -474,6 +475,7 @@ impl Command {
             Self::CarouselVertical => Some("carousel-vertical"),
             Self::ClampChildMin => Some("clamp-child-min"),
             Self::ClampDefault => Some("clamp-default"),
+            Self::ClampSizes => Some("clamp-sizes"),
             Self::StatusPageDefault => Some("status-page-default"),
             Self::StatusPageNoIcon => Some("status-page-no-icon"),
             Self::ToastOverlayDefault => Some("toast-overlay-default"),
@@ -934,6 +936,7 @@ fn create_widget_for_case(name: &str) -> Option<(gtk::Widget, bool)> {
         "carousel-vertical" => widget_case!(cases::carousel_vertical::CarouselVertical, false),
         "clamp-child-min" => widget_case!(cases::clamp_child_min::ClampChildMin, false),
         "clamp-default" => widget_case!(cases::clamp_default::ClampDefault, false),
+        "clamp-sizes" => widget_case!(cases::clamp_sizes::ClampSizes, false),
         "status-page-default" => {
             widget_case!(cases::status_page_default::StatusPageDefault, false)
         }
@@ -1637,6 +1640,7 @@ fn is_known_case(name: &str) -> bool {
             | "carousel-vertical"
             | "clamp-child-min"
             | "clamp-default"
+            | "clamp-sizes"
             | "status-page-default"
             | "status-page-no-icon"
             | "toast-overlay-default"
