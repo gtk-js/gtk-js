@@ -1,4 +1,12 @@
-import { GtkBox, GtkRevealer, GtkSwitch, useIcon, useListBoxRow, wrapStyle } from "@gtk-js/gtk4";
+import {
+  FOCUSABLE,
+  GtkBox,
+  GtkRevealer,
+  GtkSwitch,
+  useIcon,
+  useListBoxRow,
+  wrapStyle,
+} from "@gtk-js/gtk4";
 import React, {
   type CSSProperties,
   forwardRef,
@@ -45,8 +53,6 @@ function labelStyle(lines: number): CSSProperties {
     ...wrapStyle("word-char"),
   };
 }
-
-const FOCUSABLE = "a[href], button, input, select, textarea, [tabindex]";
 
 /**
  * Moves the focus to the previous or next widget in the focus chain, like

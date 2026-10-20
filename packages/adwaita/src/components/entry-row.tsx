@@ -1,4 +1,5 @@
 import {
+  FOCUSABLE,
   GtkButton,
   type GtkInputPurpose,
   GtkLabel,
@@ -59,10 +60,6 @@ const TITLE_SPACING = 3;
 
 /** Widgets that take their own clicks, so they don't activate the row. */
 const INTERACTIVE = "button, a[href], input, select, textarea, [tabindex], [role='button']";
-
-/** Widgets the keyboard can move the focus to. */
-const FOCUSABLE =
-  "button:not(:disabled), a[href], input:not(:disabled), select:not(:disabled), textarea:not(:disabled), [tabindex]:not([tabindex='-1'])";
 
 /**
  * AdwEntryRow — A list row with an integrated text entry.
@@ -192,7 +189,14 @@ export const AdwEntryRow = forwardRef<HTMLDivElement, AdwEntryRowProps>(function
       const widgets = [
         ...(input.closest(".header")?.querySelectorAll<HTMLElement>(FOCUSABLE) ?? []),
       ]
-        .filter((el) => el !== input && !el.closest("[inert]") && el.getClientRects().length > 0)
+        .filter(
+          (el) =>
+            el !== input &&
+            el.tabIndex >= 0 &&
+            !el.matches(":disabled") &&
+            !el.closest("[inert]") &&
+            el.getClientRects().length > 0,
+        )
         .filter((el) => {
           const after = input.compareDocumentPosition(el) & Node.DOCUMENT_POSITION_FOLLOWING;
           return forward ? after : !after;

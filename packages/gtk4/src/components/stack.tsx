@@ -13,6 +13,7 @@ import React, {
   useRef,
   useState,
 } from "react";
+import { FOCUSABLE } from "../focusable.ts";
 import {
   alignAttrs,
   type GtkAlignProps,
@@ -210,8 +211,6 @@ function transitionFrames(type: GtkStackTransitionType, w: number, h: number): T
     }
   }
 }
-
-const FOCUSABLE = "a[href], button, input, select, textarea, [tabindex]";
 
 /** The first element Tab would focus in a page, like gtk_widget_child_focus(). */
 function firstFocusable(page: Element): HTMLElement | undefined {

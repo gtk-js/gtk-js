@@ -1,4 +1,4 @@
-import { isCoveredByLayer } from "@gtk-js/gtk4";
+import { FOCUSABLE, isCoveredByLayer } from "@gtk-js/gtk4";
 import React, {
   createContext,
   forwardRef,
@@ -90,8 +90,6 @@ const sameTags = (a: string[], b: string[]) =>
 
 const isPrefix = (prefix: string[], of: string[]) =>
   prefix.length < of.length && prefix.every((tag, i) => of[i] === tag);
-
-const FOCUSABLE = "a[href], button, input, select, textarea, [tabindex], [contenteditable]";
 
 /** The first widget in `page` that Tab would focus, like gtk_widget_child_focus(). */
 function firstFocusable(page: HTMLElement): HTMLElement | undefined {

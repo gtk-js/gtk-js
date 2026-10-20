@@ -1,4 +1,5 @@
 import {
+  FOCUSABLE,
   GtkProviderBoundary,
   isCoveredByLayer,
   useEscapeLayer,
@@ -55,8 +56,6 @@ interface Breakpoint {
 function breakpointFor(width: number, height: number): Breakpoint {
   return { narrow: width <= NARROW_MAX_WIDTH, short: height <= SHORT_MAX_HEIGHT };
 }
-
-const FOCUSABLE = "a[href], button, input, select, textarea, [tabindex], [contenteditable]";
 
 /** The widgets in `root` that take the focus with Tab, in document order. */
 function tabbables(root: Element): HTMLElement[] {

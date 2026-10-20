@@ -1,4 +1,4 @@
-import { isCoveredByLayer } from "@gtk-js/gtk4";
+import { FOCUSABLE, isCoveredByLayer } from "@gtk-js/gtk4";
 import {
   type CSSProperties,
   forwardRef,
@@ -59,15 +59,13 @@ const DRAG_THRESHOLD_DISTANCE = 16;
 const VELOCITY_THRESHOLD_TOUCH = 0.3; // px/ms
 const EVENT_HISTORY_THRESHOLD_MS = 150;
 
-const TABBABLE = 'a[href], button, input, select, textarea, [tabindex], [contenteditable="true"]';
-
 /**
  * Like gtk_widget_grab_focus() on the pane's last focused widget, else
  * gtk_widget_child_focus (pane, GTK_DIR_TAB_FORWARD).
  */
 function focusPane(pane: HTMLElement, last: HTMLElement | null) {
   const candidates = last?.isConnected && pane.contains(last) ? [last] : [];
-  for (const el of pane.querySelectorAll<HTMLElement>(TABBABLE)) {
+  for (const el of pane.querySelectorAll<HTMLElement>(FOCUSABLE)) {
     if (el.tabIndex >= 0 && !el.matches(":disabled")) candidates.push(el);
   }
   for (const el of candidates) {
