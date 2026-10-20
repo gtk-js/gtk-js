@@ -11,6 +11,8 @@ impl SimpleComponent for EditableLabelDisplayEmpty {
 
     view! {
         gtk::EditableLabel {
+            set_halign: gtk::Align::Start,
+            set_valign: gtk::Align::Start,
             set_text: "",
         }
     }

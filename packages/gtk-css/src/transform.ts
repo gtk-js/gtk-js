@@ -199,13 +199,16 @@ const remapSelectors: Plugin = {
 };
 
 /**
- * PostCSS plugin: GTK's `selection` node → the ::selection pseudo-element.
+ * PostCSS plugin: GTK's `selection` and `placeholder` nodes → the ::selection
+ * and ::placeholder pseudo-elements.
  *
  * GtkText and GtkLabel draw selected text through a `selection` child node
  * that takes their state (gtk_text_state_flags_changed()), so
  * `selection:focus-within` is the selection of a focused text. Pseudo-classes
- * can't follow ::selection, so the state moves to the element holding the
- * text: `text > selection:focus-within` → `text:focus-within::selection`.
+ * can't follow a pseudo-element, so the state moves to the element holding
+ * the text: `text > selection:focus-within` → `text:focus-within::selection`.
+ * GtkText's placeholder is a label child named `placeholder`
+ * (gtk_text_set_placeholder_text()); the <input> draws it as ::placeholder.
  *
  * GTK draws the selection over the text, then the text again in the
  * selection's color: a transparent color leaves the text as it is. Browsers
@@ -215,11 +218,19 @@ const remapSelectors: Plugin = {
 const remapSelectionNode: Plugin = {
   postcssPlugin: "gtk-remap-selection-node",
   Rule(rule) {
-    const mapped = rule.selectors.map(selectionPseudoElement);
-    if (mapped.every((m) => !m)) return;
-    const others = rule.selectors.filter((_, i) => !mapped[i]);
+    const selections = rule.selectors.map((s) => textPseudoElement(s, "selection"));
+    const placeholders = rule.selectors.map((s) => textPseudoElement(s, "placeholder"));
+    if (!selections.some(Boolean) && !placeholders.some(Boolean)) return;
+    const others = rule.selectors.filter((_, i) => !selections[i] && !placeholders[i]);
     if (others.length > 0) rule.cloneBefore({ selectors: others });
-    rule.selectors = mapped.flatMap((m) => m ?? []);
+    if (placeholders.some(Boolean)) {
+      rule.cloneBefore({ selectors: placeholders.flatMap((m) => m ?? []) });
+    }
+    if (!selections.some(Boolean)) {
+      rule.remove();
+      return;
+    }
+    rule.selectors = selections.flatMap((m) => m ?? []);
     rule.each((node) => {
       if (node.type === "decl" && node.prop === "color" && node.value === "transparent") {
         node.remove();
@@ -228,19 +239,19 @@ const remapSelectionNode: Plugin = {
   },
 };
 
-/** `text > selection:focus` → `text:focus::selection`; null for other selectors. */
-function selectionPseudoElement(selector: string): string[] | null {
+/** `text > selection:focus` → `text:focus::selection` (or ::placeholder); null for other selectors. */
+function textPseudoElement(selector: string, node: "selection" | "placeholder"): string[] | null {
   const start = lastCompoundStart(selector);
   const compound = selector.slice(start);
-  if (!/^selection(?![\w-])/.test(compound)) return null;
-  const state = compound.slice("selection".length);
+  if (!new RegExp(`^${node}(?![\\w-])`).test(compound)) return null;
+  const state = compound.slice(node.length);
   const parent = selector.slice(0, start).trimEnd();
   // The node is a child of the text...
-  if (!parent) return [`${state}::selection`];
-  if (parent.endsWith(">")) return [`${parent.slice(0, -1).trimEnd()}${state}::selection`];
+  if (!parent) return [`${state}::${node}`];
+  if (parent.endsWith(">")) return [`${parent.slice(0, -1).trimEnd()}${state}::${node}`];
   if (/[+~]$/.test(parent)) return null;
   // ...which is the ancestor, or a descendant of it.
-  return [`${parent}${state}::selection`, `${parent} *${state}::selection`];
+  return [`${parent}${state}::${node}`, `${parent} *${state}::${node}`];
 }
 
 /**
@@ -265,13 +276,16 @@ const SENSITIVE = `:where(:not(${INSENSITIVE}))`;
  * revisits rules whose selector changed.
  */
 function remapSensitivity(selector: string): string {
-  return selector
-    .replaceAll(DISABLED, "\0d")
-    .replaceAll(SENSITIVE, "\0s")
-    .replace(/:disabled\b/g, "\0d")
-    .replace(/:(hover|active)\b(?!\0s)/g, "$&\0s")
-    .replaceAll("\0d", DISABLED)
-    .replaceAll("\0s", SENSITIVE);
+  return (
+    selector
+      .replaceAll(DISABLED, "\0d")
+      .replaceAll(SENSITIVE, "\0s")
+      .replace(/:disabled\b/g, "\0d")
+      // An :active that already matches [data-active] too is guarded after it.
+      .replace(/:(hover|active)\b(?!\0s|, \[data-active\]\))/g, "$&\0s")
+      .replaceAll("\0d", DISABLED)
+      .replaceAll("\0s", SENSITIVE)
+  );
 }
 
 /**
@@ -303,9 +317,58 @@ const remapPseudoClasses: Plugin = {
 
     sel = remapSensitivity(sel);
 
+    // :active → also [data-active]: browsers only make an element active while
+    // it or a descendant is pressed, and GTK also sets the state itself (an
+    // AdwSplitButton while one of its buttons is keyboard-activating). After
+    // remapSensitivity(), so its sensitivity guard covers [data-active] too.
+    // (Idempotent, like :disabled.)
+    sel = sel.replace(/(?<!:is\():active(?![\w-])/g, ":is(:active, [data-active])");
+
+    // :focus → also [data-focus]: a widget can give a child that doesn't have
+    // the keyboard focus GTK's focused state (GtkCalendar's cursor day).
+    sel = sel.replace(/(?<!\[data-focus\], ):focus(?![\w-])/g, ":is([data-focus], :focus)");
+
     if (sel !== rule.selector) {
       rule.selector = sel;
     }
+  },
+};
+
+/** Whether a border shorthand's value sets a width (or may, through var()). */
+function hasBorderWidth(value: string): boolean {
+  if (/var\(|^\s*(inherit|initial|unset|revert|revert-layer)\s*$/i.test(value)) return true;
+  return postcss.list
+    .space(value)
+    .some((part) => /^([+-]?\.?\d|calc\(|min\(|max\(|clamp\(|thin$|medium$|thick$)/i.test(part));
+}
+
+/**
+ * PostCSS plugin: A check button's check or radio is hovered and pressed with
+ * the button.
+ *
+ * gtk_check_button_state_flags_changed() gives the indicator all of the check
+ * button's state flags, so it shows :hover and :active while the pointer is
+ * anywhere on the button, its label included. The indicator carries the
+ * button's :checked, :indeterminate and :disabled itself; the pointer's states
+ * also match through its parent. `:is()` keeps the selector's specificity.
+ */
+const INDICATOR_RE = /^:where\(\.gtk-(?:check|radio)\):not\(_\)/;
+const POINTER_STATE_RE = /:(hover|active)(?![\w-])/g;
+const mirrorIndicatorState: Plugin = {
+  postcssPlugin: "gtk-mirror-indicator-state",
+  Rule(rule) {
+    const selectors = rule.selectors.map((selector) => {
+      const start = lastCompoundStart(selector);
+      const subject = selector.slice(start);
+      // (Idempotent: PostCSS revisits rules whose selector changed.)
+      if (!INDICATOR_RE.test(subject) || subject.includes(".gtk-checkbutton:")) return selector;
+      const mirrored = subject.replace(
+        POINTER_STATE_RE,
+        (_, state: string) => `:is(:${state}, :where(.gtk-checkbutton:${state} > *))`,
+      );
+      return selector.slice(0, start) + mirrored;
+    });
+    if (selectors.some((s, i) => s !== rule.selectors[i])) rule.selectors = selectors;
   },
 };
 
@@ -331,6 +394,14 @@ const handleGtkProperties: Plugin = {
       decl.cloneBefore({ prop: "--gtk-border-spacing-y", value: y });
       decl.remove();
       return;
+    }
+
+    // A border shorthand without a width (`border: none`, `border-bottom: none`,
+    // `border: solid`) sets it to the initial value, 0 in GTK (parse_border()
+    // in gtkcssshorthandpropertyimpl.c) but `medium` (3px) in browsers, which
+    // shows once a later rule sets only a style. Spell out GTK's 0.
+    if (/^border(-(top|right|bottom|left))?$/.test(decl.prop) && !hasBorderWidth(decl.value)) {
+      decl.value = `0 ${decl.value}`;
     }
 
     // `initial` fonts are GtkSettings:gtk-font-name in GTK (e.g. popovers use
@@ -379,8 +450,22 @@ const handleGtkProperties: Plugin = {
         decl.prop = "--gtk-icon-size";
         break;
 
+      case "-gtk-icon-source": {
+        // A theme's own symbolic image, recolored to the node's color, like a
+        // check's mark: kept for layout.css to paint (see --gtk-icon-source
+        // there). Icon theme icons, -gtk-icontheme(), come from the
+        // components' icon set instead.
+        const url = recoloredImageUrl(decl.value);
+        if (url || decl.value.trim() === "none") {
+          decl.prop = "--gtk-icon-source";
+          decl.value = url ?? "none";
+        } else {
+          decl.remove();
+        }
+        break;
+      }
+
       case "-gtk-icon-palette":
-      case "-gtk-icon-source":
       case "-gtk-icon-style":
       case "-gtk-icon-filter":
       case "-gtk-icon-weight":
@@ -397,6 +482,11 @@ const handleGtkProperties: Plugin = {
     }
   },
 };
+
+/** The url() of `-gtk-recolor(url(…))`, a symbolic image in the node's colors; null otherwise. */
+function recoloredImageUrl(value: string): string | null {
+  return value.trim().match(/^-gtk-recolor\(\s*(url\([^()]*\))\s*\)$/)?.[1] ?? null;
+}
 
 /**
  * PostCSS plugin: Replace CSS image() function with linear-gradient() fallback.
@@ -962,33 +1052,6 @@ function compoundKey(compound: string): string {
 }
 
 /**
- * PostCSS plugin: Convert .gtk-switch padding to transparent border.
- *
- * In native GTK, padding on the switch reduces the child allocation — the slider
- * knob is inset from the track edge. With CSS absolute positioning (used in
- * layout.css), the containing block is the padding edge (inside border, outside
- * padding), so padding does NOT shrink the space for absolutely-positioned children.
- *
- * Border DOES shrink it: the containing block for position:absolute is the
- * padding edge, which is inside the border. So converting padding to transparent
- * border achieves the same visual inset while correctly constraining the slider.
- */
-const fixSwitchPadding: Plugin = {
-  postcssPlugin: "gtk-fix-switch-padding",
-  Declaration(decl) {
-    if (decl.prop !== "padding") return;
-    if (!decl.parent || decl.parent.type !== "rule") return;
-    const rule = decl.parent;
-    if (!rule.selector.includes(".gtk-switch")) return;
-    if (rule.selector.includes(">")) return;
-
-    // Replace padding with transparent border of the same width
-    decl.prop = "border";
-    decl.value = `${decl.value} solid transparent`;
-  },
-};
-
-/**
  * The complete GTK → web CSS PostCSS transformation pipeline.
  * Pass a custom asset plugin to replace -gtk-scaled() with embedded data URIs.
  */
@@ -997,6 +1060,7 @@ export function buildGtkToWeb(assetPlugin?: Plugin) {
     remapSelectors,
     remapSelectionNode,
     remapPseudoClasses,
+    mirrorIndicatorState,
     handleGtkProperties,
     fixGtkTransitionRefs,
     convertGtkColorFunctions,
@@ -1006,7 +1070,6 @@ export function buildGtkToWeb(assetPlugin?: Plugin) {
     resolveCurrentColor,
     removeGtkRecolor,
     assetPlugin ?? removeGtkAssetFunctions,
-    fixSwitchPadding,
   ]);
 }
 
