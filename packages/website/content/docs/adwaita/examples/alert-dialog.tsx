@@ -15,9 +15,11 @@ export default function Example() {
         heading="Delete File?"
         body="This action cannot be undone."
         responses={[
-          { id: "cancel", label: "Cancel" },
-          { id: "delete", label: "Delete", appearance: "destructive" },
+          { id: "cancel", label: "_Cancel" },
+          { id: "delete", label: "_Delete", appearance: "destructive" },
         ]}
+        defaultResponse="cancel"
+        closeResponse="cancel"
         onResponse={() => setVisible(false)}
       />
     </>

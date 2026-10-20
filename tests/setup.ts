@@ -28,6 +28,10 @@ async function connect(): Promise<void> {
       });
       await page.goto(galleryUrl);
       await page.waitForSelector(`[data-case="button-text-default"] [data-testid="target"]`);
+      // Close the menu the split-button-open case opens: it's a modal popover,
+      // which takes the next press outside it (as GTK's autohide popovers do)
+      // from whichever test clicks first.
+      await page.keyboard.press("Escape");
       return [type.name(), browser, page] as const;
     }),
   );
