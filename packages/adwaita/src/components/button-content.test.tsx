@@ -35,8 +35,10 @@ describe("AdwButtonContent", () => {
     expect(render(<AdwButtonContent label="Open" />)).not.toContain("text-overflow");
   });
 
-  test("useUnderline hides the mnemonic underscore", () => {
-    expect(render(<AdwButtonContent label="_Open" useUnderline />)).toContain(">Open<");
+  test("useUnderline makes the label a mnemonic one, its underscore hidden", () => {
+    const html = render(<AdwButtonContent label="_Open" useUnderline />);
+    // GtkLabel's mnemonic text: the marked character in a span of its own.
+    expect(html).toContain("<span>O</span>pen<");
   });
 
   test("an empty or unknown icon name shows image-missing", () => {

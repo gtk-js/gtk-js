@@ -1,5 +1,4 @@
 import {
-  type CSSProperties,
   createContext,
   forwardRef,
   type HTMLAttributes,
@@ -13,6 +12,7 @@ import {
   useRef,
   useState,
 } from "react";
+import { MNEMONIC_UNDERLINE, parseMnemonic } from "../mnemonic.tsx";
 import { GtkScrolledWindow, type GtkScrolledWindowProps } from "./scrolled-window.tsx";
 
 /** One entry of a menu model (like a GMenuItem with an action). */
@@ -158,39 +158,8 @@ export function matchesAccelerator(
   return /^(?:Key|Digit)(.)$/.exec(e.code)?.[1]?.toLowerCase() === accel.key;
 }
 
-/**
- * Splits a label at its mnemonic: "_Quit" is "", "Q", "uit"
- * (gtk_label_set_text_with_mnemonic()). `__` is a literal underscore.
- */
-export function parseMnemonic(label: string): {
-  before: string;
-  mnemonic: string | null;
-  after: string;
-} {
-  const chars = Array.from(label);
-  let before = "";
-  for (let i = 0; i < chars.length; i++) {
-    const next = chars[i + 1];
-    if (chars[i] !== "_" || next === undefined) before += chars[i];
-    else if (next === "_") {
-      before += "_";
-      i++;
-    } else {
-      const after = chars
-        .slice(i + 2)
-        .join("")
-        .replace(/__/g, "_");
-      return { before, mnemonic: next, after };
-    }
-  }
-  return { before, mnemonic: null, after: "" };
-}
-
 /** What activates a menu item from the keyboard: its accelerator and mnemonic key. */
 const itemKeys = new WeakMap<Element, { accel: Accelerator | null; mnemonic: string | null }>();
-
-/** PANGO_UNDERLINE_LOW, drawn through descenders. */
-const UNDERLINE: CSSProperties = { textDecorationLine: "underline", textDecorationSkipInk: "none" };
 
 export interface GtkModelButtonProps extends HTMLAttributes<HTMLButtonElement> {
   label: string;
@@ -236,11 +205,11 @@ export function GtkModelButton({
   useLayoutEffect(() => {
     const button = buttonRef.current;
     if (!button) return;
-    itemKeys.set(button, { accel: shortcut, mnemonic: text.mnemonic?.toLowerCase() ?? null });
+    itemKeys.set(button, { accel: shortcut, mnemonic: text.key });
     return () => {
       itemKeys.delete(button);
     };
-  }, [shortcut, text.mnemonic]);
+  }, [shortcut, text.key]);
   const classes = ["gtk-modelbutton", "flat", "gtk-box-layout", "horizontal"];
   if (className) classes.push(className);
   // GTK makes the children of an insensitive widget insensitive too, so the
@@ -287,12 +256,16 @@ export function GtkModelButton({
         data-disabled={insensitive}
         style={{ flex: 1, textAlign: "start", whiteSpace: "nowrap" }}
       >
-        {text.before}
-        {text.mnemonic && (
-          // Underlined once the keyboard moves in the menu, if sensitive.
-          <span style={mnemonicsVisible && !disabled ? UNDERLINE : undefined}>{text.mnemonic}</span>
+        {text.segments.map((segment, i) =>
+          typeof segment === "string" ? (
+            segment
+          ) : (
+            // Underlined once the keyboard moves in the menu, if sensitive.
+            <span key={i} style={mnemonicsVisible && !disabled ? MNEMONIC_UNDERLINE : undefined}>
+              {segment.mnemonic}
+            </span>
+          ),
         )}
-        {text.after}
       </span>
       {accel && (
         <span className="gtk-accelerator" data-disabled={insensitive}>

@@ -1,6 +1,5 @@
 import { GtkImage, GtkLabel } from "@gtk-js/gtk4";
 import { forwardRef, type HTMLAttributes } from "react";
-import { stripMnemonic } from "../mnemonic.ts";
 
 export interface AdwButtonContentProps extends HTMLAttributes<HTMLDivElement> {
   /** Text label. */
@@ -72,7 +71,8 @@ export const AdwButtonContent = Object.assign(
           />
           {label && (
             <GtkLabel
-              label={useUnderline ? stripMnemonic(label) : label}
+              label={label}
+              useUnderline={useUnderline}
               ellipsize={canShrink ? "end" : "none"}
               data-disabled={insensitive}
             />
