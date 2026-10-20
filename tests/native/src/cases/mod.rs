@@ -212,6 +212,7 @@ pub mod notebook_scrollable;
 pub mod notebook_tab_pos_left;
 pub mod notebook_tabs;
 pub mod overlay_default;
+pub mod overlay_measure;
 pub mod paned_horizontal;
 pub mod paned_min_size;
 pub mod paned_position;

@@ -150,6 +150,7 @@ enum Command {
     GridHexpand,
     GridSpan,
     OverlayDefault,
+    OverlayMeasure,
     PanedHorizontal,
     PanedMinSize,
     PanedPosition,
@@ -512,6 +513,7 @@ impl Command {
             Self::GridHexpand => Some("grid-hexpand"),
             Self::GridSpan => Some("grid-span"),
             Self::OverlayDefault => Some("overlay-default"),
+            Self::OverlayMeasure => Some("overlay-measure"),
             Self::PanedHorizontal => Some("paned-horizontal"),
             Self::PanedMinSize => Some("paned-min-size"),
             Self::PanedPosition => Some("paned-position"),
@@ -1024,6 +1026,7 @@ fn create_widget_for_case(name: &str) -> Option<(gtk::Widget, bool)> {
         "notebook-tab-pos-left" => widget_case!(cases::notebook_tab_pos_left::NotebookTabPosLeft, false),
         "notebook-tabs" => widget_case!(cases::notebook_tabs::NotebookTabs, false),
         "overlay-default" => widget_case!(cases::overlay_default::OverlayDefault, false),
+        "overlay-measure" => widget_case!(cases::overlay_measure::OverlayMeasure, false),
         "paned-horizontal" => widget_case!(cases::paned_horizontal::PanedHorizontal, false),
         "paned-min-size" => widget_case!(cases::paned_min_size::PanedMinSize, false),
         "paned-position" => widget_case!(cases::paned_position::PanedPosition, false),
@@ -1653,6 +1656,7 @@ fn is_known_case(name: &str) -> bool {
             | "notebook-tab-pos-left"
             | "notebook-tabs"
             | "overlay-default"
+            | "overlay-measure"
             | "paned-horizontal"
             | "paned-min-size"
             | "paned-position"

@@ -1396,6 +1396,25 @@ const cases: Record<string, () => React.ReactElement> = {
       data-testid="target"
     />
   ),
+  "overlay-measure": () => {
+    const label = (halign: "start" | "end", valign: "start" | "end") => (
+      <GtkLabel label="A much longer overlay label" halign={halign} valign={valign} />
+    );
+    return (
+      <GtkBox orientation="vertical" spacing={12} data-testid="target">
+        <GtkOverlay
+          halign="start"
+          child={<GtkButton label="Main" />}
+          overlays={[label("start", "start"), { child: label("end", "end"), clipOverlay: true }]}
+        />
+        <GtkOverlay
+          halign="start"
+          child={<GtkButton label="Main" />}
+          overlays={[label("start", "start"), { child: label("start", "start"), measure: true }]}
+        />
+      </GtkBox>
+    );
+  },
 
   // GtkScrolledWindow cases
   "scrolled-window-default": () => (
