@@ -176,7 +176,7 @@ export const INTERNAL_SELECTORS: Record<string, string> = {
   shadow: ".gtk-shadow",
   border: ".gtk-border",
   "block-cursor": ".gtk-block-cursor",
-  placeholder: ".gtk-placeholder",
+  // `placeholder` is the ::placeholder pseudo-element (see remapSelectionNode).
   progress: ".gtk-progress",
   cell: ".gtk-cell",
   check: ".gtk-check",
