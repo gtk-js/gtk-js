@@ -15,9 +15,20 @@ import Example from "./examples/calendar";
 
 ```
 calendar.view
-  ├── header (nav buttons + month/year labels)
-  └── grid (7 columns × 6 rows)
+├── header
+│   ├── button
+│   ├── stack.month
+│   ├── button
+│   ├── button
+│   ├── label.year
+│   ╰── button
+╰── grid
+    ╰── label[.day-name][.week-number][.day-number][.other-month][.today]
 ```
+
+Day labels take `:selected` for the selected day, `:checked` for the
+`markedDays`, and `:focus` for the keyboard cursor: the arrow keys move it,
+Space selects its day, and Ctrl+arrows switch months and years.
 
 ## Props
 
