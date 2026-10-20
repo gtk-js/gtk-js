@@ -187,6 +187,7 @@ enum Command {
     EntryPrimaryIcon,
     EntryProgress,
     ImageDefault,
+    ImageInheritInLargeIcons,
     ImageNormalIcons,
     ImageLargeIcons,
     #[clap(name = "image-pixel-size-24")]
@@ -197,8 +198,12 @@ enum Command {
     LabelWrapChar,
     LabelWrapHeights,
     LabelEllipsize,
+    LabelEllipsizeMinWidth,
     LabelHeights,
     LabelJustifyCenter,
+    LabelLink,
+    LabelMaxWidthCharsFill,
+    LabelMaxWidthCharsStart,
     LabelWidthChars,
     LabelXalign,
     LabelDisabled,
@@ -521,6 +526,7 @@ impl Command {
             Self::EntryPrimaryIcon => Some("entry-primary-icon"),
             Self::EntryProgress => Some("entry-progress"),
             Self::ImageDefault => Some("image-default"),
+            Self::ImageInheritInLargeIcons => Some("image-inherit-in-large-icons"),
             Self::ImageNormalIcons => Some("image-normal-icons"),
             Self::ImageLargeIcons => Some("image-large-icons"),
             Self::ImagePixelSize24 => Some("image-pixel-size-24"),
@@ -530,8 +536,12 @@ impl Command {
             Self::LabelWrapChar => Some("label-wrap-char"),
             Self::LabelWrapHeights => Some("label-wrap-heights"),
             Self::LabelEllipsize => Some("label-ellipsize"),
+            Self::LabelEllipsizeMinWidth => Some("label-ellipsize-min-width"),
             Self::LabelHeights => Some("label-heights"),
             Self::LabelJustifyCenter => Some("label-justify-center"),
+            Self::LabelLink => Some("label-link"),
+            Self::LabelMaxWidthCharsFill => Some("label-max-width-chars-fill"),
+            Self::LabelMaxWidthCharsStart => Some("label-max-width-chars-start"),
             Self::LabelWidthChars => Some("label-width-chars"),
             Self::LabelXalign => Some("label-xalign"),
             Self::LabelDisabled => Some("label-disabled"),
@@ -1061,6 +1071,9 @@ fn create_widget_for_case(name: &str) -> Option<(gtk::Widget, bool)> {
         "entry-primary-icon" => widget_case!(cases::entry_primary_icon::EntryPrimaryIcon, false),
         "entry-progress" => widget_case!(cases::entry_progress::EntryProgress, false),
         "image-default" => widget_case!(cases::image_default::ImageDefault, false),
+        "image-inherit-in-large-icons" => {
+            widget_case!(cases::image_inherit_in_large_icons::ImageInheritInLargeIcons, false)
+        }
         "image-normal-icons" => widget_case!(cases::image_normal_icons::ImageNormalIcons, false),
         "image-large-icons" => widget_case!(cases::image_large_icons::ImageLargeIcons, false),
         "image-pixel-size-24" => widget_case!(cases::image_pixel_size_24::ImagePixelSize24, false),
@@ -1070,9 +1083,19 @@ fn create_widget_for_case(name: &str) -> Option<(gtk::Widget, bool)> {
         "label-wrap-char" => widget_case!(cases::label_wrap_char::LabelWrapChar, false),
         "label-wrap-heights" => widget_case!(cases::label_wrap_heights::LabelWrapHeights, false),
         "label-ellipsize" => widget_case!(cases::label_ellipsize::LabelEllipsize, false),
+        "label-ellipsize-min-width" => {
+            widget_case!(cases::label_ellipsize_min_width::LabelEllipsizeMinWidth, false)
+        }
         "label-heights" => widget_case!(cases::label_heights::LabelHeights, false),
         "label-justify-center" => {
             widget_case!(cases::label_justify_center::LabelJustifyCenter, false)
+        }
+        "label-link" => widget_case!(cases::label_link::LabelLink, false),
+        "label-max-width-chars-fill" => {
+            widget_case!(cases::label_max_width_chars_fill::LabelMaxWidthCharsFill, false)
+        }
+        "label-max-width-chars-start" => {
+            widget_case!(cases::label_max_width_chars_start::LabelMaxWidthCharsStart, false)
         }
         "label-width-chars" => widget_case!(cases::label_width_chars::LabelWidthChars, false),
         "label-xalign" => widget_case!(cases::label_xalign::LabelXalign, false),
@@ -1571,6 +1594,7 @@ fn is_known_case(name: &str) -> bool {
             | "entry-primary-icon"
             | "entry-progress"
             | "image-default"
+            | "image-inherit-in-large-icons"
             | "image-normal-icons"
             | "image-large-icons"
             | "image-pixel-size-24"
@@ -1580,8 +1604,12 @@ fn is_known_case(name: &str) -> bool {
             | "label-wrap-char"
             | "label-wrap-heights"
             | "label-ellipsize"
+            | "label-ellipsize-min-width"
             | "label-heights"
             | "label-justify-center"
+            | "label-link"
+            | "label-max-width-chars-fill"
+            | "label-max-width-chars-start"
             | "label-width-chars"
             | "label-xalign"
             | "label-disabled"

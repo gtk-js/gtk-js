@@ -23,10 +23,10 @@ describe("AdwComboRow", () => {
     const html = render(<AdwComboRow title="Color" items={["Red", "Green"]} selected={1} />);
     // box.suffixes > listview.view.inline > row > box > label, then the arrow's box.
     expect(html).toMatch(
-      /class="gtk-box gtk-box-layout horizontal suffixes"><div class="gtk-listview view inline"[^>]*><div class="gtk-row activatable"><div class="gtk-box gtk-box-layout horizontal"><span class="gtk-label"[^>]*><span[^>]*>Green<\/span><\/span><\/div><\/div><\/div><div class="gtk-box gtk-box-layout horizontal" data-valign="center"><span class="gtk-image dropdown-arrow">/,
+      /class="gtk-box gtk-box-layout horizontal suffixes"><div class="gtk-listview view inline"[^>]*><div class="gtk-row activatable"><div class="gtk-box gtk-box-layout horizontal"><span class="gtk-label"[^>]*><span[^>]*><span[^>]*>Green<\/span><\/span><\/span><\/div><\/div><\/div><div class="gtk-box gtk-box-layout horizontal" data-valign="center"><span class="gtk-image dropdown-arrow">/,
     );
     // The default factory's label: ellipsized, at most 20 characters wide.
-    expect(html).toContain("max-width:20ch");
+    expect(html).toContain("--gtk-max-width-chars:20ch");
     expect(html).toContain("text-overflow:ellipsis");
   });
 
@@ -69,7 +69,9 @@ describe("AdwComboRow", () => {
     ]) {
       expect(html).toMatch(new RegExp(`class="${node}"[^>]*data-disabled="true"`));
     }
-    expect(html).toMatch(/class="gtk-label"[^>]*data-disabled="true"[^>]*><span[^>]*>Red</);
+    expect(html).toMatch(
+      /class="gtk-label"[^>]*data-disabled="true"[^>]*><span[^>]*><span[^>]*>Red</,
+    );
   });
 
   test("is a combo box labelled by its title", () => {

@@ -448,6 +448,11 @@ const cases: Record<string, () => React.ReactElement> = {
 
   // GtkImage cases
   "image-default": () => <GtkImage data-testid="target" />,
+  "image-inherit-in-large-icons": () => (
+    <GtkBox className="large-icons" halign="start" valign="start" data-testid="target">
+      <GtkImage iconName="open-menu-symbolic" />
+    </GtkBox>
+  ),
   "image-normal-icons": () => (
     <GtkImage iconName="open-menu-symbolic" iconSize="normal" data-testid="target" />
   ),
@@ -511,6 +516,18 @@ const cases: Record<string, () => React.ReactElement> = {
       data-testid="target"
     />
   ),
+  "label-ellipsize-min-width": () => (
+    <GtkBox orientation="vertical" halign="start" valign="start" data-testid="target">
+      <GtkBox halign="start" style={{ width: "min-content" }}>
+        <GtkLabel label="A fairly long ellipsizing label" ellipsize="end" />
+        <GtkLabel label="Fixed" />
+      </GtkBox>
+      <GtkBox halign="start" style={{ width: "min-content" }}>
+        <GtkLabel label="A fairly long ellipsizing label" ellipsize="end" widthChars={5} />
+        <GtkLabel label="Fixed" />
+      </GtkBox>
+    </GtkBox>
+  ),
   "label-heights": () => (
     <GtkBox orientation="vertical" halign="start" valign="start" data-testid="target">
       <GtkLabel label="Label" />
@@ -521,6 +538,31 @@ const cases: Record<string, () => React.ReactElement> = {
     </GtkBox>
   ),
   "label-justify-center": () => <GtkLabel label="Centered" justify="center" data-testid="target" />,
+  "label-link": () => (
+    <GtkLabel
+      label={'Visit <a href="https://gnome.org">GNOME</a>'}
+      useMarkup
+      halign="start"
+      valign="start"
+      data-testid="target"
+    />
+  ),
+  "label-max-width-chars-fill": () => (
+    <GtkBox orientation="vertical" halign="start" style={{ width: 400 }} data-testid="target">
+      <GtkLabel label="The quick brown fox jumps over the lazy dog" wrap maxWidthChars={10} />
+    </GtkBox>
+  ),
+  "label-max-width-chars-start": () => (
+    <GtkBox orientation="vertical" halign="start" valign="start" data-testid="target">
+      <GtkLabel label="The quick brown fox jumps over the lazy dog" wrap halign="start" />
+      <GtkLabel
+        label="The quick brown fox jumps over the lazy dog"
+        wrap
+        maxWidthChars={10}
+        halign="start"
+      />
+    </GtkBox>
+  ),
   "label-width-chars": () => <GtkLabel label="Hi" widthChars={20} data-testid="target" />,
   "label-xalign": () => <GtkLabel label="Aligned" xalign={0} data-testid="target" />,
   "label-disabled": () => <GtkLabel label="Label" disabled data-testid="target" />,
