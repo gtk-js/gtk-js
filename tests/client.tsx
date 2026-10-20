@@ -679,6 +679,15 @@ const cases: Record<string, () => React.ReactElement> = {
       />
     </GtkBox>
   ),
+  "label-monospace": () => (
+    <GtkLabel
+      label="Monospace label 01234567"
+      className="monospace"
+      halign="start"
+      valign="start"
+      data-testid="target"
+    />
+  ),
   "label-width-chars": () => <GtkLabel label="Hi" widthChars={20} data-testid="target" />,
   "label-xalign": () => <GtkLabel label="Aligned" xalign={0} data-testid="target" />,
   "label-disabled": () => <GtkLabel label="Label" disabled data-testid="target" />,
