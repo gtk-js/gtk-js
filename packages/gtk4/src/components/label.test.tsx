@@ -2,7 +2,7 @@
 
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, test, vi } from "vite-plus/test";
-import { GtkLabel } from "./label.tsx";
+import { GtkLabel, linesStyle, wrapStyle } from "./label.tsx";
 
 const styleOf = (html: string) => html.match(/class="gtk-label"[^>]*style="([^"]*)"/)?.[1] ?? "";
 
@@ -144,5 +144,17 @@ describe("GtkLabel", () => {
       styleOf(renderToStaticMarkup(<GtkLabel label="text" ellipsize="end" {...props} />));
     expect(style({})).toContain("grid-template-columns:minmax(1em, max-content)");
     expect(style({ widthChars: 5 })).toContain("minmax(max(1em, 5ch), max-content)");
+  });
+});
+
+describe("linesStyle", () => {
+  test("wraps word-char, and ellipsizes after `lines` lines when above 0", () => {
+    expect(linesStyle(0)).toEqual(wrapStyle("word-char"));
+    expect(linesStyle(2)).toMatchObject({
+      ...wrapStyle("word-char"),
+      display: "-webkit-box",
+      WebkitLineClamp: 2,
+      overflow: "hidden",
+    });
   });
 });

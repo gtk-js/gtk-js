@@ -1,4 +1,4 @@
-import { GtkSwitch, tooltipAttrs, useListBoxRow, wrapStyle } from "@gtk-js/gtk4";
+import { GtkSwitch, linesStyle, tooltipAttrs, useListBoxRow } from "@gtk-js/gtk4";
 import {
   forwardRef,
   type HTMLAttributes,
@@ -37,17 +37,6 @@ export interface AdwSwitchRowProps extends HTMLAttributes<HTMLDivElement> {
 
 // The labels wrap word-char, and ellipsize after `lines` lines when set
 // (adw_action_row_set_title_lines()).
-function linesStyle(lines: number): React.CSSProperties {
-  if (lines <= 0) return wrapStyle("word-char");
-  return {
-    display: "-webkit-box",
-    WebkitLineClamp: lines,
-    WebkitBoxOrient: "vertical",
-    overflow: "hidden",
-    ...wrapStyle("word-char"),
-  };
-}
-
 /**
  * AdwSwitchRow — An ActionRow with an integrated GtkSwitch.
  *

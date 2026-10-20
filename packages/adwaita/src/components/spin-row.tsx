@@ -1,9 +1,9 @@
 import {
   GtkSpinButton,
   type GtkSpinButtonUpdatePolicy,
+  linesStyle,
   tooltipAttrs,
   useListBoxRow,
-  wrapStyle,
 } from "@gtk-js/gtk4";
 import {
   forwardRef,
@@ -66,17 +66,6 @@ export interface AdwSpinRowProps extends HTMLAttributes<HTMLDivElement> {
 
 // The labels wrap word-char, and ellipsize after `lines` lines when set
 // (adw_action_row_set_title_lines()).
-function linesStyle(lines: number): React.CSSProperties {
-  if (lines <= 0) return wrapStyle("word-char");
-  return {
-    display: "-webkit-box",
-    WebkitLineClamp: lines,
-    WebkitBoxOrient: "vertical",
-    overflow: "hidden",
-    ...wrapStyle("word-char"),
-  };
-}
-
 // Widgets that take their own clicks, so the row doesn't get them.
 const CLAIMS = ".gtk-spinbutton, button, input, textarea, select, a[href], [tabindex]";
 

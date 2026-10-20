@@ -34,7 +34,7 @@ export type { GtkImageProps } from "./components/image.tsx";
 // Phase 1: Foundation Components
 export { GtkImage } from "./components/image.tsx";
 export type { GtkLabelProps } from "./components/label.tsx";
-export { GtkLabel, wrapStyle } from "./components/label.tsx";
+export { GtkLabel, linesStyle, wrapStyle } from "./components/label.tsx";
 export type { GtkLevelBarOffset, GtkLevelBarProps } from "./components/level-bar.tsx";
 export { GtkLevelBar } from "./components/level-bar.tsx";
 export type { GtkLinkButtonProps } from "./components/link-button.tsx";
