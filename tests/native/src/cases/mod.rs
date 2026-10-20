@@ -80,6 +80,7 @@ pub mod box_disabled;
 pub mod toast_overlay_hello;
 pub mod toast_overlay_narrow;
 pub mod box_hexpand;
+pub mod box_expand_set;
 pub mod box_hexpand_computed;
 pub mod box_homogeneous;
 pub mod box_homogeneous_natural;

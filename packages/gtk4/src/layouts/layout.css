@@ -68,41 +68,56 @@
  * space equally (gtk_box_layout_allocate()). Whether a child expands is
  * computed up the widget tree like gtk_widget_compute_expand() does it (see
  * expand.ts, which sets data-computed-hexpand / data-computed-vexpand).
+ * A widget whose own hexpand/vexpand is true always expands, so that needs no
+ * computing: it holds in server-rendered HTML too, before expand.ts runs.
  * With halign/valign start, end or center, an expanding child keeps its
  * natural size, followed (or preceded) by the extra space. Flexbox only gives
  * auto margins what growing children leave, so a box that also has a filling
  * child that expands is a grid instead (below). */
-.gtk-box-layout.horizontal > [data-computed-hexpand] {
+.gtk-box-layout.horizontal > :is([data-computed-hexpand], [data-hexpand="true"]) {
   flex-grow: 1;
 }
 .gtk-box-layout.horizontal
-  > [data-computed-hexpand]:is([data-halign="start"], [data-halign="end"], [data-halign="center"]) {
+  > :is([data-computed-hexpand], [data-hexpand="true"]):is(
+    [data-halign="start"],
+    [data-halign="end"],
+    [data-halign="center"]
+  ) {
   flex-grow: 0;
 }
-.gtk-box-layout.horizontal > [data-computed-hexpand][data-halign="start"] {
+.gtk-box-layout.horizontal
+  > :is([data-computed-hexpand], [data-hexpand="true"])[data-halign="start"] {
   margin-inline-end: auto;
 }
-.gtk-box-layout.horizontal > [data-computed-hexpand][data-halign="end"] {
+.gtk-box-layout.horizontal
+  > :is([data-computed-hexpand], [data-hexpand="true"])[data-halign="end"] {
   margin-inline-start: auto;
 }
-.gtk-box-layout.horizontal > [data-computed-hexpand][data-halign="center"] {
+.gtk-box-layout.horizontal
+  > :is([data-computed-hexpand], [data-hexpand="true"])[data-halign="center"] {
   margin-inline: auto;
 }
 
-.gtk-box-layout.vertical > [data-computed-vexpand] {
+.gtk-box-layout.vertical > :is([data-computed-vexpand], [data-vexpand="true"]) {
   flex-grow: 1;
 }
 .gtk-box-layout.vertical
-  > [data-computed-vexpand]:is([data-valign="start"], [data-valign="end"], [data-valign="center"]) {
+  > :is([data-computed-vexpand], [data-vexpand="true"]):is(
+    [data-valign="start"],
+    [data-valign="end"],
+    [data-valign="center"]
+  ) {
   flex-grow: 0;
 }
-.gtk-box-layout.vertical > [data-computed-vexpand][data-valign="start"] {
+.gtk-box-layout.vertical
+  > :is([data-computed-vexpand], [data-vexpand="true"])[data-valign="start"] {
   margin-block-end: auto;
 }
-.gtk-box-layout.vertical > [data-computed-vexpand][data-valign="end"] {
+.gtk-box-layout.vertical > :is([data-computed-vexpand], [data-vexpand="true"])[data-valign="end"] {
   margin-block-start: auto;
 }
-.gtk-box-layout.vertical > [data-computed-vexpand][data-valign="center"] {
+.gtk-box-layout.vertical
+  > :is([data-computed-vexpand], [data-vexpand="true"])[data-valign="center"] {
   margin-block: auto;
 }
 
