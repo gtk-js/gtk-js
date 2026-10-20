@@ -41,18 +41,34 @@ enum Command {
     AdwActionRowDefault,
     AdwActionRowWithSubtitle,
     AdwActionRowActivatable,
+    AdwActionRowIcon,
+    AdwActionRowSubtitleOnly,
+    AdwActionRowSuffixFill,
+    AdwBreakpointBinConditions,
     AdwBreakpointBinDefault,
     AdwComboRowDefault,
+    AdwComboRowLongValue,
+    AdwComboRowSingleItem,
     AdwEntryRowDefault,
+    AdwEntryRowDisabled,
+    AdwEntryRowLongTitle,
     AdwEntryRowWithText,
     AdwExpanderRowDefault,
     AdwExpanderRowExpanded,
+    AdwExpanderRowWidgets,
     AdwHeaderbarDefault,
+    AdwHeaderbarNarrowTitle,
     AdwHeaderbarWithTitle,
     AdwHeaderbarStartEnd,
+    AdwNavigationViewBackButton,
     AdwNavigationViewDefault,
     AdwNavigationViewScrolled,
+    AdwOverlaySplitViewCollapsedRtl,
+    AdwOverlaySplitViewCollapsedShown,
     AdwOverlaySplitViewDefault,
+    AdwOverlaySplitViewEnd,
+    AdwOverlaySplitViewHidden,
+    AdwOverlaySplitViewWideSidebar,
     AdwPasswordEntryRowDefault,
     AdwPreferencesGroupDefault,
     AdwPreferencesGroupWithDescription,
@@ -61,18 +77,28 @@ enum Command {
     AdwPreferencesGroupMixed,
     AdwPreferencesPageDefault,
     AdwPreferencesRowDefault,
+    AdwPreferencesRowCustomChild,
     AdwSpinRowDefault,
     AdwSwitchRowDefault,
     AdwSwitchRowActive,
+    AdwSwitchRowPrefixSuffix,
     AdwToolbarViewDefault,
     AdwToolbarViewWithBottom,
+    AdwViewSwitcherAttention,
+    AdwViewSwitcherBar,
     AdwViewSwitcherDefault,
+    AdwViewSwitcherNarrow,
     AvatarDefault,
     AvatarInitials,
     AvatarSmall,
     BannerRevealed,
+    BannerStart,
+    BannerWide,
     BannerWithButton,
     CarouselDefault,
+    CarouselNaturalPages,
+    CarouselVertical,
+    ClampChildMin,
     ClampDefault,
     StatusPageDefault,
     StatusPageNoIcon,
@@ -95,11 +121,16 @@ enum Command {
     CenterBoxToolbarVerticalStartEndTall,
     ExpanderDefault,
     ExpanderExpanded,
+    FlowBoxAligned,
     FlowBoxDefault,
+    FlowBoxHomogeneous,
+    FlowBoxSelected,
     FrameDefault,
     HeaderbarDefault,
+    HeaderbarNarrowTitle,
     HeaderbarStartEnd,
     HeaderbarWithTitle,
+    HeaderbarWindowTitle,
     FrameNoLabel,
     GridDefault,
     OverlayDefault,
@@ -117,6 +148,9 @@ enum Command {
     ButtonTextDestructive,
     ButtonIcon,
     ButtonCircular,
+    ButtonContentButton,
+    ButtonIconLabel,
+    ButtonCanShrink,
     ButtonContentIconLabel,
     ButtonContentLabelOnly,
     ButtonContentIconOnly,
@@ -125,13 +159,20 @@ enum Command {
     ButtonRowDefault,
     ButtonRowStartIcon,
     ButtonRowDestructive,
+    ButtonRowLongTitle,
     CalendarDefault,
+    CalendarDisabled,
+    CalendarMarked,
+    CalendarNoDayNames,
+    CalendarWeekNumbers,
     CheckButtonDefault,
     CheckButtonChecked,
     CheckButtonIndeterminate,
     CheckButtonDisabled,
     CheckButtonCheckedDisabled,
     CheckButtonNoLabel,
+    CheckButtonCustomChild,
+    CheckButtonEmptyLabel,
     EditableLabelDisplayDefault,
     EditableLabelDisplayEmpty,
     EditableLabelEditingActive,
@@ -150,13 +191,16 @@ enum Command {
     LabelDefault,
     LabelWrapWord,
     LabelWrapChar,
+    LabelWrapHeights,
     LabelEllipsize,
     LabelHeights,
     LabelJustifyCenter,
     LabelWidthChars,
     LabelXalign,
     LabelDisabled,
+    ListboxBareLabels,
     ListboxDefault,
+    ListboxSelection,
     ListboxSeparators,
     LevelbarContinuousDefault,
     LevelbarContinuousLow,
@@ -168,6 +212,10 @@ enum Command {
     LinkDefault,
     LinkVisited,
     NotebookDefault,
+    NotebookHomogeneous,
+    NotebookScrollable,
+    NotebookTabPosLeft,
+    NotebookTabs,
     MenuButtonTextDefault,
     MenuButtonIcon,
     MenuButtonFlat,
@@ -195,8 +243,12 @@ enum Command {
     ScaleDefault,
     ScrolledWindowDefault,
     ScrolledWindowFrame,
+    StackChildAlign,
     StackDefault,
+    StackHhomogeneousFalse,
     StackHomogeneous,
+    StackSwitcherExpand,
+    StackSwitcherIcons,
     SearchEntryDefault,
     SearchEntryDisabled,
     SearchbarDefault,
@@ -215,10 +267,18 @@ enum Command {
     SplitButtonTextDefault,
     SplitButtonIcon,
     SplitButtonFlat,
+    SplitButtonOpen,
+    SplitButtonTall,
+    SplitButtonFill,
+    SplitButtonCanShrink,
     SwitchOffDefault,
     SwitchOnDefault,
     SwitchOffDisabled,
     SwitchOnDisabled,
+    SwitchOffTitle1,
+    SwitchOnPending,
+    SwitchOnRtl,
+    SwitchOnSmallSlider,
     TextViewDefault,
     TextViewDisabled,
     TextViewMonospace,
@@ -228,9 +288,15 @@ enum Command {
     ToggleTextChecked,
     ToggleTextFlat,
     ToggleDisabled,
+    ToggleIcon,
+    ToggleLabelChild,
+    ToggleGrouped,
     ToggleGroupTextDefault,
     ToggleGroupIcon,
     ToggleGroupHomogeneous,
+    ToggleGroupFill,
+    ToggleGroupCanShrink,
+    WindowChildValignCenter,
     WindowTitleTextDefault,
     WindowTitleWithSubtitle,
     WindowTitleLongText,
@@ -277,18 +343,34 @@ impl Command {
             Self::AdwActionRowDefault => Some("adw-action-row-default"),
             Self::AdwActionRowWithSubtitle => Some("adw-action-row-with-subtitle"),
             Self::AdwActionRowActivatable => Some("adw-action-row-activatable"),
+            Self::AdwActionRowIcon => Some("adw-action-row-icon"),
+            Self::AdwActionRowSubtitleOnly => Some("adw-action-row-subtitle-only"),
+            Self::AdwActionRowSuffixFill => Some("adw-action-row-suffix-fill"),
+            Self::AdwBreakpointBinConditions => Some("adw-breakpoint-bin-conditions"),
             Self::AdwBreakpointBinDefault => Some("adw-breakpoint-bin-default"),
             Self::AdwComboRowDefault => Some("adw-combo-row-default"),
+            Self::AdwComboRowLongValue => Some("adw-combo-row-long-value"),
+            Self::AdwComboRowSingleItem => Some("adw-combo-row-single-item"),
             Self::AdwEntryRowDefault => Some("adw-entry-row-default"),
+            Self::AdwEntryRowDisabled => Some("adw-entry-row-disabled"),
+            Self::AdwEntryRowLongTitle => Some("adw-entry-row-long-title"),
             Self::AdwEntryRowWithText => Some("adw-entry-row-with-text"),
             Self::AdwExpanderRowDefault => Some("adw-expander-row-default"),
             Self::AdwExpanderRowExpanded => Some("adw-expander-row-expanded"),
+            Self::AdwExpanderRowWidgets => Some("adw-expander-row-widgets"),
             Self::AdwHeaderbarDefault => Some("adw-headerbar-default"),
+            Self::AdwHeaderbarNarrowTitle => Some("adw-headerbar-narrow-title"),
             Self::AdwHeaderbarWithTitle => Some("adw-headerbar-with-title"),
             Self::AdwHeaderbarStartEnd => Some("adw-headerbar-start-end"),
+            Self::AdwNavigationViewBackButton => Some("adw-navigation-view-back-button"),
             Self::AdwNavigationViewDefault => Some("adw-navigation-view-default"),
             Self::AdwNavigationViewScrolled => Some("adw-navigation-view-scrolled"),
+            Self::AdwOverlaySplitViewCollapsedRtl => Some("adw-overlay-split-view-collapsed-rtl"),
+            Self::AdwOverlaySplitViewCollapsedShown => Some("adw-overlay-split-view-collapsed-shown"),
             Self::AdwOverlaySplitViewDefault => Some("adw-overlay-split-view-default"),
+            Self::AdwOverlaySplitViewEnd => Some("adw-overlay-split-view-end"),
+            Self::AdwOverlaySplitViewHidden => Some("adw-overlay-split-view-hidden"),
+            Self::AdwOverlaySplitViewWideSidebar => Some("adw-overlay-split-view-wide-sidebar"),
             Self::AdwPasswordEntryRowDefault => Some("adw-password-entry-row-default"),
             Self::AdwPreferencesGroupDefault => Some("adw-preferences-group-default"),
             Self::AdwPreferencesGroupWithDescription => Some("adw-preferences-group-with-description"),
@@ -297,18 +379,28 @@ impl Command {
             Self::AdwPreferencesGroupMixed => Some("adw-preferences-group-mixed"),
             Self::AdwPreferencesPageDefault => Some("adw-preferences-page-default"),
             Self::AdwPreferencesRowDefault => Some("adw-preferences-row-default"),
+            Self::AdwPreferencesRowCustomChild => Some("adw-preferences-row-custom-child"),
             Self::AdwSpinRowDefault => Some("adw-spin-row-default"),
             Self::AdwSwitchRowDefault => Some("adw-switch-row-default"),
             Self::AdwSwitchRowActive => Some("adw-switch-row-active"),
+            Self::AdwSwitchRowPrefixSuffix => Some("adw-switch-row-prefix-suffix"),
             Self::AdwToolbarViewDefault => Some("adw-toolbar-view-default"),
             Self::AdwToolbarViewWithBottom => Some("adw-toolbar-view-with-bottom"),
+            Self::AdwViewSwitcherAttention => Some("adw-view-switcher-attention"),
+            Self::AdwViewSwitcherBar => Some("adw-view-switcher-bar"),
             Self::AdwViewSwitcherDefault => Some("adw-view-switcher-default"),
+            Self::AdwViewSwitcherNarrow => Some("adw-view-switcher-narrow"),
             Self::AvatarDefault => Some("avatar-default"),
             Self::AvatarInitials => Some("avatar-initials"),
             Self::AvatarSmall => Some("avatar-small"),
             Self::BannerRevealed => Some("banner-revealed"),
+            Self::BannerStart => Some("banner-start"),
+            Self::BannerWide => Some("banner-wide"),
             Self::BannerWithButton => Some("banner-with-button"),
             Self::CarouselDefault => Some("carousel-default"),
+            Self::CarouselNaturalPages => Some("carousel-natural-pages"),
+            Self::CarouselVertical => Some("carousel-vertical"),
+            Self::ClampChildMin => Some("clamp-child-min"),
             Self::ClampDefault => Some("clamp-default"),
             Self::StatusPageDefault => Some("status-page-default"),
             Self::StatusPageNoIcon => Some("status-page-no-icon"),
@@ -337,11 +429,16 @@ impl Command {
             }
             Self::ExpanderDefault => Some("expander-default"),
             Self::ExpanderExpanded => Some("expander-expanded"),
+            Self::FlowBoxAligned => Some("flow-box-aligned"),
             Self::FlowBoxDefault => Some("flow-box-default"),
+            Self::FlowBoxHomogeneous => Some("flow-box-homogeneous"),
+            Self::FlowBoxSelected => Some("flow-box-selected"),
             Self::FrameDefault => Some("frame-default"),
             Self::HeaderbarDefault => Some("headerbar-default"),
+            Self::HeaderbarNarrowTitle => Some("headerbar-narrow-title"),
             Self::HeaderbarStartEnd => Some("headerbar-start-end"),
             Self::HeaderbarWithTitle => Some("headerbar-with-title"),
+            Self::HeaderbarWindowTitle => Some("headerbar-window-title"),
             Self::FrameNoLabel => Some("frame-no-label"),
             Self::GridDefault => Some("grid-default"),
             Self::OverlayDefault => Some("overlay-default"),
@@ -359,6 +456,9 @@ impl Command {
             Self::ButtonTextDestructive => Some("button-text-destructive"),
             Self::ButtonIcon => Some("button-icon"),
             Self::ButtonCircular => Some("button-circular"),
+            Self::ButtonContentButton => Some("button-content-button"),
+            Self::ButtonIconLabel => Some("button-icon-label"),
+            Self::ButtonCanShrink => Some("button-can-shrink"),
             Self::ButtonContentIconLabel => Some("button-content-icon-label"),
             Self::ButtonContentLabelOnly => Some("button-content-label-only"),
             Self::ButtonContentIconOnly => Some("button-content-icon-only"),
@@ -367,13 +467,20 @@ impl Command {
             Self::ButtonRowDefault => Some("button-row-default"),
             Self::ButtonRowStartIcon => Some("button-row-start-icon"),
             Self::ButtonRowDestructive => Some("button-row-destructive"),
+            Self::ButtonRowLongTitle => Some("button-row-long-title"),
             Self::CalendarDefault => Some("calendar-default"),
+            Self::CalendarDisabled => Some("calendar-disabled"),
+            Self::CalendarMarked => Some("calendar-marked"),
+            Self::CalendarNoDayNames => Some("calendar-no-day-names"),
+            Self::CalendarWeekNumbers => Some("calendar-week-numbers"),
             Self::CheckButtonDefault => Some("check-button-default"),
             Self::CheckButtonChecked => Some("check-button-checked"),
             Self::CheckButtonIndeterminate => Some("check-button-indeterminate"),
             Self::CheckButtonDisabled => Some("check-button-disabled"),
             Self::CheckButtonCheckedDisabled => Some("check-button-checked-disabled"),
             Self::CheckButtonNoLabel => Some("check-button-no-label"),
+            Self::CheckButtonCustomChild => Some("check-button-custom-child"),
+            Self::CheckButtonEmptyLabel => Some("check-button-empty-label"),
             Self::EditableLabelDisplayDefault => Some("editable-label-display-default"),
             Self::EditableLabelDisplayEmpty => Some("editable-label-display-empty"),
             Self::EditableLabelEditingActive => Some("editable-label-editing-active"),
@@ -391,13 +498,16 @@ impl Command {
             Self::LabelDefault => Some("label-default"),
             Self::LabelWrapWord => Some("label-wrap-word"),
             Self::LabelWrapChar => Some("label-wrap-char"),
+            Self::LabelWrapHeights => Some("label-wrap-heights"),
             Self::LabelEllipsize => Some("label-ellipsize"),
             Self::LabelHeights => Some("label-heights"),
             Self::LabelJustifyCenter => Some("label-justify-center"),
             Self::LabelWidthChars => Some("label-width-chars"),
             Self::LabelXalign => Some("label-xalign"),
             Self::LabelDisabled => Some("label-disabled"),
+            Self::ListboxBareLabels => Some("listbox-bare-labels"),
             Self::ListboxDefault => Some("listbox-default"),
+            Self::ListboxSelection => Some("listbox-selection"),
             Self::ListboxSeparators => Some("listbox-separators"),
             Self::LevelbarContinuousDefault => Some("levelbar-continuous-default"),
             Self::LevelbarContinuousLow => Some("levelbar-continuous-low"),
@@ -409,6 +519,10 @@ impl Command {
             Self::LinkDefault => Some("link-default"),
             Self::LinkVisited => Some("link-visited"),
             Self::NotebookDefault => Some("notebook-default"),
+            Self::NotebookHomogeneous => Some("notebook-homogeneous"),
+            Self::NotebookScrollable => Some("notebook-scrollable"),
+            Self::NotebookTabPosLeft => Some("notebook-tab-pos-left"),
+            Self::NotebookTabs => Some("notebook-tabs"),
             Self::MenuButtonTextDefault => Some("menu-button-text-default"),
             Self::MenuButtonIcon => Some("menu-button-icon"),
             Self::MenuButtonFlat => Some("menu-button-flat"),
@@ -431,8 +545,12 @@ impl Command {
             Self::ScaleDefault => Some("scale-default"),
             Self::ScrolledWindowDefault => Some("scrolled-window-default"),
             Self::ScrolledWindowFrame => Some("scrolled-window-frame"),
+            Self::StackChildAlign => Some("stack-child-align"),
             Self::StackDefault => Some("stack-default"),
+            Self::StackHhomogeneousFalse => Some("stack-hhomogeneous-false"),
             Self::StackHomogeneous => Some("stack-homogeneous"),
+            Self::StackSwitcherExpand => Some("stack-switcher-expand"),
+            Self::StackSwitcherIcons => Some("stack-switcher-icons"),
             Self::SearchEntryDefault => Some("search-entry-default"),
             Self::SearchEntryDisabled => Some("search-entry-disabled"),
             Self::SearchbarDefault => Some("searchbar-default"),
@@ -451,10 +569,18 @@ impl Command {
             Self::SplitButtonTextDefault => Some("split-button-text-default"),
             Self::SplitButtonIcon => Some("split-button-icon"),
             Self::SplitButtonFlat => Some("split-button-flat"),
+            Self::SplitButtonOpen => Some("split-button-open"),
+            Self::SplitButtonTall => Some("split-button-tall"),
+            Self::SplitButtonFill => Some("split-button-fill"),
+            Self::SplitButtonCanShrink => Some("split-button-can-shrink"),
             Self::SwitchOffDefault => Some("switch-off-default"),
             Self::SwitchOnDefault => Some("switch-on-default"),
             Self::SwitchOffDisabled => Some("switch-off-disabled"),
             Self::SwitchOnDisabled => Some("switch-on-disabled"),
+            Self::SwitchOffTitle1 => Some("switch-off-title-1"),
+            Self::SwitchOnPending => Some("switch-on-pending"),
+            Self::SwitchOnRtl => Some("switch-on-rtl"),
+            Self::SwitchOnSmallSlider => Some("switch-on-small-slider"),
             Self::TextViewDefault => Some("text-view-default"),
             Self::TextViewDisabled => Some("text-view-disabled"),
             Self::TextViewMonospace => Some("text-view-monospace"),
@@ -464,9 +590,15 @@ impl Command {
             Self::ToggleTextChecked => Some("toggle-text-checked"),
             Self::ToggleTextFlat => Some("toggle-text-flat"),
             Self::ToggleDisabled => Some("toggle-disabled"),
+            Self::ToggleIcon => Some("toggle-icon"),
+            Self::ToggleLabelChild => Some("toggle-label-child"),
+            Self::ToggleGrouped => Some("toggle-grouped"),
             Self::ToggleGroupTextDefault => Some("toggle-group-text-default"),
             Self::ToggleGroupIcon => Some("toggle-group-icon"),
             Self::ToggleGroupHomogeneous => Some("toggle-group-homogeneous"),
+            Self::ToggleGroupFill => Some("toggle-group-fill"),
+            Self::ToggleGroupCanShrink => Some("toggle-group-can-shrink"),
+            Self::WindowChildValignCenter => Some("window-child-valign-center"),
             Self::WindowTitleTextDefault => Some("window-title-text-default"),
             Self::WindowTitleWithSubtitle => Some("window-title-with-subtitle"),
             Self::WindowTitleLongText => Some("window-title-long-text"),
@@ -490,14 +622,38 @@ fn create_widget_for_case(name: &str) -> Option<(gtk::Widget, bool)> {
         "adw-action-row-activatable" => {
             widget_case!(cases::adw_action_row_activatable::AdwActionRowActivatable, false)
         }
+        "adw-action-row-icon" => {
+            widget_case!(cases::adw_action_row_icon::AdwActionRowIcon, false)
+        }
+        "adw-action-row-subtitle-only" => {
+            widget_case!(cases::adw_action_row_subtitle_only::AdwActionRowSubtitleOnly, false)
+        }
+        "adw-action-row-suffix-fill" => {
+            widget_case!(cases::adw_action_row_suffix_fill::AdwActionRowSuffixFill, false)
+        }
+        "adw-breakpoint-bin-conditions" => {
+            widget_case!(cases::adw_breakpoint_bin_conditions::AdwBreakpointBinConditions, false)
+        }
         "adw-breakpoint-bin-default" => {
             widget_case!(cases::adw_breakpoint_bin_default::AdwBreakpointBinDefault, false)
         }
         "adw-combo-row-default" => {
             widget_case!(cases::adw_combo_row_default::AdwComboRowDefault, false)
         }
+        "adw-combo-row-long-value" => {
+            widget_case!(cases::adw_combo_row_long_value::AdwComboRowLongValue, false)
+        }
+        "adw-combo-row-single-item" => {
+            widget_case!(cases::adw_combo_row_single_item::AdwComboRowSingleItem, false)
+        }
         "adw-entry-row-default" => {
             widget_case!(cases::adw_entry_row_default::AdwEntryRowDefault, false)
+        }
+        "adw-entry-row-disabled" => {
+            widget_case!(cases::adw_entry_row_disabled::AdwEntryRowDisabled, false)
+        }
+        "adw-entry-row-long-title" => {
+            widget_case!(cases::adw_entry_row_long_title::AdwEntryRowLongTitle, false)
         }
         "adw-entry-row-with-text" => {
             widget_case!(cases::adw_entry_row_with_text::AdwEntryRowWithText, false)
@@ -508,8 +664,14 @@ fn create_widget_for_case(name: &str) -> Option<(gtk::Widget, bool)> {
         "adw-expander-row-expanded" => {
             widget_case!(cases::adw_expander_row_expanded::AdwExpanderRowExpanded, false)
         }
+        "adw-expander-row-widgets" => {
+            widget_case!(cases::adw_expander_row_widgets::AdwExpanderRowWidgets, true)
+        }
         "adw-headerbar-default" => {
             widget_case!(cases::adw_headerbar_default::AdwHeaderbarDefault, false)
+        }
+        "adw-headerbar-narrow-title" => {
+            widget_case!(cases::adw_headerbar_narrow_title::AdwHeaderbarNarrowTitle, false)
         }
         "adw-headerbar-with-title" => {
             widget_case!(cases::adw_headerbar_with_title::AdwHeaderbarWithTitle, false)
@@ -517,14 +679,32 @@ fn create_widget_for_case(name: &str) -> Option<(gtk::Widget, bool)> {
         "adw-headerbar-start-end" => {
             widget_case!(cases::adw_headerbar_start_end::AdwHeaderbarStartEnd, false)
         }
+        "adw-navigation-view-back-button" => {
+            widget_case!(cases::adw_navigation_view_back_button::AdwNavigationViewBackButton, false)
+        }
         "adw-navigation-view-default" => {
             widget_case!(cases::adw_navigation_view_default::AdwNavigationViewDefault, false)
         }
         "adw-navigation-view-scrolled" => {
             widget_case!(cases::adw_navigation_view_scrolled::AdwNavigationViewScrolled, false)
         }
+        "adw-overlay-split-view-collapsed-rtl" => {
+            widget_case!(cases::adw_overlay_split_view_collapsed_rtl::AdwOverlaySplitViewCollapsedRtl, false)
+        }
+        "adw-overlay-split-view-collapsed-shown" => {
+            widget_case!(cases::adw_overlay_split_view_collapsed_shown::AdwOverlaySplitViewCollapsedShown, false)
+        }
         "adw-overlay-split-view-default" => {
             widget_case!(cases::adw_overlay_split_view_default::AdwOverlaySplitViewDefault, false)
+        }
+        "adw-overlay-split-view-end" => {
+            widget_case!(cases::adw_overlay_split_view_end::AdwOverlaySplitViewEnd, false)
+        }
+        "adw-overlay-split-view-hidden" => {
+            widget_case!(cases::adw_overlay_split_view_hidden::AdwOverlaySplitViewHidden, false)
+        }
+        "adw-overlay-split-view-wide-sidebar" => {
+            widget_case!(cases::adw_overlay_split_view_wide_sidebar::AdwOverlaySplitViewWideSidebar, false)
         }
         "adw-password-entry-row-default" => {
             widget_case!(cases::adw_password_entry_row_default::AdwPasswordEntryRowDefault, false)
@@ -550,6 +730,12 @@ fn create_widget_for_case(name: &str) -> Option<(gtk::Widget, bool)> {
         "adw-preferences-row-default" => {
             widget_case!(cases::adw_preferences_row_default::AdwPreferencesRowDefault, false)
         }
+        "adw-preferences-row-custom-child" => {
+            widget_case!(
+                cases::adw_preferences_row_custom_child::AdwPreferencesRowCustomChild,
+                false
+            )
+        }
         "adw-spin-row-default" => {
             widget_case!(cases::adw_spin_row_default::AdwSpinRowDefault, false)
         }
@@ -559,23 +745,42 @@ fn create_widget_for_case(name: &str) -> Option<(gtk::Widget, bool)> {
         "adw-switch-row-active" => {
             widget_case!(cases::adw_switch_row_active::AdwSwitchRowActive, false)
         }
+        "adw-switch-row-prefix-suffix" => {
+            widget_case!(cases::adw_switch_row_prefix_suffix::AdwSwitchRowPrefixSuffix, false)
+        }
         "adw-toolbar-view-default" => {
             widget_case!(cases::adw_toolbar_view_default::AdwToolbarViewDefault, false)
         }
         "adw-toolbar-view-with-bottom" => {
             widget_case!(cases::adw_toolbar_view_with_bottom::AdwToolbarViewWithBottom, false)
         }
+        "adw-view-switcher-attention" => {
+            widget_case!(cases::adw_view_switcher_attention::AdwViewSwitcherAttention, false)
+        }
+        "adw-view-switcher-bar" => {
+            widget_case!(cases::adw_view_switcher_bar::AdwViewSwitcherBar, false)
+        }
         "adw-view-switcher-default" => {
             widget_case!(cases::adw_view_switcher_default::AdwViewSwitcherDefault, false)
+        }
+        "adw-view-switcher-narrow" => {
+            widget_case!(cases::adw_view_switcher_narrow::AdwViewSwitcherNarrow, false)
         }
         "avatar-default" => widget_case!(cases::avatar_default::AvatarDefault, true),
         "avatar-initials" => widget_case!(cases::avatar_initials::AvatarInitials, true),
         "avatar-small" => widget_case!(cases::avatar_small::AvatarSmall, true),
         "banner-revealed" => widget_case!(cases::banner_revealed::BannerRevealed, false),
+        "banner-start" => widget_case!(cases::banner_start::BannerStart, false),
+        "banner-wide" => widget_case!(cases::banner_wide::BannerWide, false),
         "banner-with-button" => {
             widget_case!(cases::banner_with_button::BannerWithButton, false)
         }
         "carousel-default" => widget_case!(cases::carousel_default::CarouselDefault, false),
+        "carousel-natural-pages" => {
+            widget_case!(cases::carousel_natural_pages::CarouselNaturalPages, false)
+        }
+        "carousel-vertical" => widget_case!(cases::carousel_vertical::CarouselVertical, false),
+        "clamp-child-min" => widget_case!(cases::clamp_child_min::ClampChildMin, false),
         "clamp-default" => widget_case!(cases::clamp_default::ClampDefault, false),
         "status-page-default" => {
             widget_case!(cases::status_page_default::StatusPageDefault, false)
@@ -638,10 +843,18 @@ fn create_widget_for_case(name: &str) -> Option<(gtk::Widget, bool)> {
         "dropdown-fill" => widget_case!(cases::dropdown_fill::DropdownFill, false),
         "expander-default" => widget_case!(cases::expander_default::ExpanderDefault, false),
         "expander-expanded" => widget_case!(cases::expander_expanded::ExpanderExpanded, false),
+        "flow-box-aligned" => widget_case!(cases::flow_box_aligned::FlowBoxAligned, true),
         "flow-box-default" => widget_case!(cases::flow_box_default::FlowBoxDefault, false),
+        "flow-box-homogeneous" => {
+            widget_case!(cases::flow_box_homogeneous::FlowBoxHomogeneous, true)
+        }
+        "flow-box-selected" => widget_case!(cases::flow_box_selected::FlowBoxSelected, false),
         "frame-default" => widget_case!(cases::frame_default::FrameDefault, false),
         "headerbar-default" => {
             widget_case!(cases::headerbar_default::HeaderbarDefault, false)
+        }
+        "headerbar-narrow-title" => {
+            widget_case!(cases::headerbar_narrow_title::HeaderbarNarrowTitle, false)
         }
         "headerbar-start-end" => {
             widget_case!(cases::headerbar_start_end::HeaderbarStartEnd, false)
@@ -649,11 +862,22 @@ fn create_widget_for_case(name: &str) -> Option<(gtk::Widget, bool)> {
         "headerbar-with-title" => {
             widget_case!(cases::headerbar_with_title::HeaderbarWithTitle, false)
         }
+        "headerbar-window-title" => {
+            widget_case!(cases::headerbar_window_title::HeaderbarWindowTitle, false)
+        }
         "frame-no-label" => widget_case!(cases::frame_no_label::FrameNoLabel, false),
         "grid-default" => widget_case!(cases::grid_default::GridDefault, false),
+        "listbox-bare-labels" => {
+            widget_case!(cases::listbox_bare_labels::ListboxBareLabels, false)
+        }
         "listbox-default" => widget_case!(cases::listbox_default::ListboxDefault, false),
+        "listbox-selection" => widget_case!(cases::listbox_selection::ListboxSelection, false),
         "listbox-separators" => widget_case!(cases::listbox_separators::ListboxSeparators, false),
         "notebook-default" => widget_case!(cases::notebook_default::NotebookDefault, false),
+        "notebook-homogeneous" => widget_case!(cases::notebook_homogeneous::NotebookHomogeneous, false),
+        "notebook-scrollable" => widget_case!(cases::notebook_scrollable::NotebookScrollable, false),
+        "notebook-tab-pos-left" => widget_case!(cases::notebook_tab_pos_left::NotebookTabPosLeft, false),
+        "notebook-tabs" => widget_case!(cases::notebook_tabs::NotebookTabs, false),
         "overlay-default" => widget_case!(cases::overlay_default::OverlayDefault, false),
         "paned-horizontal" => widget_case!(cases::paned_horizontal::PanedHorizontal, false),
         "paned-vertical" => widget_case!(cases::paned_vertical::PanedVertical, false),
@@ -686,6 +910,11 @@ fn create_widget_for_case(name: &str) -> Option<(gtk::Widget, bool)> {
         }
         "button-icon" => widget_case!(cases::button_icon::ButtonIcon, false),
         "button-circular" => widget_case!(cases::button_circular::ButtonCircular, false),
+        "button-content-button" => {
+            widget_case!(cases::button_content_button::ButtonContentButton, false)
+        }
+        "button-icon-label" => widget_case!(cases::button_icon_label::ButtonIconLabel, false),
+        "button-can-shrink" => widget_case!(cases::button_can_shrink::ButtonCanShrink, true),
         "button-content-icon-label" => {
             widget_case!(cases::button_content_icon_label::ButtonContentIconLabel, false)
         }
@@ -706,7 +935,18 @@ fn create_widget_for_case(name: &str) -> Option<(gtk::Widget, bool)> {
         "button-row-destructive" => {
             widget_case!(cases::button_row_destructive::ButtonRowDestructive, true)
         }
+        "button-row-long-title" => {
+            widget_case!(cases::button_row_long_title::ButtonRowLongTitle, false)
+        }
         "calendar-default" => widget_case!(cases::calendar_default::CalendarDefault, false),
+        "calendar-disabled" => widget_case!(cases::calendar_disabled::CalendarDisabled, false),
+        "calendar-marked" => widget_case!(cases::calendar_marked::CalendarMarked, false),
+        "calendar-no-day-names" => {
+            widget_case!(cases::calendar_no_day_names::CalendarNoDayNames, false)
+        }
+        "calendar-week-numbers" => {
+            widget_case!(cases::calendar_week_numbers::CalendarWeekNumbers, false)
+        }
         "check-button-default" => {
             widget_case!(cases::check_button_default::CheckButtonDefault, false)
         }
@@ -730,6 +970,12 @@ fn create_widget_for_case(name: &str) -> Option<(gtk::Widget, bool)> {
         }
         "check-button-no-label" => {
             widget_case!(cases::check_button_no_label::CheckButtonNoLabel, false)
+        }
+        "check-button-custom-child" => {
+            widget_case!(cases::check_button_custom_child::CheckButtonCustomChild, false)
+        }
+        "check-button-empty-label" => {
+            widget_case!(cases::check_button_empty_label::CheckButtonEmptyLabel, false)
         }
         "editable-label-display-default" => {
             widget_case!(
@@ -765,6 +1011,7 @@ fn create_widget_for_case(name: &str) -> Option<(gtk::Widget, bool)> {
         "label-default" => widget_case!(cases::label_default::LabelDefault, false),
         "label-wrap-word" => widget_case!(cases::label_wrap_word::LabelWrapWord, false),
         "label-wrap-char" => widget_case!(cases::label_wrap_char::LabelWrapChar, false),
+        "label-wrap-heights" => widget_case!(cases::label_wrap_heights::LabelWrapHeights, false),
         "label-ellipsize" => widget_case!(cases::label_ellipsize::LabelEllipsize, false),
         "label-heights" => widget_case!(cases::label_heights::LabelHeights, false),
         "label-justify-center" => {
@@ -884,8 +1131,18 @@ fn create_widget_for_case(name: &str) -> Option<(gtk::Widget, bool)> {
         "scrolled-window-frame" => {
             widget_case!(cases::scrolled_window_frame::ScrolledWindowFrame, false)
         }
+        "stack-child-align" => widget_case!(cases::stack_child_align::StackChildAlign, false),
         "stack-default" => widget_case!(cases::stack_default::StackDefault, false),
+        "stack-hhomogeneous-false" => {
+            widget_case!(cases::stack_hhomogeneous_false::StackHhomogeneousFalse, false)
+        }
         "stack-homogeneous" => widget_case!(cases::stack_homogeneous::StackHomogeneous, false),
+        "stack-switcher-expand" => {
+            widget_case!(cases::stack_switcher_expand::StackSwitcherExpand, false)
+        }
+        "stack-switcher-icons" => {
+            widget_case!(cases::stack_switcher_icons::StackSwitcherIcons, false)
+        }
         "search-entry-default" => {
             widget_case!(cases::search_entry_default::SearchEntryDefault, false)
         }
@@ -950,10 +1207,28 @@ fn create_widget_for_case(name: &str) -> Option<(gtk::Widget, bool)> {
         "split-button-flat" => {
             widget_case!(cases::split_button_flat::SplitButtonFlat, false)
         }
+        "split-button-open" => {
+            widget_case!(cases::split_button_open::SplitButtonOpen, false)
+        }
+        "split-button-tall" => {
+            widget_case!(cases::split_button_tall::SplitButtonTall, false)
+        }
+        "split-button-fill" => {
+            widget_case!(cases::split_button_fill::SplitButtonFill, true)
+        }
+        "split-button-can-shrink" => {
+            widget_case!(cases::split_button_can_shrink::SplitButtonCanShrink, true)
+        }
         "switch-off-default" => widget_case!(cases::switch_off_default::SwitchOffDefault, false),
         "switch-on-default" => widget_case!(cases::switch_on_default::SwitchOnDefault, false),
         "switch-off-disabled" => widget_case!(cases::switch_off_disabled::SwitchOffDisabled, false),
         "switch-on-disabled" => widget_case!(cases::switch_on_disabled::SwitchOnDisabled, false),
+        "switch-off-title-1" => widget_case!(cases::switch_off_title_1::SwitchOffTitle1, true),
+        "switch-on-pending" => widget_case!(cases::switch_on_pending::SwitchOnPending, false),
+        "switch-on-rtl" => widget_case!(cases::switch_on_rtl::SwitchOnRtl, false),
+        "switch-on-small-slider" => {
+            widget_case!(cases::switch_on_small_slider::SwitchOnSmallSlider, false)
+        }
         "text-view-default" => widget_case!(cases::text_view_default::TextViewDefault, false),
         "text-view-disabled" => widget_case!(cases::text_view_disabled::TextViewDisabled, false),
         "text-view-monospace" => widget_case!(cases::text_view_monospace::TextViewMonospace, false),
@@ -965,14 +1240,28 @@ fn create_widget_for_case(name: &str) -> Option<(gtk::Widget, bool)> {
         "toggle-text-checked" => widget_case!(cases::toggle_text_checked::ToggleTextChecked, false),
         "toggle-text-flat" => widget_case!(cases::toggle_text_flat::ToggleTextFlat, false),
         "toggle-disabled" => widget_case!(cases::toggle_disabled::ToggleDisabled, false),
+        "toggle-icon" => widget_case!(cases::toggle_icon::ToggleIcon, false),
+        "toggle-label-child" => {
+            widget_case!(cases::toggle_label_child::ToggleLabelChild, false)
+        }
+        "toggle-grouped" => widget_case!(cases::toggle_grouped::ToggleGrouped, false),
         "toggle-group-text-default" => {
-            widget_case!(cases::toggle_group_text_default::ToggleGroupTextDefault, false)
+            widget_case!(cases::toggle_group_text_default::ToggleGroupTextDefault, true)
         }
         "toggle-group-icon" => {
-            widget_case!(cases::toggle_group_icon::ToggleGroupIcon, false)
+            widget_case!(cases::toggle_group_icon::ToggleGroupIcon, true)
         }
         "toggle-group-homogeneous" => {
-            widget_case!(cases::toggle_group_homogeneous::ToggleGroupHomogeneous, false)
+            widget_case!(cases::toggle_group_homogeneous::ToggleGroupHomogeneous, true)
+        }
+        "toggle-group-fill" => {
+            widget_case!(cases::toggle_group_fill::ToggleGroupFill, true)
+        }
+        "toggle-group-can-shrink" => {
+            widget_case!(cases::toggle_group_can_shrink::ToggleGroupCanShrink, true)
+        }
+        "window-child-valign-center" => {
+            widget_case!(cases::window_child_valign_center::WindowChildValignCenter, false)
         }
         "window-title-text-default" => {
             widget_case!(
@@ -1009,18 +1298,34 @@ fn is_known_case(name: &str) -> bool {
             | "adw-action-row-default"
             | "adw-action-row-with-subtitle"
             | "adw-action-row-activatable"
+            | "adw-action-row-icon"
+            | "adw-action-row-subtitle-only"
+            | "adw-action-row-suffix-fill"
+            | "adw-breakpoint-bin-conditions"
             | "adw-breakpoint-bin-default"
             | "adw-combo-row-default"
+            | "adw-combo-row-long-value"
+            | "adw-combo-row-single-item"
             | "adw-entry-row-default"
+            | "adw-entry-row-disabled"
+            | "adw-entry-row-long-title"
             | "adw-entry-row-with-text"
             | "adw-expander-row-default"
             | "adw-expander-row-expanded"
+            | "adw-expander-row-widgets"
             | "adw-headerbar-default"
+            | "adw-headerbar-narrow-title"
             | "adw-headerbar-with-title"
             | "adw-headerbar-start-end"
+            | "adw-navigation-view-back-button"
             | "adw-navigation-view-default"
             | "adw-navigation-view-scrolled"
+            | "adw-overlay-split-view-collapsed-rtl"
+            | "adw-overlay-split-view-collapsed-shown"
             | "adw-overlay-split-view-default"
+            | "adw-overlay-split-view-end"
+            | "adw-overlay-split-view-hidden"
+            | "adw-overlay-split-view-wide-sidebar"
             | "adw-password-entry-row-default"
             | "adw-preferences-group-default"
             | "adw-preferences-group-with-description"
@@ -1029,18 +1334,28 @@ fn is_known_case(name: &str) -> bool {
             | "adw-preferences-group-mixed"
             | "adw-preferences-page-default"
             | "adw-preferences-row-default"
+            | "adw-preferences-row-custom-child"
             | "adw-spin-row-default"
             | "adw-switch-row-default"
             | "adw-switch-row-active"
+            | "adw-switch-row-prefix-suffix"
             | "adw-toolbar-view-default"
             | "adw-toolbar-view-with-bottom"
+            | "adw-view-switcher-attention"
+            | "adw-view-switcher-bar"
             | "adw-view-switcher-default"
+            | "adw-view-switcher-narrow"
             | "avatar-default"
             | "avatar-initials"
             | "avatar-small"
             | "banner-revealed"
+            | "banner-start"
+            | "banner-wide"
             | "banner-with-button"
             | "carousel-default"
+            | "carousel-natural-pages"
+            | "carousel-vertical"
+            | "clamp-child-min"
             | "clamp-default"
             | "status-page-default"
             | "status-page-no-icon"
@@ -1065,16 +1380,27 @@ fn is_known_case(name: &str) -> bool {
             | "dropdown-fill"
             | "expander-default"
             | "expander-expanded"
+            | "flow-box-aligned"
             | "flow-box-default"
+            | "flow-box-homogeneous"
+            | "flow-box-selected"
             | "frame-default"
             | "frame-no-label"
             | "headerbar-default"
+            | "headerbar-narrow-title"
             | "headerbar-start-end"
             | "headerbar-with-title"
+            | "headerbar-window-title"
             | "grid-default"
+            | "listbox-bare-labels"
             | "listbox-default"
+            | "listbox-selection"
             | "listbox-separators"
             | "notebook-default"
+            | "notebook-homogeneous"
+            | "notebook-scrollable"
+            | "notebook-tab-pos-left"
+            | "notebook-tabs"
             | "overlay-default"
             | "paned-horizontal"
             | "paned-vertical"
@@ -1089,6 +1415,9 @@ fn is_known_case(name: &str) -> bool {
             | "button-text-destructive"
             | "button-icon"
             | "button-circular"
+            | "button-content-button"
+            | "button-icon-label"
+            | "button-can-shrink"
             | "button-content-icon-label"
             | "button-content-label-only"
             | "button-content-icon-only"
@@ -1097,13 +1426,20 @@ fn is_known_case(name: &str) -> bool {
             | "button-row-default"
             | "button-row-start-icon"
             | "button-row-destructive"
+            | "button-row-long-title"
             | "calendar-default"
+            | "calendar-disabled"
+            | "calendar-marked"
+            | "calendar-no-day-names"
+            | "calendar-week-numbers"
             | "check-button-default"
             | "check-button-checked"
             | "check-button-indeterminate"
             | "check-button-disabled"
             | "check-button-checked-disabled"
             | "check-button-no-label"
+            | "check-button-custom-child"
+            | "check-button-empty-label"
             | "editable-label-display-default"
             | "editable-label-display-empty"
             | "editable-label-editing-active"
@@ -1121,6 +1457,7 @@ fn is_known_case(name: &str) -> bool {
             | "label-default"
             | "label-wrap-word"
             | "label-wrap-char"
+            | "label-wrap-heights"
             | "label-ellipsize"
             | "label-heights"
             | "label-justify-center"
@@ -1157,8 +1494,12 @@ fn is_known_case(name: &str) -> bool {
             | "scale-default"
             | "scrolled-window-default"
             | "scrolled-window-frame"
+            | "stack-child-align"
             | "stack-default"
+            | "stack-hhomogeneous-false"
             | "stack-homogeneous"
+            | "stack-switcher-expand"
+            | "stack-switcher-icons"
             | "search-entry-default"
             | "search-entry-disabled"
             | "searchbar-default"
@@ -1177,10 +1518,18 @@ fn is_known_case(name: &str) -> bool {
             | "split-button-text-default"
             | "split-button-icon"
             | "split-button-flat"
+            | "split-button-open"
+            | "split-button-tall"
+            | "split-button-fill"
+            | "split-button-can-shrink"
             | "switch-off-default"
             | "switch-on-default"
             | "switch-off-disabled"
             | "switch-on-disabled"
+            | "switch-off-title-1"
+            | "switch-on-pending"
+            | "switch-on-rtl"
+            | "switch-on-small-slider"
             | "text-view-default"
             | "text-view-disabled"
             | "text-view-monospace"
@@ -1190,9 +1539,15 @@ fn is_known_case(name: &str) -> bool {
             | "toggle-text-checked"
             | "toggle-text-flat"
             | "toggle-disabled"
+            | "toggle-icon"
+            | "toggle-label-child"
+            | "toggle-grouped"
             | "toggle-group-text-default"
             | "toggle-group-icon"
             | "toggle-group-homogeneous"
+            | "toggle-group-fill"
+            | "toggle-group-can-shrink"
+            | "window-child-valign-center"
             | "window-title-text-default"
             | "window-title-with-subtitle"
             | "window-title-long-text"
