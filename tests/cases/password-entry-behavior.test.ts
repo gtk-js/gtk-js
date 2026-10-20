@@ -42,7 +42,7 @@ for (const [browserName, page] of Object.entries(globalThis.__testPages)) {
     await input.evaluate((el: HTMLInputElement) => el.setSelectionRange(2, 4));
     await peek.click();
     expect(await state()).toEqual({ type: "text", selection: [2, 4], focused: true });
-    expect(await peek.getAttribute("title")).toBe("Hide Text");
+    expect(await peek.getAttribute("data-gtk-tooltip")).toBe("Hide Text");
     await peek.click();
     expect(await state()).toEqual({ type: "password", selection: [2, 4], focused: true });
 
@@ -68,7 +68,7 @@ for (const [browserName, page] of Object.entries(globalThis.__testPages)) {
     expect(await peek.count()).toBe(0);
     expect((await state()).type).toBe("password");
     await root.locator("#password-peek-toggle").click();
-    expect(await peek.getAttribute("title")).toBe("Show Text");
+    expect(await peek.getAttribute("data-gtk-tooltip")).toBe("Show Text");
 
     // A disabled entry is dimmed, and its peek icon is never picked.
     const disabled = root.locator(".gtk-entry:has(> #password-disabled)");

@@ -7,6 +7,7 @@ import React, {
   useState,
 } from "react";
 import { useIcon } from "../icon-context.tsx";
+import { tooltipAttrs } from "../tooltip.tsx";
 import { alignAttrs, type GtkAlignProps } from "../types.ts";
 
 export interface GtkPasswordEntryProps
@@ -203,7 +204,11 @@ export const GtkPasswordEntry = forwardRef<HTMLInputElement, GtkPasswordEntryPro
           {...rest}
         />
         {showCapsLock && CapsLockIcon && (
-          <span className="gtk-image caps-lock-indicator" role="alert" title="Caps Lock is on">
+          <span
+            className="gtk-image caps-lock-indicator"
+            role="alert"
+            {...tooltipAttrs("Caps Lock is on")}
+          >
             <CapsLockIcon size={16} />
           </span>
         )}
@@ -211,7 +216,7 @@ export const GtkPasswordEntry = forwardRef<HTMLInputElement, GtkPasswordEntryPro
           <span
             className="gtk-image"
             onClick={disabled ? undefined : toggleVisibility}
-            title={visible ? "Hide Text" : "Show Text"}
+            {...tooltipAttrs(visible ? "Hide Text" : "Show Text")}
           >
             <PeekIcon size={16} />
           </span>
