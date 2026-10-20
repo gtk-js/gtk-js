@@ -37,7 +37,7 @@ describe("AdwToastOverlay nodes", () => {
 
   test("the action button is a text button whose label uses underlines for mnemonics", () => {
     const html = toastMarkup({ title: "Deleted", buttonLabel: "_Undo" });
-    expect(html).toMatch(/<button class="gtk-button text-button"[^>]* type="button"/);
+    expect(html).toMatch(/<button type="button" class="gtk-button text-button"/);
     expect(html).not.toContain("_Undo");
     expect(html).toMatch(/>U<\/span>ndo</);
   });
@@ -46,7 +46,7 @@ describe("AdwToastOverlay nodes", () => {
     const html = toastMarkup({ title: "Hello!" });
     const close = html.match(/<button [^>]*>/)?.[0] ?? "";
     expect(close).toMatch(/class="gtk-button flat image-button circular"/);
-    expect(close).toContain('title="Dismiss"');
+    expect(close).toContain('data-gtk-tooltip="Dismiss"');
     expect(close).toContain('type="button"');
     expect(html.match(/<button/g)).toHaveLength(1);
   });
