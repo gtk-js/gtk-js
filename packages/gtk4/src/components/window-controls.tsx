@@ -1,4 +1,5 @@
 import { forwardRef, type HTMLAttributes } from "react";
+import { noFocusOnClick } from "../focus-on-click.ts";
 import { useIcon } from "../icon-context.tsx";
 import { alignAttrs, type GtkAlignProps } from "../types.ts";
 import { useWindowControls } from "../window-controls-context.tsx";
@@ -62,7 +63,7 @@ function WindowControlButton({
       type="button"
       tabIndex={-1}
       aria-label={CONTROL_LABELS[name]}
-      onMouseDown={(e) => e.preventDefault()}
+      {...noFocusOnClick()}
       onClick={onClick}
     >
       <span className="gtk-image">

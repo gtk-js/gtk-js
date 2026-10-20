@@ -101,7 +101,9 @@ describe("remapPseudoClasses", () => {
     expect(out).toContain(
       `:where(.gtk-splitbutton):not(_).flat:is(:active, [data-active])${sensitive}`,
     );
-    expect(out).toContain(`:not(:is(:active, [data-active])${sensitive}):hover${sensitive}`);
+    expect(out).toContain(
+      `:not(:is(:active, [data-active])${sensitive}, [data-pressed]):hover${sensitive}`,
+    );
     expect(out).not.toContain(":is(:is(");
   });
 
@@ -121,6 +123,21 @@ describe("remapPseudoClasses", () => {
     const out = await transform(".gtk-row:drop(active) { background: blue; }");
     expect(out).toContain(".gtk-row[data-drop-active]");
     expect(out).not.toContain(":drop(active)");
+  });
+
+  test(":active → :active or [data-pressed], with the same specificity", async () => {
+    const out = await transform(
+      "button:active, label { color: red; } button:not(:active):hover > image { color: blue; } row:drop(active) { color: green; }",
+    );
+    // #78 also matches :active as [data-active].
+    expect(out).toContain(":where(.gtk-button):not(_):is(:active, [data-active])");
+    expect(out).toContain(":where(.gtk-button):not(_)[data-pressed], :where(.gtk-label):not(_) {");
+    expect(out).toMatch(
+      /:where\(.gtk-button\):not\(_\):not\(:is\(:active.*?, \[data-pressed\]\):hover/,
+    );
+    expect(out).toContain(":where(.gtk-row):not(_)[data-drop-active]");
+    // Applied once, even though PostCSS revisits changed rules.
+    expect(out.match(/\[data-pressed\]/g)).toHaveLength(2);
   });
 
   test(":selected → [aria-selected] or [data-selected]", async () => {
