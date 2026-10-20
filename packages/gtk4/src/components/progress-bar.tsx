@@ -5,6 +5,7 @@ import {
   type GtkEllipsizeMode,
   type GtkOrientation,
 } from "../types.ts";
+import { GtkLabel } from "./label.tsx";
 
 export interface GtkProgressBarProps extends HTMLAttributes<HTMLDivElement>, GtkAlignProps {
   /** Fraction completed (0.0 to 1.0). Default: 0. */
@@ -147,11 +148,15 @@ export const GtkProgressBar = forwardRef<HTMLDivElement, GtkProgressBarProps>(
         aria-valuemin={0}
         aria-valuemax={1}
         aria-busy={pulsing}
+        aria-valuetext={showText && displayText ? displayText : undefined}
         className={classes.join(" ")}
         {...alignAttrs(halign, valign, hexpand, vexpand)}
         {...rest}
       >
-        {showText && displayText && <span className="gtk-label text">{displayText}</span>}
+        {/* A label named "text", above the trough (gtk_progress_bar_set_show_text()). */}
+        {showText && displayText && (
+          <GtkLabel cssName="text" label={displayText} ellipsize={ellipsize} aria-hidden />
+        )}
         <div className={troughClasses.join(" ")}>
           <div className={progressClasses.join(" ")} style={progressStyle} />
         </div>

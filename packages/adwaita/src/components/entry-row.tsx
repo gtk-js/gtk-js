@@ -1,4 +1,11 @@
-import { GtkButton, type GtkInputPurpose, GtkLabel, useIcon, useListBoxRow } from "@gtk-js/gtk4";
+import {
+  GtkButton,
+  type GtkInputPurpose,
+  GtkLabel,
+  tooltipAttrs,
+  useIcon,
+  useListBoxRow,
+} from "@gtk-js/gtk4";
 import React, {
   forwardRef,
   type HTMLAttributes,
@@ -203,7 +210,7 @@ export const AdwEntryRow = forwardRef<HTMLDivElement, AdwEntryRowProps>(function
     <div
       ref={ref}
       className={classes.join(" ")}
-      title={tooltipText}
+      {...tooltipAttrs(tooltipText)}
       data-disabled={disabled || undefined}
       // pressed_cb(): a press on the row itself, its header, its prefix and
       // suffix boxes or the indicator focuses the text. Its widgets, the text
@@ -288,7 +295,8 @@ export const AdwEntryRow = forwardRef<HTMLDivElement, AdwEntryRowProps>(function
             <input
               ref={inputRef}
               className="gtk-text"
-              type={inputPurpose === "password" || !visibility ? "password" : "text"}
+              // GtkText:visibility alone hides the text; input-purpose only hints input methods.
+              type={visibility ? "text" : "password"}
               autoFocus={autoFocus}
               spellCheck={
                 inputPurpose === "free-form" || inputPurpose === "name" ? undefined : false
@@ -319,7 +327,7 @@ export const AdwEntryRow = forwardRef<HTMLDivElement, AdwEntryRowProps>(function
           {focused && indicator && (
             <span
               className="gtk-image indicator"
-              title={indicatorTooltip}
+              {...tooltipAttrs(indicatorTooltip)}
               style={{ display: "flex", alignItems: "center" }}
             >
               {indicator}

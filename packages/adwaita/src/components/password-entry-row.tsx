@@ -1,4 +1,4 @@
-import { useIcon } from "@gtk-js/gtk4";
+import { GtkButton, useIcon } from "@gtk-js/gtk4";
 import { forwardRef, useState } from "react";
 import { AdwEntryRow, type AdwEntryRowProps } from "./entry-row.tsx";
 
@@ -24,10 +24,7 @@ export const AdwPasswordEntryRow = forwardRef<HTMLDivElement, AdwPasswordEntryRo
   function AdwPasswordEntryRow({ suffixWidget, className, onEntryKeyDown, ...rest }, ref) {
     const [visible, setVisible] = useState(false);
     const [capsLock, setCapsLock] = useState(false);
-    const RevealIcon = useIcon("ViewReveal");
-    const ConcealIcon = useIcon("ViewConceal");
     const CapsLockIcon = useIcon("CapsLock");
-    const PeekIcon = visible ? ConcealIcon : RevealIcon;
 
     const classes = ["password"];
     if (className) classes.push(className);
@@ -47,21 +44,20 @@ export const AdwPasswordEntryRow = forwardRef<HTMLDivElement, AdwPasswordEntryRo
         indicatorTooltip="Caps Lock is on"
         suffixWidget={
           <>
-            {PeekIcon && (
-              <button
-                type="button"
-                className="gtk-button flat"
-                title={visible ? "Hide Text" : "Show Text"}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setVisible(!visible);
-                }}
-              >
-                <span className="gtk-image">
-                  <PeekIcon size={16} />
-                </span>
-              </button>
-            )}
+            {/* show_text_toggle in adw_password_entry_row_init(): a flat image
+                button that doesn't take the focus from the text when clicked. */}
+            <GtkButton
+              type="button"
+              iconName={visible ? "ViewConceal" : "ViewReveal"}
+              hasFrame={false}
+              valign="center"
+              tooltipText={visible ? "Hide Password" : "Show Password"}
+              onMouseDown={(e) => e.preventDefault()}
+              onClick={(e) => {
+                e.stopPropagation();
+                setVisible(!visible);
+              }}
+            />
             {suffixWidget}
           </>
         }

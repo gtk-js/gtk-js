@@ -5,7 +5,10 @@ import React, {
   useCallback,
   useState,
 } from "react";
+import { useIcon } from "../icon-context.tsx";
+import { tooltipAttrs } from "../tooltip.tsx";
 import { alignAttrs, type GtkAlignProps } from "../types.ts";
+import { childButtonClass } from "./button.tsx";
 
 export interface GtkToggleButtonProps
   extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, "children">,
@@ -63,6 +66,7 @@ export const GtkToggleButton = forwardRef<HTMLButtonElement, GtkToggleButtonProp
     const active = isControlled ? controlledActive : internalActive;
     const [keyboardActivating, setKeyboardActivating] = useState(false);
 
+    const Icon = useIcon(iconName ?? "");
     const hasCustomChild = children != null;
     const hasLabel = !hasCustomChild && label != null;
     const hasIcon = !hasCustomChild && iconName != null;
@@ -72,6 +76,8 @@ export const GtkToggleButton = forwardRef<HTMLButtonElement, GtkToggleButtonProp
     if (hasLabel && !hasIcon) classes.push("text-button");
     if (hasIcon && !hasLabel) classes.push("image-button");
     if (hasIcon && hasLabel) classes.push("image-text-button");
+    const childClass = childButtonClass(children);
+    if (childClass) classes.push(childClass);
     if (keyboardActivating) classes.push("keyboard-activating");
     if (className) classes.push(className);
 
@@ -105,7 +111,7 @@ export const GtkToggleButton = forwardRef<HTMLButtonElement, GtkToggleButtonProp
       <button
         ref={ref}
         className={classes.join(" ")}
-        title={tooltipText}
+        {...tooltipAttrs(tooltipText)}
         aria-pressed={active}
         {...alignAttrs(halign, valign, hexpand, vexpand)}
         data-checked={active || undefined}
@@ -118,7 +124,12 @@ export const GtkToggleButton = forwardRef<HTMLButtonElement, GtkToggleButtonProp
           children
         ) : (
           <>
-            {hasIcon && <span className="gtk-image" />}
+            {/* A GtkButton's image, as gtk_button_set_icon_name() makes it. */}
+            {hasIcon && (
+              <span className="gtk-image" data-valign="center">
+                {Icon && <Icon size={16} />}
+              </span>
+            )}
             {hasLabel && <span className="gtk-label">{label}</span>}
           </>
         )}
