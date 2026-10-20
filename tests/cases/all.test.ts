@@ -43,6 +43,7 @@ gtkTest("menu-button-flat", { childSelector: "button.toggle" });
 gtkTest("menu-button-icon", { childSelector: "button.toggle" });
 gtkTest("menu-button-text-default", { childSelector: "button.toggle" });
 gtkTest("toggle-disabled");
+gtkTest("toggle-label-child");
 gtkTest("toggle-text-checked");
 gtkTest("toggle-text-default");
 gtkTest("toggle-text-flat");

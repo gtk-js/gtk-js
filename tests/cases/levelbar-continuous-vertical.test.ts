@@ -1,4 +1,5 @@
 import { expect } from "vite-plus/test";
+import { gtkAssert } from "../assert";
 import { compare, findChild, gtkTest } from "../harness";
 
 gtkTest("levelbar-continuous-vertical", (native, web) => {
@@ -21,4 +22,20 @@ gtkTest("levelbar-continuous-vertical", (native, web) => {
       (f) => f.property !== "background_color" && !f.property.startsWith("border_radius"),
     ),
   ).toEqual([]);
+
+  // The trough and the empty block fill the bar's height; the filled block is
+  // the value's share of it (gtk_level_bar_allocate_trough_continuous()).
+  gtkAssert.numbersEqual(native.height, web.height, "height");
+  gtkAssert.numbersEqual(native.width, web.width, "width");
+  for (const [name, i] of [
+    ["trough", 0],
+    ["block", 0],
+    ["block", 1],
+  ] as const) {
+    const n = findChild(native, name, i);
+    const w = findChild(web, name, i);
+    for (const key of ["x", "y", "width", "height"] as const) {
+      gtkAssert.numbersEqual(n[key] ?? 0, w[key] ?? 0, `${name} ${i} ${key}`);
+    }
+  }
 });
