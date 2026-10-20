@@ -1,5 +1,5 @@
 import { describe, expect, test } from "vite-plus/test";
-import { arrowGap, insetTriangle, shadowExtents } from "./popover.tsx";
+import { alignAlong, arrowGap, insetTriangle, resizeToFit, shadowExtents } from "./popover.tsx";
 
 describe("GtkPopover arrow", () => {
   // libadwaita's popover shadow, as Chromium computes it.
@@ -42,5 +42,48 @@ describe("GtkPopover arrow", () => {
     expect([left[1], right[1]]).toEqual([13, 13]);
     expect(tip[0]).toBeCloseTo(12);
     expect(tip[1]).toBeCloseTo(Math.hypot(12, 13) / 12);
+  });
+});
+
+describe("GtkPopover placement", () => {
+  // A 100px popover along a 40px anchor at 200 (create_popup_layout()).
+  test("halign/valign START and END line up the popover's edge with the anchor's", () => {
+    expect(alignAlong("start", false, 200, 40, 100)).toBe(200);
+    expect(alignAlong("end", false, 200, 40, 100)).toBe(140);
+  });
+
+  test("anything else centers it", () => {
+    for (const align of [undefined, "fill", "center", "baseline-fill"] as const) {
+      expect(alignAlong(align, false, 200, 40, 100)).toBe(170);
+    }
+  });
+
+  test("in RTL, START is the right edge", () => {
+    expect(alignAlong("start", true, 200, 40, 100)).toBe(140);
+    expect(alignAlong("end", true, 200, 40, 100)).toBe(200);
+  });
+
+  test("what still doesn't fit is cut off, as GDK_ANCHOR_RESIZE does", () => {
+    // A long menu below a button at y=46 in a 600px viewport.
+    expect(resizeToFit({ x: 10, y: 46, width: 120, height: 1300 }, 800, 600)).toEqual({
+      x: 10,
+      y: 46,
+      width: 120,
+      height: 554,
+    });
+    // Above the viewport's top, the start is cut off.
+    expect(resizeToFit({ x: -20, y: -50, width: 100, height: 300 }, 800, 600)).toEqual({
+      x: 0,
+      y: 0,
+      width: 80,
+      height: 250,
+    });
+    // It fits: unchanged.
+    expect(resizeToFit({ x: 5, y: 5, width: 50, height: 50 }, 800, 600)).toEqual({
+      x: 5,
+      y: 5,
+      width: 50,
+      height: 50,
+    });
   });
 });

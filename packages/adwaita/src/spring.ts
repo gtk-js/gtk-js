@@ -24,6 +24,10 @@ export const NAVIGATION_SPRING: SpringParams = { dampingRatio: 1, mass: 1, stiff
 export const DIALOG_SPRING: SpringParams = { dampingRatio: 0.62, mass: 1, stiffness: 500 };
 export const DIALOG_SPRING_EPSILON = 0.01;
 
+/** AdwBottomSheet's open/close spring: `adw_spring_params_new (0.8, 1, 400)`, epsilon 0.0001. */
+export const BOTTOM_SHEET_SPRING: SpringParams = { dampingRatio: 0.8, mass: 1, stiffness: 400 };
+export const BOTTOM_SHEET_SPRING_EPSILON = 0.0001;
+
 const DEFAULT_EPSILON = 0.001;
 const DELTA = 0.001;
 const MAX_ITERATIONS = 20000;

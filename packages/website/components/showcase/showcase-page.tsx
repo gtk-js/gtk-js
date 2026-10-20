@@ -147,9 +147,9 @@ export function ShowcasePage() {
     if (el) el.scrollTop = el.scrollHeight;
   }, [displayCode]);
 
+  // Called once a press on the title bar passes the drag threshold, with that
+  // pointer move (presses on its buttons never start a move).
   const handleWindowHandleDragStart = (e: React.PointerEvent<HTMLDivElement>) => {
-    if ((e.target as HTMLElement).closest("button")) return;
-    if (e.button !== 0) return;
     if (maximized) return;
     e.currentTarget.setPointerCapture(e.pointerId);
     dragRef.current = { startX: e.clientX, startY: e.clientY, origX: pos.x, origY: pos.y };
@@ -189,7 +189,7 @@ export function ShowcasePage() {
   );
 
   return (
-    <GtkProvider theme={committedTheme} icons={icons}>
+    <GtkProvider theme={committedTheme} icons={icons} hideUntilReady={false}>
       {/* .background paints the window colors, as a GtkWindow does (gtk_window_init());
           the provider's own background stays transparent. */}
       <div
@@ -308,6 +308,7 @@ export function ShowcasePage() {
                   <GtkProvider
                     theme={committedTheme}
                     icons={icons}
+                    hideUntilReady={false}
                     style={{ position: "fixed", inset: 0, zIndex: 9999 }}
                   >
                     <div

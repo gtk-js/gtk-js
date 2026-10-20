@@ -28,4 +28,13 @@ describe("clampChildSize", () => {
     // A threshold above the maximum size is capped by it.
     expect(clampChildSize(500, 360, 400)).toEqual({ size: 360, sizeClass: "large" });
   });
+
+  test("never goes below the child's minimum size", () => {
+    // lower = max(400, 462) = 462, upper 876; progress 38 / 414:
+    // 462 + 138 · (1 − (376 / 414)³) = 496.6
+    expect(clampChildSize(500, 600, 400, 462)).toEqual({ size: 496, sizeClass: "medium" });
+    expect(clampChildSize(700, 600, 400, 462)).toEqual({ size: 589, sizeClass: "medium" });
+    // A maximum size below the minimum is raised to it.
+    expect(clampChildSize(800, 300, 400, 462)).toEqual({ size: 462, sizeClass: "large" });
+  });
 });

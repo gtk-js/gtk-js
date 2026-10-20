@@ -1,3 +1,4 @@
+use gtk::prelude::*;
 use relm4::prelude::*;
 
 pub struct SpinButtonDefault;
@@ -11,6 +12,9 @@ impl SimpleComponent for SpinButtonDefault {
     view! {
         gtk::SpinButton::with_range(0.0, 100.0, 1.0) {
             set_value: 50.0,
+            // Its natural size, not the window's.
+            set_halign: gtk::Align::Start,
+            set_valign: gtk::Align::Start,
         }
     }
 
