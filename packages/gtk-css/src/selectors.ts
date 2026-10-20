@@ -119,6 +119,9 @@ export const WIDGET_SELECTORS: Record<string, string> = {
   // Adwaita-specific widgets
   avatar: ".gtk-avatar",
   banner: ".gtk-banner",
+  carousel: ".gtk-carousel",
+  carouselindicatordots: ".gtk-carouselindicatordots",
+  carouselindicatorlines: ".gtk-carouselindicatorlines",
   "status-page": ".gtk-status-page",
   statuspage: ".gtk-statuspage",
   "bottom-sheet": ".gtk-bottom-sheet",
@@ -159,6 +162,8 @@ export const INTERNAL_SELECTORS: Record<string, string> = {
   marks: ".gtk-marks",
   mark: ".gtk-mark",
   indicator: ".gtk-indicator",
+  // AdwIndicatorBin's mask (cut out of its child under the indicator).
+  mask: ".gtk-mask",
   value: ".gtk-value",
   arrow: ".gtk-arrow",
   contents: ".gtk-contents",

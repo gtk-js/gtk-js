@@ -1,4 +1,5 @@
 use relm4::adw;
+use relm4::adw::prelude::*;
 use relm4::prelude::*;
 
 pub struct AdwViewSwitcherDefault;
@@ -9,9 +10,12 @@ impl SimpleComponent for AdwViewSwitcherDefault {
     type Input = ();
     type Output = ();
 
+    // At its natural size, so the buttons' widths can be compared.
     view! {
         adw::ViewSwitcher {
             set_policy: adw::ViewSwitcherPolicy::Wide,
+            set_halign: gtk::Align::Start,
+            set_valign: gtk::Align::Start,
         }
     }
 
