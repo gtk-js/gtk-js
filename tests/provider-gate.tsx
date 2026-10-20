@@ -12,6 +12,7 @@ declare global {
 
 /** Records the provider's state in the frame where the theme CSS first applies. */
 function probeFirstFrame() {
+  // Added, or server-rendered and taken over (given its id) on hydration.
   const observer = new MutationObserver(() => {
     if (!document.getElementById("gtk-js-theme")) return;
     observer.disconnect();
@@ -23,7 +24,12 @@ function probeFirstFrame() {
       };
     });
   });
-  observer.observe(document.head, { childList: true });
+  observer.observe(document, {
+    subtree: true,
+    childList: true,
+    attributes: true,
+    attributeFilter: ["id"],
+  });
 }
 
 export function render(page: string, container: HTMLElement) {
