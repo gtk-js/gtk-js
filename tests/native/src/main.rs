@@ -248,6 +248,9 @@ enum Command {
     ScrolledWindowDefault,
     ScrolledWindowFrame,
     StackChildAlign,
+    ScrolledWindowHpolicyNever,
+    ScrolledWindowNatural,
+    ScrolledWindowOverflow,
     StackDefault,
     StackHhomogeneousFalse,
     StackHomogeneous,
@@ -258,6 +261,7 @@ enum Command {
     SearchbarDefault,
     SearchbarWithCloseButton,
     ScrollbarDefault,
+    ScrollbarValue,
     SeparatorHorizontalDefault,
     SeparatorVertical,
     SeparatorSpacerHorizontal,
@@ -554,6 +558,9 @@ impl Command {
             Self::ScrolledWindowDefault => Some("scrolled-window-default"),
             Self::ScrolledWindowFrame => Some("scrolled-window-frame"),
             Self::StackChildAlign => Some("stack-child-align"),
+            Self::ScrolledWindowHpolicyNever => Some("scrolled-window-hpolicy-never"),
+            Self::ScrolledWindowNatural => Some("scrolled-window-natural"),
+            Self::ScrolledWindowOverflow => Some("scrolled-window-overflow"),
             Self::StackDefault => Some("stack-default"),
             Self::StackHhomogeneousFalse => Some("stack-hhomogeneous-false"),
             Self::StackHomogeneous => Some("stack-homogeneous"),
@@ -564,6 +571,7 @@ impl Command {
             Self::SearchbarDefault => Some("searchbar-default"),
             Self::SearchbarWithCloseButton => Some("searchbar-with-close-button"),
             Self::ScrollbarDefault => Some("scrollbar-default"),
+            Self::ScrollbarValue => Some("scrollbar-value"),
             Self::SeparatorHorizontalDefault => Some("separator-horizontal-default"),
             Self::SeparatorVertical => Some("separator-vertical"),
             Self::SeparatorSpacerHorizontal => Some("separator-spacer-horizontal"),
@@ -1152,6 +1160,18 @@ fn create_widget_for_case(name: &str) -> Option<(gtk::Widget, bool)> {
             widget_case!(cases::scrolled_window_frame::ScrolledWindowFrame, false)
         }
         "stack-child-align" => widget_case!(cases::stack_child_align::StackChildAlign, false),
+        "scrolled-window-hpolicy-never" => {
+            widget_case!(
+                cases::scrolled_window_hpolicy_never::ScrolledWindowHpolicyNever,
+                false
+            )
+        }
+        "scrolled-window-natural" => {
+            widget_case!(cases::scrolled_window_natural::ScrolledWindowNatural, false)
+        }
+        "scrolled-window-overflow" => {
+            widget_case!(cases::scrolled_window_overflow::ScrolledWindowOverflow, false)
+        }
         "stack-default" => widget_case!(cases::stack_default::StackDefault, false),
         "stack-hhomogeneous-false" => {
             widget_case!(cases::stack_hhomogeneous_false::StackHhomogeneousFalse, false)
@@ -1179,6 +1199,7 @@ fn create_widget_for_case(name: &str) -> Option<(gtk::Widget, bool)> {
             )
         }
         "scrollbar-default" => widget_case!(cases::scrollbar_default::ScrollbarDefault, false),
+        "scrollbar-value" => widget_case!(cases::scrollbar_value::ScrollbarValue, false),
         "separator-horizontal-default" => {
             widget_case!(
                 cases::separator_horizontal_default::SeparatorHorizontalDefault,
@@ -1519,6 +1540,9 @@ fn is_known_case(name: &str) -> bool {
             | "scrolled-window-default"
             | "scrolled-window-frame"
             | "stack-child-align"
+            | "scrolled-window-hpolicy-never"
+            | "scrolled-window-natural"
+            | "scrolled-window-overflow"
             | "stack-default"
             | "stack-hhomogeneous-false"
             | "stack-homogeneous"
@@ -1529,6 +1553,7 @@ fn is_known_case(name: &str) -> bool {
             | "searchbar-default"
             | "searchbar-with-close-button"
             | "scrollbar-default"
+            | "scrollbar-value"
             | "separator-horizontal-default"
             | "separator-vertical"
             | "separator-spacer-horizontal"
