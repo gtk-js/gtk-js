@@ -6,7 +6,8 @@ Bringing the GTK4/Adwaita ecosystem to the web via React.
 
 gtk-js uses [Vite+](https://viteplus.dev) (`vp`) on npm workspaces.
 
-- `vp install` installs dependencies. `vp run <script>` runs a root script; `vp run -r <script>` runs it in every package, in dependency order.
+- `vp install` installs dependencies. `vp run <script>` runs a root script; `vp run -r <script>` runs it in every package.
+- `vp run` orders packages only by `workspace:` dependencies, which npm can't install, so it can't see the npm workspace graph. Each package's `build` is therefore a task in its `vite.config.ts` (`buildTask` from `vite.shared.ts`), not a `package.json` script, and runs after the builds of the `@gtk-js/*` packages it depends on.
 - `vp run build:packages` builds the published packages: `node build.ts` generates CSS or icons where a package has one, then `vp pack` (tsdown) bundles `src/index.ts` and its types into `dist/`.
 - `vp test` runs the tests (Vitest). See the `gtk-js-testing` skill.
 - Run `vp run check` (biome lint + tsc) and `vp run fix` (biome auto-fix) before committing.

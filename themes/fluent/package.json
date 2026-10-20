@@ -18,8 +18,5 @@
       "default": "./dist/index.js"
     }
   },
-  "scripts": {
-    "build": "node build.ts && vp pack"
-  },
   "type": "module"
 }

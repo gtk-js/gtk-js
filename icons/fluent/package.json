@@ -9,9 +9,6 @@
   "exports": {
     ".": "./src/index.ts"
   },
-  "scripts": {
-    "build": "node build.ts"
-  },
   "dependencies": {
     "@gtk-js/icon-helpers": "0.1.6"
   },

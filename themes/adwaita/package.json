@@ -16,9 +16,6 @@
       "default": "./dist/index.js"
     }
   },
-  "scripts": {
-    "build": "node build.ts && vp pack"
-  },
   "dependencies": {
     "@gtk-js/gtk-css": "0.1.7"
   }
