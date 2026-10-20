@@ -1497,44 +1497,61 @@
 
 /* gtk_range_measure_trough() / gtk_range_allocate_trough(): the trough is as
    thick as the slider's margin box (Adwaita's 20px slider with -8px margins: a
-   4px track) and the highlight fills it from the origin. The slider is moved
-   along it by JS, its margins letting it overhang the track. */
+   4px track) and the highlight fills it from the origin.
+   gtk_range_compute_slider_position(): the slider's margin box starts at
+   --gtk-scale-slider-position (the fraction, flipped when inverted) of the
+   trough's length less its own. The slider is laid out in flow, so its margins
+   are the theme's and let it overhang the track, and the pseudo-elements on
+   either side share the rest of the trough in that ratio: no measuring, so it's
+   right in server-rendered HTML. */
 .gtk-scale > .gtk-trough {
-  display: grid;
+  position: relative;
+  display: flex;
+  align-items: center;
 }
 
-.gtk-scale > .gtk-trough > :is(.gtk-highlight, .gtk-slider) {
-  grid-area: 1 / 1;
+.gtk-scale.vertical > .gtk-trough {
+  flex-direction: column;
+}
+
+.gtk-scale > .gtk-trough::before,
+.gtk-scale > .gtk-trough::after {
+  content: "";
+  flex: var(--gtk-scale-slider-position) 1 0;
+}
+
+.gtk-scale > .gtk-trough::after {
+  flex-grow: calc(1 - var(--gtk-scale-slider-position));
 }
 
 .gtk-scale > .gtk-trough > .gtk-slider {
-  position: relative;
+  flex: none;
+}
+
+.gtk-scale > .gtk-trough > .gtk-highlight {
+  position: absolute;
 }
 
 .gtk-scale.horizontal > .gtk-trough > .gtk-highlight {
-  justify-self: start;
+  top: 0;
+  bottom: 0;
+  left: 0;
 }
 
 .gtk-scale.horizontal > .gtk-trough > .gtk-highlight.bottom {
-  justify-self: end;
-}
-
-.gtk-scale.horizontal > .gtk-trough > .gtk-slider {
-  justify-self: start;
-  align-self: center;
+  left: auto;
+  right: 0;
 }
 
 .gtk-scale.vertical > .gtk-trough > .gtk-highlight {
-  align-self: start;
+  left: 0;
+  right: 0;
+  top: 0;
 }
 
 .gtk-scale.vertical > .gtk-trough > .gtk-highlight.bottom {
-  align-self: end;
-}
-
-.gtk-scale.vertical > .gtk-trough > .gtk-slider {
-  align-self: start;
-  justify-self: center;
+  top: auto;
+  bottom: 0;
 }
 
 /* gtk_scale_allocate_marks() / gtk_scale_allocate_mark(): every mark is as

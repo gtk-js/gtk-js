@@ -293,6 +293,7 @@ enum Command {
     ScaleDrawValue,
     ScaleMarksInverted,
     ScaleVertical,
+    ScalePositions,
     ScrolledWindowDefault,
     ScrolledWindowFrame,
     StackChildAlign,
@@ -655,6 +656,7 @@ impl Command {
             Self::ScaleDrawValue => Some("scale-draw-value"),
             Self::ScaleMarksInverted => Some("scale-marks-inverted"),
             Self::ScaleVertical => Some("scale-vertical"),
+            Self::ScalePositions => Some("scale-positions"),
             Self::ScrolledWindowDefault => Some("scrolled-window-default"),
             Self::ScrolledWindowFrame => Some("scrolled-window-frame"),
             Self::StackChildAlign => Some("stack-child-align"),
@@ -1372,6 +1374,7 @@ fn create_widget_for_case(name: &str) -> Option<(gtk::Widget, bool)> {
             widget_case!(cases::scale_marks_inverted::ScaleMarksInverted, false)
         }
         "scale-vertical" => widget_case!(cases::scale_vertical::ScaleVertical, false),
+        "scale-positions" => widget_case!(cases::scale_positions::ScalePositions, false),
         "scrolled-window-default" => {
             widget_case!(cases::scrolled_window_default::ScrolledWindowDefault, false)
         }
@@ -1814,6 +1817,7 @@ fn is_known_case(name: &str) -> bool {
             | "scale-draw-value"
             | "scale-marks-inverted"
             | "scale-vertical"
+            | "scale-positions"
             | "scrolled-window-default"
             | "scrolled-window-frame"
             | "stack-child-align"
