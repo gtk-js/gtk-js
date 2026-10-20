@@ -146,6 +146,11 @@ body:has(> :first-child:has([data-gtk-provider])) > :first-child {
   outline: none;
 }
 
+/* A focused expander's ring is drawn on its title (_expanders.scss). */
+:where([data-gtk-provider] .gtk-expander-widget) {
+  outline: none;
+}
+
 :where([data-gtk-provider] input),
 :where([data-gtk-provider] textarea),
 :where([data-gtk-provider] select) {
@@ -272,6 +277,14 @@ body:has(> :first-child:has([data-gtk-provider])) > :first-child {
 /* A button's arrow, a GtkBuiltinIcon like a menu button's, draws its icon
    centered in its allocation too (gtk_builtin_icon_snapshot()). */
 :where([data-gtk-provider] .gtk-button > .gtk-arrow) {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* GtkBuiltinIcon (an expander's arrow) draws its icon centered in the space it
+   gets too (gtk_css_style_snapshot_icon()). */
+:where([data-gtk-provider] .gtk-expander) {
   display: inline-flex;
   align-items: center;
   justify-content: center;
