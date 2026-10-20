@@ -169,7 +169,9 @@ enum Command {
     LabelWidthChars,
     LabelXalign,
     LabelDisabled,
+    ListboxBareLabels,
     ListboxDefault,
+    ListboxSelection,
     ListboxSeparators,
     LevelbarContinuousDefault,
     LevelbarContinuousLow,
@@ -435,7 +437,9 @@ impl Command {
             Self::LabelWidthChars => Some("label-width-chars"),
             Self::LabelXalign => Some("label-xalign"),
             Self::LabelDisabled => Some("label-disabled"),
+            Self::ListboxBareLabels => Some("listbox-bare-labels"),
             Self::ListboxDefault => Some("listbox-default"),
+            Self::ListboxSelection => Some("listbox-selection"),
             Self::ListboxSeparators => Some("listbox-separators"),
             Self::LevelbarContinuousDefault => Some("levelbar-continuous-default"),
             Self::LevelbarContinuousLow => Some("levelbar-continuous-low"),
@@ -733,7 +737,11 @@ fn create_widget_for_case(name: &str) -> Option<(gtk::Widget, bool)> {
         }
         "frame-no-label" => widget_case!(cases::frame_no_label::FrameNoLabel, false),
         "grid-default" => widget_case!(cases::grid_default::GridDefault, false),
+        "listbox-bare-labels" => {
+            widget_case!(cases::listbox_bare_labels::ListboxBareLabels, false)
+        }
         "listbox-default" => widget_case!(cases::listbox_default::ListboxDefault, false),
+        "listbox-selection" => widget_case!(cases::listbox_selection::ListboxSelection, false),
         "listbox-separators" => widget_case!(cases::listbox_separators::ListboxSeparators, false),
         "notebook-default" => widget_case!(cases::notebook_default::NotebookDefault, false),
         "overlay-default" => widget_case!(cases::overlay_default::OverlayDefault, false),
@@ -1197,7 +1205,9 @@ fn is_known_case(name: &str) -> bool {
             | "headerbar-start-end"
             | "headerbar-with-title"
             | "grid-default"
+            | "listbox-bare-labels"
             | "listbox-default"
+            | "listbox-selection"
             | "listbox-separators"
             | "notebook-default"
             | "overlay-default"
