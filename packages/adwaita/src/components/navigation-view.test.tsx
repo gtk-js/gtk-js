@@ -63,6 +63,6 @@ test("the back button is an AdwBackButton: a widget holding button.image-button.
     </IconProvider>,
   );
   expect(html).toContain(
-    '<div class="gtk-widget gtk-bin-layout"><button class="gtk-button image-button back" type="button" aria-label="Back" aria-haspopup="menu" title="root">',
+    '<div class="gtk-widget gtk-bin-layout"><button class="gtk-button image-button back" type="button" aria-label="Back" aria-haspopup="menu" data-gtk-tooltip="root" aria-description="root">',
   );
 });

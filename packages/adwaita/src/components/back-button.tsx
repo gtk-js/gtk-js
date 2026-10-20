@@ -1,4 +1,4 @@
-import { GtkPopover, GtkPopoverMenu, useIcons } from "@gtk-js/gtk4";
+import { GtkPopover, GtkPopoverMenu, tooltipAttrs, useIcons } from "@gtk-js/gtk4";
 import { useLayoutEffect, useRef, useState } from "react";
 import { type NavigationHistoryEntry, useNavigation } from "./navigation-view.tsx";
 
@@ -59,7 +59,7 @@ export function AdwBackButton() {
         type="button"
         aria-label="Back"
         aria-haspopup="menu"
-        title={nav.previousTitle || "Back"}
+        {...tooltipAttrs(nav.previousTitle || "Back")}
         // :checked while the menu is open (open_navigation_menu()).
         data-checked={history ? true : undefined}
         onClick={() => {

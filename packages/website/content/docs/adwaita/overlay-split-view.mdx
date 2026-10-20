@@ -15,7 +15,22 @@ import Example from "./examples/overlay-split-view";
 
 ```
 overlay-split-view
+├── dimming.left|.right
+├── shadow.left|.right
+├── border.left|.right
+├── widget[.content-pane]
+│   ╰── [content]
+├── widget
+╰── widget[.sidebar-pane|.background][.end]
+    ╰── [sidebar]
 ```
+
+Not collapsed, the panes have the `.content-pane` and `.sidebar-pane` style
+classes. Collapsed, the content pane has none and the sidebar pane has
+`.background`. `dimming`, `shadow` and `border` (along the sidebar's edge) and
+the empty `widget` (which takes the clicks that hide the sidebar) are only
+shown while the sidebar overlays the content. The sidebar pane gets `.end`
+when `sidebarPosition` is `"end"`.
 
 ## Props
 
@@ -26,7 +41,20 @@ overlay-split-view
 
 ## Behavior
 
-- In collapsed mode, the sidebar overlays the content with a dimming background.
-- In expanded mode, sidebar and content sit side by side.
+- Not collapsed, sidebar and content sit side by side. The sidebar takes
+  `sidebarWidthFraction` of the width, between `minSidebarWidth` and
+  `maxSidebarWidth`, and never less than its child's minimum width.
+- Collapsed, the sidebar overlays the dimmed content, `maxSidebarWidth` wide
+  when there's room.
+- Showing and hiding the sidebar slides it in and out. Both panes stay mounted,
+  so their state survives collapsing and hiding.
+- Collapsing hides the sidebar and uncollapsing shows it, reported through
+  `onShowSidebarChanged`, unless `pinSidebar` is set. Collapse it on narrow
+  widths with an `AdwBreakpointBin` breakpoint (`max-width: 400sp`).
+- While the sidebar overlays the content, a click on the content or Escape
+  hides it, and the content can't take the focus. Hiding the sidebar moves the
+  focus out of it; showing it over the content moves the focus into it.
+- On touchscreens, a swipe from the sidebar's edge shows it and a swipe on the
+  sidebar hides it (`enableShowGesture`, `enableHideGesture`).
 
 [Adwaita Documentation →](https://gnome.pages.gitlab.gnome.org/libadwaita/doc/1-latest/class.OverlaySplitView.html)
