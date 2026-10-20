@@ -34,6 +34,10 @@ pub struct WidgetSnapshot {
     pub css_classes: Vec<String>,
     #[serde(skip_serializing_if = "Vec::is_empty")]
     pub children: Vec<WidgetSnapshot>,
+    /// The colors of the widget's text runs, in drawing order: a label's
+    /// links and Pango color attributes give runs their own color.
+    #[serde(skip_serializing_if = "Vec::is_empty")]
+    pub text_colors: Vec<Color>,
 }
 
 #[derive(Debug, Serialize, Default)]
@@ -169,6 +173,7 @@ pub fn extract_widget_tree<W: IsA<gtk::Widget>>(widget: &W) -> WidgetSnapshot {
             css_name: None,
             css_classes: Vec::new(),
             children: Vec::new(),
+            text_colors: Vec::new(),
         };
         // Still extract widget API properties even without render nodes
         let color = w.color();
@@ -236,6 +241,7 @@ pub fn extract_snapshot(node: &gsk::RenderNode) -> WidgetSnapshot {
         css_name: None,
         css_classes: Vec::new(),
         children: Vec::new(),
+        text_colors: Vec::new(),
     };
 
     walk_node(node, &mut snapshot);
@@ -334,6 +340,21 @@ fn walk_node(node: &gsk::RenderNode, snapshot: &mut WidgetSnapshot) {
             // GdkColor/GdkRGBA layout mismatch in the C API. Text color is
             // extracted via widget.get_color() instead (see extract_with_widget).
             let text_node = node.downcast_ref::<gsk::TextNode>().unwrap();
+
+            // The colors of the text runs themselves, through the C getter,
+            // which is right for sRGB colors: a Pango color attribute's is
+            // (get_color() in gskpango.c).
+            let rgba = unsafe {
+                *gsk::ffi::gsk_text_node_get_color(
+                    text_node.as_ptr() as *const gsk::ffi::GskTextNode,
+                )
+            };
+            snapshot.text_colors.push(Color {
+                r: rgba.red,
+                g: rgba.green,
+                b: rgba.blue,
+                a: rgba.alpha,
+            });
 
             if snapshot.font_family.is_none() {
                 let font = text_node.font();

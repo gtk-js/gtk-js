@@ -10,7 +10,7 @@ import {
   type ThemePickerState,
 } from "./use-theme-picker";
 
-type ThemeControlsProps = Omit<ThemePickerState, "theme" | "icons">;
+type ThemeControlsProps = Omit<ThemePickerState, "theme" | "icons" | "restored">;
 
 function AccentPicker({
   presets,

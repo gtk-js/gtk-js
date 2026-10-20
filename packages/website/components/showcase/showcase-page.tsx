@@ -83,17 +83,23 @@ export function ShowcasePage() {
   const [codeBadge, setCodeBadge] = useState<CodeBadgeState>("visible");
 
   // Theme state — extracted to shared hook
-  const { theme, icons, ...controls } = useThemePicker();
+  const { theme, icons, restored, ...controls } = useThemePicker();
 
   // Committed theme lags behind `theme`: on change, content slides out over 400ms,
   // the CSS swaps while hidden, waits 1s, then slides back in. Changing theme resets.
   const [committedTheme, setCommittedTheme] = useState(theme);
   const [transitionState, setTransitionState] = useState<"idle" | "exiting" | "entering">("idle");
-  const isFirstThemeRender = useRef(true);
+  // The saved theme replaces the default one before the first paint: no slide for it.
+  const [themeRestored, setThemeRestored] = useState(restored);
+  if (themeRestored !== restored) {
+    setThemeRestored(restored);
+    setCommittedTheme(theme);
+  }
+  const slideThemeChanges = useRef(false);
 
   useEffect(() => {
-    if (isFirstThemeRender.current) {
-      isFirstThemeRender.current = false;
+    if (!slideThemeChanges.current) {
+      slideThemeChanges.current = restored;
       return;
     }
     setTransitionState("idle");
@@ -107,7 +113,7 @@ export function ShowcasePage() {
     // 400ms + 1000ms + 400ms: done
     timers.push(setTimeout(() => setTransitionState("idle"), 1800));
     return () => timers.forEach(clearTimeout);
-  }, [theme]);
+  }, [theme, restored]);
 
   const dragRef = useRef<{ startX: number; startY: number; origX: number; origY: number } | null>(
     null,
@@ -141,9 +147,9 @@ export function ShowcasePage() {
     if (el) el.scrollTop = el.scrollHeight;
   }, [displayCode]);
 
+  // Called once a press on the title bar passes the drag threshold, with that
+  // pointer move (presses on its buttons never start a move).
   const handleWindowHandleDragStart = (e: React.PointerEvent<HTMLDivElement>) => {
-    if ((e.target as HTMLElement).closest("button")) return;
-    if (e.button !== 0) return;
     if (maximized) return;
     e.currentTarget.setPointerCapture(e.pointerId);
     dragRef.current = { startX: e.clientX, startY: e.clientY, origX: pos.x, origY: pos.y };
@@ -183,196 +189,199 @@ export function ShowcasePage() {
   );
 
   return (
-    <GtkProvider
-      theme={committedTheme}
-      icons={icons}
-      style={{ minHeight: "100vh", transition: "background-color 700ms ease" }}
-    >
+    <GtkProvider theme={committedTheme} icons={icons}>
+      {/* .background paints the window colors, as a GtkWindow does (gtk_window_init());
+          the provider's own background stays transparent. */}
       <div
-        style={{
-          animation:
-            transitionState === "exiting"
-              ? "theme-swipe-out 400ms ease forwards"
-              : transitionState === "entering"
-                ? "theme-swipe-in 400ms ease forwards"
-                : undefined,
-        }}
+        className="background"
+        style={{ minHeight: "100vh", transition: "background-color 700ms ease" }}
       >
-        <div style={{ display: "flex", justifyContent: "flex-end", padding: "16px 24px 0" }}>
-          <ThemeControls {...controls} />
-        </div>
-
-        <div style={{ textAlign: "center", padding: "64px 24px 32px" }}>
-          <h1 style={{ fontSize: "2.5rem", fontWeight: 800, margin: "0 0 8px" }}>
-            The GNOME UI stack for React
-          </h1>
-          <p style={{ fontSize: "1.1rem", opacity: 0.7, margin: "0 0 32px" }}>
-            GTK4/Adwaita components, icons, themes, and more. All usable in your browser, Electron,
-            and wherever else you run React.
-          </p>
-          <div style={{ display: "flex", gap: 12, justifyContent: "center" }}>
-            <Link href="/docs/getting-started" style={{ textDecoration: "none" }}>
-              <GtkButton label="Get Started" className="suggested-action" />
-            </Link>
-            <Link href="/docs/gtk4/button" style={{ textDecoration: "none" }}>
-              <GtkButton label="View Components" />
-            </Link>
+        <div
+          style={{
+            animation:
+              transitionState === "exiting"
+                ? "theme-swipe-out 400ms ease forwards"
+                : transitionState === "entering"
+                  ? "theme-swipe-in 400ms ease forwards"
+                  : undefined,
+          }}
+        >
+          <div style={{ display: "flex", justifyContent: "flex-end", padding: "16px 24px 0" }}>
+            <ThemeControls {...controls} />
           </div>
-        </div>
 
-        <div style={{ maxWidth: 920, margin: "0 auto", padding: "0 24px 48px" }}>
-          <AudioProvider>
-            <div
-              style={{
-                display: "grid",
-                gridTemplateColumns: codeCollapsed ? "0fr 1fr" : "1fr 1fr",
-                transition: "grid-template-columns 600ms cubic-bezier(0.4, 0, 0.2, 1)",
-                borderRadius: 12,
-              }}
-            >
-              {/* Code panel */}
-              <div style={{ overflow: "hidden", minWidth: 0 }}>
-                <div
-                  ref={codeRef}
-                  style={{
-                    padding: 20,
-                    overflowY: "auto",
-                    overflowX: "auto",
-                    maxHeight: 420,
-                    borderRight: "1px solid rgba(128,128,128,0.15)",
-                    scrollBehavior: "smooth",
-                    background: "#0d1117",
-                    borderRadius: 12,
-                    opacity: codeCollapsing || codeCollapsed ? 0 : 1,
-                    transition: "opacity 500ms ease",
-                    position: "relative",
-                  }}
-                >
-                  <SyntaxHighlight code={"// app.tsx\n" + displayCode} cursor={cursor} />
+          <div style={{ textAlign: "center", padding: "64px 24px 32px" }}>
+            <h1 style={{ fontSize: "2.5rem", fontWeight: 800, margin: "0 0 8px" }}>
+              The GNOME UI stack for React
+            </h1>
+            <p style={{ fontSize: "1.1rem", opacity: 0.7, margin: "0 0 32px" }}>
+              GTK4/Adwaita components, icons, themes, and more. All usable in your browser,
+              Electron, and wherever else you run React.
+            </p>
+            <div style={{ display: "flex", gap: 12, justifyContent: "center" }}>
+              <Link href="/docs/getting-started" style={{ textDecoration: "none" }}>
+                <GtkButton label="Get Started" className="suggested-action" />
+              </Link>
+              <Link href="/docs/gtk4/button" style={{ textDecoration: "none" }}>
+                <GtkButton label="View Components" />
+              </Link>
+            </div>
+          </div>
+
+          <div style={{ maxWidth: 920, margin: "0 auto", padding: "0 24px 48px" }}>
+            <AudioProvider>
+              <div
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: codeCollapsed ? "0fr 1fr" : "1fr 1fr",
+                  transition: "grid-template-columns 600ms cubic-bezier(0.4, 0, 0.2, 1)",
+                  borderRadius: 12,
+                }}
+              >
+                {/* Code panel */}
+                <div style={{ overflow: "hidden", minWidth: 0 }}>
                   <div
+                    ref={codeRef}
                     style={{
-                      position: "absolute",
-                      bottom: 12,
-                      right: 12,
-                      opacity: codeCollapsing ? 1 : 0,
-                      transition: "opacity 300ms ease",
-                      pointerEvents: "none",
-                      fontFamily: "monospace",
-                      fontSize: "0.8rem",
-                      fontWeight: 600,
-                      color: "rgba(255,255,255,0.6)",
+                      padding: 20,
+                      overflowY: "auto",
+                      overflowX: "auto",
+                      maxHeight: 420,
+                      borderRight: "1px solid rgba(128,128,128,0.15)",
+                      scrollBehavior: "smooth",
+                      background: "#0d1117",
+                      borderRadius: 12,
+                      opacity: codeCollapsing || codeCollapsed ? 0 : 1,
+                      transition: "opacity 500ms ease",
+                      position: "relative",
                     }}
                   >
-                    {"</>"}
+                    <SyntaxHighlight code={"// app.tsx\n" + displayCode} cursor={cursor} />
+                    <div
+                      style={{
+                        position: "absolute",
+                        bottom: 12,
+                        right: 12,
+                        opacity: codeCollapsing ? 1 : 0,
+                        transition: "opacity 300ms ease",
+                        pointerEvents: "none",
+                        fontFamily: "monospace",
+                        fontSize: "0.8rem",
+                        fontWeight: 600,
+                        color: "rgba(255,255,255,0.6)",
+                      }}
+                    >
+                      {"</>"}
+                    </div>
                   </div>
+                </div>
+
+                <div
+                  style={{ position: "relative", overflow: "visible" }}
+                  onPointerMove={handlePointerMove}
+                  onPointerUp={handlePointerUp}
+                >
+                  {mounted && !maximized && (
+                    <div
+                      className="showcase-preview"
+                      style={{
+                        position: "absolute",
+                        top: 0,
+                        left: "50%",
+                        transform: codeCollapsed
+                          ? `translate(calc(-50% + ${pos.x}px), ${pos.y}px)`
+                          : `translate(calc(-50% + 24px + ${pos.x}px), ${pos.y}px)`,
+                        transition: dragRef.current
+                          ? undefined
+                          : `transform 600ms cubic-bezier(0.4, 0, 0.2, 1)`,
+                      }}
+                    >
+                      {player}
+                    </div>
+                  )}
                 </div>
               </div>
 
-              <div
-                style={{ position: "relative", overflow: "visible" }}
-                onPointerMove={handlePointerMove}
-                onPointerUp={handlePointerUp}
-              >
-                {mounted && !maximized && (
-                  <div
-                    className="showcase-preview"
-                    style={{
-                      position: "absolute",
-                      top: 0,
-                      left: "50%",
-                      transform: codeCollapsed
-                        ? `translate(calc(-50% + ${pos.x}px), ${pos.y}px)`
-                        : `translate(calc(-50% + 24px + ${pos.x}px), ${pos.y}px)`,
-                      transition: dragRef.current
-                        ? undefined
-                        : `transform 600ms cubic-bezier(0.4, 0, 0.2, 1)`,
-                    }}
+              {mounted &&
+                maximized &&
+                createPortal(
+                  <GtkProvider
+                    theme={committedTheme}
+                    icons={icons}
+                    style={{ position: "fixed", inset: 0, zIndex: 9999 }}
                   >
-                    {player}
-                  </div>
+                    <div
+                      className="showcase-preview"
+                      style={{ width: "100%", height: "100%" }}
+                      onPointerMove={handlePointerMove}
+                      onPointerUp={handlePointerUp}
+                    >
+                      {player}
+                    </div>
+                  </GtkProvider>,
+                  document.body,
                 )}
-              </div>
-            </div>
+            </AudioProvider>
+          </div>
 
-            {mounted &&
-              maximized &&
-              createPortal(
-                <GtkProvider
-                  theme={committedTheme}
-                  icons={icons}
-                  style={{ position: "fixed", inset: 0, zIndex: 9999 }}
-                >
-                  <div
-                    className="showcase-preview"
-                    style={{ width: "100%", height: "100%" }}
-                    onPointerMove={handlePointerMove}
-                    onPointerUp={handlePointerUp}
-                  >
-                    {player}
-                  </div>
-                </GtkProvider>,
-                document.body,
-              )}
-          </AudioProvider>
+          <style>{`
+          @keyframes theme-swipe-out {
+            from { opacity: 1; transform: translateY(0); }
+            to { opacity: 0; transform: translateY(-24px); }
+          }
+          @keyframes theme-swipe-in {
+            from { opacity: 0; transform: translateY(24px); }
+            to { opacity: 1; transform: translateY(0); }
+          }
+          @keyframes sc-slide-up {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+          }
+          @keyframes sc-scale-in {
+            from { opacity: 0; transform: scale(0.94); }
+            to { opacity: 1; transform: scale(1); }
+          }
+          @keyframes sc-slide-down {
+            from { opacity: 0; transform: translateY(-6px); }
+            to { opacity: 1; transform: translateY(0); }
+          }
+          @keyframes sc-fade {
+            from { opacity: 0; }
+            to { opacity: 1; }
+          }
+          @keyframes sc-badge-in {
+            from { opacity: 0; transform: scale(0.6); }
+            to { opacity: 1; transform: scale(1); }
+          }
+          .showcase-preview .gtk-window {
+            animation: sc-scale-in 350ms cubic-bezier(0.16, 1, 0.3, 1) both;
+          }
+          .showcase-preview .gtk-headerbar {
+            animation: sc-slide-down 250ms cubic-bezier(0.16, 1, 0.3, 1) both;
+          }
+          .showcase-preview .gtk-windowtitle .title {
+            animation: sc-fade 200ms ease-out both;
+          }
+          .showcase-preview .gtk-label {
+            animation: sc-slide-up 250ms cubic-bezier(0.16, 1, 0.3, 1) both;
+          }
+          .showcase-preview .gtk-button {
+            animation: sc-slide-up 250ms cubic-bezier(0.16, 1, 0.3, 1) both;
+          }
+          .showcase-preview .gtk-scale {
+            animation: sc-slide-up 250ms cubic-bezier(0.16, 1, 0.3, 1) both;
+          }
+          .showcase-preview .gtk-windowhandle {
+            cursor: grab;
+          }
+          .showcase-preview .gtk-windowhandle:active {
+            cursor: grabbing;
+          }
+          .showcase-preview .gtk-windowhandle button {
+            cursor: default;
+          }
+        `}</style>
         </div>
-
-        <style>{`
-        @keyframes theme-swipe-out {
-          from { opacity: 1; transform: translateY(0); }
-          to { opacity: 0; transform: translateY(-24px); }
-        }
-        @keyframes theme-swipe-in {
-          from { opacity: 0; transform: translateY(24px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes sc-slide-up {
-          from { opacity: 0; transform: translateY(8px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes sc-scale-in {
-          from { opacity: 0; transform: scale(0.94); }
-          to { opacity: 1; transform: scale(1); }
-        }
-        @keyframes sc-slide-down {
-          from { opacity: 0; transform: translateY(-6px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes sc-fade {
-          from { opacity: 0; }
-          to { opacity: 1; }
-        }
-        @keyframes sc-badge-in {
-          from { opacity: 0; transform: scale(0.6); }
-          to { opacity: 1; transform: scale(1); }
-        }
-        .showcase-preview .gtk-window {
-          animation: sc-scale-in 350ms cubic-bezier(0.16, 1, 0.3, 1) both;
-        }
-        .showcase-preview .gtk-headerbar {
-          animation: sc-slide-down 250ms cubic-bezier(0.16, 1, 0.3, 1) both;
-        }
-        .showcase-preview .gtk-windowtitle .title {
-          animation: sc-fade 200ms ease-out both;
-        }
-        .showcase-preview .gtk-label {
-          animation: sc-slide-up 250ms cubic-bezier(0.16, 1, 0.3, 1) both;
-        }
-        .showcase-preview .gtk-button {
-          animation: sc-slide-up 250ms cubic-bezier(0.16, 1, 0.3, 1) both;
-        }
-        .showcase-preview .gtk-scale {
-          animation: sc-slide-up 250ms cubic-bezier(0.16, 1, 0.3, 1) both;
-        }
-        .showcase-preview .gtk-windowhandle {
-          cursor: grab;
-        }
-        .showcase-preview .gtk-windowhandle:active {
-          cursor: grabbing;
-        }
-        .showcase-preview .gtk-windowhandle button {
-          cursor: default;
-        }
-      `}</style>
       </div>
     </GtkProvider>
   );
