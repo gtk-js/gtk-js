@@ -3,7 +3,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "next dev",
+    "dev": "node scripts/copy-themes.ts && next dev",
     "start": "vp dlx serve out"
   },
   "dependencies": {

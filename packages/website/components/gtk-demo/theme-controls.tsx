@@ -10,7 +10,7 @@ import {
   type ThemePickerState,
 } from "./use-theme-picker";
 
-type ThemeControlsProps = Omit<ThemePickerState, "theme" | "icons" | "restored">;
+type ThemeControlsProps = Omit<ThemePickerState, "cssHref" | "cssText" | "icons" | "restored">;
 
 function AccentPicker({
   presets,
@@ -62,6 +62,7 @@ export function ThemeControls({
   setFluentTitlebutton,
   fluentWindow,
   setFluentWindow,
+  preloadOptions,
 }: ThemeControlsProps) {
   const [open, setOpen] = useState(false);
   const btnRef = useRef<HTMLButtonElement>(null);
@@ -74,7 +75,14 @@ export function ThemeControls({
 
   return (
     <div style={{ position: "relative" }}>
-      <GtkButton ref={btnRef} hasFrame={false} onClicked={() => setOpen((o) => !o)}>
+      <GtkButton
+        ref={btnRef}
+        hasFrame={false}
+        onClicked={() => {
+          if (!open) preloadOptions();
+          setOpen(!open);
+        }}
+      >
         <ApplicationsSystem size={20} />
       </GtkButton>
       <GtkPopover

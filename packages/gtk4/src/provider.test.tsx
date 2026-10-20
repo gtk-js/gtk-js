@@ -55,6 +55,20 @@ test("server HTML links a cssHref theme", () => {
   );
 });
 
+test("with cssHref, cssText goes after the linked theme", () => {
+  const html = renderToStaticMarkup(
+    <GtkProvider cssHref="/theme.css" cssText=":root { --accent-bg-color: red; }">
+      Hello
+    </GtkProvider>,
+  );
+  const link = html.indexOf('href="/theme.css"');
+  const text = html.indexOf(
+    'data-href="gtk-js-theme-text">:root { --accent-bg-color: red; }</style>',
+  );
+  expect(link).toBeGreaterThan(-1);
+  expect(text).toBeGreaterThan(link);
+});
+
 /** A stand-in for a theme <link> or <style> element. */
 function element(localName: string, sheet: object | null = null) {
   return Object.assign(new EventTarget(), { localName, sheet }) as unknown as Element;
