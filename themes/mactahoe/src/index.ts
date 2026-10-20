@@ -1,4 +1,4 @@
-import { GtkTheme, resolveColorScheme } from "@gtk-js/gtk-css";
+import { GtkTheme, resolveColorScheme, type SystemColorScheme } from "@gtk-js/gtk-css";
 import dark from "../dist/dark_default.css?raw";
 import light from "../dist/light_default.css?raw";
 
@@ -14,7 +14,7 @@ export class MacTahoeTheme extends GtkTheme {
     this.colorScheme = colorScheme;
   }
 
-  getCSS() {
-    return resolveColorScheme(this.colorScheme) === "dark" ? dark : light;
+  getCSS(systemScheme?: SystemColorScheme) {
+    return resolveColorScheme(this.colorScheme, systemScheme) === "dark" ? dark : light;
   }
 }
