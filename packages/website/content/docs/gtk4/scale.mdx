@@ -14,12 +14,14 @@ import Example from "./examples/scale";
 ## CSS Node Tree
 
 ```
-scale[.horizontal|.vertical][.marks-before][.marks-after]
-  ├── value[.top|.bottom|.left|.right]
-  ├── marks
+scale[.horizontal|.vertical][.marks-before][.marks-after][.fine-tune][.dragging]
+  ├── [value[.top|.bottom|.left|.right]]
+  ├── [marks.top]
+  │   └── mark > [label] + indicator
+  ├── [marks.bottom]
   │   └── mark > indicator + [label]
   └── trough
-      ├── highlight
+      ├── [highlight[.top|.bottom]]
       └── slider
 ```
 
@@ -32,8 +34,15 @@ scale[.horizontal|.vertical][.marks-before][.marks-after]
 
 ## Keyboard
 
-- **Arrow keys** — adjust value by step
-- **Shift + Arrow** — fine-tune (10× smaller step)
+- **Arrow keys** — move the slider by a step (Up decreases a vertical scale), stopping at marks
+- **Page Up / Page Down**, **Ctrl + Arrow** — move by a page (`pageStep`)
+- **+ / −** — increase / decrease by a step (with **Ctrl**, by a page)
 - **Home / End** — jump to min / max
+
+## Pointer
+
+- **Click** the trough — jump there; **Shift + click** or **middle click** — page towards it; **right click** — scroll towards that end
+- **Drag** the slider; **Shift** (or a long press) fine-tunes, **Escape** stops the drag
+- **Scroll wheel** — move by a page
 
 [GTK4 Documentation →](https://docs.gtk.org/gtk4/class.Scale.html)

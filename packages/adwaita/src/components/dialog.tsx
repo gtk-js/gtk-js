@@ -37,9 +37,12 @@ export interface AdwDialogProps extends HTMLAttributes<HTMLDivElement> {
  * Upstream CSS node name: "dialog" (mapped to .gtk-dialog)
  * Layout manager: GTK_TYPE_BIN_LAYOUT
  *
- * Native structure (floating mode):
- *   dialog-host > dialog.background[.floating] > floating-sheet > dimming
- *                                                                > sheet > child
+ * Native structure:
+ *   dialog-host > dialog.floating > floating-sheet > dimming
+ *                                                  > sheet.background > widget > child
+ *   or, in a host at most 450px wide or 360px tall (presentationMode "auto"),
+ *   dialog-host > dialog.bottom-sheet > bottom-sheet > dimming
+ *                                                    > sheet.background > stack > …
  *
  * @see https://gnome.pages.gitlab.gnome.org/libadwaita/doc/1-latest/class.Dialog.html
  */
@@ -72,15 +75,9 @@ export const AdwDialog = forwardRef<HTMLDivElement, AdwDialogProps>(function Adw
     onClosed?.();
   }, [canClose, onClosed, onCloseAttempt]);
 
-  // Header bars inside a dialog only get a close button, which closes the dialog.
-  const controls = useMemo(
-    () => ({ close: canClose ? close : undefined, decorationLayout: canClose ? ":close" : ":" }),
-    [canClose, close],
-  );
-
-  // Upstream: presentation mode determines "floating" vs "bottom-sheet" CSS class.
-  // "auto" defaults to floating on desktop.
-  const modeClass = presentationMode === "bottom-sheet" ? "bottom-sheet" : "floating";
+  // Header bars inside a dialog only get a close button (AdwSheetControls),
+  // which is there even when the dialog can't close: it emits close-attempt.
+  const controls = useMemo(() => ({ close, decorationLayout: ":close" }), [close]);
 
   const sheetStyle: React.CSSProperties = {
     width: contentWidth > 0 ? contentWidth : undefined,
@@ -95,7 +92,8 @@ export const AdwDialog = forwardRef<HTMLDivElement, AdwDialogProps>(function Adw
     <FloatingSheet
       ref={ref}
       open={visible}
-      dialogClasses={["background", modeClass]}
+      dialogClasses={[]}
+      presentationMode={presentationMode}
       className={className}
       sheetStyle={sheetStyle}
       followsContentSize={followsContentSize}

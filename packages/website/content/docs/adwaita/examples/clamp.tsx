@@ -1,12 +1,14 @@
 "use client";
 
-import { AdwClamp } from "@gtk-js/adwaita";
-import { GtkLabel } from "@gtk-js/gtk4";
+import { AdwActionRow, AdwClamp, AdwPreferencesGroup } from "@gtk-js/adwaita";
 
 export default function Example() {
   return (
-    <AdwClamp maximumSize={400}>
-      <GtkLabel label="This content is clamped to a maximum width of 400px." wrap />
+    <AdwClamp maximumSize={400} tighteningThreshold={300} style={{ width: "100%" }}>
+      <AdwPreferencesGroup title="Account">
+        <AdwActionRow title="Username" subtitle="john_doe" />
+        <AdwActionRow title="Email" subtitle="john@example.com" />
+      </AdwPreferencesGroup>
     </AdwClamp>
   );
 }
