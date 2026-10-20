@@ -13,7 +13,7 @@ export default function Example() {
   const [active, setActive] = useState("page1");
 
   return (
-    <GtkBox orientation="vertical" spacing={8} style={{ width: 250 }}>
+    <GtkBox orientation="vertical" spacing={8} style={{ minWidth: 250 }}>
       <GtkStackSwitcher pages={pages} activePageName={active} onPageChanged={setActive} />
       <GtkStack visibleChildName={active}>
         <GtkStackPage name="page1" title="First">

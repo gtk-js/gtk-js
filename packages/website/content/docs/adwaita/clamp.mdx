@@ -14,7 +14,8 @@ import Example from "./examples/clamp";
 ## CSS Node Tree
 
 ```
-clamp[.small|.medium|.large]
+clamp
+└── [child][.small|.medium|.large]
 ```
 
 ## Props
@@ -26,6 +27,8 @@ clamp[.small|.medium|.large]
 
 ## Behavior
 
-- Applies `.small`, `.medium`, or `.large` CSS classes based on the container's size relative to `tighteningThreshold` and `maximumSize`.
+- Gives the child the full width up to `tighteningThreshold`, then eases it towards `maximumSize`, centered.
+- Puts `.small`, `.medium`, or `.large` CSS classes on the child based on its size relative to `tighteningThreshold` and `maximumSize`.
+- Never makes the child smaller than its minimum size, even above `maximumSize`.
 
 [Adwaita Documentation →](https://gnome.pages.gitlab.gnome.org/libadwaita/doc/1-latest/class.Clamp.html)
