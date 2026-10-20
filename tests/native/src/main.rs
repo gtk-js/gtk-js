@@ -41,6 +41,9 @@ enum Command {
     AdwActionRowDefault,
     AdwActionRowWithSubtitle,
     AdwActionRowActivatable,
+    AdwActionRowIcon,
+    AdwActionRowSubtitleOnly,
+    AdwActionRowSuffixFill,
     AdwBreakpointBinDefault,
     AdwComboRowDefault,
     AdwComboRowLongValue,
@@ -67,6 +70,7 @@ enum Command {
     AdwPreferencesGroupMixed,
     AdwPreferencesPageDefault,
     AdwPreferencesRowDefault,
+    AdwPreferencesRowCustomChild,
     AdwSpinRowDefault,
     AdwSwitchRowDefault,
     AdwSwitchRowActive,
@@ -145,6 +149,7 @@ enum Command {
     ButtonRowDefault,
     ButtonRowStartIcon,
     ButtonRowDestructive,
+    ButtonRowLongTitle,
     CalendarDefault,
     CalendarDisabled,
     CalendarMarked,
@@ -321,6 +326,9 @@ impl Command {
             Self::AdwActionRowDefault => Some("adw-action-row-default"),
             Self::AdwActionRowWithSubtitle => Some("adw-action-row-with-subtitle"),
             Self::AdwActionRowActivatable => Some("adw-action-row-activatable"),
+            Self::AdwActionRowIcon => Some("adw-action-row-icon"),
+            Self::AdwActionRowSubtitleOnly => Some("adw-action-row-subtitle-only"),
+            Self::AdwActionRowSuffixFill => Some("adw-action-row-suffix-fill"),
             Self::AdwBreakpointBinDefault => Some("adw-breakpoint-bin-default"),
             Self::AdwComboRowDefault => Some("adw-combo-row-default"),
             Self::AdwComboRowLongValue => Some("adw-combo-row-long-value"),
@@ -347,6 +355,7 @@ impl Command {
             Self::AdwPreferencesGroupMixed => Some("adw-preferences-group-mixed"),
             Self::AdwPreferencesPageDefault => Some("adw-preferences-page-default"),
             Self::AdwPreferencesRowDefault => Some("adw-preferences-row-default"),
+            Self::AdwPreferencesRowCustomChild => Some("adw-preferences-row-custom-child"),
             Self::AdwSpinRowDefault => Some("adw-spin-row-default"),
             Self::AdwSwitchRowDefault => Some("adw-switch-row-default"),
             Self::AdwSwitchRowActive => Some("adw-switch-row-active"),
@@ -431,6 +440,7 @@ impl Command {
             Self::ButtonRowDefault => Some("button-row-default"),
             Self::ButtonRowStartIcon => Some("button-row-start-icon"),
             Self::ButtonRowDestructive => Some("button-row-destructive"),
+            Self::ButtonRowLongTitle => Some("button-row-long-title"),
             Self::CalendarDefault => Some("calendar-default"),
             Self::CalendarDisabled => Some("calendar-disabled"),
             Self::CalendarMarked => Some("calendar-marked"),
@@ -578,6 +588,15 @@ fn create_widget_for_case(name: &str) -> Option<(gtk::Widget, bool)> {
         "adw-action-row-activatable" => {
             widget_case!(cases::adw_action_row_activatable::AdwActionRowActivatable, false)
         }
+        "adw-action-row-icon" => {
+            widget_case!(cases::adw_action_row_icon::AdwActionRowIcon, false)
+        }
+        "adw-action-row-subtitle-only" => {
+            widget_case!(cases::adw_action_row_subtitle_only::AdwActionRowSubtitleOnly, false)
+        }
+        "adw-action-row-suffix-fill" => {
+            widget_case!(cases::adw_action_row_suffix_fill::AdwActionRowSuffixFill, false)
+        }
         "adw-breakpoint-bin-default" => {
             widget_case!(cases::adw_breakpoint_bin_default::AdwBreakpointBinDefault, false)
         }
@@ -655,6 +674,12 @@ fn create_widget_for_case(name: &str) -> Option<(gtk::Widget, bool)> {
         }
         "adw-preferences-row-default" => {
             widget_case!(cases::adw_preferences_row_default::AdwPreferencesRowDefault, false)
+        }
+        "adw-preferences-row-custom-child" => {
+            widget_case!(
+                cases::adw_preferences_row_custom_child::AdwPreferencesRowCustomChild,
+                false
+            )
         }
         "adw-spin-row-default" => {
             widget_case!(cases::adw_spin_row_default::AdwSpinRowDefault, false)
@@ -845,6 +870,9 @@ fn create_widget_for_case(name: &str) -> Option<(gtk::Widget, bool)> {
         }
         "button-row-destructive" => {
             widget_case!(cases::button_row_destructive::ButtonRowDestructive, true)
+        }
+        "button-row-long-title" => {
+            widget_case!(cases::button_row_long_title::ButtonRowLongTitle, false)
         }
         "calendar-default" => widget_case!(cases::calendar_default::CalendarDefault, false),
         "calendar-disabled" => widget_case!(cases::calendar_disabled::CalendarDisabled, false),
@@ -1197,6 +1225,9 @@ fn is_known_case(name: &str) -> bool {
             | "adw-action-row-default"
             | "adw-action-row-with-subtitle"
             | "adw-action-row-activatable"
+            | "adw-action-row-icon"
+            | "adw-action-row-subtitle-only"
+            | "adw-action-row-suffix-fill"
             | "adw-breakpoint-bin-default"
             | "adw-combo-row-default"
             | "adw-combo-row-long-value"
@@ -1223,6 +1254,7 @@ fn is_known_case(name: &str) -> bool {
             | "adw-preferences-group-mixed"
             | "adw-preferences-page-default"
             | "adw-preferences-row-default"
+            | "adw-preferences-row-custom-child"
             | "adw-spin-row-default"
             | "adw-switch-row-default"
             | "adw-switch-row-active"
@@ -1307,6 +1339,7 @@ fn is_known_case(name: &str) -> bool {
             | "button-row-default"
             | "button-row-start-icon"
             | "button-row-destructive"
+            | "button-row-long-title"
             | "calendar-default"
             | "calendar-disabled"
             | "calendar-marked"

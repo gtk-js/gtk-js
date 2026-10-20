@@ -114,6 +114,7 @@ export {
   orderRows,
   useListBoxRow,
 } from "./list-box-row-context.tsx";
+export { labelText, parseMarkup } from "./markup.tsx";
 export type { GtkProviderProps } from "./provider.tsx";
 export { GtkProvider, useGtkTheme } from "./provider.tsx";
 export { tooltipAttrs } from "./tooltip.tsx";
