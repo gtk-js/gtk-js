@@ -14,6 +14,7 @@ import {
   GtkListBoxSlotContext,
   useListBoxRow,
 } from "../list-box-row-context.tsx";
+import { tooltipAttrs } from "../tooltip.tsx";
 import { alignAttrs, type GtkAlignProps, type GtkSelectionMode } from "../types.ts";
 
 export interface GtkListBoxRowProps extends HTMLAttributes<HTMLDivElement>, GtkAlignProps {
@@ -21,6 +22,8 @@ export interface GtkListBoxRowProps extends HTMLAttributes<HTMLDivElement>, GtkA
   activatable?: boolean;
   /** Whether the row can be selected. Default: true. */
   selectable?: boolean;
+  /** Tooltip shown when hovering the row (GtkWidget:tooltip-text). */
+  tooltipText?: string;
   /**
    * Whether the row is insensitive (GtkWidget:sensitive = false): neither it
    * nor anything in it takes clicks, keys or focus. Default: false.
@@ -40,6 +43,7 @@ export const GtkListBoxRow = forwardRef<HTMLDivElement, GtkListBoxRowProps>(func
   {
     activatable = true,
     selectable = true,
+    tooltipText,
     disabled = false,
     children,
     halign,
@@ -66,6 +70,7 @@ export const GtkListBoxRow = forwardRef<HTMLDivElement, GtkListBoxRowProps>(func
       className={classes.join(" ")}
       {...alignAttrs(halign, valign, hexpand, vexpand)}
       data-selectable={selectable || undefined}
+      {...tooltipAttrs(tooltipText)}
       aria-disabled={disabled || undefined}
       data-disabled={disabled || undefined}
       inert={disabled || undefined}

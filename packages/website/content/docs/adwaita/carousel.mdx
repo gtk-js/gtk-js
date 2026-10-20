@@ -1,6 +1,6 @@
 ---
 title: AdwCarousel
-description: A swipeable/scrollable page container.
+description: A paginated scrolling widget.
 ---
 
 import Example from "./examples/carousel";
@@ -15,6 +15,11 @@ import Example from "./examples/carousel";
 
 ```
 carousel[.horizontal|.vertical]
+  └── [child] (a page each)
+
+carouselindicatordots
+
+carouselindicatorlines
 ```
 
 ## Props
@@ -24,9 +29,27 @@ carousel[.horizontal|.vertical]
   name="AdwCarouselProps"
 />
 
+### AdwCarouselIndicatorDots
+
+<AutoTypeTable
+  path="../adwaita/src/components/carousel.tsx"
+  name="AdwCarouselIndicatorDotsProps"
+/>
+
+### AdwCarouselIndicatorLines
+
+<AutoTypeTable
+  path="../adwaita/src/components/carousel.tsx"
+  name="AdwCarouselIndicatorLinesProps"
+/>
+
 ## Behavior
 
-- Pages snap into place using CSS scroll-snap.
-- Use `AdwCarouselIndicatorDots` or `AdwCarouselIndicatorLines` to show page position.
+- Each child is a page. Pages are as wide as the widest child, or as the carousel when a child sets `hexpand` (`vexpand` when vertical), and the current page is centered.
+- Drag pages with the mouse or touch, or swipe with a touchpad: the pages follow, and a swipe goes to the next page at most unless `allowLongSwipes` is set. A quick flick goes on to the next page.
+- A mouse wheel notch goes to the next or previous page. Set `allowScrollWheel={false}` to turn it off, or `allowMouseDrag={false}` to leave dragging to touch.
+- While something in the carousel has the focus, <kbd>←</kbd> and <kbd>→</kbd> (<kbd>↑</kbd> and <kbd>↓</kbd> when vertical) and <kbd>Page Up</kbd> and <kbd>Page Down</kbd> go to the previous or next page, <kbd>Home</kbd> and <kbd>End</kbd> to the first or last.
+- `page` changes the page from code, with an animation, and `onPageChanged` reports the page once it settles. With `interactive={false}`, only `page` changes it: the user can't.
+- `onPositionChanged` reports the scroll position as it moves, in pages. Pass it with the page count to `AdwCarouselIndicatorDots` or `AdwCarouselIndicatorLines`, which follow it. As in libadwaita, the indicators only show the position; they can't be clicked.
 
 [Adwaita Documentation →](https://gnome.pages.gitlab.gnome.org/libadwaita/doc/1-latest/class.Carousel.html)

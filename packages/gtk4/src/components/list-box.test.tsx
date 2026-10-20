@@ -80,6 +80,18 @@ describe("GtkListBoxRow focus", () => {
   });
 });
 
+describe("GtkListBoxRow", () => {
+  test("shows tooltipText as a GTK tooltip", () => {
+    const html = renderToStaticMarkup(
+      <GtkListBox>
+        <GtkListBoxRow tooltipText="Documents">A</GtkListBoxRow>
+      </GtkListBox>,
+    );
+    expect(html).toContain('data-gtk-tooltip="Documents"');
+    expect(html).toContain('aria-description="Documents"');
+  });
+});
+
 describe("GtkListBox rows", () => {
   const classes = (tag: string) => (tag.match(/class="([^"]*)"/)?.[1] ?? "").split(" ");
 
