@@ -1,4 +1,5 @@
 import { forwardRef, type HTMLAttributes } from "react";
+import { MnemonicText } from "../mnemonic.tsx";
 import {
   alignAttrs,
   type GtkAlignProps,
@@ -18,6 +19,12 @@ export interface GtkLabelProps extends HTMLAttributes<HTMLSpanElement>, GtkAlign
   wrapMode?: GtkWrapMode;
   /** Whether the text is selectable. Default: false. */
   selectable?: boolean;
+  /**
+   * Whether an underscore marks the next character as the mnemonic ("_Save"),
+   * underlined while Alt is held; Alt with it activates the widget the label
+   * is in. `__` is a literal underscore. Default: false.
+   */
+  useUnderline?: boolean;
   /** Ellipsize mode. Default: "none". */
   ellipsize?: GtkEllipsizeMode;
   /** Minimum width in characters. Default: -1 (natural). */
@@ -30,6 +37,8 @@ export interface GtkLabelProps extends HTMLAttributes<HTMLSpanElement>, GtkAlign
   xalign?: number;
   /** Vertical alignment 0.0 (top) to 1.0 (bottom). Default: 0.5. */
   yalign?: number;
+  /** The CSS node name (GtkWidget:css-name), e.g. a progress bar's "text". Default: "label". */
+  cssName?: string;
 }
 
 /**
@@ -59,12 +68,14 @@ export const GtkLabel = forwardRef<HTMLSpanElement, GtkLabelProps>(function GtkL
     wrap = false,
     wrapMode = "word",
     selectable = false,
+    useUnderline = false,
     ellipsize = "none",
     widthChars = -1,
     maxWidthChars = -1,
     lines = -1,
     xalign = 0.5,
     yalign = 0.5,
+    cssName = "label",
     halign,
     valign,
     hexpand,
@@ -75,7 +86,7 @@ export const GtkLabel = forwardRef<HTMLSpanElement, GtkLabelProps>(function GtkL
   },
   ref,
 ) {
-  const classes = ["gtk-label"];
+  const classes = [`gtk-${cssName}`];
   if (className) classes.push(className);
 
   const textAlign =
@@ -101,7 +112,13 @@ export const GtkLabel = forwardRef<HTMLSpanElement, GtkLabelProps>(function GtkL
   // Pango keeps every space and line break of the text: "pre" rather than the
   // collapsing "nowrap".
   if (!wrap) cssStyle.whiteSpace = "pre";
-  else Object.assign(cssStyle, wrapStyle(wrapMode));
+  else {
+    Object.assign(cssStyle, wrapStyle(wrapMode));
+    // GTK sizes a label in whole pixels (gtk_label_measure() takes the
+    // layout's pixel size): several lines of 20.5px make a 42px label, not a
+    // 41px one that leaves what follows on a fractional pixel.
+    cssStyle.height ??= WRAPPING_HEIGHT;
+  }
 
   // `lines` only limits a wrapping, ellipsizing label, which wraps up to that
   // many lines. Otherwise an ellipsized paragraph is one line (Pango's default
@@ -135,6 +152,8 @@ export const GtkLabel = forwardRef<HTMLSpanElement, GtkLabelProps>(function GtkL
     cssStyle.overflow = "hidden";
   }
 
+  const content = useUnderline ? <MnemonicText text={text} /> : text;
+
   return (
     <span
       ref={ref}
@@ -143,7 +162,7 @@ export const GtkLabel = forwardRef<HTMLSpanElement, GtkLabelProps>(function GtkL
       style={cssStyle}
       {...rest}
     >
-      {ellipsizing ? <span style={ELLIPSIS_STYLE}>{text}</span> : text}
+      {ellipsizing ? <span style={ELLIPSIS_STYLE}>{content}</span> : content}
     </span>
   );
 });
@@ -152,6 +171,9 @@ export const GtkLabel = forwardRef<HTMLSpanElement, GtkLabelProps>(function GtkL
 function flexAlign(align: number): "flex-start" | "center" | "flex-end" {
   return align < 0.25 ? "flex-start" : align > 0.75 ? "flex-end" : "center";
 }
+
+/** A wrapping label's height: its text's, rounded up to whole pixels. */
+const WRAPPING_HEIGHT = "calc-size(auto, round(up, size, 1px))";
 
 const ELLIPSIS_STYLE: React.CSSProperties = {
   display: "block",

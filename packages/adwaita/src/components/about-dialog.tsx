@@ -2,17 +2,22 @@ import {
   GtkActionBar,
   GtkButton,
   GtkImage,
+  GtkLabel,
   GtkScrolledWindow,
   GtkWindowTitle,
   useIcon,
   WindowControlsContext,
+  wrapStyle,
 } from "@gtk-js/gtk4";
 import {
+  type CSSProperties,
   forwardRef,
   type HTMLAttributes,
+  type KeyboardEvent,
   type ReactNode,
   useCallback,
   useMemo,
+  useRef,
   useState,
 } from "react";
 import { AdwActionRow } from "./action-row.tsx";
@@ -21,6 +26,7 @@ import { FloatingSheet } from "./floating-sheet.tsx";
 import { AdwHeaderBar } from "./header-bar.tsx";
 import { AdwNavigationView } from "./navigation-view.tsx";
 import { AdwPreferencesGroup } from "./preferences-group.tsx";
+import { AdwToastOverlay, type AdwToastOverlayRef } from "./toast-overlay.tsx";
 import { AdwToolbarView } from "./toolbar-view.tsx";
 
 /** A titled list of people, for the Credits and Acknowledgements pages. */
@@ -64,6 +70,7 @@ export interface AdwAboutDialogProps extends HTMLAttributes<HTMLDivElement> {
   version?: string;
   /** Release notes in AppStream description markup (`<p>`, `<ul>`, `<ol>`, `<li>`, `<em>`, `<code>`). */
   releaseNotes?: string;
+  /** The version the release notes are for, in their "Version X" heading. Defaults to `version`. */
   releaseNotesVersion?: string;
   comments?: string;
   website?: string;
@@ -93,7 +100,12 @@ export interface AdwAboutDialogProps extends HTMLAttributes<HTMLDivElement> {
   visible?: boolean;
   portal?: boolean | HTMLElement;
   onClosed?: () => void;
-  /** Open external links. Defaults to `window.open(url, "_blank")`. */
+  /**
+   * Open external links (AdwAboutDialog::activate-link). Other apps' rows pass
+   * `appstream:<app-id>`, which GTK opens in the software center. Defaults to
+   * `window.open(url, "_blank")`, with `appstream:` URLs opening the app's
+   * Flathub page, as browsers can't open them.
+   */
   onOpenUrl?: (url: string) => void;
 }
 
@@ -246,28 +258,54 @@ function ReleaseNotes({ version, markup }: { version?: string; markup: string })
       if (tag === "ul" || tag === "ol") {
         const items = Array.from(el.children).filter((c) => c.tagName.toLowerCase() === "li");
         return items.map((li, n) => (
-          <div key={`${i}-${n}`} style={{ marginLeft: 12, marginTop: n === 0 ? sectionTop : 6 }}>
+          <div
+            key={`${i}-${n}`}
+            style={{ ...PARAGRAPH, marginLeft: 12, marginTop: n === 0 ? sectionTop : 6 }}
+          >
             {tag === "ol" ? `${n + 1}. ` : "• "}
             {Array.from(li.childNodes).map(inline)}
           </div>
         ));
       }
       return (
-        <div key={i} style={{ marginTop: sectionTop }}>
+        <div key={i} style={{ ...PARAGRAPH, marginTop: sectionTop }}>
           {Array.from(el.childNodes).map(inline)}
         </div>
       );
     });
   }, [markup, version]);
-  // textview > text, as GtkTextView's nodes; the margins are the text's.
   return (
-    <div className="gtk-textview body">
+    <TextView>
+      {version && <div style={{ ...PARAGRAPH, fontWeight: "bold" }}>{`Version ${version}`}</div>}
+      {sections}
+    </TextView>
+  );
+}
+
+/**
+ * A paragraph of a GtkTextView: GtkTextLayout rounds the height of each
+ * paragraph's layout to whole pixels (gtk_text_layout_create_display()),
+ * so one 20.5px line takes 21px, two take 41px. An empty one is a line tall.
+ */
+const PARAGRAPH: CSSProperties = {
+  minHeight: "round(1lh, 1px)",
+  height: "calc-size(auto, round(size, 1px))",
+};
+
+/**
+ * The read-only GtkTextViews of the What's New and Debugging Information
+ * pages: textview > text, with the template's margins and word-char wrapping,
+ * holding paragraphs. Like any GtkTextView, it takes the focus (drawing no
+ * ring) and shows the text cursor over the whole widget (gtk_text_view_init()).
+ */
+function TextView({ children }: { children: ReactNode }) {
+  return (
+    <div className="gtk-textview body" tabIndex={0} style={{ cursor: "text", outline: "none" }}>
       <div
         className="gtk-text"
-        style={{ padding: "18px 12px", whiteSpace: "pre-wrap", overflowWrap: "anywhere" }}
+        style={{ padding: "18px 12px", ...wrapStyle("word-char"), userSelect: "text" }}
       >
-        {version && <div style={{ fontWeight: "bold" }}>{`Version ${version}`}</div>}
-        {sections}
+        {children}
       </div>
     </div>
   );
@@ -373,6 +411,14 @@ function CreditSection({
   );
 }
 
+/** A wrapping GtkLabel's height: its text's, rounded up to whole pixels. */
+const WRAPPING_LABEL_HEIGHT = "calc-size(auto, round(up, size, 1px))";
+
+const TROUBLESHOOTING_TEXT =
+  "To assist in troubleshooting, you can view your debugging information. Providing this " +
+  "information to the application developers can help diagnose any problems you encounter " +
+  "when you report an issue.";
+
 /** A Legal page section, like append_legal_section(): a heading, then copyright and license. */
 function LegalSection({
   title,
@@ -388,20 +434,20 @@ function LegalSection({
   if (!copyright && !license && !forceTitle) return null;
   return (
     <>
-      {title && (
-        <span className="gtk-label heading" style={{ whiteSpace: "normal", textAlign: "start" }}>
-          {title}
-        </span>
-      )}
+      {title && <GtkLabel className="heading" label={title} wrap wrapMode="word-char" xalign={0} />}
       {(copyright || license) && (
-        // A wrapping label: its text and link flow as one paragraph.
+        // A wrapping, selectable label (word-char, xalign 0), so it shows the
+        // text cursor (gtk_label_update_cursor()). A block, so its text and
+        // link flow as one paragraph; whole pixels tall, like GtkLabel.
         <span
           className="gtk-label body"
           style={{
             display: "block",
-            whiteSpace: "pre-wrap",
+            ...wrapStyle("word-char"),
+            height: WRAPPING_LABEL_HEIGHT,
             textAlign: "start",
             userSelect: "text",
+            cursor: "text",
           }}
         >
           {copyright}
@@ -465,21 +511,66 @@ export const AdwAboutDialog = forwardRef<HTMLDivElement, AdwAboutDialogProps>(
   ) {
     const AppIcon = useIcon(applicationIcon ?? "");
     const [stack, setStack] = useState<string[]>(["main"]);
-    const [copied, setCopied] = useState(false);
     const [mainScrolled, setMainScrolled] = useState(false);
+    const toasts = useRef<AdwToastOverlayRef>(null);
 
     const close = useCallback(() => onClosed?.(), [onClosed]);
     const open = useCallback(
-      (url: string) => (onOpenUrl ? onOpenUrl(url) : window.open(url, "_blank", "noopener")),
+      (url: string) => {
+        if (onOpenUrl) return onOpenUrl(url);
+        // The web's software center for appstream:<app-id>.
+        const app = url.match(/^appstream:(.+)$/);
+        window.open(
+          app ? `https://flathub.org/apps/${encodeURIComponent(app[1]!)}` : url,
+          "_blank",
+          "noopener",
+        );
+      },
       [onOpenUrl],
     );
     const push = (tag: string) => setStack((s) => [...s, tag]);
+    // copy_property_cb(): copy the version or debugging information, and
+    // confirm it with a new toast each time.
+    const copy = (text: string | undefined) => {
+      if (!text) return;
+      void navigator.clipboard
+        ?.writeText(text)
+        .then(() => toasts.current?.addToast({ title: "Copied to clipboard" }));
+    };
+    // save_debug_info_cb(): the browser's download stands in for the file dialog.
+    const saveDebugInfo = () => {
+      const blob = new Blob([debugInfo ?? ""], { type: "text/plain" });
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = debugInfoFilename ?? "debug-info.txt";
+      a.click();
+      URL.revokeObjectURL(a.href);
+    };
+    // save_debug_info_shortcut_cb(): Ctrl+S saves while the Debugging
+    // Information page is shown (instead of the browser saving the page).
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (
+        stack[stack.length - 1] === "debuginfo" &&
+        e.ctrlKey &&
+        !e.metaKey &&
+        !e.altKey &&
+        !e.shiftKey &&
+        e.key.toLowerCase() === "s"
+      ) {
+        e.preventDefault();
+        saveDebugInfo();
+      }
+    };
 
     const controls = useMemo(() => ({ close, decorationLayout: ":close" }), [close]);
 
-    const translators = translatorCredits
-      ?.split("\n")
-      .filter((line) => line.trim() !== "" && line !== "translator-credits");
+    // update_credits(): the untranslated "translator-credits" placeholder means nobody.
+    const translators =
+      translatorCredits &&
+      translatorCredits !== "translator_credits" &&
+      translatorCredits !== "translator-credits"
+        ? translatorCredits.split("\n").filter(Boolean)
+        : undefined;
     const hasCredits = Boolean(
       developers?.length ||
         designers?.length ||
@@ -552,18 +643,11 @@ export const AdwAboutDialog = forwardRef<HTMLDivElement, AdwAboutDialogProps>(
                 </span>
               )}
               {version && (
-                <button
-                  type="button"
-                  className="gtk-button app-version"
-                  style={{ alignSelf: "center" }}
-                  title={copied ? "Copied to clipboard" : "Copy version"}
-                  onClick={() => {
-                    void navigator.clipboard?.writeText(version);
-                    setCopied(true);
-                  }}
-                >
-                  <span className="gtk-label">{version}</span>
-                </button>
+                // can-shrink: like gtk_button_set_can_shrink(), its label
+                // ellipsizes rather than wrapping.
+                <GtkButton className="app-version" halign="center" onClicked={() => copy(version)}>
+                  <GtkLabel label={version} ellipsize="end" />
+                </GtkButton>
               )}
               <div className="gtk-box gtk-box-layout vertical" style={{ textAlign: "start" }}>
                 {(releaseNotes || showDetails || website) && (
@@ -634,7 +718,7 @@ export const AdwAboutDialog = forwardRef<HTMLDivElement, AdwAboutDialogProps>(
       {
         tag: "whats-new",
         title: "What’s New",
-        // A GtkTextView in an AdwClampScrollable (no viewport).
+        // A GtkTextView in an AdwClampScrollable.
         children: page(
           <GtkScrolledWindow
             className="subpage"
@@ -642,7 +726,8 @@ export const AdwAboutDialog = forwardRef<HTMLDivElement, AdwAboutDialogProps>(
             style={{ height: "100%" }}
           >
             <AdwClamp>
-              <ReleaseNotes version={releaseNotesVersion} markup={releaseNotes ?? ""} />
+              {/* update_release_notes(): the heading falls back to the version. */}
+              <ReleaseNotes version={releaseNotesVersion || version} markup={releaseNotes ?? ""} />
             </AdwClamp>
           </GtkScrolledWindow>,
           "What’s New",
@@ -654,12 +739,7 @@ export const AdwAboutDialog = forwardRef<HTMLDivElement, AdwAboutDialogProps>(
         children: page(
           <Subpage>
             {comments && (
-              <span
-                className="gtk-label body"
-                style={{ whiteSpace: "pre-wrap", textAlign: "start" }}
-              >
-                {comments}
-              </span>
+              <GtkLabel className="body" label={comments} wrap wrapMode="word-char" xalign={0} />
             )}
             {showLinks && (
               <AdwPreferencesGroup>
@@ -678,11 +758,13 @@ export const AdwAboutDialog = forwardRef<HTMLDivElement, AdwAboutDialogProps>(
         title: "Troubleshooting",
         children: page(
           <Subpage>
-            <span className="gtk-label body" style={{ whiteSpace: "normal", textAlign: "start" }}>
-              To assist in troubleshooting, you can view your debugging information. Providing this
-              information to the application developers can help diagnose any problems you encounter
-              when you report an issue.
-            </span>
+            <GtkLabel
+              className="body"
+              label={TROUBLESHOOTING_TEXT}
+              wrap
+              wrapMode="word-char"
+              xalign={0}
+            />
             <AdwPreferencesGroup>
               <NavRow title="Debugging Information" onActivated={() => push("debuginfo")} />
             </AdwPreferencesGroup>
@@ -710,43 +792,21 @@ export const AdwAboutDialog = forwardRef<HTMLDivElement, AdwAboutDialogProps>(
                 style={{ height: "100%" }}
               >
                 <AdwClamp>
-                  <div className="gtk-textview body">
-                    <div
-                      className="gtk-text"
-                      style={{
-                        padding: "18px 12px",
-                        whiteSpace: "pre-wrap",
-                        overflowWrap: "anywhere",
-                        userSelect: "text",
-                      }}
-                    >
-                      {debugInfo}
-                    </div>
-                  </div>
+                  <TextView>
+                    {/* Each line of the buffer is a paragraph. */}
+                    {debugInfo?.split("\n").map((line, i) => (
+                      <div key={i} style={PARAGRAPH}>
+                        {line}
+                      </div>
+                    ))}
+                  </TextView>
                 </AdwClamp>
               </GtkScrolledWindow>
             }
             bottomBars={
               <GtkActionBar
-                start={
-                  <GtkButton
-                    label="Copy Text"
-                    onClicked={() => void navigator.clipboard?.writeText(debugInfo ?? "")}
-                  />
-                }
-                end={
-                  <GtkButton
-                    label="Save As…"
-                    onClicked={() => {
-                      const blob = new Blob([debugInfo ?? ""], { type: "text/plain" });
-                      const a = document.createElement("a");
-                      a.href = URL.createObjectURL(blob);
-                      a.download = debugInfoFilename ?? "debug-info.txt";
-                      a.click();
-                      URL.revokeObjectURL(a.href);
-                    }}
-                  />
-                }
+                start={<GtkButton label="Copy Text" onClicked={() => copy(debugInfo)} />}
+                end={<GtkButton label="Save As…" onClicked={saveDebugInfo} />}
               />
             }
           />
@@ -813,7 +873,7 @@ export const AdwAboutDialog = forwardRef<HTMLDivElement, AdwAboutDialogProps>(
       <FloatingSheet
         ref={ref}
         open={visible}
-        dialogClasses={["about", "background", "floating"]}
+        dialogClasses={["about"]}
         className={className}
         // Upstream: content-width 360; the height is the main page's natural height.
         sheetStyle={{
@@ -832,12 +892,19 @@ export const AdwAboutDialog = forwardRef<HTMLDivElement, AdwAboutDialogProps>(
         {...rest}
       >
         <WindowControlsContext.Provider value={controls}>
-          <AdwNavigationView
-            pages={pages}
-            stack={stack}
-            onStackChange={setStack}
-            style={{ flex: "1 1 auto", minHeight: 0 }}
-          />
+          {/* toast_overlay > navigation_view, as in adw-about-dialog.ui */}
+          <AdwToastOverlay
+            toastRef={toasts}
+            style={{ flex: "1 1 auto", minHeight: 0, display: "flex", flexDirection: "column" }}
+            onKeyDown={handleKeyDown}
+          >
+            <AdwNavigationView
+              pages={pages}
+              stack={stack}
+              onStackChange={setStack}
+              style={{ flex: "1 1 auto", minHeight: 0 }}
+            />
+          </AdwToastOverlay>
         </WindowControlsContext.Provider>
       </FloatingSheet>
     );

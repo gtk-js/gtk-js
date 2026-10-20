@@ -13,6 +13,7 @@ import {
   useState,
 } from "react";
 import { useIcon } from "../icon-context.tsx";
+import { tooltipAttrs } from "../tooltip.tsx";
 import {
   alignAttrs,
   type GtkAlignProps,
@@ -61,6 +62,12 @@ export interface GtkMenuButtonProps
   primary?: boolean;
   /** Disables the button. */
   disabled?: boolean;
+  /**
+   * @internal The menu button of an AdwSplitButton: its button has no
+   * .image-button (update_style_classes() in adw-split-button.c), and the
+   * theme draws its arrow.none as pan-down.
+   */
+  splitButton?: boolean;
 }
 
 /** How long a keyboard activation shows the button pressed at most (gtkbutton.c). */
@@ -134,6 +141,7 @@ export const GtkMenuButton = forwardRef<HTMLDivElement, GtkMenuButtonProps>(func
     canShrink = false,
     primary = false,
     disabled,
+    splitButton = false,
     halign,
     valign,
     hexpand,
@@ -171,7 +179,9 @@ export const GtkMenuButton = forwardRef<HTMLDivElement, GtkMenuButtonProps>(func
     if (disabled && open) setOpen(false);
   }, [disabled, open, setOpen]);
 
-  const ArrowIcon = useIcon(arrowIconMap[direction] ?? "PanDown");
+  const ArrowIcon = useIcon(
+    splitButton && direction === "none" ? "PanDown" : (arrowIconMap[direction] ?? "PanDown"),
+  );
 
   const hasCustomChild = children != null;
   const hasLabel = label != null && !hasCustomChild;
@@ -190,7 +200,7 @@ export const GtkMenuButton = forwardRef<HTMLDivElement, GtkMenuButtonProps>(func
 
   const btnClasses = ["gtk-button", "toggle"];
   if (!hasFrame) btnClasses.push("flat");
-  if (arrowOnly || hasIcon) btnClasses.push("image-button");
+  if ((arrowOnly || hasIcon) && !splitButton) btnClasses.push("image-button");
   if (hasLabel) btnClasses.push("text-button");
   if (showArrow && !arrowOnly) btnClasses.push("arrow-button");
   if (keyboardActivating) btnClasses.push("keyboard-activating");
@@ -292,7 +302,7 @@ export const GtkMenuButton = forwardRef<HTMLDivElement, GtkMenuButtonProps>(func
       <button
         ref={buttonRef}
         type="button"
-        title={tooltipText}
+        {...tooltipAttrs(tooltipText)}
         className={btnClasses.join(" ")}
         aria-haspopup="true"
         aria-expanded={open}

@@ -52,6 +52,22 @@
   flex: 1;
 }
 
+/* A homogeneous AdwToggleGroup puts its toggles in a GtkSizeGroup
+ * (adw_toggle_group_set_homogeneous()): each is as large as the largest one,
+ * and they share any extra space equally. Equal fr tracks do both; the
+ * separators between them keep their own size. */
+.gtk-toggle-group[data-homogeneous] {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 1fr auto;
+}
+
+.gtk-toggle-group[data-homogeneous].vertical {
+  grid-auto-flow: row;
+  grid-auto-columns: auto;
+  grid-auto-rows: 1fr auto;
+}
+
 /* GtkWidget:hexpand / vexpand: the children that expand share the box's extra
  * space equally (gtk_box_layout_allocate()). Whether a child expands is
  * computed up the widget tree like gtk_widget_compute_expand() does it (see
@@ -122,21 +138,49 @@
   align-self: center;
 }
 
+/* === GtkCheckButton indicator === */
+/* The check or radio is a GtkBuiltinIcon (gtk_check_button_init()): over its
+ * background it draws the theme's -gtk-icon-source, the check mark, bullet or
+ * dash, stretched over its content box (gtk_builtin_icon_snapshot()), which is
+ * -gtk-icon-size big (gtk_builtin_icon_measure()). @gtk-js/gtk-css keeps a
+ * -gtk-recolor()ed image as --gtk-icon-source, painted here in the node's
+ * color like a recolored symbolic image. Like -gtk-icon-source, it isn't
+ * inherited. */
+@property --gtk-icon-source {
+  syntax: "*";
+  inherits: false;
+}
+
+:is(.gtk-check, .gtk-radio) {
+  display: grid;
+}
+
+:is(.gtk-check, .gtk-radio)::before {
+  --gtk-icon-source: inherit;
+  content: "";
+  min-width: var(--gtk-icon-size);
+  min-height: var(--gtk-icon-size);
+  background-color: currentColor;
+  /* `none` is a transparent layer, so without an image nothing is painted;
+     as the only layer, it would mean no mask at all. */
+  mask:
+    var(--gtk-icon-source, none) 0 0 / 100% 100% no-repeat,
+    linear-gradient(transparent, transparent);
+}
+
 /* === BinLayout === */
 /* Single-cell grid overlay. Used by GtkHeaderBar (outer), GtkWindowHandle, etc.
  * GtkButton and the widgets built on it lay out their one child with it too
  * (gtk_button_class_init()), so a button node uses it without the class: an
- * image child fills the button and centers its icon, like gtk_image_snapshot().
- * gtk-js's icon-and-label buttons (.image-text-button) have two children and
- * stay inline. */
-:is(.gtk-bin-layout, .gtk-button:not(.image-text-button)) {
+ * image child fills the button and centers its icon, like gtk_image_snapshot(). */
+:is(.gtk-bin-layout, .gtk-button) {
   display: grid;
   grid-template-columns: 1fr;
   grid-template-rows: 1fr;
 }
 
 /* Buttons stay inline-level, as <button> is. */
-.gtk-button:not(.image-text-button) {
+.gtk-button {
   display: inline-grid;
 }
 
@@ -149,35 +193,94 @@
   grid-template: minmax(min-content, 1fr) / minmax(min-content, 1fr);
 }
 
-:is(.gtk-bin-layout, .gtk-button:not(.image-text-button)) > * {
+:is(.gtk-bin-layout, .gtk-button) > * {
   grid-column: 1;
   grid-row: 1;
 }
 
 /* A button's label is centered: GtkLabel's default xalign is 0.5, which labels
  * don't otherwise apply. */
-.gtk-button:not(.image-text-button) > .gtk-label {
+.gtk-button > .gtk-label {
   justify-content: center;
 }
 
-/* -- Widget alignment in BinLayout (grid): both axes independent -- */
-:is(.gtk-bin-layout, .gtk-button:not(.image-text-button)) > [data-halign="start"] {
+/* -- Widget alignment in BinLayout (grid): both axes independent --
+ * A GtkStack's pages get the whole stack too (gtk_stack_size_allocate()). */
+:is(.gtk-bin-layout, .gtk-stack, .gtk-button) > [data-halign="start"] {
   justify-self: start;
 }
-:is(.gtk-bin-layout, .gtk-button:not(.image-text-button)) > [data-halign="end"] {
+:is(.gtk-bin-layout, .gtk-stack, .gtk-button) > [data-halign="end"] {
   justify-self: end;
 }
-:is(.gtk-bin-layout, .gtk-button:not(.image-text-button)) > [data-halign="center"] {
+:is(.gtk-bin-layout, .gtk-stack, .gtk-button) > [data-halign="center"] {
   justify-self: center;
 }
-:is(.gtk-bin-layout, .gtk-button:not(.image-text-button)) > [data-valign="start"] {
+:is(.gtk-bin-layout, .gtk-stack, .gtk-button) > [data-valign="start"] {
   align-self: start;
 }
-:is(.gtk-bin-layout, .gtk-button:not(.image-text-button)) > [data-valign="end"] {
+:is(.gtk-bin-layout, .gtk-stack, .gtk-button) > [data-valign="end"] {
   align-self: end;
 }
-:is(.gtk-bin-layout, .gtk-button:not(.image-text-button)) > [data-valign="center"] {
+:is(.gtk-bin-layout, .gtk-stack, .gtk-button) > [data-valign="center"] {
   align-self: center;
+}
+
+/* GtkOverlay: the child and the overlays share the overlay's area, each one
+ * placed in it by its halign and valign (gtk_overlay_get_child_position()): an
+ * overlay at the end corner takes only its own size there. The wrappers that
+ * tell the overlays from the child leave the layout to them. */
+.gtk-overlay {
+  display: grid;
+  grid-template: 1fr / 1fr;
+}
+.gtk-overlay > .gtk-overlay-child {
+  display: contents;
+}
+.gtk-overlay > :not(.gtk-overlay-child),
+.gtk-overlay > .gtk-overlay-child > * {
+  grid-area: 1 / 1;
+}
+.gtk-overlay > .gtk-overlay-child > [data-halign="start"] {
+  justify-self: start;
+}
+.gtk-overlay > .gtk-overlay-child > [data-halign="end"] {
+  justify-self: end;
+}
+.gtk-overlay > .gtk-overlay-child > [data-halign="center"] {
+  justify-self: center;
+}
+.gtk-overlay > .gtk-overlay-child > [data-valign="start"] {
+  align-self: start;
+}
+.gtk-overlay > .gtk-overlay-child > [data-valign="end"] {
+  align-self: end;
+}
+.gtk-overlay > .gtk-overlay-child > [data-valign="center"] {
+  align-self: center;
+}
+
+/* === AdwClamp === */
+/* adw_clamp_layout_allocate() centers the child at (size - child size) / 2,
+ * an integer division: AdwClamp gives an odd leftover pixel to this spacer,
+ * after the child (to its right, also in RTL), instead of splitting it. */
+.gtk-clamp::after {
+  content: "";
+  flex: 0 0 var(--gtk-clamp-remainder, 0px);
+  order: var(--gtk-clamp-remainder-order, 0);
+}
+
+/* === GtkDropDown ===
+ * The dropdown measures and allocates only its button, which fills it; its
+ * popup is a surface of its own (gtk_drop_down_size_allocate()). The arrow is
+ * a GtkBuiltinIcon, which draws its icon centered. */
+.gtk-dropdown {
+  display: inline-grid;
+}
+
+.gtk-dropdown > .gtk-button > .gtk-box > .gtk-arrow {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 /* === GtkActionBar ===
@@ -190,9 +293,74 @@
   width: 100%;
 }
 
+/* === GtkFlowBox === */
+/* GtkFlowBox lays its children out like gtk_flow_box_size_allocate(): in
+ * aligned columns (rows when vertical) of the sizes it computes
+ * (--gtk-flowbox-tracks), each line as high as its largest child (vertical
+ * lines: --gtk-flowbox-lines), in a flow box sized like its request
+ * (gtk_flow_box_measure()), which containment keeps from depending on the
+ * current layout. Until then (server rendering), the children just wrap. */
+.gtk-flowbox {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.gtk-flowbox.vertical {
+  flex-direction: column;
+}
+
+.gtk-flowbox[data-measured] {
+  display: grid;
+  grid-template-columns: var(--gtk-flowbox-tracks);
+  grid-auto-rows: auto;
+  contain: inline-size;
+  contain-intrinsic-inline-size: var(--gtk-flowbox-natural-size);
+  min-width: var(--gtk-flowbox-minimum-size);
+}
+
+.gtk-flowbox.vertical[data-measured] {
+  grid-auto-flow: column;
+  grid-template-rows: var(--gtk-flowbox-tracks);
+  grid-template-columns: var(--gtk-flowbox-lines);
+  contain: size;
+  contain-intrinsic-size: var(--gtk-flowbox-lines-natural-size) var(--gtk-flowbox-natural-size);
+  min-width: var(--gtk-flowbox-lines-minimum-size);
+  min-height: var(--gtk-flowbox-minimum-size);
+}
+
+/* Homogeneous lines all get the largest one's size. */
+.gtk-flowbox.horizontal[data-measured][data-homogeneous] {
+  grid-auto-rows: 1fr;
+}
+
+.gtk-flowbox > [data-halign="start"] {
+  justify-self: start;
+}
+.gtk-flowbox > [data-halign="end"] {
+  justify-self: end;
+}
+.gtk-flowbox > [data-halign="center"] {
+  justify-self: center;
+}
+.gtk-flowbox > [data-valign="start"] {
+  align-self: start;
+}
+.gtk-flowbox > [data-valign="end"] {
+  align-self: end;
+}
+.gtk-flowbox > [data-valign="center"] {
+  align-self: center;
+}
+
+/* Insensitive children get no pointer input, so no hover either. */
+.gtk-flowbox > .gtk-flowboxchild[data-disabled] {
+  pointer-events: none;
+}
+
 /* === GtkStack === */
 /* All pages share one cell, like gtk_stack_size_allocate(): the visible page,
-   and the hidden ones a homogeneous stack is sized by. */
+   the hidden ones a homogeneous stack is sized by, and the one a transition
+   leaves. */
 .gtk-stack {
   display: grid;
 }
@@ -201,54 +369,272 @@
   grid-area: 1 / 1;
 }
 
+/* GtkStack keeps its hidden pages (gtk_widget_set_child_visible()), so their
+   state lives on: they stay laid out but unseen. Along an axis that isn't
+   homogeneous they add nothing to the stack's size, yet are laid out at it,
+   as gtk_stack_measure() measures them for the stack's size. Pages that
+   aren't visible at all (GtkStackPage:visible) take no space. */
+.gtk-stack > [data-stack-hidden]:not([data-stack-leaving]) {
+  visibility: hidden;
+}
+
+.gtk-stack[data-hhomogeneous="false"] > [data-stack-hidden] {
+  width: 0;
+  min-width: 100%;
+  contain: paint;
+}
+
+.gtk-stack[data-vhomogeneous="false"] > [data-stack-hidden] {
+  height: 0;
+  min-height: 100%;
+  contain: paint;
+}
+
+.gtk-stack[data-hhomogeneous="false"][data-vhomogeneous="false"]
+  > [data-stack-hidden]:not([data-stack-leaving]),
+.gtk-stack > [hidden] {
+  display: none;
+}
+
+/* GTK clips the stack while a transition runs (gtk_stack_start_transition()),
+   and draws the pages into it on their own (a crossfade blends only them). */
+.gtk-stack[data-transition-running] {
+  overflow: clip;
+  isolation: isolate;
+}
+
+/* === GtkStackSwitcher === */
+/* A BoxLayout whose buttons all expand (add_child()): GtkBoxLayout gives each
+   one its natural size, which counts the theme's min-width (100px for a text
+   button), and shares out the rest equally. A growing flex item would grow
+   from the width of its text instead, so the buttons are auto grid tracks,
+   which start from their min-width and share the rest equally too. */
+.gtk-stackswitcher {
+  display: grid;
+  grid-auto-flow: column;
+  column-gap: var(--gtk-border-spacing-x);
+}
+
+.gtk-stackswitcher.vertical {
+  grid-auto-flow: row;
+  column-gap: 0;
+  row-gap: var(--gtk-border-spacing-y);
+}
+
+/* === AdwCarousel === */
+/* Like adw_carousel_size_allocate(): every page gets the largest child's
+   natural size, up to the carousel's (all of it when a child sets hexpand /
+   vexpand), and the carousel's full size across. The pages share one cell,
+   centered, and move by --gtk-carousel-position times their size plus the
+   spacing, so the current page is centered and narrower pages show their
+   neighbours. Each page lays out its child like a bin. Clipped like GTK's
+   overflow hidden, which can't be scrolled: focusing a page off screen mustn't
+   scroll the carousel. */
+.gtk-carousel {
+  display: grid;
+  justify-content: center;
+  align-content: center;
+  overflow: clip;
+}
+
+.gtk-carousel.horizontal {
+  grid-template-columns: minmax(0, max-content);
+  grid-template-rows: minmax(0, 1fr);
+}
+
+.gtk-carousel.vertical {
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: minmax(0, max-content);
+}
+
+.gtk-carousel.horizontal:has(> * > [data-hexpand="true"]) {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.gtk-carousel.vertical:has(> * > [data-vexpand="true"]) {
+  grid-template-rows: minmax(0, 1fr);
+}
+
+.gtk-carousel > * {
+  grid-area: 1 / 1;
+  transform: translateX(
+    calc(
+      (var(--gtk-carousel-index) - var(--gtk-carousel-position)) *
+      (100% + var(--gtk-carousel-spacing))
+    )
+  );
+}
+
+.gtk-carousel.horizontal:dir(rtl) > * {
+  transform: translateX(
+    calc(
+      (var(--gtk-carousel-position) - var(--gtk-carousel-index)) *
+      (100% + var(--gtk-carousel-spacing))
+    )
+  );
+}
+
+.gtk-carousel.vertical > * {
+  transform: translateY(
+    calc(
+      (var(--gtk-carousel-index) - var(--gtk-carousel-position)) *
+      (100% + var(--gtk-carousel-spacing))
+    )
+  );
+}
+
+/* === GtkNotebook === */
+/* A BoxLayout of the header (a GtkBox) and the stack, which expands
+   (gtk_notebook_init()). The stack holds every page, each in a wrapper that
+   leaves the page itself in the stack's cell; only the current one shows. */
+.gtk-notebook > .gtk-stack {
+  flex: 1 1 auto;
+}
+
+.gtk-notebook > .gtk-stack > * {
+  display: contents;
+}
+
+.gtk-notebook > .gtk-stack > * > * {
+  grid-area: 1 / 1;
+}
+
+.gtk-notebook > .gtk-stack > :not([data-current]) {
+  visibility: hidden;
+}
+
+/* The tabs gizmo lays the tabs out in a row, or a column for side tabs, at
+   their natural size (gtk_notebook_allocate_tabs()); a tab gives its label
+   all its space (allocate_tab()), and the label centers itself. */
+.gtk-notebook > .gtk-header > .gtk-tabs {
+  display: flex;
+}
+
+.gtk-notebook > .gtk-header.vertical > .gtk-tabs {
+  flex-direction: column;
+}
+
+.gtk-notebook > .gtk-header > .gtk-tabs > * {
+  flex: none;
+}
+
+.gtk-notebook > .gtk-header > .gtk-tabs > .gtk-tab {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* A dragged tab is drawn over the others (gtk_notebook_snapshot_tabs()). */
+.gtk-notebook > .gtk-header > .gtk-tabs > .gtk-tab.dnd {
+  z-index: 1;
+}
+
+/* Scrollable tabs can be smaller than all the tabs: then the arrows show, the
+   tabs that don't fit are hidden, and the shown ones share out the space left
+   (gtk_notebook_calculate_shown_tabs()). */
+.gtk-notebook > .gtk-header > .gtk-tabs[data-scrollable] {
+  position: relative;
+  overflow: clip;
+  min-width: 0;
+  min-height: 0;
+}
+
+.gtk-notebook > .gtk-header > .gtk-tabs[data-arrows] > .gtk-tab {
+  flex: 1 1 auto;
+}
+
+.gtk-notebook > .gtk-header > .gtk-tabs > .gtk-tab[data-child-hidden] {
+  position: absolute;
+  visibility: hidden;
+}
+
 /* === CenterLayout === */
 /* True centering: center child is always centered relative to the full width,
-   regardless of start/end sizes. Uses CSS grid with 1fr/auto/1fr columns. */
+   regardless of start/end sizes. Uses CSS grid with start | spacing | center |
+   spacing | end tracks: 1fr, gap, auto, gap, 1fr. */
 .gtk-center-layout {
   display: grid;
-  grid-template-columns: 1fr auto 1fr;
+  grid-template-columns: 1fr var(--gtk-center-gap-start) auto var(--gtk-center-gap-end) 1fr;
   align-items: center;
-  /* The layout's border-spacing, for its slots (below): the registered
-     --gtk-border-spacing-* properties aren't inherited. */
-  --gtk-center-spacing-x: var(--gtk-border-spacing-x);
-  --gtk-center-spacing-y: var(--gtk-border-spacing-y);
+  /* Not inherited from an enclosing center layout. */
+  --gtk-center-gap-start: 0px;
+  --gtk-center-gap-end: 0px;
 }
 
 .gtk-center-layout.vertical {
   grid-template-columns: 1fr;
-  grid-template-rows: 1fr auto 1fr;
+  grid-template-rows: 1fr var(--gtk-center-gap-start) auto var(--gtk-center-gap-end) 1fr;
+}
+
+.gtk-center-layout:not(.vertical) > .gtk-center-layout-start {
+  grid-column: 1;
+}
+.gtk-center-layout:not(.vertical) > .gtk-center-layout-center {
+  grid-column: 3;
+}
+.gtk-center-layout:not(.vertical) > .gtk-center-layout-end {
+  grid-column: 5;
+}
+.gtk-center-layout.vertical > .gtk-center-layout-start {
+  grid-row: 1;
+}
+.gtk-center-layout.vertical > .gtk-center-layout-center {
+  grid-row: 3;
+}
+.gtk-center-layout.vertical > .gtk-center-layout-end {
+  grid-row: 5;
 }
 
 /* Spacing (the theme's border-spacing) only goes between children that exist,
    as in GtkCenterLayout ((visible children - 1) × spacing). Renderers mark the
-   present slots with data-start / data-center / data-end. Next to a center
-   child the spacing is the side child's margin: the equal 1fr tracks keep the
-   center geometrically centered, and the margin only keeps the two apart when
-   space runs out, like GTK pushing the center away from a side child. Between
-   start and end alone it is split around the empty center slot. */
-.gtk-center-layout:not(.vertical)[data-start][data-center] > .gtk-center-layout-start {
-  margin-inline-end: var(--gtk-center-spacing-x);
+   present slots with data-start / data-center / data-end. The spacing is the
+   layout's own track, not the children's margins: a child's CSS margins add to
+   it, as GTK measures children with their margins (headerbar box.start/.end's
+   6px). The equal 1fr tracks keep the center geometrically centered, and the
+   spacing only keeps it apart from a side child when space runs out, like GTK
+   pushing the center away (gtk_center_layout_allocate()). With one side child,
+   the other side's gap mirrors it while there is room, and gives way first.
+   Between start and end alone it is split around the empty center slot. */
+.gtk-center-layout:not(.vertical)[data-center][data-start] {
+  --gtk-center-gap-start: var(--gtk-border-spacing-x);
 }
 
-.gtk-center-layout:not(.vertical)[data-end][data-center] > .gtk-center-layout-end {
-  margin-inline-start: var(--gtk-center-spacing-x);
+.gtk-center-layout:not(.vertical)[data-center][data-end] {
+  --gtk-center-gap-end: var(--gtk-border-spacing-x);
 }
 
-.gtk-center-layout:not(.vertical)[data-start][data-end]:not([data-center])
-  > .gtk-center-layout-center {
-  margin-inline: calc(var(--gtk-center-spacing-x) / 2);
+.gtk-center-layout:not(.vertical)[data-center][data-start]:not([data-end]) {
+  --gtk-center-gap-end: minmax(0px, var(--gtk-border-spacing-x));
 }
 
-.gtk-center-layout.vertical[data-start][data-center] > .gtk-center-layout-start {
-  margin-block-end: var(--gtk-center-spacing-y);
+.gtk-center-layout:not(.vertical)[data-center][data-end]:not([data-start]) {
+  --gtk-center-gap-start: minmax(0px, var(--gtk-border-spacing-x));
 }
 
-.gtk-center-layout.vertical[data-end][data-center] > .gtk-center-layout-end {
-  margin-block-start: var(--gtk-center-spacing-y);
+.gtk-center-layout:not(.vertical)[data-start][data-end]:not([data-center]) {
+  --gtk-center-gap-start: calc(var(--gtk-border-spacing-x) / 2);
+  --gtk-center-gap-end: calc(var(--gtk-border-spacing-x) / 2);
 }
 
-.gtk-center-layout.vertical[data-start][data-end]:not([data-center]) > .gtk-center-layout-center {
-  margin-block: calc(var(--gtk-center-spacing-y) / 2);
+.gtk-center-layout.vertical[data-center][data-start] {
+  --gtk-center-gap-start: var(--gtk-border-spacing-y);
+}
+
+.gtk-center-layout.vertical[data-center][data-end] {
+  --gtk-center-gap-end: var(--gtk-border-spacing-y);
+}
+
+.gtk-center-layout.vertical[data-center][data-start]:not([data-end]) {
+  --gtk-center-gap-end: minmax(0px, var(--gtk-border-spacing-y));
+}
+
+.gtk-center-layout.vertical[data-center][data-end]:not([data-start]) {
+  --gtk-center-gap-start: minmax(0px, var(--gtk-border-spacing-y));
+}
+
+.gtk-center-layout.vertical[data-start][data-end]:not([data-center]) {
+  --gtk-center-gap-start: calc(var(--gtk-border-spacing-y) / 2);
+  --gtk-center-gap-end: calc(var(--gtk-border-spacing-y) / 2);
 }
 
 /* -- Widget alignment in CenterLayout (grid): both axes independent -- */
@@ -317,23 +703,88 @@
   align-self: center;
 }
 
+/* === AdwBanner === */
+/* The revealer slides the banner down (transition-type slide-down in
+ * adw-banner.ui): while AdwBanner animates its height, the gizmo keeps its
+ * own and stays at the bottom edge, like gtk_revealer_size_allocate(). */
+.gtk-banner > .gtk-revealer {
+  display: grid;
+  align-content: unsafe end;
+}
+
+/* The gizmo's custom layout (measure_content() / allocate_content() in
+ * adw-banner.c), which AdwBanner picks in data-layout. The title is centered
+ * on the whole width unless the layout places it otherwise. */
+.gtk-banner > .gtk-revealer > .gtk-widget {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-items: center;
+  justify-items: center;
+}
+
+/* Side by side: the button at the end, BUTTON_HORZ_MIN_WIDTH (84px) wide or
+ * more, and the title across the whole width or HORZ_PADDING (6px) in. */
+.gtk-banner > .gtk-revealer > .gtk-widget:is([data-layout="center"], [data-layout="start"]) {
+  grid-template-columns: 6px minmax(0, 1fr) minmax(84px, max-content);
+}
+.gtk-banner > .gtk-revealer > .gtk-widget[data-layout="center"] > .gtk-label {
+  grid-area: 1 / 1 / 2 / -1;
+}
+.gtk-banner > .gtk-revealer > .gtk-widget[data-layout="start"] > .gtk-label {
+  grid-area: 1 / 2 / 2 / -1;
+  justify-self: start;
+}
+.gtk-banner
+  > .gtk-revealer
+  > .gtk-widget:is([data-layout="center"], [data-layout="start"])
+  > .gtk-button {
+  grid-area: 1 / 3;
+  justify-self: stretch;
+}
+
+/* Stacked: VERT_PADDING (6px), the title wrapping HORZ_PADDING from each side,
+ * VERT_SPACING (9px), the button, BUTTON_VERT_MIN_WIDTH (160px) wide or more,
+ * and 6px again. */
+.gtk-banner > .gtk-revealer > .gtk-widget[data-layout="stacked"] {
+  grid-template:
+    6px auto 9px auto 6px /
+    minmax(6px, 1fr) minmax(160px, max-content) minmax(6px, 1fr);
+}
+.gtk-banner > .gtk-revealer > .gtk-widget[data-layout="stacked"] > .gtk-label {
+  grid-area: 2 / 1 / 3 / -1;
+  max-width: calc(100% - 12px);
+}
+.gtk-banner > .gtk-revealer > .gtk-widget[data-layout="stacked"] > .gtk-button {
+  grid-area: 4 / 2;
+  justify-self: stretch;
+}
+
+/* Without a button: 6px around the title when it fits that way, otherwise it
+ * wraps 6px from each side, or across the whole width. */
+.gtk-banner > .gtk-revealer > .gtk-widget[data-layout="padded"] {
+  grid-template-rows: 6px auto 6px;
+}
+.gtk-banner > .gtk-revealer > .gtk-widget[data-layout="padded"] > .gtk-label {
+  grid-row: 2;
+}
+.gtk-banner > .gtk-revealer > .gtk-widget[data-layout="wrap"] > .gtk-label {
+  max-width: calc(100% - 12px);
+}
+
 /* === AdwWindowTitle === */
 /*
  * Its labels are single-line and ellipsize, and the title has width-chars=5
  * (upstream/libadwaita/src/adw-window-title.ui): the minimum width is five
- * characters (plus the labels' padding, 12px a side in the theme) while the
- * natural width is the full text. A grid track with a fixed minimum reproduces
- * that min/natural split, so a long title ellipsizes instead of forcing the
- * header bar wider than the window.
+ * characters (the title's min-width, see window-title.tsx) plus the labels'
+ * theme padding, while the natural width is the full text. A grid track from
+ * the labels' minimum to their natural width reproduces that min/natural split,
+ * so a long title ellipsizes instead of forcing the header bar wider than the
+ * window.
  */
 .gtk-windowtitle {
   display: grid;
-  grid-template-columns: minmax(0px, max-content);
+  grid-template-columns: minmax(auto, max-content);
   align-content: center;
-}
-
-.gtk-windowtitle:has(> .title) {
-  grid-template-columns: minmax(calc(5ch + 24px), max-content);
 }
 
 /* Blocks, not the default inline-flex: text-overflow only applies to blocks.
@@ -347,7 +798,77 @@
   text-align: center;
 }
 
+/* === AdwViewSwitcher === */
+/* adw_view_switcher_button_measure() makes a button's content at least 120px
+ * (wide) or 100px (narrow) wide (MIN_NAT_BUTTON_WIDTH_*). That is only its
+ * natural width, so GTK can still squeeze it to its minimum; here it is never
+ * narrower. */
+.gtk-viewswitcher.wide > .gtk-button > .gtk-stack {
+  min-width: 120px;
+}
+
+.gtk-viewswitcher.narrow > .gtk-button > .gtk-stack {
+  min-width: 100px;
+}
+
+/* -- AdwIndicatorBin --
+ * indicator-bin.tsx places the mask and the indicator over the child's corner
+ * like adw_indicator_bin_size_allocate(). adw_indicator_bin_snapshot() draws
+ * neither without a badge or needs-attention, and then only uses the mask to
+ * cut the child out (the shape indicator-bin.tsx gives --gtk-indicator-mask). */
+.gtk-indicatorbin {
+  position: relative;
+}
+
+.gtk-indicatorbin > :is(.gtk-mask, .gtk-indicator) {
+  position: absolute;
+}
+
+.gtk-indicatorbin > .gtk-mask,
+.gtk-indicatorbin:not(.needs-attention, .badge) > .gtk-indicator {
+  visibility: hidden;
+}
+
+.gtk-indicatorbin:is(.needs-attention, .badge) > :not(.gtk-mask, .gtk-indicator) {
+  mask: var(--gtk-indicator-mask) no-repeat;
+}
+
+/* === AdwButtonRow === */
+/*
+ * Its box is centered (halign=center in adw-button-row.ui), and GTK gives it
+ * at most the row's width, where the title ellipsizes. A grid track from 0 to
+ * the box's natural width, centered in the row, does both, like AdwWindowTitle.
+ */
+.gtk-row.button {
+  display: grid;
+  grid-template-columns: minmax(0px, max-content);
+  justify-content: center;
+}
+
+/* === AdwOverlaySplitView === */
+/* The sidebar pane (the view's last child) is never narrower than
+ * min-sidebar-width or its child's minimum width (get_sidebar_width()): with
+ * a spacer of the former in its cell, its min-content width is the larger of
+ * the two, which the pane's `min-width: min-content` keeps. */
+.gtk-overlay-split-view > .gtk-widget:last-child::before {
+  content: "";
+  grid-area: 1 / 1;
+  width: var(--gtk-min-sidebar-width, 0px);
+}
+
 /* === Scale (GtkRange / GtkScale) === */
+/* GtkProgressBar: a vertical box layout whatever its orientation, with the
+ * text above the trough. A horizontal bar's trough fills the width, a vertical
+ * one's the height (gtk_progress_bar_set_orientation()). */
+.gtk-progressbar {
+  display: flex;
+  flex-direction: column;
+}
+.gtk-progressbar.vertical > .gtk-trough {
+  flex-grow: 1;
+  align-self: center;
+}
+
 /*
  * GTK uses a custom layout manager (gtk_range_allocate_trough) for the trough.
  * Key facts from the C source (gtkrange.c, gtk_range_compute_slider_position):
@@ -438,48 +959,60 @@
  * GtkSwitch uses a custom layout manager (gtkswitch.c: gtk_switch_measure /
  * gtk_switch_allocate). Native behavior:
  *
- *   // gtkswitch.c lines 374-378 — slider gets half-width, full-height allocation
- *   gtk_widget_size_allocate(slider, {
- *     x: round(handle_pos * (width / 2)),  y: 0,
+ *   // measure: twice the widest child, as tall as the tallest (margins included)
+ *   width  = 2 * MAX (slider, MAX (on_image, off_image));
+ *   height = MAX (slider, MAX (on_image, off_image));
+ *
+ *   // allocate: the slider gets one half, full height; each image is centered in a half
+ *   gtk_widget_size_allocate (slider, {
+ *     x: round (handle_pos * (width / 2)),  y: 0,
  *     width: width / 2,  height: height
  *   });
  *
- *   // gtkwidget.c lines 4275-4278 — CSS margin is subtracted from allocation
- *   adjusted.x += margin.left;  adjusted.y += margin.top;
- *   adjusted.width -= margin.left + margin.right;
- *   adjusted.height -= margin.top + margin.bottom;
+ * A theme's switch min-width/min-height is only a lower bound: the size follows
+ * the theme's slider. Here the switch is a grid of two equal columns, each as
+ * wide as the widest child, margins included, so the slider's 100% inset is
+ * one column, width / 2. The logical inset puts "on" on the left in RTL, like
+ * is_right_side(). While the slider is dragged, its inset follows the pointer
+ * (inline style).
  *
- * We replicate with absolute positioning using opposing insets (left+right,
- * top+bottom) to define the allocation box. When an absolutely-positioned
- * element has both left and right set, CSS margin SHRINKS the element inward
- * — exactly matching how native GTK subtracts margin from the allocation.
- *
- * Unchecked: left:0 + right:50% → slider allocation = left half
- * Checked:   left:50% + right:0 → slider allocation = right half
- *
- * Animation: native uses 100ms ease-out-cubic (gtkswitch.c line 186/202).
- * left and right are both animatable CSS properties.
+ * Animation: native uses 100ms ease-out-cubic (gtkswitch.c ANIMATION_DURATION).
  */
 .gtk-switch {
-  position: relative;
-  min-width: 40px; /* Adwaita default: 2 × 20px slider. Themes override. */
-  min-height: 20px; /* Adwaita default: 20px slider height. Themes override. */
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  /* Like GtkGesturePan(HORIZONTAL): the slider can be dragged by touch, and a
+     vertical swipe still scrolls. */
+  touch-action: pan-y;
+}
+
+/* GTK doesn't pick insensitive widgets: no hover, press or drag. */
+.gtk-switch[data-disabled] {
+  pointer-events: none;
+}
+
+.gtk-switch > .gtk-image {
+  grid-row: 1;
+  place-self: center;
+}
+
+.gtk-switch > .gtk-image:first-child {
+  grid-column: 1;
+}
+
+.gtk-switch > .gtk-image:nth-child(2) {
+  grid-column: 2;
 }
 
 .gtk-switch > .gtk-slider {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 50%;
-  transition:
-    left 100ms cubic-bezier(0.215, 0.61, 0.355, 1),
-    right 100ms cubic-bezier(0.215, 0.61, 0.355, 1);
+  grid-area: 1 / 1;
+  position: relative;
+  inset-inline-start: 0;
+  transition: inset-inline-start 100ms cubic-bezier(0.215, 0.61, 0.355, 1);
 }
 
-.gtk-switch[data-checked] > .gtk-slider {
-  left: 50%;
-  right: 0;
+.gtk-switch[data-switch-active] > .gtk-slider {
+  inset-inline-start: 100%;
 }
 
 /* === Popover Arrow ===
@@ -574,18 +1107,44 @@
   margin-right: 12px;
 }
 
-/* === GtkCalendar grid ===
- * The calendar's grid node is a GtkGrid using GtkGridLayout.
- * Column count: 7 without week numbers, 8 with (first column for week numbers).
- * Each column gets equal width (1fr). Items auto-place left-to-right.
- * GtkLabel defaults halign=CENTER, so all grid labels get justify-content:center. */
+/* === GtkCalendar ===
+ * A vertical GtkBoxLayout: the header at its natural height, then the grid
+ * (vexpand) in the rest. The grid's sizer (below) shares the grid's place, so
+ * it's laid out as a one-column grid. GTK draws its focus on the cursor's day
+ * (label:focus), not around it. */
+.gtk-calendar.gtk-box-layout {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  outline: none;
+}
+
+/* The grid is a homogeneous GtkGrid (gtk_calendar_init()): its columns, the
+ * days of the week after the week numbers, share its width equally, and its
+ * rows its height. */
 .gtk-calendar > .gtk-grid {
   display: grid;
+  grid-area: 2 / 1;
   grid-template-columns: repeat(7, 1fr);
+  grid-auto-rows: 1fr;
 }
 
 .gtk-calendar > .gtk-grid[data-week-numbers] {
-  grid-template-columns: auto repeat(7, 1fr);
+  grid-template-columns: repeat(8, 1fr);
+}
+
+/* Nothing is attached above the week numbers. */
+.gtk-calendar > .gtk-grid[data-week-numbers] > .day-name:first-child {
+  grid-column-start: 2;
+}
+
+/* A homogeneous GtkGridLayout requests every line from its first child to its
+ * last, shown or not, as large as the largest child (grid_request_homogeneous()):
+ * 8 columns with the week numbers hidden, 7 rows with the day names hidden.
+ * It then shares its size among the shown lines only. The sizer, invisible
+ * copies of the shown labels in 8 × 7 equal cells, is that request. */
+.gtk-calendar > .gtk-grid[data-sizer] {
+  grid-template: repeat(7, 1fr) / repeat(8, 1fr);
+  visibility: hidden;
 }
 
 /* GtkLabel halign=CENTER: center text within each grid cell */
@@ -593,28 +1152,20 @@
   justify-content: center;
 }
 
-/* Prevent layout shift when navigating months/years.
- * Native: month is in a GtkStack (sized to widest month = "September"),
- * year gets +10px via gtk_widget_set_size_request. */
-.gtk-calendar > .gtk-header > .gtk-label.month {
-  min-width: 6ch;
-  justify-content: center;
-}
-
+/* The year label requests the width of its text at init (this year) + 10px,
+ * so other years don't change the calendar's width (gtk_calendar_init()).
+ * Under the text, a hidden copy of that one, 10px wider and 0px tall. */
 .gtk-calendar > .gtk-header > .gtk-label.year {
-  min-width: 4ch;
-  justify-content: center;
+  flex-direction: column;
+  align-items: center;
 }
 
-/* Web adaptation: day-number cells are clickable — show pointer cursor and
- * a subtle hover highlight (Adwaita button hover = 7% currentColor). */
-.gtk-calendar > .gtk-grid > .gtk-label.day-number {
-  cursor: pointer;
-}
-
-.gtk-calendar > .gtk-grid > .gtk-label.day-number:hover {
-  background-color: color-mix(in srgb, currentColor 7%, transparent);
-  border-radius: 9px;
+.gtk-calendar > .gtk-header > .gtk-label.year::after {
+  content: attr(data-init-label);
+  height: 0;
+  padding-inline-start: 10px;
+  overflow: hidden;
+  visibility: hidden;
 }
 
 /* -- AdwPreferencesGroup's list --

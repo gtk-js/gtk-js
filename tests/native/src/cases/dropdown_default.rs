@@ -1,3 +1,4 @@
+use gtk::prelude::*;
 use relm4::prelude::*;
 
 pub struct DropdownDefault;
@@ -11,6 +12,8 @@ impl SimpleComponent for DropdownDefault {
     view! {
         gtk::DropDown::from_strings(&["Option 1", "Option 2", "Option 3"]) {
             set_selected: 0,
+            // Its natural width, not the window's.
+            set_halign: gtk::Align::Start,
         }
     }
 
