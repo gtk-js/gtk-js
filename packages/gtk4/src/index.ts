@@ -26,7 +26,7 @@ export type { GtkFlowBoxChildProps, GtkFlowBoxProps } from "./components/flow-bo
 export { GtkFlowBox, GtkFlowBoxChild } from "./components/flow-box.tsx";
 export type { GtkFrameProps } from "./components/frame.tsx";
 export { GtkFrame } from "./components/frame.tsx";
-export type { GtkGridProps } from "./components/grid.tsx";
+export type { GtkGridChildProps, GtkGridProps } from "./components/grid.tsx";
 export { GtkGrid } from "./components/grid.tsx";
 export type { GtkHeaderBarProps } from "./components/headerbar.tsx";
 export { GtkHeaderBar } from "./components/headerbar.tsx";
@@ -45,7 +45,7 @@ export type { GtkMenuButtonProps } from "./components/menu-button.tsx";
 export { GtkMenuButton } from "./components/menu-button.tsx";
 export type { GtkNotebookPageProps, GtkNotebookProps } from "./components/notebook.tsx";
 export { GtkNotebook, GtkNotebookPage } from "./components/notebook.tsx";
-export type { GtkOverlayProps } from "./components/overlay.tsx";
+export type { GtkOverlayChildProps, GtkOverlayProps } from "./components/overlay.tsx";
 export { GtkOverlay } from "./components/overlay.tsx";
 export type { GtkPanedProps } from "./components/paned.tsx";
 export { GtkPaned } from "./components/paned.tsx";
@@ -95,6 +95,10 @@ export type { GtkToggleButtonProps } from "./components/toggle-button.tsx";
 export { GtkToggleButton } from "./components/toggle-button.tsx";
 export type { GtkWindowProps } from "./components/window.tsx";
 export { GtkWindow } from "./components/window.tsx";
+export type { GtkWindowControlsProps } from "./components/window-controls.tsx";
+export { GtkWindowControls, windowControlButtons } from "./components/window-controls.tsx";
+export type { GtkWindowHandleProps } from "./components/window-handle.tsx";
+export { GtkWindowHandle } from "./components/window-handle.tsx";
 export type { GtkWindowTitleProps } from "./components/window-title.tsx";
 export { GtkWindowTitle } from "./components/window-title.tsx";
 export { isCoveredByLayer, useEscapeLayer } from "./escape-layers.ts";
@@ -115,8 +119,10 @@ export {
   orderRows,
   useListBoxRow,
 } from "./list-box-row-context.tsx";
+export { labelText, parseMarkup } from "./markup.tsx";
 export type { GtkProviderProps } from "./provider.tsx";
-export { GtkProvider, useGtkTheme } from "./provider.tsx";
+export { GtkProvider, GtkProviderBoundary, useGtkTheme } from "./provider.tsx";
+export { tooltipAttrs } from "./tooltip.tsx";
 // Types
 export type * from "./types.ts";
 export { DecorationLayout } from "./types.ts";

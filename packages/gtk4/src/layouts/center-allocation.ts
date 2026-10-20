@@ -122,6 +122,14 @@ export function centerTracks(
     const covered = allocations.some((a) => a && a.pos < line && a.pos + a.size > from);
     return { width: line - from, low: line - from, high: line - from, covered };
   });
+  // Nothing allocated any size (a layout of no width, in a stack's hidden
+  // page say): one empty track for all, which can still grow to the natural size.
+  if (tracks.length === 0) {
+    return {
+      tracks: `minmax(0px, ${round(natural)}px)`,
+      lines: allocations.map((a) => (a ? "1 / 2" : "-1")),
+    };
+  }
   const order = [...tracks].sort((a, b) => +a.covered - +b.covered || b.width - a.width);
   let slack = size - minimum;
   for (const track of order) {
@@ -141,11 +149,16 @@ export function centerTracks(
 /** The layout's start, center and end children: its slots, or its own children in order. */
 function layoutChildren(box: HTMLElement): (HTMLElement | null)[] {
   const elements = [...box.children].filter((child) => !child.hasAttribute("hidden"));
+  // A layout of slot elements (a header bar's) may leave a slot's element out
+  // when its box is empty: the slot is then empty, not the next element.
+  const slotted = elements.some((child) =>
+    SLOTS.some((slot) => child.classList.contains(`gtk-center-layout-${slot}`)),
+  );
   let next = 0;
   return SLOTS.map((slot) => {
     const element =
       elements.find((child) => child.classList.contains(`gtk-center-layout-${slot}`)) ??
-      (box.hasAttribute(`data-${slot}`) ? elements[next++] : undefined);
+      (!slotted && box.hasAttribute(`data-${slot}`) ? elements[next++] : undefined);
     return element instanceof HTMLElement && box.hasAttribute(`data-${slot}`) ? element : null;
   });
 }
@@ -203,15 +216,21 @@ function allocate(boxes: Iterable<HTMLElement>): void {
   for (const job of jobs) job.box.removeAttribute("data-measuring");
 
   jobs.forEach((job, i) => {
-    const measured = job.children.map(
-      (element, slot): Child | null =>
-        element && {
-          // The children sit in tracks 1, 3 and 5 while measuring.
-          min: mins[i]![slot * 2] ?? 0,
-          nat: nats[i]![slot * 2] ?? 0,
-          expand: element.hasAttribute(expandAttribute(job.box)),
-        },
-    );
+    const measured = job.children.map((element, slot): Child | null => {
+      // A slot whose element is left out is an empty child (AdwHeaderBar's
+      // start and end bins stay, empty, when their boxes are hidden).
+      if (!element) {
+        return job.box.hasAttribute(`data-${SLOTS[slot]}`)
+          ? { min: 0, nat: 0, expand: false }
+          : null;
+      }
+      return {
+        // The children sit in tracks 1, 3 and 5 while measuring.
+        min: mins[i]![slot * 2] ?? 0,
+        nat: nats[i]![slot * 2] ?? 0,
+        expand: element.hasAttribute(expandAttribute(job.box)),
+      };
+    });
     const present = measured.filter((child): child is Child => !!child);
     const spacing = (present.length - 1) * job.spacing;
     const minimum = present.reduce((sum, child) => sum + child.min, 0) + spacing;

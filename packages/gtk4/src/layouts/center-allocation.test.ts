@@ -65,3 +65,10 @@ test("overlapping children share tracks; a missing one goes after the last", () 
   const { lines } = centerTracks([{ pos: 0, size: 133 }, null, { pos: 100, size: 188 }], 0, 0);
   expect(lines).toEqual(["1 / 3", "-1", "2 / 4"]);
 });
+
+test("a layout allocated no size still gets a track, up to its natural size", () => {
+  expect(centerTracks([{ pos: 0, size: 0 }, null, { pos: 0, size: 0 }], 0, 40)).toEqual({
+    tracks: "minmax(0px, 40px)",
+    lines: ["1 / 2", "-1", "1 / 2"],
+  });
+});
