@@ -42,3 +42,10 @@ The provider:
 - Injects layout CSS (flexbox/grid classes for GTK layout managers)
 - Provides icon context (widgets load icons from the provider's icon set)
 - Provides theme context (accent color, color scheme, high contrast)
+- Hides its content until it's ready (see below)
+
+### Server rendering
+
+Part of GTK's layout (computed expand) runs in JavaScript, and the theme CSS is injected from JavaScript. Server-rendered or static HTML would paint before hydration without either, so the provider keeps its content laid out but invisible (`visibility: hidden`, `aria-busy`) until both are in place, and reveals it before the next paint. A client-only render is ready before its first paint, so it's never hidden; only a `cssHref` stylesheet that's still loading holds it back (for up to 3 seconds). With JavaScript disabled, a `<noscript>` style shows the content as is.
+
+To paint server-rendered content right away instead, pass `hideUntilReady={false}`.
