@@ -1,0 +1,65 @@
+---
+title: GtkSourceView
+description: A text view for source code, with line numbers and style schemes.
+---
+
+import Example from "./examples/source-view";
+
+`@gtk-js/sourceview` ports [GtkSourceView 5](https://gitlab.gnome.org/GNOME/gtksourceview), the
+code view of GNOME Builder, Text Editor and Workbench. Syntax highlighting is coming: for now
+the code is plain monospace text, in the colors of the style scheme.
+
+```sh
+npm install @gtk-js/sourceview
+```
+
+## Preview
+
+<PreviewFile file="content/docs/sourceview/examples/source-view.tsx">
+  <Example />
+</PreviewFile>
+
+## CSS Node Tree
+
+```
+textview.view.GtkSourceView.sourceview
+├── text
+└── border.left              (with line numbers)
+    └── gutter
+        └── gutterrenderer
+```
+
+## Props
+
+`GtkSourceView` takes `GtkTextView`'s props too (`value`, `onChanged`, `editable`, `wrapMode`, …).
+
+<AutoTypeTable
+  path="../../packages/sourceview/src/view.tsx"
+  name="GtkSourceViewProps"
+/>
+
+## Style Schemes
+
+The schemes GtkSourceView bundles: Adwaita and Adwaita Dark, Classic and Classic Dark, Cobalt
+and Cobalt Light, Kate and Kate Dark, Oblivion, Solarized Light and Dark, and Tango. A new
+buffer's scheme is Classic, as in GtkSourceView; apps such as Text Editor pick a scheme's
+`dark-variant` or `light-variant` (`scheme.getMetadata("dark-variant")`) to follow the color
+scheme.
+
+```tsx
+import { getDefaultStyleSchemeManager } from "@gtk-js/sourceview";
+
+const manager = getDefaultStyleSchemeManager();
+manager.getSchemeIds(); // ["Adwaita", "Adwaita-dark", "classic", …]
+manager.getScheme("Adwaita")?.getStyle("def:comment"); // { foreground: "#77767B" }
+```
+
+## Behavior
+
+- Tab inserts a tab, or spaces with `insertSpacesInsteadOfTabs`; with whole lines selected, Tab
+  and Shift+Tab indent and unindent them by `indentWidth`.
+- With `autoIndent`, Enter indents the new line like the one before it.
+- Clicking a line number moves the cursor to that line; a double click or Control+click selects
+  it, Shift+click extends the selection to it.
+
+[GtkSourceView Documentation →](https://gnome.pages.gitlab.gnome.org/gtksourceview/gtksourceview5/class.View.html)
