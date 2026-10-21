@@ -16,6 +16,7 @@ import {
   type GtkJustification,
   type GtkWrapMode,
 } from "../types.ts";
+import { pangoLineHeight } from "./text-view-metrics.ts";
 import {
   canReadSelectionStyle,
   type SelectionRect,
@@ -208,6 +209,19 @@ export const GtkTextView = forwardRef<HTMLTextAreaElement, GtkTextViewProps>(fun
   const [ownCursorVisible, setOwnCursorVisible] = useState(true);
   const showCursor = cursorVisible ?? ownCursorVisible;
   const [dropActive, setDropActive] = useState(false);
+
+  // Its lines are as tall as Pango's for the text's font, which reset.css
+  // gives the text, the paragraphs the selection is measured on and gutters.
+  const [lineHeight, setLineHeight] = useState<number | null>(null);
+  const measureLineHeight = useCallback(() => {
+    const text = textRef.current;
+    if (text) setLineHeight(pangoLineHeight(text));
+  }, []);
+  useLayoutEffect(measureLineHeight);
+  useEffect(() => {
+    document.fonts?.addEventListener("loadingdone", measureLineHeight);
+    return () => document.fonts?.removeEventListener("loadingdone", measureLineHeight);
+  }, [measureLineHeight]);
 
   // The selection, drawn under the text as gtk_text_layout_snapshot() draws
   // it, where the browser lets the theme's ::selection color be read: the
@@ -521,7 +535,11 @@ export const GtkTextView = forwardRef<HTMLTextAreaElement, GtkTextViewProps>(fun
     <div
       ref={rootRef}
       className={classes.join(" ")}
-      style={style}
+      style={
+        lineHeight == null
+          ? style
+          : ({ ...style, "--gtk-textview-line-height": `${lineHeight}px` } as React.CSSProperties)
+      }
       {...alignAttrs(halign, valign, hexpand, vexpand)}
       data-disabled={disabled || undefined}
       data-drop-active={(dropActive && acceptsDrop) || undefined}

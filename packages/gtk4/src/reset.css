@@ -74,10 +74,11 @@ body:has(> :first-child:has([data-gtk-provider])) > :first-child {
   --monospace-font-family: monospace;
   --monospace-font-size: var(--gtk-font-size);
   /* A text view's lines are the font's ascent + descent, to the nearest
-     pixel (gtk_text_layout_get_line_yrange()): `normal` for the monospace
-     font, its metrics' (17.07px for DejaVu Sans Mono at 11pt, so 17px lines,
-     where 1.2em gives 17.6px, 18px lines). Set this along with
-     --monospace-font-family. */
+     pixel (gtk_text_layout_get_line_yrange()), which the view measures (see
+     --gtk-textview-line-height). Until it has, they're this, rounded: `normal`
+     for the monospace font, its metrics' (17.07px for DejaVu Sans Mono at
+     11pt, so 17px lines, where 1.2em gives 17.6px, 18px lines). Set this
+     along with --monospace-font-family. */
   --monospace-line-height: normal;
   /* GTK's `line-height: normal` is Pango's: the font's ascent + descent, 1.2em
      for Cantarell. Browsers round the ascent and descent separately for
@@ -374,10 +375,12 @@ body:has(> :first-child:has([data-gtk-provider])) > :first-child {
    measures it where `field-sizing` isn't supported. The text never scrolls
    itself: the view does, in a GtkScrolledWindow. Its lines are the font's
    line height to the nearest whole pixel, as Pango rounds a line's logical
-   extents (PANGO_PIXELS()): 18px for Cantarell's 17.6px at 11pt. The indent
+   extents (PANGO_PIXELS()): 18px for Cantarell's 17.6px at 11pt. The view
+   measures that in --gtk-textview-line-height (text-view-metrics.ts), since
+   browsers round `normal` their own ways. The indent
    is each paragraph's where `each-line` is supported (gtk_text_view_set_indent()). */
 :where([data-gtk-provider] .gtk-textview > .gtk-text) {
-  line-height: round(1lh, 1px);
+  line-height: var(--gtk-textview-line-height, round(1lh, 1px));
   field-sizing: content;
   contain: inline-size;
   overflow: hidden;
@@ -437,7 +440,7 @@ body:has(> :first-child:has([data-gtk-provider])) > :first-child {
 }
 
 :where([data-gtk-provider] .gtk-textview-paragraphs > *) {
-  line-height: round(1lh, 1px);
+  line-height: var(--gtk-textview-line-height, round(1lh, 1px));
   text-indent: var(--gtk-textview-indent, 0);
 }
 
