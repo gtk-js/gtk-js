@@ -123,8 +123,7 @@ pub fn tab_width() -> (gtk::Widget, bool) {
     }))
 }
 
-/// A wrapped line's number is on its first row. (No underscores: CI's GTK
-/// build made the rows with one 2px taller than the font's line height.)
+/// A wrapped line's number is on its first row.
 pub fn wrap() -> (gtk::Widget, bool) {
     in_box(view(Options {
         text: "int x = call (first argument, second argument);\nreturn x;",
