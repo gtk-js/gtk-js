@@ -371,6 +371,44 @@ export const GtkTextView = forwardRef<HTMLTextAreaElement, GtkTextViewProps>(fun
     setBlink((b) => ({ key: b.key + 1, delay: e?.type === "focus" ? 0 : CURSOR_BLINK_TIME / 2 }));
   }, []);
   useLayoutEffect(updateSelection, [rest.value]);
+  // Firefox fires no `selectionchange` for a disabled textarea; an insensitive
+  // view keeps a cursor and a selection the app may set, so setting them
+  // fires one.
+  useEffect(() => {
+    const text = textRef.current;
+    if (!text || !disabled) return;
+    const notify = () => text.dispatchEvent(new Event("selectionchange"));
+    const proto = HTMLTextAreaElement.prototype;
+    const methods = ["setSelectionRange", "select", "setRangeText"] as const;
+    for (const name of methods) {
+      Object.defineProperty(text, name, {
+        configurable: true,
+        value(...args: unknown[]) {
+          const result = (proto[name] as (...a: unknown[]) => unknown).apply(this, args);
+          notify();
+          return result;
+        },
+      });
+    }
+    const properties = ["selectionStart", "selectionEnd", "selectionDirection"] as const;
+    for (const name of properties) {
+      const descriptor = Object.getOwnPropertyDescriptor(proto, name)!;
+      Object.defineProperty(text, name, {
+        configurable: true,
+        get() {
+          return descriptor.get!.call(this);
+        },
+        set(value) {
+          descriptor.set!.call(this, value);
+          notify();
+        },
+      });
+    }
+    return () => {
+      for (const name of [...methods, ...properties])
+        delete (text as unknown as Record<string, unknown>)[name];
+    };
+  }, [disabled]);
   useEffect(() => {
     const text = textRef.current;
     if (!text) return;
