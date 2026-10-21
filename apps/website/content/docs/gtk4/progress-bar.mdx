@@ -1,0 +1,36 @@
+---
+title: GtkProgressBar
+description: A widget that shows progress.
+---
+
+import Example from "./examples/progress-bar";
+
+## Preview
+
+<PreviewFile file="content/docs/gtk4/examples/progress-bar.tsx">
+  <Example />
+</PreviewFile>
+
+## CSS Node Tree
+
+```
+progressbar[.horizontal|.vertical][.osd]
+  ├── text (optional)
+  └── trough[.empty|.full]
+      └── progress[.pulse]
+```
+
+## Props
+
+<AutoTypeTable
+  path="../../packages/gtk4/src/components/progress-bar.tsx"
+  name="GtkProgressBarProps"
+/>
+
+## Style Classes
+
+| Class | Effect |
+|-------|--------|
+| `.osd` | On-screen display style (thinner, translucent) |
+
+[GTK4 Documentation →](https://docs.gtk.org/gtk4/class.ProgressBar.html)

@@ -1,0 +1,44 @@
+---
+title: GtkSwitch
+description: A toggle switch widget.
+---
+
+import Example from "./examples/switch";
+
+## Preview
+
+<PreviewFile file="content/docs/gtk4/examples/switch.tsx">
+  <Example />
+</PreviewFile>
+
+## CSS Node Tree
+
+```
+switch[:checked]
+  ├── image (on icon)
+  ├── image (off icon)
+  └── slider
+```
+
+## Props
+
+<AutoTypeTable
+  path="../../packages/gtk4/src/components/switch.tsx"
+  name="GtkSwitchProps"
+/>
+
+## Behavior
+
+- Click, tap, Space or Enter to toggle: the slider slides over, then `active` changes and `onStateSet` is called
+- Drag the slider horizontally: it follows the pointer, and the switch turns on if you let go past the middle
+- Clicking doesn't move the keyboard focus to the switch
+- `active` places the slider; `state` colors the trough (`:checked`) and follows `active` when not provided
+- For a delayed change (e.g., connecting to WiFi), pass your backend's value as `state` and start the change in `onStateSet`: the slider moves right away, the trough once `state` does. This is GTK's `state-set` handler returning `TRUE`.
+- `onStateSet` callback can return `false` to reject the change
+- `disabled` makes the switch insensitive: dimmed, out of the tab order, and ignoring input
+
+## Animation
+
+The slider slides for 100ms with an ease-out-cubic curve, matching the native GTK behavior. As in GTK, `active` changes when it gets there, or right away when the user prefers reduced motion.
+
+[GTK4 Documentation →](https://docs.gtk.org/gtk4/class.Switch.html)

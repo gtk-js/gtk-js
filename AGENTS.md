@@ -6,6 +6,7 @@ Bringing the GTK4/Adwaita ecosystem to the web via React.
 
 gtk-js uses [Vite+](https://viteplus.dev) (`vp`) on npm workspaces.
 
+- `packages/` holds the published libraries (`gtk4`, `adwaita`, `gtk-css`, `icon-helpers`), `themes/` and `icons/` the published themes and icon sets, and `apps/website` the docs site, which isn't published. Docs pages point at component sources from the site's directory (`path="../../packages/adwaita/src/components/avatar.tsx"`).
 - `vp install` installs dependencies. `vp run <script>` runs a root script; `vp run -r <script>` runs it in every package.
 - `vp run` orders packages only by `workspace:` dependencies, which npm can't install, so it can't see the npm workspace graph. Each package's `build` is therefore a task in its `vite.config.ts` (`buildTask` from `vite.shared.ts`), not a `package.json` script, and runs after the builds of the `@gtk-js/*` packages it depends on.
 - `vp run build:packages` builds the published packages: `node build.ts` generates CSS or icons where a package has one, then `vp pack` (tsdown) bundles `src/index.ts` and its types into `dist/`.
@@ -74,7 +75,7 @@ GTK uses `content-box` sizing — `min-height` refers to content only, padding i
 - Icons are React components generated at build time from upstream SVGs
 - Both icon packages export the same component names — the Provider's `icons` prop selects which set
 - Widgets load icons from context, never by importing an icon package directly
-- The website (`packages/website/`) should prefer Adwaita icons (`@gtk-js/adwaita-icons`) over GTK4 icons
+- The website (`apps/website/`) should prefer Adwaita icons (`@gtk-js/adwaita-icons`) over GTK4 icons
 
 ## Component Conventions
 
@@ -89,7 +90,7 @@ GTK uses `content-box` sizing — `min-height` refers to content only, padding i
 
 - **Treat the root cause, not symptoms.** When a widget renders incorrectly, don't patch around it — find what's actually wrong. Cross-reference the upstream C source and SCSS to understand the intended behavior, then fix the underlying issue.
 - **Modifying source components is okay when they're wrong.** If a component in `packages/` doesn't match native GTK behavior (wrong CSS node structure, missing CSS class, incorrect default prop, bad layout manager), fix the component. Don't work around broken components in tests or the website.
-- **Validate the website visually.** After changes that affect rendering, check the website (`packages/website/`) using Chrome MCP, Playwright MCP, or similar browser tools — but only if they are installed. Don't skip visual verification just because tests pass.
+- **Validate the website visually.** After changes that affect rendering, check the website (`apps/website/`) using Chrome MCP, Playwright MCP, or similar browser tools — but only if they are installed. Don't skip visual verification just because tests pass.
 
 ## Testing
 

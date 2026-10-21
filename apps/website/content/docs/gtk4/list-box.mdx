@@ -1,0 +1,52 @@
+---
+title: GtkListBox
+description: A vertical list of selectable rows.
+---
+
+import Example from "./examples/list-box";
+
+## Preview
+
+<PreviewFile file="content/docs/gtk4/examples/list-box.tsx">
+  <Example />
+</PreviewFile>
+
+## CSS Node Tree
+
+```
+list[.separators][.boxed-list][.navigation-sidebar][.rich-list]
+  └── row[.activatable] (per child)
+```
+
+A child that isn't a row (a `GtkListBoxRow`, or a component that renders one, like `AdwActionRow`) is put in a `GtkListBoxRow`. A row is `.activatable` when it's activatable or the list can select it.
+
+## Props
+
+<AutoTypeTable
+  path="../../packages/gtk4/src/components/list-box.tsx"
+  name="GtkListBoxProps"
+/>
+
+### GtkListBoxRow
+
+<AutoTypeTable
+  path="../../packages/gtk4/src/components/list-box.tsx"
+  name="GtkListBoxRowProps"
+/>
+
+## Behavior
+
+- A click selects a row and activates it. With `activateOnSingleClick={false}`, a click selects it (Ctrl toggles, Shift selects a range) and a double click activates it. Clicks on buttons, entries and other controls in a row are theirs alone.
+- The arrows, Home, End, Page Up and Page Down move between rows and select the new one (Shift selects a range, Ctrl only moves). Enter and Space activate a row, Ctrl+Space toggles its selection, Ctrl+A selects every row in `multiple` mode, and Shift+Ctrl+A unselects them.
+- Tab enters the list at its selected row, and moving between rows with Tab selects them.
+
+## Style Classes
+
+| Class | Effect |
+|-------|--------|
+| `.boxed-list` | Rounded box with border |
+| `.separators` | Separator lines between rows |
+| `.rich-list` | Extra padding for rich content |
+| `.navigation-sidebar` | Navigation sidebar styling |
+
+[GTK4 Documentation →](https://docs.gtk.org/gtk4/class.ListBox.html)

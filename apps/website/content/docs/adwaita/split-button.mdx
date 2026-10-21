@@ -1,0 +1,30 @@
+---
+title: AdwSplitButton
+description: An action button with a linked dropdown.
+---
+
+import Example from "./examples/split-button";
+
+## Preview
+
+<PreviewFile file="content/docs/adwaita/examples/split-button.tsx">
+  <Example />
+</PreviewFile>
+
+## CSS Node Tree
+
+```
+splitbutton
+  ├── button (action)
+  ├── separator (vertical)
+  └── menubutton > button.toggle > arrow
+```
+
+## Props
+
+<AutoTypeTable
+  path="../../packages/adwaita/src/components/split-button.tsx"
+  name="AdwSplitButtonProps"
+/>
+
+[Adwaita Documentation →](https://gnome.pages.gitlab.gnome.org/libadwaita/doc/1-latest/class.SplitButton.html)

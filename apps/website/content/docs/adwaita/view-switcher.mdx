@@ -1,0 +1,73 @@
+---
+title: AdwViewSwitcher
+description: Tab buttons for switching views.
+---
+
+import Example from "./examples/view-switcher";
+import BarExample from "./examples/view-switcher-bar";
+
+## Preview
+
+<PreviewFile file="content/docs/adwaita/examples/view-switcher.tsx">
+  <Example />
+</PreviewFile>
+
+## CSS Node Tree
+
+```
+viewswitcher[.wide|.narrow]
+└── button.toggle.flat[.horizontal|.vertical][:checked]
+    └── stack
+        └── box.wide|box.narrow
+            ├── indicatorbin[.needs-attention][.badge]
+            │   ├── mask
+            │   ├── indicator
+            │   │   └── [label.numeric]
+            │   └── image
+            └── label
+```
+
+## Props
+
+<AutoTypeTable
+  path="../../packages/adwaita/src/components/view-switcher.tsx"
+  name="AdwViewSwitcherProps"
+/>
+
+## Behavior
+
+- Every button shows an icon and a label: side by side with `policy="wide"`, the icon above the label with `policy="narrow"`. A page without `iconName` shows the image-missing icon.
+- Without `activePageName` the switcher keeps its own selection, starting on the first visible page.
+- Tab focuses the selected button, and the arrow keys move between buttons. Clicking a button doesn't take the keyboard focus.
+- Holding a drag over a button for half a second selects its page.
+
+[Adwaita Documentation →](https://gnome.pages.gitlab.gnome.org/libadwaita/doc/1-latest/class.ViewSwitcher.html)
+
+## AdwViewSwitcherBar
+
+A bar for the bottom of a window, holding a narrow view switcher. It's shown when `reveal` is set and there are at least two visible pages.
+
+<PreviewFile file="content/docs/adwaita/examples/view-switcher-bar.tsx">
+  <BarExample />
+</PreviewFile>
+
+### CSS Node Tree
+
+```
+viewswitcherbar
+└── actionbar
+    └── revealer
+        └── box
+            ├── box.start
+            ├── viewswitcher.narrow
+            └── box.end
+```
+
+### Props
+
+<AutoTypeTable
+  path="../../packages/adwaita/src/components/view-switcher.tsx"
+  name="AdwViewSwitcherBarProps"
+/>
+
+[Adwaita Documentation →](https://gnome.pages.gitlab.gnome.org/libadwaita/doc/1-latest/class.ViewSwitcherBar.html)

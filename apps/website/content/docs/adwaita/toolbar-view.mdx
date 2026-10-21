@@ -1,0 +1,41 @@
+---
+title: AdwToolbarView
+description: A layout with top and bottom bar slots.
+---
+
+import Example from "./examples/toolbar-view";
+
+## Preview
+
+<PreviewFile file="content/docs/adwaita/examples/toolbar-view.tsx">
+  <Example />
+</PreviewFile>
+
+## CSS Node Tree
+
+```
+toolbarview[.undershoot-top][.undershoot-bottom]
+  ├── revealer.top-bar[.raised][.border]
+  │     └── windowhandle
+  │           └── box.vertical[.collapse-spacing]
+  ├── [content]
+  └── revealer.bottom-bar[.raised][.border]
+        └── windowhandle
+              └── box.vertical[.collapse-spacing]
+```
+
+## Props
+
+<AutoTypeTable
+  path="../../packages/adwaita/src/components/toolbar-view.tsx"
+  name="AdwToolbarViewProps"
+/>
+
+## Behavior
+
+- The bars are drawn over the content: `extendContentToTopEdge` / `extendContentToBottomEdge` give the content the area under them.
+- `revealTopBars` / `revealBottomBars` slide the bars in and out; hidden bars stay mounted and keep their state.
+- Several bars on one side get `.collapse-spacing`, which makes header bars thinner.
+- Empty space in the bars moves the window, like a header bar.
+
+[Adwaita Documentation →](https://gnome.pages.gitlab.gnome.org/libadwaita/doc/1-latest/class.ToolbarView.html)

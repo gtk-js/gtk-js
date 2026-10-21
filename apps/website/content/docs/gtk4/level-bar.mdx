@@ -1,0 +1,36 @@
+---
+title: GtkLevelBar
+description: A bar that shows a fill level.
+---
+
+import Example from "./examples/level-bar";
+
+## Preview
+
+<PreviewFile file="content/docs/gtk4/examples/level-bar.tsx">
+  <Example />
+</PreviewFile>
+
+## CSS Node Tree
+
+```
+levelbar[.horizontal|.vertical][.continuous|.discrete]
+  └── trough
+      ├── block.filled[.low|.high|.full]
+      └── block.empty
+```
+
+## Props
+
+<AutoTypeTable
+  path="../../packages/gtk4/src/components/level-bar.tsx"
+  name="GtkLevelBarProps"
+/>
+
+## Behavior
+
+- In `continuous` mode, the bar fills proportionally.
+- In `discrete` mode, individual blocks fill up.
+- Default offset thresholds: low (0.25), high (0.75), full (1.0).
+
+[GTK4 Documentation →](https://docs.gtk.org/gtk4/class.LevelBar.html)

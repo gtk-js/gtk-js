@@ -1,0 +1,38 @@
+---
+title: AdwBanner
+description: A bar with contextual information.
+---
+
+import Example from "./examples/banner";
+
+## Preview
+
+<PreviewFile file="content/docs/adwaita/examples/banner.tsx">
+  <Example />
+</PreviewFile>
+
+## CSS Node Tree
+
+```
+banner
+  └── revealer
+      └── widget
+          ├── label.heading
+          └── button.text-button (when buttonLabel is set)
+```
+
+## Props
+
+<AutoTypeTable
+  path="../../packages/adwaita/src/components/banner.tsx"
+  name="AdwBannerProps"
+/>
+
+## Behavior
+
+- The title is centered, with the button at the end. When there isn't room to center the title it moves to the start, and when the title and button don't fit side by side the title goes above the button.
+- A banner is as wide as its parent makes it: put it at the top of a vertical box, or of an `AdwToolbarView`'s content, to span the window.
+- `revealed` slides the banner down and back up. A hidden banner keeps its place in the tree, with no height.
+- An underscore in `buttonLabel` marks the button's mnemonic. Clicking the button doesn't move the focus to it.
+
+[Adwaita Documentation →](https://gnome.pages.gitlab.gnome.org/libadwaita/doc/1-latest/class.Banner.html)

@@ -1,0 +1,38 @@
+---
+title: GtkScrolledWindow
+description: A scrollable container.
+---
+
+import Example from "./examples/scrolled-window";
+
+## Preview
+
+<PreviewFile file="content/docs/gtk4/examples/scrolled-window.tsx">
+  <Example />
+</PreviewFile>
+
+## CSS Node Tree
+
+```
+scrolledwindow[.frame]
+  ├── [child]
+  ├── scrollbar.horizontal.bottom.overlay-indicator[.hovering]
+  ├── scrollbar.vertical.right.overlay-indicator[.hovering]
+  └── undershoot.top / .bottom / .left / .right
+```
+
+## Props
+
+<AutoTypeTable
+  path="../../packages/gtk4/src/components/scrolled-window.tsx"
+  name="GtkScrolledWindowProps"
+/>
+
+## Style Classes
+
+| Class | Effect |
+|-------|--------|
+| `.frame` | Visible border frame (same as `hasFrame`) |
+| `.undershoot-top`, `.undershoot-bottom`, `.undershoot-start`, `.undershoot-end` | Shade along an edge with more content beyond it |
+
+[GTK4 Documentation →](https://docs.gtk.org/gtk4/class.ScrolledWindow.html)

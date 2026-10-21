@@ -1,0 +1,42 @@
+---
+title: GtkFlowBox
+description: A reflowing grid of children.
+---
+
+import Example from "./examples/flow-box";
+
+## Preview
+
+<PreviewFile file="content/docs/gtk4/examples/flow-box.tsx">
+  <Example />
+</PreviewFile>
+
+## CSS Node Tree
+
+```
+flowbox.horizontal|.vertical
+  └── flowboxchild (per child)
+```
+
+## Props
+
+<AutoTypeTable
+  path="../../packages/gtk4/src/components/flow-box.tsx"
+  name="GtkFlowBoxProps"
+/>
+
+## Child Props
+
+<AutoTypeTable
+  path="../../packages/gtk4/src/components/flow-box.tsx"
+  name="GtkFlowBoxChildProps"
+/>
+
+## Behavior
+
+- Children that aren't a `GtkFlowBoxChild` are put in one.
+- Children flow in aligned columns (rows when vertical), as many per line as fit, between `minChildrenPerLine` and `maxChildrenPerLine`. The columns share the width left over.
+- Clicking a child selects and activates it; with `activateOnSingleClick={false}`, a click selects (Ctrl toggles, Shift extends in multiple mode) and a double click activates. Clicks on widgets in a child, such as buttons, stay theirs.
+- Every child is a Tab stop, and the keyboard focus selects the child it moves to. The arrow keys, Home, End, Page Up and Page Down move between children (Shift extends the selection, Ctrl moves without selecting), Enter and Space activate, Ctrl+Space toggles the selection and Ctrl+A / Shift+Ctrl+A select and unselect all in multiple mode.
+
+[GTK4 Documentation →](https://docs.gtk.org/gtk4/class.FlowBox.html)

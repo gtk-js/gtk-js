@@ -4,6 +4,7 @@
   "type": "module",
   "workspaces": [
     "packages/*",
+    "apps/*",
     "icons/*",
     "themes/*",
     "tests"
@@ -13,7 +14,7 @@
     "build:packages": "vp run --filter '@gtk-js/*' --filter '!@gtk-js/website' build",
     "build": "vp run -r build",
     "test": "vp test",
-    "check": "biome check . && tsc --noEmit && tsc --noEmit -p packages/website",
+    "check": "biome check . && tsc --noEmit && tsc --noEmit -p apps/website",
     "fix": "biome check . --write",
     "update-upstream": "node scripts/update-upstream.ts",
     "publish": "vp run build:packages && node scripts/publish.ts"

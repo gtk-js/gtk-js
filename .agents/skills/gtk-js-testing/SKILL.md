@@ -74,7 +74,7 @@ On failure, the harness always dumps full native and web JSON snapshots to stder
 - **Modifying source components is okay when they're wrong.** If a component in `packages/` doesn't match native GTK behavior (wrong CSS node structure, missing CSS class, incorrect default prop, bad layout manager), fix the component rather than working around it in the test.
 - **Verify against native C code.** Check `gtk_widget_class_set_css_name`, `set_layout_manager_type`, `gtk_widget_add_css_class`, and default property values in the upstream source before deciding what the correct behavior should be.
 - **Update tests when fixing components.** If you fix a component bug, add or update regression tests to cover the fix.
-- **Validate the website visually.** After changes, check the website (`packages/website/`) using Chrome MCP, Playwright MCP, or similar browser tools if they are installed. Tests passing doesn't guarantee correct visual rendering.
+- **Validate the website visually.** After changes, check the website (`apps/website/`) using Chrome MCP, Playwright MCP, or similar browser tools if they are installed. Tests passing doesn't guarantee correct visual rendering.
 
 ## Key files to read
 

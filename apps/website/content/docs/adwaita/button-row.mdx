@@ -1,0 +1,40 @@
+---
+title: AdwButtonRow
+description: A list row that looks like a button, for actions at the end of a boxed list.
+---
+
+import Example from "./examples/button-row";
+
+## Preview
+
+<PreviewFile file="content/docs/adwaita/examples/button-row.tsx">
+  <Example />
+</PreviewFile>
+
+## CSS Node Tree
+
+```
+row.button
+  └── box
+      ├── image.icon.start
+      ├── label.title
+      └── image.icon.end
+```
+
+## Props
+
+<AutoTypeTable
+  path="../../packages/adwaita/src/components/button-row.tsx"
+  name="AdwButtonRowProps"
+/>
+
+## Style Classes
+
+| Class | Effect |
+|-------|--------|
+| `.suggested-action` | Uses the accent color for the background, for an important action. Use it sparingly |
+| `.destructive-action` | Uses destructive colors, to warn of an action's consequences |
+
+Button rows are usually the last rows of an `AdwPreferencesGroup`. With `separateRows`, the group shows each row as a card of its own instead.
+
+[Adwaita Documentation →](https://gnome.pages.gitlab.gnome.org/libadwaita/doc/1-latest/class.ButtonRow.html)

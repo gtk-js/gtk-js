@@ -1,0 +1,34 @@
+---
+title: GtkCenterBox
+description: A container with three children arranged as start, center, and end.
+---
+
+import Example from "./examples/center-box";
+
+## Preview
+
+<PreviewFile file="content/docs/gtk4/examples/center-box.tsx">
+  <Example />
+</PreviewFile>
+
+## CSS Node Tree
+
+```
+box[.vertical] (CenterLayout)
+  ├── [start widget]
+  ├── [center widget]
+  └── [end widget]
+```
+
+## Props
+
+<AutoTypeTable
+  path="../../packages/gtk4/src/components/center-box.tsx"
+  name="GtkCenterBoxProps"
+/>
+
+## Behavior
+
+- The center widget is truly centered relative to the full width, regardless of start/end sizes.
+
+[GTK4 Documentation →](https://docs.gtk.org/gtk4/class.CenterBox.html)
