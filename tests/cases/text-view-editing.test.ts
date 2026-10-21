@@ -170,6 +170,11 @@ for (const [browserName, browser] of Object.entries(globalThis.__testBrowsers)) 
       await page.keyboard.type("ab");
       expect((await state(page, "controlled")).value).toBe("AB");
       expect((await drawn(page, "controlled")).paragraphs).toEqual(["AB"]);
+      await page.locator("#controlled-source").focus();
+      await page.keyboard.type("cd");
+      await page.keyboard.press("Enter");
+      expect((await state(page, "controlled-source")).value).toBe("CD\n");
+      expect((await drawn(page, "controlled-source")).paragraphs).toEqual(["CD", ""]);
 
       // A view that isn't editable keeps its cursor, which doesn't blink, and
       // its text.

@@ -128,6 +128,7 @@ const EDITING_TEXT =
 /** Controlled views whose app upper-cases what's typed. */
 function UpperCaseTextViews() {
   const [value, setValue] = useState("");
+  const [source, setSource] = useState("");
   return (
     <>
       <GtkTextView
@@ -135,6 +136,13 @@ function UpperCaseTextViews() {
         monospace
         value={value}
         onChange={(e) => setValue(e.target.value.toUpperCase())}
+        style={{ width: "200px" }}
+      />
+      <GtkSourceView
+        id="controlled-source"
+        showLineNumbers
+        value={source}
+        onChange={(e) => setSource(e.target.value.toUpperCase())}
         style={{ width: "200px" }}
       />
     </>

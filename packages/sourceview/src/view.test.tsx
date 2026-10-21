@@ -42,7 +42,7 @@ describe("GtkSourceView", () => {
     );
   });
 
-  test("lays the text's lines out under it, and the right margin", () => {
+  test("measures its tab stops and right margin, drawn under the text", () => {
     const html = markup(
       <GtkSourceView
         defaultValue={"x\n\ty"}
@@ -57,7 +57,15 @@ describe("GtkSourceView", () => {
     expect(html).toContain('<span class="gtk-source-measure">    </span>');
     expect(html).toContain('<span class="gtk-source-measure">_____</span>');
     expect(html).toContain(
-      '<div class="gtk-source-right-margin-overlay" style="left:calc(2px + round(up, 5ch, 1px))"></div><div class="gtk-source-right-margin" style="left:calc(2px + round(up, 5ch, 1px))"></div><div class="gtk-source-lines" data-wrap="word" data-right-margin="" style="padding-top:0;padding-bottom:0;--gtk-source-right-margin-x:calc(2px + round(up, 5ch, 1px))">',
+      '<div class="gtk-source-right-margin-overlay" style="left:calc(2px + round(up, 5ch, 1px))"></div><div class="gtk-source-right-margin" style="left:calc(2px + round(up, 5ch, 1px))"></div><div class="gtk-source-lines" data-right-margin="" style="--gtk-source-right-margin-x:calc(2px + round(up, 5ch, 1px))"></div>',
+    );
+  });
+
+  test("draws the current line from where the text's paragraphs are", () => {
+    // On the server, a row per line.
+    const html = markup(<GtkSourceView defaultValue={"a\nb"} highlightCurrentLine />);
+    expect(html).toContain(
+      '<div class="gtk-source-line" data-current-line="true" style="top:calc(0px + 0 * var(--gtk-textview-line-height, round(1lh, 1px)));height:var(--gtk-textview-line-height, round(1lh, 1px))"></div>',
     );
   });
 

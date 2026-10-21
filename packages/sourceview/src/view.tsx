@@ -1,4 +1,9 @@
-import { GtkTextView, type GtkTextViewProps, registerScrollable } from "@gtk-js/gtk4";
+import {
+  GtkTextView,
+  type GtkTextViewLayout,
+  type GtkTextViewProps,
+  registerScrollable,
+} from "@gtk-js/gtk4";
 import {
   type CSSProperties,
   forwardRef,
@@ -137,6 +142,20 @@ function selectRange(textarea: HTMLTextAreaElement, insert: number, anchor: numb
 }
 
 /**
+ * A line's box across the text window: its paragraph's, once the text is laid
+ * out, else a row's (on the server).
+ */
+function lineBox(layout: GtkTextViewLayout | null, line: number, topMargin: number): CSSProperties {
+  const box = layout?.paragraphs[line];
+  return box
+    ? { top: box.top, height: box.height }
+    : {
+        top: `calc(${topMargin}px + ${line} * var(--gtk-textview-line-height, round(1lh, 1px)))`,
+        height: "var(--gtk-textview-line-height, round(1lh, 1px))",
+      };
+}
+
+/**
  * GtkSourceView — A text view for source code: line numbers, the current
  * line highlighted, a right margin, indentation and style schemes.
  *
@@ -227,7 +246,9 @@ export const GtkSourceView = forwardRef<HTMLTextAreaElement, GtkSourceViewProps>
       const onDocumentSelection = () => {
         if (document.activeElement === textarea) updateCursor();
       };
-      const events = ["selectionchange", "select", "input", "keyup", "pointerup", "focus"];
+      // Not on `input`, after which React reads a controlled view's edit: the
+      // text changing moves it (useLayoutEffect above).
+      const events = ["selectionchange", "select", "keyup", "pointerup", "focus"];
       for (const type of events) textarea.addEventListener(type, updateCursor);
       document.addEventListener("selectionchange", onDocumentSelection);
       return () => {
@@ -236,27 +257,7 @@ export const GtkSourceView = forwardRef<HTMLTextAreaElement, GtkSourceViewProps>
       };
     }, [updateCursor]);
 
-    // Wrapped lines take more than one row: the gutter's numbers take their heights.
-    const linesRef = useRef<HTMLDivElement>(null);
     const gutterRef = useRef<HTMLDivElement>(null);
-    const [heights, setHeights] = useState<number[] | null>(null);
-    useLayoutEffect(() => {
-      const container = linesRef.current;
-      if (!container || wrapMode === "none" || !showLineNumbers) {
-        setHeights(null);
-        return;
-      }
-      const measure = () => {
-        const next = Array.from(container.children, (line) => (line as HTMLElement).offsetHeight);
-        setHeights((prev) =>
-          prev && prev.length === next.length && prev.every((h, i) => h === next[i]) ? prev : next,
-        );
-      };
-      measure();
-      const resizes = new ResizeObserver(measure);
-      resizes.observe(container);
-      return () => resizes.disconnect();
-    }, [wrapMode, showLineNumbers, lines]);
 
     const settings: IndentSettings = {
       tabWidth,
@@ -356,41 +357,39 @@ export const GtkSourceView = forwardRef<HTMLTextAreaElement, GtkSourceViewProps>
     if (scheme) classes.push(styleSchemeClass(scheme));
     if (className) classes.push(className);
 
-    const gutter: ReactNode = showLineNumbers ? (
-      <div ref={gutterRef} className="gtk-gutter" onMouseDown={handleGutterMouseDown}>
-        {showCurrentLine && (
-          <div
-            className="gtk-source-gutter-current-line"
-            style={{
-              top: heights
-                ? topMargin + heights.slice(0, cursor.line).reduce((a, b) => a + b, 0)
-                : `calc(${topMargin}px + ${cursor.line} * var(--gtk-source-line-height))`,
-              height: heights ? heights[cursor.line] : undefined,
-            }}
-          />
-        )}
-        <div
-          className="gtk-gutterrenderer"
-          style={{
-            width: `calc(round(up, ${digits}ch, 1px) + 12px)`,
-            paddingTop: topMargin,
-            paddingBottom: bottomMargin,
-          }}
-        >
-          {lines.map((_, i) => (
+    // The gutter's lines are the text's paragraphs, each number on its first
+    // row (gtk_source_gutter_lines_get_line_extent()).
+    const gutter = (layout: GtkTextViewLayout | null): ReactNode =>
+      showLineNumbers ? (
+        <div ref={gutterRef} className="gtk-gutter" onMouseDown={handleGutterMouseDown}>
+          {showCurrentLine && (
             <div
-              key={i}
-              data-line={i}
-              data-cursor-line={i === cursor.line || undefined}
-              data-bold={(i === cursor.line && !cursor.selection) || undefined}
-              style={heights ? { height: heights[i] } : undefined}
-            >
-              {i + 1}
-            </div>
-          ))}
+              className="gtk-source-gutter-current-line"
+              style={lineBox(layout, cursor.line, topMargin)}
+            />
+          )}
+          <div
+            className="gtk-gutterrenderer"
+            style={{
+              width: `calc(round(up, ${digits}ch, 1px) + 12px)`,
+              paddingTop: topMargin,
+              paddingBottom: bottomMargin,
+            }}
+          >
+            {lines.map((_, i) => (
+              <div
+                key={i}
+                data-line={i}
+                data-cursor-line={i === cursor.line || undefined}
+                data-bold={(i === cursor.line && !cursor.selection) || undefined}
+                style={layout ? { height: layout.paragraphs[i]?.height } : undefined}
+              >
+                {i + 1}
+              </div>
+            ))}
+          </div>
         </div>
-      </div>
-    ) : null;
+      ) : null;
 
     // Tabs stop every tabWidth spaces, in whole pixels (set_tab_stops_internal()),
     // or every 8 spaces as Pango has them while the width is the default.
@@ -446,7 +445,7 @@ export const GtkSourceView = forwardRef<HTMLTextAreaElement, GtkSourceViewProps>
         : `calc(${leftMargin}px + round(up, ${rightMarginPosition}ch, 1px))`;
     const viewMarginX = gutterInset ? `calc(${marginX} - ${gutterInset}px)` : marginX;
 
-    const belowText = (
+    const belowText = (layout: GtkTextViewLayout | null) => (
       <>
         <span ref={tabRef} className="gtk-source-measure">
           {" ".repeat(tabWidth)}
@@ -461,28 +460,17 @@ export const GtkSourceView = forwardRef<HTMLTextAreaElement, GtkSourceViewProps>
           </>
         )}
         <div
-          ref={linesRef}
           className="gtk-source-lines"
-          data-wrap={wrapMode}
           data-right-margin={margin ? "" : undefined}
-          style={
-            {
-              paddingTop: topMargin,
-              paddingBottom: bottomMargin,
-              "--gtk-source-right-margin-x": margin ? marginX : undefined,
-            } as CSSProperties
-          }
+          style={{ "--gtk-source-right-margin-x": margin ? marginX : undefined } as CSSProperties}
         >
-          {lines.map((line, i) => (
+          {showCurrentLine && !disabled && (
             <div
-              key={i}
               className="gtk-source-line"
-              data-current-line={(showCurrentLine && !disabled && i === cursor.line) || undefined}
-              style={{ paddingLeft: leftMargin, paddingRight: rightMargin }}
-            >
-              {`${line}\n`}
-            </div>
-          ))}
+              data-current-line
+              style={lineBox(layout, cursor.line, topMargin)}
+            />
+          )}
         </div>
       </>
     );

@@ -17,7 +17,6 @@
 .sourceview > .gtk-border > .gtk-gutter {
   position: relative;
   display: flex;
-  --gtk-source-line-height: var(--gtk-textview-line-height, round(1lh, 1px));
 }
 
 /* The current line's number's background, across the gutter. */
@@ -25,7 +24,6 @@
   position: absolute;
   left: 0;
   right: 0;
-  height: var(--gtk-source-line-height);
   background-color: var(--gtk-source-current-line-number-background, transparent);
 }
 
@@ -53,25 +51,17 @@
   font-weight: var(--gtk-source-current-line-number-weight, normal);
 }
 
-/* The text's lines under the text, laid out like it, for what's drawn behind
-   them (gtk_source_view_snapshot_layer(), GTK_TEXT_VIEW_LAYER_BELOW_TEXT). */
+/* What's drawn under the text, across the text window, from where its
+   paragraphs are (gtk_source_view_snapshot_layer(), GTK_TEXT_VIEW_LAYER_BELOW_TEXT). */
 .gtk-source-lines {
-  position: relative;
+  position: absolute;
+  inset: 0;
 }
 
 .gtk-source-line {
-  line-height: var(--gtk-textview-line-height, round(1lh, 1px));
-  white-space: pre;
-  color: transparent;
-}
-
-.gtk-source-lines:not([data-wrap="none"]) > .gtk-source-line {
-  white-space: pre-wrap;
-  overflow-wrap: break-word;
-}
-
-.gtk-source-lines[data-wrap="word"] > .gtk-source-line {
-  overflow-wrap: normal;
+  position: absolute;
+  left: 0;
+  right: 0;
 }
 
 /* The current line, across the text window: the current-line style's
