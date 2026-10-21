@@ -262,6 +262,7 @@ pub mod searchbar_with_close_button;
 pub mod separator_horizontal_default;
 pub mod separator_spacer_horizontal;
 pub mod separator_vertical;
+pub mod source_view;
 pub mod spin_button_default;
 pub mod spin_button_disabled;
 pub mod spin_button_vertical;

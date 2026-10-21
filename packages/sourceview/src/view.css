@@ -1,0 +1,124 @@
+/* GtkSourceView's text node draws no background, whatever other CSS says
+   (gtksourceinit.c: `textview.GtkSourceView text {background: transparent;}`
+   at G_MAXINT priority): the view's background shows under the current line
+   and the right margin. */
+.gtk-textview.GtkSourceView > .gtk-text {
+  background: transparent !important;
+}
+
+/* The gutter fills its border window and lays its renderers out side by side,
+   each its full height (gtk_source_gutter_size_allocate()). Lines are as tall
+   as the text's (gtk_source_gutter_lines_get_line_extent()). */
+/* (Not :where(): the reset's rules for every element come later.) */
+.sourceview > .gtk-border {
+  display: grid;
+}
+
+.sourceview > .gtk-border > .gtk-gutter {
+  position: relative;
+  display: flex;
+  --gtk-source-line-height: round(1lh, 1px);
+}
+
+/* The current line's number's background, across the gutter. */
+.gtk-source-gutter-current-line {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: var(--gtk-source-line-height);
+  background-color: var(--gtk-source-current-line-number-background, transparent);
+}
+
+.sourceview > .gtk-border > .gtk-gutter > .gtk-gutterrenderer {
+  position: relative;
+}
+
+/* A line's number in the renderer's cell, 6px in from each side (xpad), at
+   the end (xalign 1) of the line's first row (GTK_SOURCE_GUTTER_RENDERER_ALIGNMENT_MODE_FIRST). */
+.sourceview .gtk-gutterrenderer > [data-line] {
+  padding: 0 6px;
+  line-height: round(1lh, 1px);
+  text-align: end;
+  white-space: nowrap;
+}
+
+/* The cursor's line's number, in the current-line-number style's color, bold
+   while nothing is selected unless the style isn't bold
+   (gtk_source_gutter_renderer_lines_snapshot_line()). */
+.sourceview .gtk-gutterrenderer > [data-cursor-line] {
+  color: var(--gtk-source-current-line-number-color, inherit);
+}
+
+.sourceview .gtk-gutterrenderer > [data-bold] {
+  font-weight: var(--gtk-source-current-line-number-weight, normal);
+}
+
+/* The text's lines under the text, laid out like it, for what's drawn behind
+   them (gtk_source_view_snapshot_layer(), GTK_TEXT_VIEW_LAYER_BELOW_TEXT). */
+.gtk-source-lines {
+  position: relative;
+}
+
+.gtk-source-line {
+  line-height: round(1lh, 1px);
+  white-space: pre;
+  color: transparent;
+}
+
+.gtk-source-lines:not([data-wrap="none"]) > .gtk-source-line {
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+}
+
+.gtk-source-lines[data-wrap="word"] > .gtk-source-line {
+  overflow-wrap: normal;
+}
+
+/* The current line, across the text window: the current-line style's
+   background, or the view's color at 5% (update_current_line_color()). */
+.gtk-source-line[data-current-line] {
+  background-color: var(
+    --gtk-source-current-line,
+    color-mix(in srgb, currentColor 5%, transparent)
+  );
+}
+
+/* Text measured for the tab stops and the right margin. */
+.gtk-source-measure {
+  position: absolute;
+  visibility: hidden;
+  white-space: pre;
+}
+
+/* The right margin: a line rightMarginPosition underscores in, over the
+   current line, and the right-margin style's background beyond it, under it
+   (gtk_source_view_paint_right_margin(), gtk_source_view_paint_line_background()). */
+.gtk-source-right-margin {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background-color: var(
+    --gtk-source-right-margin-line,
+    color-mix(in srgb, currentColor 15.686%, transparent)
+  );
+}
+
+.gtk-source-lines[data-right-margin] > .gtk-source-line[data-current-line] {
+  background-image: linear-gradient(
+    var(--gtk-source-right-margin-line, color-mix(in srgb, currentColor 15.686%, transparent)),
+    var(--gtk-source-right-margin-line, color-mix(in srgb, currentColor 15.686%, transparent))
+  );
+  background-position: var(--gtk-source-right-margin-x) 0;
+  background-size: 1px 100%;
+  background-repeat: no-repeat;
+}
+
+.gtk-source-right-margin-overlay {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  margin-left: 1px;
+  background-color: var(--gtk-source-right-margin-overlay, transparent);
+}

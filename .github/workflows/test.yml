@@ -21,7 +21,15 @@ jobs:
           submodules: recursive
 
       - name: Install needed dependencies
-        run: dnf install -y sassc unzip cargo
+        run: dnf install -y sassc unzip cargo libxml2-devel pcre2-devel fribidi-devel
+
+      # The image has GTK and libadwaita; the native cases need GtkSourceView
+      # too, built from its submodule like they're built from theirs.
+      - name: Build GtkSourceView
+        run: |
+          meson setup /tmp/gtksourceview upstream/gtksourceview --prefix=/usr --buildtype=release \
+            -Dintrospection=disabled -Dvapi=false -Dbuild-testsuite=false -Ddocumentation=false
+          meson install -C /tmp/gtksourceview
 
       - uses: voidzero-dev/setup-vp@v1.21.2
         with:

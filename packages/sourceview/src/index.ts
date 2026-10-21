@@ -10,3 +10,5 @@ export type {
   GtkSourceStyleSchemeData,
   GtkSourceUnderline,
 } from "./style-scheme-data.ts";
+export type { GtkSourceViewProps } from "./view.tsx";
+export { GtkSourceView, getDefaultStyleSchemeManager } from "./view.tsx";

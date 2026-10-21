@@ -315,6 +315,14 @@ enum Command {
     SeparatorHorizontalDefault,
     SeparatorVertical,
     SeparatorSpacerHorizontal,
+    SourceViewCurrentLine,
+    SourceViewDefault,
+    SourceViewDisabled,
+    SourceViewLineNumbers,
+    SourceViewScrolled,
+    SourceViewSolarized,
+    SourceViewTabWidth,
+    SourceViewWrap,
     SpinButtonDefault,
     SpinButtonDisabled,
     SpinButtonVertical,
@@ -679,6 +687,14 @@ impl Command {
             Self::SeparatorHorizontalDefault => Some("separator-horizontal-default"),
             Self::SeparatorVertical => Some("separator-vertical"),
             Self::SeparatorSpacerHorizontal => Some("separator-spacer-horizontal"),
+            Self::SourceViewCurrentLine => Some("source-view-current-line"),
+            Self::SourceViewDefault => Some("source-view-default"),
+            Self::SourceViewDisabled => Some("source-view-disabled"),
+            Self::SourceViewLineNumbers => Some("source-view-line-numbers"),
+            Self::SourceViewScrolled => Some("source-view-scrolled"),
+            Self::SourceViewSolarized => Some("source-view-solarized"),
+            Self::SourceViewTabWidth => Some("source-view-tab-width"),
+            Self::SourceViewWrap => Some("source-view-wrap"),
             Self::SpinButtonDefault => Some("spin-button-default"),
             Self::SpinButtonDisabled => Some("spin-button-disabled"),
             Self::SpinButtonVertical => Some("spin-button-vertical"),
@@ -1438,6 +1454,14 @@ fn create_widget_for_case(name: &str) -> Option<(gtk::Widget, bool)> {
                 false
             )
         }
+        "source-view-current-line" => Some(cases::source_view::current_line()),
+        "source-view-default" => Some(cases::source_view::default()),
+        "source-view-disabled" => Some(cases::source_view::disabled()),
+        "source-view-line-numbers" => Some(cases::source_view::line_numbers()),
+        "source-view-scrolled" => Some(cases::source_view::scrolled()),
+        "source-view-solarized" => Some(cases::source_view::solarized()),
+        "source-view-tab-width" => Some(cases::source_view::tab_width()),
+        "source-view-wrap" => Some(cases::source_view::wrap()),
         "spin-button-default" => {
             widget_case!(cases::spin_button_default::SpinButtonDefault, false)
         }
@@ -1842,6 +1866,14 @@ fn is_known_case(name: &str) -> bool {
             | "separator-horizontal-default"
             | "separator-vertical"
             | "separator-spacer-horizontal"
+            | "source-view-current-line"
+            | "source-view-default"
+            | "source-view-disabled"
+            | "source-view-line-numbers"
+            | "source-view-scrolled"
+            | "source-view-solarized"
+            | "source-view-tab-width"
+            | "source-view-wrap"
             | "spin-button-default"
             | "spin-button-disabled"
             | "spin-button-vertical"

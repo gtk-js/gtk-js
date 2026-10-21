@@ -78,6 +78,7 @@ import {
   GtkWindowTitle,
   useNavigation,
 } from "@gtk-js/adwaita";
+import { GtkSourceView, type GtkSourceViewProps } from "@gtk-js/sourceview";
 import {
   Fragment,
   type ReactElement,
@@ -102,6 +103,38 @@ function avatarGizmoTarget(el: HTMLDivElement | null) {
 // GtkTextView's ref is its text node; the native cases measure the textview node.
 function textViewTarget(el: HTMLTextAreaElement | null) {
   el?.parentElement?.setAttribute("data-testid", "target");
+}
+
+// GtkSourceView's ref is its text node too. The native cases place the cursor
+// at a line's start.
+function sourceViewTarget(cursorLine: number) {
+  return (el: HTMLTextAreaElement | null) => {
+    if (!el) return;
+    el.parentElement?.setAttribute("data-testid", "target");
+    let offset = 0;
+    for (let i = 0; i < cursorLine; i++) offset = el.value.indexOf("\n", offset) + 1;
+    el.setSelectionRange(offset, offset);
+  };
+}
+
+const SOURCE_VIEW_TEXT = "int main (void)\n{\n\treturn 0;\n}";
+
+/** A GtkSourceView like tests/native/src/cases/source_view.rs builds one. */
+function SourceViewCase({
+  cursorLine = 0,
+  ...props
+}: GtkSourceViewProps & { cursorLine?: number }) {
+  return (
+    <GtkBox orientation="vertical" halign="start" valign="start">
+      <GtkSourceView
+        defaultValue={SOURCE_VIEW_TEXT}
+        monospace
+        style={{ width: "200px" }}
+        ref={sourceViewTarget(cursorLine)}
+        {...props}
+      />
+    </GtkBox>
+  );
 }
 
 /** What the password-entry-behavior case's entries report, for its test to read. */
@@ -838,6 +871,53 @@ const cases: Record<string, () => React.ReactElement> = {
   "separator-horizontal-default": () => <GtkSeparator data-testid="target" />,
   "separator-vertical": () => <GtkSeparator orientation="vertical" data-testid="target" />,
   "separator-spacer-horizontal": () => <GtkSeparator className="spacer" data-testid="target" />,
+
+  // GtkSourceView cases
+  "source-view-current-line": () => (
+    <SourceViewCase
+      styleScheme="Adwaita-dark"
+      showLineNumbers
+      highlightCurrentLine
+      cursorLine={2}
+    />
+  ),
+  "source-view-default": () => <SourceViewCase />,
+  "source-view-disabled": () => (
+    <SourceViewCase styleScheme="Adwaita" showLineNumbers highlightCurrentLine disabled />
+  ),
+  "source-view-line-numbers": () => (
+    <SourceViewCase styleScheme="Adwaita" showLineNumbers cursorLine={1} />
+  ),
+  "source-view-scrolled": () => (
+    <GtkScrolledWindow hasFrame style={{ width: "200px", height: "100px" }} data-testid="target">
+      <GtkSourceView
+        defaultValue={Array.from({ length: 120 }, (_, i) => `line ${i + 1}`).join("\n")}
+        styleScheme="Adwaita"
+        monospace
+        showLineNumbers
+        ref={(el) => el?.setSelectionRange(0, 0)}
+      />
+    </GtkScrolledWindow>
+  ),
+  "source-view-solarized": () => (
+    <SourceViewCase
+      styleScheme="solarized-light"
+      showLineNumbers
+      highlightCurrentLine
+      cursorLine={3}
+    />
+  ),
+  "source-view-tab-width": () => (
+    <SourceViewCase defaultValue={"tabs\n\t\t\tx"} tabWidth={4} wrapMode="char" />
+  ),
+  "source-view-wrap": () => (
+    <SourceViewCase
+      defaultValue={"int x = call (first argument, second argument);\nreturn x;"}
+      styleScheme="Adwaita"
+      showLineNumbers
+      wrapMode="word"
+    />
+  ),
 
   // GtkSpinner cases
   "spinner-default": () => <GtkSpinner data-testid="target" />,

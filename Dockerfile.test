@@ -3,7 +3,13 @@ FROM ghcr.io/gtk-rs/gtk4-rs/gtk4:latest
 RUN dnf install -y sassc unzip cargo xorg-x11-server-Xvfb \
     libicu libjpeg-turbo libwebp flite pcre libffi mesa-libgbm libdrm \
     atk at-spi2-atk libXcomposite libXdamage libXrandr libX11 \
-    nss nspr alsa-lib cups-libs libXScrnSaver pango
+    nss nspr alsa-lib cups-libs libXScrnSaver pango libxml2-devel pcre2-devel fribidi-devel
+
+# GtkSourceView for the native cases, at upstream/gtksourceview's tag (CI builds the submodule).
+RUN git clone --depth 1 --branch 5.22.0 https://gitlab.gnome.org/GNOME/gtksourceview.git /gtksourceview && \
+    meson setup /gtksourceview/build /gtksourceview --prefix=/usr --buildtype=release \
+      -Dintrospection=disabled -Dvapi=false -Dbuild-testsuite=false -Ddocumentation=false && \
+    meson install -C /gtksourceview/build && rm -rf /gtksourceview
 
 ENV VP_HOME=/opt/vite-plus
 RUN curl -fsSL https://vite.plus | bash
