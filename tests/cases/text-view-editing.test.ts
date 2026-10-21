@@ -23,10 +23,20 @@ function pointAt(page: Page, id: string, offset: number, across = 0.25) {
       const text = (document.getElementById(id) as HTMLTextAreaElement).value;
       const paragraph = text.slice(0, offset).split("\n").length - 1;
       const start = text.lastIndexOf("\n", offset - 1) + 1;
-      const block = view.querySelectorAll(".gtk-textview-paragraph")[paragraph]!.firstElementChild!;
+      // The paragraph's rows, each a text node.
+      let local = offset - start;
+      let node: Node | null = null;
+      const rows = view
+        .querySelectorAll(".gtk-textview-paragraph")
+        [paragraph]!.querySelectorAll(".gtk-textview-row");
+      for (const row of rows) {
+        node = row.firstChild!;
+        if (local < node.textContent!.length) break;
+        local -= node.textContent!.length;
+      }
       const range = document.createRange();
-      range.setStart(block.firstChild!, offset - start);
-      range.setEnd(block.firstChild!, offset - start + 1);
+      range.setStart(node!, local);
+      range.setEnd(node!, local + 1);
       const rect = range.getClientRects()[0]!;
       return { x: rect.left + rect.width * across, y: rect.top + rect.height / 2 };
     },
@@ -147,20 +157,28 @@ for (const [browserName, browser] of Object.entries(globalThis.__testBrowsers)) 
       const gamma = value.indexOf("gamma");
       expect(await state(page, "editor")).toMatchObject({ start: gamma, end: gamma + 5 });
       const row = await page.evaluate(() => {
-        // The first paragraph's second row, from where its characters are drawn.
-        const node = document
+        // The first paragraph's second row, as the view draws it.
+        const rows = document
           .querySelector("#editor")!
-          .parentElement!.querySelector(".gtk-textview-paragraph")!.firstElementChild!.firstChild!;
-        const range = document.createRange();
-        const tops: number[] = [];
-        for (let i = 0; i < node.textContent!.length - 1; i++) {
-          range.setStart(node, i);
-          range.setEnd(node, i + 1);
-          tops.push(Math.round(range.getClientRects()[0]!.top));
-        }
-        const second = [...new Set(tops)][1]!;
-        return [tops.indexOf(second), tops.lastIndexOf(second) + 1];
+          .parentElement!.querySelector(".gtk-textview-paragraph")!
+          .querySelectorAll(".gtk-textview-row");
+        const second = rows[0]!.textContent!.length;
+        return [second, second + rows[1]!.textContent!.length];
       });
+      // Down keeps the x on the next display line; End goes to before its
+      // last character, the line going on after it; Home to its start; Up
+      // from there to the line before's.
+      point = await pointAt(page, "editor", 2, 0);
+      await page.mouse.click(point.x, point.y);
+      await page.keyboard.press("ArrowDown");
+      expect((await state(page, "editor")).start).toBe(row[0]! + 2);
+      await page.keyboard.press("End");
+      expect((await state(page, "editor")).start).toBe(row[1]! - 1);
+      await page.keyboard.press("Home");
+      expect((await state(page, "editor")).start).toBe(row[0]);
+      await page.keyboard.press("Shift+ArrowUp");
+      expect(await state(page, "editor")).toMatchObject({ start: 0, end: row[0] });
+
       point = await pointAt(page, "editor", row[0]! + 3, 0.5);
       await page.mouse.click(point.x, point.y, { clickCount: 3 });
       expect(await state(page, "editor")).toMatchObject({ start: row[0], end: row[1] });

@@ -465,6 +465,36 @@ body:has(> :first-child:has([data-gtk-provider])) > :first-child {
   text-indent: var(--gtk-textview-indent, 0);
 }
 
+/* Wrapped text is as wide as Pango's layout: the text window's width less a
+   pixel for the cursor (SPACE_FOR_CURSOR) and the margins. */
+:where(
+    [data-gtk-provider]
+      .gtk-textview-paragraphs:not([data-wrap="none"])
+      > .gtk-textview-paragraph
+      > *
+  ) {
+  margin-right: 1px;
+}
+
+/* The indent is the paragraph's first row's. */
+:where([data-gtk-provider] .gtk-textview-row + .gtk-textview-row) {
+  text-indent: 0;
+}
+
+/* Character wrapping's rows are the view's (text-view-wrap.ts): Pango ends
+   a row it breaks inside a word with a hyphen, and leaves room for it. */
+:where(
+    [data-gtk-provider]
+      .gtk-textview-paragraphs:is([data-wrap="char"], [data-wrap="word-char"])
+      .gtk-textview-row
+  ) {
+  white-space: pre;
+}
+
+:where([data-gtk-provider] .gtk-textview-row[data-hyphen])::after {
+  content: "\2010";
+}
+
 /* While the view draws the text, the textarea's own text, cursor and
    selection aren't seen (but for reading the theme's colors, data-gtk-probe). */
 :where([data-gtk-provider] .gtk-textview[data-gtk-drawn] > .gtk-text:not([data-gtk-probe])) {

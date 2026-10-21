@@ -103,7 +103,7 @@ describe("GtkTextView", () => {
       <GtkTextView defaultValue={"one\n\nthree"} wrapMode="char" />,
     );
     expect(html).toContain(
-      '<div class="gtk-textview-paragraphs" data-wrap="char" style="text-align:start;padding-left:0;padding-right:0;padding-top:0;padding-bottom:0"><div class="gtk-textview-paragraph"><div>one\n</div></div><div class="gtk-textview-paragraph"><div>\n</div></div><div class="gtk-textview-paragraph"><div>three\n</div></div></div>',
+      '<div class="gtk-textview-paragraphs" data-wrap="char" style="text-align:start;padding-left:0;padding-right:0;padding-top:0;padding-bottom:0"><div class="gtk-textview-paragraph"><div><div class="gtk-textview-row">one\n</div></div></div><div class="gtk-textview-paragraph"><div><div class="gtk-textview-row">\n</div></div></div><div class="gtk-textview-paragraph"><div><div class="gtk-textview-row">three\n</div></div></div></div>',
     );
     // Until it's laid out, the textarea draws its text itself.
     expect(html).not.toContain("data-gtk-drawn");

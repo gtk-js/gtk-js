@@ -85,12 +85,59 @@ function paragraphAt(starts: readonly number[], offset: number): number {
 }
 
 /**
- * A paragraph's text node: each paragraph's element holds a block whose one
- * text node is the paragraph and its newline.
+ * A paragraph's text as the view draws it: its element holds a block of rows,
+ * each a text node (one row the browser may wrap, or the rows the view broke
+ * it into, text-view-wrap.ts), the last ending in the paragraph's newline.
  */
-function textNodeOf(paragraph: Element): Text | null {
-  const node = paragraph.firstElementChild?.firstChild;
-  return node instanceof Text ? node : null;
+interface ParagraphText {
+  nodes: Text[];
+  /** Each node's offset in the paragraph. */
+  starts: number[];
+  /** The paragraph's length, without its newline. */
+  length: number;
+}
+
+function paragraphText(paragraph: Element): ParagraphText | null {
+  const block = paragraph.firstElementChild;
+  if (!block) return null;
+  const nodes: Text[] = [];
+  const starts: number[] = [];
+  let length = 0;
+  for (const row of block.children) {
+    const node = row.firstChild;
+    if (!(node instanceof Text)) continue;
+    nodes.push(node);
+    starts.push(length);
+    length += node.length;
+  }
+  return nodes.length ? { nodes, starts, length: length - 1 } : null;
+}
+
+/** The text node and its offset for a paragraph offset (a row's start, not the row before's end). */
+function locate(text: ParagraphText, offset: number): [Text, number] {
+  for (let i = text.nodes.length - 1; i >= 0; i--) {
+    if (offset >= text.starts[i]!) {
+      const node = text.nodes[i]!;
+      return [node, Math.min(offset - text.starts[i]!, node.length)];
+    }
+  }
+  return [text.nodes[0]!, 0];
+}
+
+/** A range over a paragraph's offsets. */
+function rangeOf(text: ParagraphText, from: number, to: number): Range {
+  const range = document.createRange();
+  range.setStart(...locate(text, from));
+  range.setEnd(...locate(text, to));
+  return range;
+}
+
+/** The paragraph offset of a point in one of its text nodes. */
+function offsetIn(text: ParagraphText, node: Node, offset: number): number | null {
+  const index = text.nodes.indexOf(node as Text);
+  if (index < 0) return null;
+  const last = index === text.nodes.length - 1;
+  return Math.min(text.starts[index]! + offset, last ? text.length : text.starts[index + 1]!);
 }
 
 /** The number of rows each paragraph takes, as laid out at the row height. */
@@ -110,7 +157,8 @@ export function paragraphRows(container: HTMLElement, rowHeight: number): number
  */
 function pangoX(clientX: number, paragraph: Element, scale: number): number {
   if (scale === 1) return clientX;
-  const start = (paragraph.firstElementChild ?? paragraph).getBoundingClientRect().left;
+  const block = paragraph.firstElementChild ?? paragraph;
+  const start = (block.firstElementChild ?? block).getBoundingClientRect().left;
   return start + (clientX - start) * scale;
 }
 
@@ -138,13 +186,14 @@ function rowOf(rect: DOMRect, top: number, rowHeight: number): number {
 
 /**
  * The rectangles GTK fills for a selection, as render_para() does on each
- * display line: the selected text's x ranges, the row's whole height (from
- * its top to the next's, each rounded to the pixel); from the left margin to
- * the text where the selection began on an earlier row; and from the end of
- * the text where it goes on past the row (the newline is selected, or the
- * row wraps). That fill ends at the screen width (the text window's less a
- * pixel for the cursor) or the widest line, whichever is wider, less the
- * right margin (total_width in set_para_values()).
+ * display line: the selected text's x ranges (with the hyphen a row's last
+ * character carries, its cluster's), the row's whole height (from its top to
+ * the next's, each rounded to the pixel); from the left margin to the text
+ * where the selection began on an earlier row; and from the end of the text
+ * where it goes on past the row (the newline is selected, or the row wraps).
+ * That fill ends at the screen width (the text window's less a pixel for the
+ * cursor) or the widest line, whichever is wider, less the right margin
+ * (total_width in set_para_values()).
  */
 export function selectionRects(
   container: HTMLElement,
@@ -156,20 +205,26 @@ export function selectionRects(
   rightMargin: number,
   rowHeight: number,
   scale = 1,
+  hyphenWidth = 0,
+  wrap: "none" | "word" | "char" = "none",
 ): SelectionRect[] {
   const rects: SelectionRect[] = [];
   if (start >= end || rowHeight <= 0) return rects;
   const origin = layer.getBoundingClientRect();
-  const range = document.createRange();
   const paragraphs = container.children;
+  // The widest line: unwrapped, the longest; word-wrapped, a word too long for
+  // its row (the spaces a row ends with hang, uncounted); character-wrapped
+  // rows don't run past the width.
   let widest = 0;
   for (const paragraph of paragraphs) {
-    const node = textNodeOf(paragraph);
-    if (!node || node.length < 2) continue;
-    range.setStart(node, 0);
-    range.setEnd(node, node.length - 1);
-    const x = pangoX(range.getBoundingClientRect().right, paragraph, scale) - origin.left;
-    widest = Math.max(widest, Math.round(x));
+    const text = paragraphText(paragraph);
+    const block = paragraph.firstElementChild;
+    if (!text || !block || text.length < 1 || wrap === "char") continue;
+    const right =
+      wrap === "word"
+        ? block.getBoundingClientRect().left + block.scrollWidth
+        : rangeOf(text, 0, text.length).getBoundingClientRect().right;
+    widest = Math.max(widest, Math.round(pangoX(right, paragraph, scale) - origin.left));
   }
   const width = Math.max(layer.clientWidth - 1, widest + rightMargin) - rightMargin;
 
@@ -177,9 +232,9 @@ export function selectionRects(
     const paragraphStart = starts[i]!;
     if (paragraphStart >= end) break;
     const element = paragraphs[i]!;
-    const node = textNodeOf(element);
-    if (!node) continue;
-    const length = node.length - 1;
+    const text = paragraphText(element);
+    if (!text) continue;
+    const length = text.length;
     const paragraphEnd = paragraphStart + length;
     const hasNewline = i < paragraphs.length - 1;
     if (start >= paragraphEnd + (hasNewline ? 1 : 0)) continue;
@@ -204,14 +259,22 @@ export function selectionRects(
       }
     };
     if (from < to) {
-      range.setStart(node, from);
-      range.setEnd(node, to);
-      const clientRects = [...range.getClientRects()];
+      const clientRects = [...rangeOf(text, from, to).getClientRects()];
       const wide = clientRects.filter((rect) => rect.width > 0);
       for (const rect of wide.length ? wide : clientRects) add(rect);
+      // A row the view broke with a hyphen: its last character's cluster
+      // takes the hyphen too.
+      text.nodes.forEach((node, n) => {
+        const rowEnd = text.starts[n]! + node.length;
+        const row = node.parentElement;
+        if (!row?.hasAttribute("data-hyphen") || from >= rowEnd || to < rowEnd) return;
+        const last = rangeOf(text, rowEnd - 1, rowEnd).getClientRects()[0];
+        const seen = last && rows.get(rowOf(last, clientTop, rowHeight));
+        if (seen) seen.right += hyphenWidth;
+      });
     } else {
       // Just the newline: where the paragraph's text ends.
-      const found = characterRect(node, length);
+      const found = characterRect(text, length);
       if (found) {
         const x =
           pangoX(found.after ? found.rect.right : found.rect.left, element, scale) - origin.left;
@@ -226,8 +289,9 @@ export function selectionRects(
       const [y0, y1] = rowRange(row, rowHeight);
       const y = top + y0;
       const height = y1 - y0;
-      const x0 = Math.round(left);
-      const x1 = Math.round(right);
+      // A space a row breaks after hangs, zero wide (zero_line_final_glyph()).
+      const x0 = Math.min(Math.round(left), width);
+      const x1 = Math.min(Math.round(right), width);
       if (x1 > x0) rects.push({ x: x0, y, width: x1 - x0, height });
       // The selection began on an earlier display line.
       const beganBefore = row !== ordered[0] || start < paragraphStart;
@@ -244,35 +308,32 @@ export function selectionRects(
 }
 
 /**
- * The client rectangle of the character after a paragraph offset (its newline
- * at the end), or, at the end of a paragraph with text, of the one before it.
+ * The client rectangle of the character after a paragraph offset (a row's
+ * first at a row's start, the newline at the end), or, at the end of a
+ * paragraph with text, of the one before it.
  */
-function characterRect(node: Text, offset: number): { rect: DOMRect; after: boolean } | null {
-  const range = document.createRange();
-  const length = node.length - 1;
-  if (offset < length || length === 0) {
-    range.setStart(node, offset);
-    range.setEnd(node, offset + 1);
-    const rect = range.getClientRects()[0];
+function characterRect(
+  text: ParagraphText,
+  offset: number,
+): { rect: DOMRect; after: boolean } | null {
+  if (offset < text.length || text.length === 0) {
+    const rect = rangeOf(text, offset, offset + 1).getClientRects()[0];
     if (rect && rect.height > 0) return { rect, after: false };
   }
-  if (length > 0) {
-    range.setStart(node, Math.max(0, offset - 1));
-    range.setEnd(node, Math.max(1, offset));
-    const rects = range.getClientRects();
+  if (text.length > 0) {
+    const rects = rangeOf(text, Math.max(0, offset - 1), Math.max(1, offset)).getClientRects();
     const rect = rects[rects.length - 1];
     if (rect) return { rect, after: true };
   }
-  range.setStart(node, 0);
-  range.setEnd(node, 0);
-  const rect = range.getBoundingClientRect();
+  const rect = rangeOf(text, 0, 0).getBoundingClientRect();
   return rect.height > 0 ? { rect, after: false } : null;
 }
 
 /**
  * The cursor's rectangle at an offset: its row of the paragraph rounded out
  * to whole pixels and its x to the pixel, as gtk_css_style_snapshot_caret()
- * draws it from pango_layout_get_caret_pos().
+ * draws it from pango_layout_get_caret_pos(). At a row's break it's at the
+ * next row's start.
  */
 export function cursorRect(
   container: HTMLElement,
@@ -284,10 +345,10 @@ export function cursorRect(
 ): CursorRect | null {
   const index = paragraphAt(starts, offset);
   const element = container.children[index];
-  const node = element && textNodeOf(element);
-  if (!node || rowHeight <= 0) return null;
-  const local = Math.min(offset - starts[index]!, node.length - 1);
-  const found = characterRect(node, local);
+  const text = element && paragraphText(element);
+  if (!text || rowHeight <= 0) return null;
+  const local = Math.min(offset - starts[index]!, text.length);
+  const found = characterRect(text, local);
   const origin = layer.getBoundingClientRect();
   const top = element.getBoundingClientRect().top;
   if (!found) {
@@ -319,8 +380,8 @@ export function offsetAtPoint(
     }
   }
   const block = paragraphs[index]!.firstElementChild;
-  const node = textNodeOf(paragraphs[index]!);
-  if (!block || !node) return null;
+  const text = paragraphText(paragraphs[index]!);
+  if (!block || !text) return null;
   const box = block.getBoundingClientRect();
   const y = Math.min(Math.max(clientY, box.top + 0.5), box.bottom - 0.5);
   const area = container.getBoundingClientRect();
@@ -341,9 +402,14 @@ export function offsetAtPoint(
     hitNode = range?.startContainer ?? null;
     hitOffset = range?.startOffset ?? 0;
   }
-  const length = node.length - 1;
+  // A row's element (its hyphen) is past its text.
+  if (hitNode && !(hitNode instanceof Text) && hitNode.parentNode === block) {
+    hitNode = hitNode.firstChild;
+    hitOffset = hitNode instanceof Text ? hitNode.length : 0;
+  }
   const local =
-    hitNode === node ? Math.min(hitOffset, length) : x < box.left + box.width / 2 ? 0 : length;
+    (hitNode && offsetIn(text, hitNode, hitOffset)) ??
+    (x < box.left + box.width / 2 ? 0 : text.length);
   return starts[index]! + local;
 }
 
@@ -382,6 +448,44 @@ export function wordRange(text: string, offset: number): [number, number] {
 }
 
 /**
+ * The display line an offset is on: from its start to the next one's, or to
+ * the paragraph's end.
+ */
+export function displayLine(
+  container: HTMLElement,
+  starts: readonly number[],
+  offset: number,
+  rowHeight: number,
+): { start: number; end: number; last: boolean; paragraph: number } | null {
+  const index = paragraphAt(starts, offset);
+  const paragraphStart = starts[index]!;
+  const element = container.children[index];
+  const text = element && paragraphText(element);
+  if (!text) return null;
+  const length = text.length;
+  if (length === 0)
+    return { start: paragraphStart, end: paragraphStart, last: true, paragraph: index };
+  // The rows' starts, from where the characters are laid out.
+  const top = element.getBoundingClientRect().top;
+  const rowAt = (local: number) => {
+    const rect = rangeOf(text, local, local + 1).getClientRects()[0];
+    return rect ? rowOf(rect, top, rowHeight) : 0;
+  };
+  const local = Math.min(offset - paragraphStart, length - 1);
+  const row = rowAt(local);
+  let start = local;
+  while (start > 0 && rowAt(start - 1) === row) start--;
+  let end = local;
+  while (end < length && rowAt(end) === row) end++;
+  return {
+    start: paragraphStart + start,
+    end: paragraphStart + end,
+    last: end === length,
+    paragraph: index,
+  };
+}
+
+/**
  * What a triple click selects at an offset (GTK_TEXT_EXTEND_SELECTION_LINE):
  * its display line, to the start of the next one, the newline for a
  * paragraph's last.
@@ -393,29 +497,8 @@ export function displayLineRange(
   offset: number,
   rowHeight: number,
 ): [number, number] {
-  const index = paragraphAt(starts, offset);
-  const paragraphStart = starts[index]!;
-  const newline = text.indexOf("\n", paragraphStart);
-  const paragraphEnd = newline < 0 ? text.length : newline;
-  const lineEnd = newline < 0 ? text.length : newline + 1;
-  const element = container.children[index];
-  const node = element && textNodeOf(element);
-  const length = paragraphEnd - paragraphStart;
-  if (!node || length === 0) return [paragraphStart, lineEnd];
-  // The rows' starts, from where the characters are laid out.
-  const top = element.getBoundingClientRect().top;
-  const range = document.createRange();
-  const rowAt = (local: number) => {
-    range.setStart(node, local);
-    range.setEnd(node, local + 1);
-    const rect = range.getClientRects()[0];
-    return rect ? rowOf(rect, top, rowHeight) : 0;
-  };
-  const local = Math.min(offset - paragraphStart, length - 1);
-  const row = rowAt(local);
-  let start = local;
-  while (start > 0 && rowAt(start - 1) === row) start--;
-  let end = local;
-  while (end < length && rowAt(end) === row) end++;
-  return [paragraphStart + start, end === length ? lineEnd : paragraphStart + end];
+  const line = displayLine(container, starts, offset, rowHeight);
+  if (!line) return [offset, offset];
+  const newline = text.indexOf("\n", line.start);
+  return [line.start, line.last ? (newline < 0 ? text.length : newline + 1) : line.end];
 }

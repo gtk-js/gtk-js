@@ -38,6 +38,10 @@ pub struct WidgetSnapshot {
     /// links and Pango color attributes give runs their own color.
     #[serde(skip_serializing_if = "Vec::is_empty")]
     pub text_colors: Vec<Color>,
+    /// A text view's display lines: the offset each starts at
+    /// (gtk_text_view_forward_display_line()).
+    #[serde(skip_serializing_if = "Vec::is_empty")]
+    pub text_lines: Vec<i32>,
 }
 
 #[derive(Debug, Serialize, Default)]
@@ -174,6 +178,7 @@ pub fn extract_widget_tree<W: IsA<gtk::Widget>>(widget: &W) -> WidgetSnapshot {
             css_classes: Vec::new(),
             children: Vec::new(),
             text_colors: Vec::new(),
+            text_lines: Vec::new(),
         };
         // Still extract widget API properties even without render nodes
         let color = w.color();
@@ -217,6 +222,14 @@ pub fn extract_widget_tree<W: IsA<gtk::Widget>>(widget: &W) -> WidgetSnapshot {
     }
     snapshot.children = children;
 
+    if let Some(view) = w.downcast_ref::<gtk::TextView>() {
+        let mut iter = view.buffer().start_iter();
+        snapshot.text_lines.push(iter.offset());
+        while view.forward_display_line(&mut iter) {
+            snapshot.text_lines.push(iter.offset());
+        }
+    }
+
     snapshot
 }
 
@@ -242,6 +255,7 @@ pub fn extract_snapshot(node: &gsk::RenderNode) -> WidgetSnapshot {
         css_classes: Vec::new(),
         children: Vec::new(),
         text_colors: Vec::new(),
+        text_lines: Vec::new(),
     };
 
     walk_node(node, &mut snapshot);

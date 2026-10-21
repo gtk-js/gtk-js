@@ -118,9 +118,12 @@ function sourceViewTarget(cursorLine: number) {
 }
 
 const SELECTION_TEXT = "one two\nthree\nfour";
-// Paragraphs of eight rows, one, three and none: Pango rounds each one's
+// Paragraphs of several rows, one, three and none: Pango rounds each one's
 // height, not each row's.
-const WRAP_TEXT = `${"0123456789".repeat(17)}\none\n${"9876543210".repeat(6)}\n`;
+// Words broken by character and word-character wrapping (text_view_wrap.rs).
+const WRAP_WORDS =
+  "The quick brown fox jumps over the lazy dog; extraordinarily long words like incomprehensibilities wrap.\nshort\n\tindented text-with-hyphens and_underscores 12345678901234567890123 end";
+const WRAP_TEXT = `Pango rounds each paragraph to whole pixels, not each row of it, so a paragraph that wraps onto several rows can be a pixel taller than its rows rounded one by one.\none\nThe third paragraph wraps onto a few rows as well.\n`;
 // Five rows of 22 characters at 200px in DejaVu Sans Mono, then short paragraphs.
 const EDITING_TEXT =
   "alpha beta gamma delta epsilon zeta eta theta iota kappa lambda mu nu xi omicron pi rho sigma tau\nshort\n\nlast line";
@@ -2781,6 +2784,26 @@ const cases: Record<string, () => React.ReactElement> = {
   "text-view-wrap": () => (
     <GtkBox orientation="vertical" halign="start" valign="start" data-testid="target">
       <GtkTextView monospace wrapMode="char" defaultValue={WRAP_TEXT} style={{ width: "200px" }} />
+    </GtkBox>
+  ),
+  "text-view-wrap-words": () => (
+    <GtkBox orientation="vertical" spacing={12} halign="start" valign="start" data-testid="target">
+      {(
+        [
+          [true, "char"],
+          [true, "word-char"],
+          [false, "char"],
+          [false, "word-char"],
+        ] as const
+      ).map(([monospace, wrapMode]) => (
+        <GtkTextView
+          key={`${monospace}-${wrapMode}`}
+          monospace={monospace}
+          wrapMode={wrapMode}
+          defaultValue={WRAP_WORDS}
+          style={{ width: "200px" }}
+        />
+      ))}
     </GtkBox>
   ),
 };
