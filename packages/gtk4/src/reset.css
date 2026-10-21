@@ -73,6 +73,12 @@ body:has(> :first-child:has([data-gtk-provider])) > :first-child {
   --document-font-size: var(--gtk-font-size);
   --monospace-font-family: monospace;
   --monospace-font-size: var(--gtk-font-size);
+  /* A text view's lines are the font's ascent + descent, to the nearest
+     pixel (gtk_text_layout_get_line_yrange()): `normal` for the monospace
+     font, its metrics' (17.07px for DejaVu Sans Mono at 11pt, so 17px lines,
+     where 1.2em gives 17.6px, 18px lines). Set this along with
+     --monospace-font-family. */
+  --monospace-line-height: normal;
   /* GTK's `line-height: normal` is Pango's: the font's ascent + descent, 1.2em
      for Cantarell. Browsers round the ascent and descent separately for
      `normal` (17px lines instead of 17.6px at 11pt). Set this along with
@@ -177,6 +183,11 @@ body:has(> :first-child:has([data-gtk-provider])) > :first-child {
 /* A focused expander's ring is drawn on its title (_expanders.scss). */
 :where([data-gtk-provider] .gtk-expander-widget) {
   outline: none;
+}
+
+/* A monospace text view's lines (see --monospace-line-height). */
+:where([data-gtk-provider] .gtk-textview.monospace) {
+  line-height: var(--monospace-line-height);
 }
 
 /* GtkEditableLabel is focused itself, outside of editing; Adwaita draws no ring for it. */
@@ -361,11 +372,12 @@ body:has(> :first-child:has([data-gtk-provider])) > :first-child {
 /* It's as tall as its text and as wide as its margins (gtk_text_view_measure()),
    not the size a <textarea> takes from `rows` and `cols`; text-view.tsx
    measures it where `field-sizing` isn't supported. The text never scrolls
-   itself: a GtkScrolledWindow scrolls it. Its lines are whole pixels tall, as
-   GtkTextLayout's are. The indent is each paragraph's where `each-line` is
-   supported (gtk_text_view_set_indent()). */
+   itself: a GtkScrolledWindow scrolls it. Its lines are the font's line
+   height to the nearest whole pixel, as Pango rounds a line's logical extents
+   (PANGO_PIXELS()): 18px for Cantarell's 17.6px at 11pt. The indent is each
+   paragraph's where `each-line` is supported (gtk_text_view_set_indent()). */
 :where([data-gtk-provider] .gtk-textview > .gtk-text) {
-  line-height: round(up, 1lh, 1px);
+  line-height: round(1lh, 1px);
   field-sizing: content;
   contain: inline-size;
   overflow: hidden;
