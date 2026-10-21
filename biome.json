@@ -10,7 +10,8 @@
       "!**/.next/**",
       "!**/.source/**",
       "!icons/*/src/icons/**",
-      "!icons/*/src/index.ts"
+      "!icons/*/src/index.ts",
+      "!packages/sourceview/src/schemes.ts"
     ]
   },
   "formatter": {
