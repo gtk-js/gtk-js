@@ -1,0 +1,43 @@
+---
+title: GtkGrid
+description: A container that arranges children in rows and columns.
+---
+
+import Example from "./examples/grid";
+
+## Preview
+
+<PreviewFile file="content/docs/gtk4/examples/grid.tsx">
+  <Example />
+</PreviewFile>
+
+## CSS Node Tree
+
+```
+grid
+```
+
+## Props
+
+<AutoTypeTable
+  path="../../packages/gtk4/src/components/grid.tsx"
+  name="GtkGridProps"
+/>
+
+### Child placement
+
+GtkGrid reads these from each child's props, like `gtk_grid_attach()`, and doesn't pass them on.
+
+<AutoTypeTable
+  path="../../packages/gtk4/src/components/grid.tsx"
+  name="GtkGridChildProps"
+/>
+
+## Behavior
+
+- Children fill their cells unless their `halign` / `valign` say otherwise.
+- Only columns (rows) with a child that expands (`hexpand` / `vexpand`, also when something inside it expands) take extra space, unless the grid is homogeneous.
+- Without placement props, children flow naturally.
+- Uses CSS Grid for layout.
+
+[GTK4 Documentation →](https://docs.gtk.org/gtk4/class.Grid.html)

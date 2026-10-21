@@ -1,0 +1,37 @@
+---
+title: GtkSearchBar
+description: A toolbar for search functionality.
+---
+
+import Example from "./examples/search-bar";
+
+## Preview
+
+<PreviewFile file="content/docs/gtk4/examples/search-bar.tsx">
+  <Example />
+</PreviewFile>
+
+## CSS Node Tree
+
+```
+searchbar
+  └── revealer
+      └── box
+          ├── [child]
+          └── [button.image-button.close]
+```
+
+## Props
+
+<AutoTypeTable
+  path="../../packages/gtk4/src/components/search-bar.tsx"
+  name="GtkSearchBarProps"
+/>
+
+## Behavior
+
+- Slides in when `searchModeEnabled` turns true and focuses its `GtkSearchEntry`; hiding it clears the entry.
+- Escape in the entry and the close button hide it (`onSearchModeChanged(false)`). Without `searchModeEnabled` the bar keeps its own state.
+- With `keyCaptureRef`, typing a printable key elsewhere in that element reveals the bar and types the key into the entry.
+
+[GTK4 Documentation →](https://docs.gtk.org/gtk4/class.SearchBar.html)

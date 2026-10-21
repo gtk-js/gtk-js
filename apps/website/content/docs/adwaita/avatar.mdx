@@ -1,0 +1,33 @@
+---
+title: AdwAvatar
+description: A circular avatar widget.
+---
+
+import Example from "./examples/avatar";
+
+## Preview
+
+<PreviewFile file="content/docs/adwaita/examples/avatar.tsx">
+  <Example />
+</PreviewFile>
+
+## CSS Node Tree
+
+```
+avatar[.color1..color14][.contrasted][.image]
+```
+
+## Props
+
+<AutoTypeTable
+  path="../../packages/adwaita/src/components/avatar.tsx"
+  name="AdwAvatarProps"
+/>
+
+## Behavior
+
+- Generates initials and color from the `text` prop.
+- Falls back to a default icon when `showInitials` is false or text is empty.
+- 14 color palettes are deterministically assigned based on the text hash.
+
+[Adwaita Documentation →](https://gnome.pages.gitlab.gnome.org/libadwaita/doc/1-latest/class.Avatar.html)

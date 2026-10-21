@@ -1,0 +1,40 @@
+---
+title: GtkSpinButton
+description: A numeric input with increment/decrement buttons.
+---
+
+import Example from "./examples/spin-button";
+
+## Preview
+
+<PreviewFile file="content/docs/gtk4/examples/spin-button.tsx">
+  <Example />
+</PreviewFile>
+
+## CSS Node Tree
+
+```
+spinbutton[.horizontal|.vertical]
+  ├── text
+  ├── button.down
+  └── button.up
+```
+
+## Props
+
+<AutoTypeTable
+  path="../../packages/gtk4/src/components/spin-button.tsx"
+  name="GtkSpinButtonProps"
+/>
+
+## Keyboard
+
+- **Arrow Up/Down** — increment/decrement by step
+- **Page Up/Down** — increment/decrement by page step
+- **Ctrl+Home / Ctrl+End**, **Ctrl+Page Down / Ctrl+Page Up** — jump to min / max
+- **Enter** — commit the typed value
+
+Typed text is committed on Enter, when the focus leaves, and before any spin.
+The scroll wheel spins by a step. Middle-clicking a button spins by a page; right-clicking it jumps to the bound.
+
+[GTK4 Documentation →](https://docs.gtk.org/gtk4/class.SpinButton.html)

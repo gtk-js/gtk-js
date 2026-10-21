@@ -1,0 +1,30 @@
+---
+title: AdwPreferencesGroup
+description: A group of preference rows with title and description.
+---
+
+import Example from "./examples/preferences-group";
+
+## Preview
+
+<PreviewFile file="content/docs/adwaita/examples/preferences-group.tsx">
+  <Example />
+</PreviewFile>
+
+## CSS Node Tree
+
+```
+preferencesgroup > box
+  ├── box.header
+  │   └── box.labels > label#title + label#description
+  └── listbox.boxed-list
+```
+
+## Props
+
+<AutoTypeTable
+  path="../../packages/adwaita/src/components/preferences-group.tsx"
+  name="AdwPreferencesGroupProps"
+/>
+
+[Adwaita Documentation →](https://gnome.pages.gitlab.gnome.org/libadwaita/doc/1-latest/class.PreferencesGroup.html)

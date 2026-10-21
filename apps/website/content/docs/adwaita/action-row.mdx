@@ -1,0 +1,59 @@
+---
+title: AdwActionRow
+description: A preferences list row with title, subtitle, and prefix/suffix slots.
+---
+
+import Example from "./examples/action-row";
+
+## Preview
+
+<PreviewFile file="content/docs/adwaita/examples/action-row.tsx">
+  <Example />
+</PreviewFile>
+
+## CSS Node Tree
+
+```
+row[.activatable]
+  └── box.header
+      ├── box.prefixes
+      ├── image.icon
+      ├── box.title (vertical)
+      │   ├── label.title
+      │   └── label.subtitle
+      └── box.suffixes
+```
+
+## Props
+
+<AutoTypeTable
+  path="../../packages/adwaita/src/components/action-row.tsx"
+  name="AdwActionRowProps"
+/>
+
+## Prefix & Suffix Widgets
+
+Use the `prefixWidget` and `suffixWidget` props (children go into the suffixes too). Like in GTK, they fill the row's height unless they set `valign`:
+
+```tsx
+<AdwActionRow
+  title="Volume"
+  prefixWidget={<GtkImage iconName="AudioVolumeHigh" />}
+  suffixWidget={<GtkScale value={75} min={0} max={100} hexpand valign="center" />}
+/>
+```
+
+## Activation
+
+An `activatable` row has hover and press states, and calls `onActivated` when it's clicked or when Enter or Space is pressed on it. Clicks on a button, check button or switch inside the row stay with that widget.
+
+With `activatableWidget`, a ref to a check button, switch or button in the row, activating the row activates that widget (an entry gets the focus instead), and the row is activatable while the widget is sensitive.
+
+## Style Classes
+
+| Class | Effect |
+|-------|--------|
+| `.property` | Inverts emphasis: subtitle becomes prominent, title becomes dimmed |
+| `.monospace` | Applies monospace font to subtitle only |
+
+[Adwaita Documentation →](https://gnome.pages.gitlab.gnome.org/libadwaita/doc/1-latest/class.ActionRow.html)
