@@ -16,6 +16,12 @@ import {
   type GtkJustification,
   type GtkWrapMode,
 } from "../types.ts";
+import {
+  canReadSelectionStyle,
+  type SelectionRect,
+  selectionColor,
+  selectionRects,
+} from "./text-view-selection.ts";
 
 export interface GtkTextViewProps
   extends Omit<TextareaHTMLAttributes<HTMLTextAreaElement>, "wrap">,
@@ -56,6 +62,18 @@ export interface GtkTextViewProps
    * subclass draws GTK_TEXT_VIEW_LAYER_BELOW_TEXT (GtkTextViewClass.snapshot_layer()).
    */
   belowText?: ReactNode;
+}
+
+interface TextSelection {
+  text: string;
+  start: number;
+  end: number;
+  focused: boolean;
+}
+
+interface SelectionPaint {
+  color: string;
+  rects: SelectionRect[];
 }
 
 /** The text view's border windows (GtkTextWindowType, but for the text window). */
@@ -141,13 +159,12 @@ function editText(text: HTMLTextAreaElement, insert: string) {
  *   textview.view
  *     └── text
  *
- * The text node, a <textarea>, holds the text, its margins and the selection,
- * which themes style as `textview > text` and `textview text selection`. The
- * ref is the textarea; className, style and the alignment are the widget's.
- *
- * With gutters (`border.left` etc. around the text) or a layer below the
- * text, the view lays them out around its text window and, in a
- * GtkScrolledWindow, scrolls them together: the view scrolls, not its text.
+ * The text node, a <textarea>, holds the text and its margins, which themes
+ * style as `textview > text`. The ref is the textarea; className, style and
+ * the alignment are the widget's. The view draws the selection under the
+ * text in the colors of `textview text selection`, as GTK draws it, and lays
+ * gutters (`border.left` etc.) out around the text window. In a
+ * GtkScrolledWindow the view scrolls, its text and gutters together.
  *
  * @see https://docs.gtk.org/gtk4/class.TextView.html
  */
@@ -175,6 +192,7 @@ export const GtkTextView = forwardRef<HTMLTextAreaElement, GtkTextViewProps>(fun
     onChange,
     onInput,
     onKeyDown,
+    onMouseDown,
     disabled,
     gutters,
     belowText,
@@ -185,12 +203,86 @@ export const GtkTextView = forwardRef<HTMLTextAreaElement, GtkTextViewProps>(fun
   const rootRef = useRef<HTMLDivElement>(null);
   const textRef = useRef<HTMLTextAreaElement>(null);
   useImperativeHandle(ref, () => textRef.current as HTMLTextAreaElement);
-  const windowed = belowText != null || BORDER_WINDOWS.some((side) => gutters?.[side] != null);
 
   // F7 toggles the cursor when the app doesn't set it (gtk_text_view_toggle_cursor_visible()).
   const [ownCursorVisible, setOwnCursorVisible] = useState(true);
   const showCursor = cursorVisible ?? ownCursorVisible;
   const [dropActive, setDropActive] = useState(false);
+
+  // The selection, drawn under the text as gtk_text_layout_snapshot() draws
+  // it, where the browser lets the theme's ::selection color be read: the
+  // browser's own stops at each line's text and isn't drawn while the text
+  // is unfocused. It's measured on the paragraphs laid out like the text.
+  const paragraphsRef = useRef<HTMLDivElement>(null);
+  const selectionLayerRef = useRef<HTMLDivElement>(null);
+  const [selection, setSelection] = useState<TextSelection | null>(null);
+  const [selectionPaint, setSelectionPaint] = useState<SelectionPaint | null>(null);
+  const updateSelection = useCallback(() => {
+    const text = textRef.current;
+    if (!text || !canReadSelectionStyle()) return;
+    text.setAttribute("data-gtk-selection", "");
+    const { value, selectionStart: start, selectionEnd: end } = text;
+    const focused = document.activeElement === text;
+    setSelection((prev) =>
+      start === end
+        ? null
+        : prev?.text === value &&
+            prev.start === start &&
+            prev.end === end &&
+            prev.focused === focused
+          ? prev
+          : { text: value, start, end, focused },
+    );
+  }, []);
+  useLayoutEffect(updateSelection, [rest.value]);
+  useEffect(() => {
+    const text = textRef.current;
+    if (!text) return;
+    updateSelection();
+    const onDocumentSelection = () => {
+      if (document.activeElement === text) updateSelection();
+    };
+    const events = ["selectionchange", "select", "input", "focus", "blur", "keyup", "pointerup"];
+    for (const type of events) text.addEventListener(type, updateSelection);
+    document.addEventListener("selectionchange", onDocumentSelection);
+    return () => {
+      for (const type of events) text.removeEventListener(type, updateSelection);
+      document.removeEventListener("selectionchange", onDocumentSelection);
+    };
+  }, [updateSelection]);
+  useLayoutEffect(() => {
+    const paragraphs = paragraphsRef.current;
+    const layer = selectionLayerRef.current;
+    const text = textRef.current;
+    if (!selection || !paragraphs || !layer || !text) {
+      setSelectionPaint(null);
+      return;
+    }
+    const measure = () => {
+      const lineHeight = parseFloat(
+        getComputedStyle(paragraphs.firstElementChild ?? text).lineHeight,
+      );
+      const rects = selectionRects(
+        paragraphs,
+        layer,
+        selection.start,
+        selection.end,
+        leftMargin,
+        rightMargin,
+        lineHeight,
+      );
+      const color = selectionColor(text);
+      setSelectionPaint((prev) =>
+        prev?.color === color && JSON.stringify(prev.rects) === JSON.stringify(rects)
+          ? prev
+          : { color, rects },
+      );
+    };
+    measure();
+    const resizes = new ResizeObserver(measure);
+    resizes.observe(paragraphs);
+    return () => resizes.disconnect();
+  }, [selection, leftMargin, rightMargin]);
 
   const classes = ["gtk-textview", "view"];
   if (monospace) classes.push("monospace");
@@ -245,6 +337,22 @@ export const GtkTextView = forwardRef<HTMLTextAreaElement, GtkTextViewProps>(fun
     rootRef.current?.removeAttribute("data-cursor-obscured");
   }, []);
 
+  // A triple click selects the line under it, its newline too
+  // (gtk_text_view_click_gesture_pressed(), SELECT_LINES), the same in every browser.
+  const handleMouseDown = useCallback(
+    (e: React.MouseEvent<HTMLTextAreaElement>) => {
+      onMouseDown?.(e);
+      if (e.defaultPrevented || e.button !== 0 || e.detail !== 3) return;
+      e.preventDefault();
+      const text = e.currentTarget;
+      const { value, selectionStart } = text;
+      const start = value.lastIndexOf("\n", selectionStart - 1) + 1;
+      const newline = value.indexOf("\n", selectionStart);
+      text.setSelectionRange(start, newline < 0 ? value.length : newline + 1, "forward");
+    },
+    [onMouseDown],
+  );
+
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
       onKeyDown?.(e);
@@ -288,7 +396,7 @@ export const GtkTextView = forwardRef<HTMLTextAreaElement, GtkTextViewProps>(fun
           // The view's adjustments: it scrolls its own text, in a scrolled window
           // too (GtkScrollable). A step is a tenth of the page, a page nine
           // tenths (gtk_text_view_set_vadjustment_values()).
-          const scroller = windowed ? (rootRef.current ?? text) : text;
+          const scroller = rootRef.current ?? text;
           const [page, upper] =
             action.axis === "y"
               ? [scroller.clientHeight, scroller.scrollHeight]
@@ -300,7 +408,7 @@ export const GtkTextView = forwardRef<HTMLTextAreaElement, GtkTextViewProps>(fun
         }
       }
     },
-    [acceptsTab, editable, showCursor, cursorVisible, onKeyDown, windowed],
+    [acceptsTab, editable, showCursor, cursorVisible, onKeyDown],
   );
 
   // A view that isn't editable keeps its cursor (gtk_text_view_set_editable()),
@@ -338,17 +446,6 @@ export const GtkTextView = forwardRef<HTMLTextAreaElement, GtkTextViewProps>(fun
   const fitText = useCallback(() => {
     const text = textRef.current;
     if (!text || CSS.supports("field-sizing", "content")) return;
-    // In a GtkScrolledWindow, the window allocates the view and its text
-    // scrolls (GtkScrollable): it isn't fitted to the text. With border
-    // windows the view scrolls, and the text is as large as its contents.
-    const root = rootRef.current;
-    if (
-      !root?.hasAttribute("data-text-windows") &&
-      root?.parentElement?.classList.contains("gtk-scrolledwindow")
-    ) {
-      text.style.width = text.style.minWidth = text.style.height = text.style.minHeight = "";
-      return;
-    }
     const css = getComputedStyle(text);
     const paddingX = parseFloat(css.paddingLeft) + parseFloat(css.paddingRight);
     const paddingY = parseFloat(css.paddingTop) + parseFloat(css.paddingBottom);
@@ -390,7 +487,7 @@ export const GtkTextView = forwardRef<HTMLTextAreaElement, GtkTextViewProps>(fun
   // window alone, beside them).
   useLayoutEffect(() => {
     const root = rootRef.current;
-    if (!root || !windowed) return;
+    if (!root) return;
     const sizes = new ResizeObserver(() => {
       const size = (side: GtkTextWindowType) => {
         const border = root.querySelector<HTMLElement>(`:scope > .gtk-border.${side}`);
@@ -428,7 +525,6 @@ export const GtkTextView = forwardRef<HTMLTextAreaElement, GtkTextViewProps>(fun
       {...alignAttrs(halign, valign, hexpand, vexpand)}
       data-disabled={disabled || undefined}
       data-drop-active={(dropActive && acceptsDrop) || undefined}
-      data-text-windows={windowed || undefined}
       onPointerMove={unobscureCursor}
       onDragEnter={handleDragOver}
       onDragOver={handleDragOver}
@@ -439,6 +535,41 @@ export const GtkTextView = forwardRef<HTMLTextAreaElement, GtkTextViewProps>(fun
       {belowText != null && (
         <div className="gtk-textview-layer" aria-hidden>
           {belowText}
+        </div>
+      )}
+      {selection && (
+        <div ref={selectionLayerRef} className="gtk-textview-layer" aria-hidden>
+          <div
+            ref={paragraphsRef}
+            className="gtk-textview-paragraphs"
+            style={{
+              textAlign,
+              paddingLeft: textStyle.paddingLeft,
+              paddingRight: rightMargin,
+              paddingTop: topMargin,
+              paddingBottom: bottomMargin,
+              whiteSpace: wrapMode === "none" ? "pre" : "pre-wrap",
+              overflowWrap: wrapMode === "word" ? "normal" : "break-word",
+              ...({ "--gtk-textview-indent": indent ? `${indent}px` : undefined } as object),
+            }}
+          >
+            {selection.text.split("\n").map((paragraph, i) => (
+              <div key={i}>{`${paragraph}\n`}</div>
+            ))}
+          </div>
+          {selectionPaint?.rects.map((rect, i) => (
+            <div
+              key={i}
+              className="gtk-textview-selection"
+              style={{
+                left: rect.x,
+                top: rect.y,
+                width: rect.width,
+                height: rect.height,
+                backgroundColor: selectionPaint.color,
+              }}
+            />
+          ))}
         </div>
       )}
       <textarea
@@ -453,6 +584,7 @@ export const GtkTextView = forwardRef<HTMLTextAreaElement, GtkTextViewProps>(fun
         onChange={handleChange}
         onInput={handleInput}
         onKeyDown={handleKeyDown}
+        onMouseDown={handleMouseDown}
         {...rest}
       />
       {BORDER_WINDOWS.map(

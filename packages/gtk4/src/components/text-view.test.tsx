@@ -87,10 +87,8 @@ describe("GtkTextView", () => {
     const html = renderToStaticMarkup(
       <GtkTextView gutters={{ left: <span>1</span>, right: null }} belowText={<i />} />,
     );
-    expect(html).toContain("data-text-windows");
     expect(html).toMatch(
       /<div class="gtk-textview-layer" aria-hidden="true"><i><\/i><\/div><textarea class="gtk-text"[^>]*><\/textarea><div class="gtk-border left"><span>1<\/span><\/div><\/div>$/,
     );
-    expect(renderToStaticMarkup(<GtkTextView />)).not.toContain("data-text-windows");
   });
 });

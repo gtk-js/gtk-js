@@ -117,6 +117,8 @@ function sourceViewTarget(cursorLine: number) {
   };
 }
 
+const SELECTION_TEXT = "one two\nthree\nfour";
+
 const SOURCE_VIEW_TEXT = "int main (void)\n{\n\treturn 0;\n}";
 
 /** A GtkSourceView like tests/native/src/cases/source_view.rs builds one. */
@@ -2789,6 +2791,30 @@ if (caseName === "alert-dialog-body") {
         />
       </AdwaitaProvider>,
     ),
+  );
+} else if (caseName === "text-view-selection") {
+  // Page for tests/cases/text-view-selection.test.ts, which focuses and
+  // selects in the views itself.
+  createRoot(container).render(
+    <AdwaitaProvider colorScheme="light">
+      <GtkBox orientation="vertical" spacing={12} halign="start" valign="start">
+        <GtkTextView
+          id="text-view"
+          monospace
+          defaultValue={SELECTION_TEXT}
+          style={{ width: "200px" }}
+        />
+        <GtkSourceView
+          id="source-view"
+          styleScheme="Adwaita"
+          showLineNumbers
+          highlightCurrentLine
+          monospace
+          defaultValue={SELECTION_TEXT}
+          style={{ width: "200px" }}
+        />
+      </GtkBox>
+    </AdwaitaProvider>,
   );
 } else if (caseName.startsWith("provider-gate-")) {
   // Pages for tests/cases/provider-gate.test.ts, which set up their own provider.

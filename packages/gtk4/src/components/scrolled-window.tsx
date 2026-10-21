@@ -162,13 +162,10 @@ function isScrollable(child: ReactNode): boolean {
   return classes.includes("gtk-viewport") || classes.includes("gtk-listview");
 }
 
-/**
- * The element that scrolls: the viewport or list view, or a text view's text,
- * or a text view with border windows, which it scrolls with its text.
- */
+/** The element that scrolls: the viewport, list view or text view. */
 function findScroller(root: HTMLElement): HTMLElement | null {
   return root.querySelector<HTMLElement>(
-    ":scope > :is(.gtk-viewport, .gtk-listview, .gtk-textview[data-text-windows]), :scope > .gtk-textview:not([data-text-windows]) > .gtk-text",
+    ":scope > :is(.gtk-viewport, .gtk-listview, .gtk-textview)",
   );
 }
 
@@ -262,7 +259,7 @@ const noScroll: ScrollAxis = { value: 0, pageSize: 1, overflows: false, start: f
  * along an undershoot, e.g. under the flat top bar of an AdwToolbarView.
  *
  * The forwarded ref is the scrolledwindow node; the scrolling element is its
- * viewport (or the text view's text).
+ * viewport (or the text view).
  *
  * @see https://docs.gtk.org/gtk4/class.ScrolledWindow.html
  */

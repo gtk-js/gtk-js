@@ -372,10 +372,10 @@ body:has(> :first-child:has([data-gtk-provider])) > :first-child {
 /* It's as tall as its text and as wide as its margins (gtk_text_view_measure()),
    not the size a <textarea> takes from `rows` and `cols`; text-view.tsx
    measures it where `field-sizing` isn't supported. The text never scrolls
-   itself: a GtkScrolledWindow scrolls it. Its lines are the font's line
-   height to the nearest whole pixel, as Pango rounds a line's logical extents
-   (PANGO_PIXELS()): 18px for Cantarell's 17.6px at 11pt. The indent is each
-   paragraph's where `each-line` is supported (gtk_text_view_set_indent()). */
+   itself: the view does, in a GtkScrolledWindow. Its lines are the font's
+   line height to the nearest whole pixel, as Pango rounds a line's logical
+   extents (PANGO_PIXELS()): 18px for Cantarell's 17.6px at 11pt. The indent
+   is each paragraph's where `each-line` is supported (gtk_text_view_set_indent()). */
 :where([data-gtk-provider] .gtk-textview > .gtk-text) {
   line-height: round(1lh, 1px);
   field-sizing: content;
@@ -395,19 +395,10 @@ body:has(> :first-child:has([data-gtk-provider])) > :first-child {
   cursor: none;
 }
 
-/* A GtkTextView is a GtkScrollable: a GtkScrolledWindow allocates it its
-   viewport (gtk_scrolled_window_allocate_child()) and its text, which fills
-   it, scrolls itself (the GtkScrolledWindow rules below). */
-:where(
-    [data-gtk-provider] .gtk-scrolledwindow > .gtk-textview:not([data-text-windows]) > .gtk-text
-  ) {
-  min-height: 100%;
-}
-
 /* Border windows (gtk_text_view_set_gutter()) sit around the text window,
-   beside it along its length, and a layer under the text fills the text
+   beside it along its length, and the layers under the text fill the text
    window (gtk_text_view_size_allocate()). */
-:where([data-gtk-provider] .gtk-textview[data-text-windows]) {
+:where([data-gtk-provider] .gtk-textview) {
   grid-template:
     ". top ." auto
     "left text right" 1fr
@@ -415,12 +406,12 @@ body:has(> :first-child:has([data-gtk-provider])) > :first-child {
     / auto 1fr auto;
 }
 
-:where([data-gtk-provider] .gtk-textview[data-text-windows] > :is(.gtk-text, .gtk-textview-layer)) {
+:where([data-gtk-provider] .gtk-textview > :is(.gtk-text, .gtk-textview-layer)) {
   grid-area: text;
 }
 
-/* The text over the layer. */
-:where([data-gtk-provider] .gtk-textview[data-text-windows] > .gtk-text) {
+/* The text over the layers. */
+:where([data-gtk-provider] .gtk-textview > .gtk-text) {
   position: relative;
 }
 
@@ -430,41 +421,66 @@ body:has(> :first-child:has([data-gtk-provider])) > :first-child {
   pointer-events: none;
 }
 
+/* The text view draws its selection under the text, like
+   gtk_text_layout_snapshot() (text-view.tsx), where the browser can read its
+   colors (data-gtk-selection): not the browser's, which stops at a line's
+   text and isn't drawn while the view is unfocused. */
+:where(
+    [data-gtk-provider] .gtk-textview > .gtk-text[data-gtk-selection]:not([data-gtk-probe])
+  )::selection {
+  background-color: transparent !important;
+}
+
+/* The text the selection is measured on: laid out like the text, unseen. */
+:where([data-gtk-provider] .gtk-textview-paragraphs) {
+  visibility: hidden;
+}
+
+:where([data-gtk-provider] .gtk-textview-paragraphs > *) {
+  line-height: round(1lh, 1px);
+  text-indent: var(--gtk-textview-indent, 0);
+}
+
+:where([data-gtk-provider] .gtk-textview-selection) {
+  position: absolute;
+}
+
 /* The text scrolls under the border windows, which keep to their sides. */
-:where([data-gtk-provider] .gtk-textview[data-text-windows] > .gtk-border) {
+:where([data-gtk-provider] .gtk-textview > .gtk-border) {
   position: sticky;
   z-index: 1;
 }
 
-:where([data-gtk-provider] .gtk-textview[data-text-windows] > .gtk-border.left) {
+:where([data-gtk-provider] .gtk-textview > .gtk-border.left) {
   grid-area: left;
   left: 0;
 }
 
-:where([data-gtk-provider] .gtk-textview[data-text-windows] > .gtk-border.right) {
+:where([data-gtk-provider] .gtk-textview > .gtk-border.right) {
   grid-area: right;
   right: 0;
 }
 
-:where([data-gtk-provider] .gtk-textview[data-text-windows] > .gtk-border.top) {
+:where([data-gtk-provider] .gtk-textview > .gtk-border.top) {
   grid-area: top;
   top: 0;
 }
 
-:where([data-gtk-provider] .gtk-textview[data-text-windows] > .gtk-border.bottom) {
+:where([data-gtk-provider] .gtk-textview > .gtk-border.bottom) {
   grid-area: bottom;
   bottom: 0;
 }
 
-/* In a GtkScrolledWindow, a view with border windows scrolls them and its
-   text together: the text is as large as its contents, and at least fills
-   the view. */
-:where([data-gtk-provider] .gtk-scrolledwindow > .gtk-textview[data-text-windows]) {
+/* A GtkTextView is a GtkScrollable: a GtkScrolledWindow allocates it its
+   viewport (gtk_scrolled_window_allocate_child()) and it scrolls its text,
+   with the border windows and the layers: the text is as large as its
+   contents and at least fills the view (the GtkScrolledWindow rules below). */
+:where([data-gtk-provider] .gtk-scrolledwindow > .gtk-textview) {
   grid-template-rows: auto minmax(max-content, 1fr) auto;
   grid-template-columns: auto minmax(max-content, 1fr) auto;
 }
 
-:where([data-gtk-provider] .gtk-scrolledwindow > .gtk-textview[data-text-windows] > .gtk-text) {
+:where([data-gtk-provider] .gtk-scrolledwindow > .gtk-textview > .gtk-text) {
   contain: none;
 }
 
@@ -559,11 +575,7 @@ body:has(> :first-child:has([data-gtk-provider])) > :first-child {
 
 /* The element that scrolls hides the browser's scrollbar: the scrolled window
    draws its own. Adwaita draws no focus ring on a focused scrolled window. */
-:where([data-gtk-provider] .gtk-scrolledwindow > :is(.gtk-viewport, .gtk-listview)),
-:where([data-gtk-provider] .gtk-scrolledwindow > .gtk-textview[data-text-windows]),
-:where(
-    [data-gtk-provider] .gtk-scrolledwindow > .gtk-textview:not([data-text-windows]) > .gtk-text
-  ) {
+:where([data-gtk-provider] .gtk-scrolledwindow > :is(.gtk-viewport, .gtk-listview, .gtk-textview)) {
   overflow-x: var(--gtk-scrolled-overflow-x);
   overflow-y: var(--gtk-scrolled-overflow-y);
   scrollbar-width: none;
@@ -571,13 +583,7 @@ body:has(> :first-child:has([data-gtk-provider])) > :first-child {
 }
 
 :where(
-    [data-gtk-provider] .gtk-scrolledwindow > :is(.gtk-viewport, .gtk-listview)
-  )::-webkit-scrollbar,
-:where(
-    [data-gtk-provider] .gtk-scrolledwindow > .gtk-textview[data-text-windows]
-  )::-webkit-scrollbar,
-:where(
-    [data-gtk-provider] .gtk-scrolledwindow > .gtk-textview:not([data-text-windows]) > .gtk-text
+    [data-gtk-provider] .gtk-scrolledwindow > :is(.gtk-viewport, .gtk-listview, .gtk-textview)
   )::-webkit-scrollbar {
   display: none;
 }

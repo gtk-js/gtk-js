@@ -10,7 +10,7 @@ describe("GtkSourceView", () => {
   test("is a text view with the GtkSourceView and sourceview classes and the buffer's scheme", () => {
     const html = markup(<GtkSourceView monospace />);
     expect(html).toMatch(
-      /^<div class="gtk-textview view monospace GtkSourceView sourceview source-scheme-classic" style="tab-size:8" data-text-windows="true">/,
+      /^<div class="gtk-textview view monospace GtkSourceView sourceview source-scheme-classic" style="tab-size:8">/,
     );
     // GtkSourceView sets 2px left and right margins (gtk_source_view_init()).
     expect(html).toContain("padding-left:2px;padding-right:2px");
