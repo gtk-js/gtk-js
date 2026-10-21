@@ -16,6 +16,7 @@
     "icons/fluent": {},
     "packages/gtk4": {},
     "packages/adwaita": {},
+    "packages/sourceview": {},
     "themes/adwaita": {},
     "themes/whitesur": {},
     "themes/mactahoe": {},

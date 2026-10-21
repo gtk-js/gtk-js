@@ -8,6 +8,8 @@
     "---GTK4 Components---",
     "...gtk4",
     "---Adwaita Components---",
-    "...adwaita"
+    "...adwaita",
+    "---GtkSourceView---",
+    "...sourceview"
   ]
 }

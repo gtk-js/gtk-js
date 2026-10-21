@@ -73,6 +73,13 @@ body:has(> :first-child:has([data-gtk-provider])) > :first-child {
   --document-font-size: var(--gtk-font-size);
   --monospace-font-family: monospace;
   --monospace-font-size: var(--gtk-font-size);
+  /* A text view's lines are the font's ascent + descent, to the nearest
+     pixel (gtk_text_layout_get_line_yrange()), which the view measures (see
+     --gtk-textview-row-height). Until it has, they're this, rounded: `normal`
+     for the monospace font, its metrics' (17.07px for DejaVu Sans Mono at
+     11pt, so 17px lines, where 1.2em gives 17.6px, 18px lines). Set this
+     along with --monospace-font-family. */
+  --monospace-line-height: normal;
   /* GTK's `line-height: normal` is Pango's: the font's ascent + descent, 1.2em
      for Cantarell. Browsers round the ascent and descent separately for
      `normal` (17px lines instead of 17.6px at 11pt). Set this along with
@@ -177,6 +184,11 @@ body:has(> :first-child:has([data-gtk-provider])) > :first-child {
 /* A focused expander's ring is drawn on its title (_expanders.scss). */
 :where([data-gtk-provider] .gtk-expander-widget) {
   outline: none;
+}
+
+/* A monospace text view's lines (see --monospace-line-height). */
+:where([data-gtk-provider] .gtk-textview.monospace) {
+  line-height: var(--monospace-line-height);
 }
 
 /* GtkEditableLabel is focused itself, outside of editing; Adwaita draws no ring for it. */
@@ -359,17 +371,26 @@ body:has(> :first-child:has([data-gtk-provider])) > :first-child {
 }
 
 /* It's as tall as its text and as wide as its margins (gtk_text_view_measure()),
-   not the size a <textarea> takes from `rows` and `cols`; text-view.tsx
-   measures it where `field-sizing` isn't supported. The text never scrolls
-   itself: a GtkScrolledWindow scrolls it. Its lines are whole pixels tall, as
-   GtkTextLayout's are. The indent is each paragraph's where `each-line` is
+   not the size a <textarea> takes from `rows` and `cols`. The text never
+   scrolls itself: the view does, in a GtkScrolledWindow. Its rows are as tall
+   as Pango's for the font (--gtk-textview-row-height, text-view-metrics.ts),
+   and once the view draws the text itself (data-gtk-drawn), its paragraphs
+   size the text window and the textarea fills it. Until then (on the
+   server) the textarea sizes itself, its rows the font's line height to the
+   nearest pixel. The indent is each paragraph's where `each-line` is
    supported (gtk_text_view_set_indent()). */
 :where([data-gtk-provider] .gtk-textview > .gtk-text) {
-  line-height: round(up, 1lh, 1px);
+  line-height: var(--gtk-textview-row-height, round(1lh, 1px));
   field-sizing: content;
   contain: inline-size;
   overflow: hidden;
   text-indent: var(--gtk-textview-indent, 0);
+}
+
+:where([data-gtk-provider] .gtk-textview[data-gtk-drawn] > .gtk-text) {
+  field-sizing: fixed;
+  contain: size;
+  min-height: 0;
 }
 
 @supports (text-indent: 1px each-line) {
@@ -383,11 +404,194 @@ body:has(> :first-child:has([data-gtk-provider])) > :first-child {
   cursor: none;
 }
 
+/* Border windows (gtk_text_view_set_gutter()) sit around the text window,
+   beside it along its length, and the layers under the text fill the text
+   window (gtk_text_view_size_allocate()). */
+:where([data-gtk-provider] .gtk-textview) {
+  grid-template:
+    ". top ." auto
+    "left text right" 1fr
+    ". bottom ." auto
+    / auto 1fr auto;
+}
+
+:where([data-gtk-provider] .gtk-textview > :is(.gtk-text, .gtk-textview-layer)) {
+  grid-area: text;
+}
+
+/* The text over the layers. */
+:where([data-gtk-provider] .gtk-textview > .gtk-text) {
+  position: relative;
+}
+
+:where([data-gtk-provider] .gtk-textview-layer) {
+  position: relative;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+/* The text the view draws, laid out as GtkTextLayout lays it out: each
+   paragraph a block as tall as its rows to the nearest pixel, its rows at
+   their fractional height inside it (gtk_text_layout_get_line_display()). It
+   sizes the text window, as the textarea did: across, only in a scrolled
+   window. The textarea over it takes the presses, which the view maps to
+   the text here (offsetAtPoint()). */
+:where([data-gtk-provider] .gtk-textview-text-layer) {
+  contain: inline-size;
+}
+
+:where([data-gtk-provider] .gtk-textview-paragraphs) {
+  visibility: hidden;
+  pointer-events: auto;
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+}
+
+:where([data-gtk-provider] .gtk-textview[data-gtk-drawn] .gtk-textview-paragraphs) {
+  visibility: visible;
+}
+
+:where([data-gtk-provider] .gtk-textview-paragraphs[data-wrap="none"]) {
+  white-space: pre;
+}
+
+/* GTK_WRAP_WORD never breaks a word; one too long for the line runs past it. */
+:where([data-gtk-provider] .gtk-textview-paragraphs[data-wrap="word"]) {
+  overflow-wrap: normal;
+}
+
+:where([data-gtk-provider] .gtk-textview-paragraph > *) {
+  line-height: var(--gtk-textview-row-height, round(1lh, 1px));
+  text-indent: var(--gtk-textview-indent, 0);
+}
+
+/* Wrapped text is as wide as Pango's layout: the text window's width less a
+   pixel for the cursor (SPACE_FOR_CURSOR) and the margins. */
+:where(
+    [data-gtk-provider]
+      .gtk-textview-paragraphs:not([data-wrap="none"])
+      > .gtk-textview-paragraph
+      > *
+  ) {
+  margin-right: 1px;
+}
+
+/* The indent is the paragraph's first row's. */
+:where([data-gtk-provider] .gtk-textview-row + .gtk-textview-row) {
+  text-indent: 0;
+}
+
+/* Character wrapping's rows are the view's (text-view-wrap.ts): Pango ends
+   a row it breaks inside a word with a hyphen, and leaves room for it. */
+:where(
+    [data-gtk-provider]
+      .gtk-textview-paragraphs:is([data-wrap="char"], [data-wrap="word-char"])
+      .gtk-textview-row
+  ) {
+  white-space: pre;
+}
+
+:where([data-gtk-provider] .gtk-textview-row[data-hyphen])::after {
+  content: "\2010";
+}
+
+/* While the view draws the text, the textarea's own text, cursor and
+   selection aren't seen (but for reading the theme's colors, data-gtk-probe). */
+:where([data-gtk-provider] .gtk-textview[data-gtk-drawn] > .gtk-text:not([data-gtk-probe])) {
+  -webkit-text-fill-color: transparent !important;
+  caret-color: transparent !important;
+}
+
+:where(
+    [data-gtk-provider] .gtk-textview[data-gtk-drawn] > .gtk-text:not([data-gtk-probe])
+  )::selection {
+  background-color: transparent !important;
+}
+
+:where([data-gtk-provider] .gtk-textview-selection),
+:where([data-gtk-provider] .gtk-textview-cursor),
+:where([data-gtk-provider] .gtk-textview-preedit) {
+  position: absolute;
+}
+
+/* Text the view measures how much wider Pango lays out than the browser in. */
+:where([data-gtk-provider] .gtk-textview-probe) {
+  position: absolute;
+  visibility: hidden;
+  white-space: pre;
+  font: inherit;
+}
+
+/* An input method's text is underlined while it's composed. */
+:where([data-gtk-provider] .gtk-textview-preedit) {
+  height: 1px;
+  background-color: currentColor;
+}
+
+/* The cursor blinks evenly between shown, fading out, hidden and fading in
+   (blink_alpha()), and stops, shown, after a while (text-view.tsx). */
+:where([data-gtk-provider] .gtk-textview-cursor[data-blink]) {
+  animation-name: gtk-textview-cursor-blink;
+  animation-duration: 1200ms;
+  animation-timing-function: linear;
+}
+
+@keyframes gtk-textview-cursor-blink {
+  0%,
+  25% {
+    opacity: 1;
+  }
+  50%,
+  75% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+/* The text scrolls under the border windows, which keep to their sides. */
+:where([data-gtk-provider] .gtk-textview > .gtk-border) {
+  position: sticky;
+  z-index: 1;
+}
+
+:where([data-gtk-provider] .gtk-textview > .gtk-border.left) {
+  grid-area: left;
+  left: 0;
+}
+
+:where([data-gtk-provider] .gtk-textview > .gtk-border.right) {
+  grid-area: right;
+  right: 0;
+}
+
+:where([data-gtk-provider] .gtk-textview > .gtk-border.top) {
+  grid-area: top;
+  top: 0;
+}
+
+:where([data-gtk-provider] .gtk-textview > .gtk-border.bottom) {
+  grid-area: bottom;
+  bottom: 0;
+}
+
 /* A GtkTextView is a GtkScrollable: a GtkScrolledWindow allocates it its
-   viewport (gtk_scrolled_window_allocate_child()) and its text, which fills
-   it, scrolls itself (the GtkScrolledWindow rules below). */
-:where([data-gtk-provider] .gtk-scrolledwindow > .gtk-textview > .gtk-text) {
-  min-height: 100%;
+   viewport (gtk_scrolled_window_allocate_child()) and it scrolls its text,
+   with the border windows and the layers: the text is as large as its
+   contents and at least fills the view (the GtkScrolledWindow rules below). */
+:where([data-gtk-provider] .gtk-scrolledwindow > .gtk-textview) {
+  grid-template-rows: auto minmax(max-content, 1fr) auto;
+  grid-template-columns: auto minmax(max-content, 1fr) auto;
+}
+
+:where([data-gtk-provider] .gtk-scrolledwindow > .gtk-textview > .gtk-text),
+:where([data-gtk-provider] .gtk-scrolledwindow > .gtk-textview > .gtk-textview-text-layer) {
+  contain: none;
+}
+
+:where([data-gtk-provider] .gtk-scrolledwindow > .gtk-textview[data-gtk-drawn] > .gtk-text) {
+  contain: size;
 }
 
 /* GtkEntry / GtkSearchEntry: the entry's custom size_allocate lays out children
@@ -481,8 +685,7 @@ body:has(> :first-child:has([data-gtk-provider])) > :first-child {
 
 /* The element that scrolls hides the browser's scrollbar: the scrolled window
    draws its own. Adwaita draws no focus ring on a focused scrolled window. */
-:where([data-gtk-provider] .gtk-scrolledwindow > :is(.gtk-viewport, .gtk-listview)),
-:where([data-gtk-provider] .gtk-scrolledwindow > .gtk-textview > .gtk-text) {
+:where([data-gtk-provider] .gtk-scrolledwindow > :is(.gtk-viewport, .gtk-listview, .gtk-textview)) {
   overflow-x: var(--gtk-scrolled-overflow-x);
   overflow-y: var(--gtk-scrolled-overflow-y);
   scrollbar-width: none;
@@ -490,9 +693,8 @@ body:has(> :first-child:has([data-gtk-provider])) > :first-child {
 }
 
 :where(
-    [data-gtk-provider] .gtk-scrolledwindow > :is(.gtk-viewport, .gtk-listview)
-  )::-webkit-scrollbar,
-:where([data-gtk-provider] .gtk-scrolledwindow > .gtk-textview > .gtk-text)::-webkit-scrollbar {
+    [data-gtk-provider] .gtk-scrolledwindow > :is(.gtk-viewport, .gtk-listview, .gtk-textview)
+  )::-webkit-scrollbar {
   display: none;
 }
 

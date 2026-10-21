@@ -31,6 +31,8 @@ export interface WidgetSnapshot {
   children?: WidgetSnapshot[];
   /** The colors of the widget's text runs, in drawing order (native only). */
   text_colors?: Color[];
+  /** A text view's display lines, the offset each starts at (native only). */
+  text_lines?: number[];
 }
 
 export interface Sides {

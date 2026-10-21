@@ -315,6 +315,14 @@ enum Command {
     SeparatorHorizontalDefault,
     SeparatorVertical,
     SeparatorSpacerHorizontal,
+    SourceViewCurrentLine,
+    SourceViewDefault,
+    SourceViewDisabled,
+    SourceViewLineNumbers,
+    SourceViewScrolled,
+    SourceViewSolarized,
+    SourceViewTabWidth,
+    SourceViewWrap,
     SpinButtonDefault,
     SpinButtonDisabled,
     SpinButtonVertical,
@@ -345,6 +353,8 @@ enum Command {
     TextViewNonEditable,
     TextViewScrolled,
     TextViewScrolledLong,
+    TextViewWrap,
+    TextViewWrapWords,
     ToggleTextDefault,
     ToggleTextChecked,
     ToggleTextFlat,
@@ -679,6 +689,14 @@ impl Command {
             Self::SeparatorHorizontalDefault => Some("separator-horizontal-default"),
             Self::SeparatorVertical => Some("separator-vertical"),
             Self::SeparatorSpacerHorizontal => Some("separator-spacer-horizontal"),
+            Self::SourceViewCurrentLine => Some("source-view-current-line"),
+            Self::SourceViewDefault => Some("source-view-default"),
+            Self::SourceViewDisabled => Some("source-view-disabled"),
+            Self::SourceViewLineNumbers => Some("source-view-line-numbers"),
+            Self::SourceViewScrolled => Some("source-view-scrolled"),
+            Self::SourceViewSolarized => Some("source-view-solarized"),
+            Self::SourceViewTabWidth => Some("source-view-tab-width"),
+            Self::SourceViewWrap => Some("source-view-wrap"),
             Self::SpinButtonDefault => Some("spin-button-default"),
             Self::SpinButtonDisabled => Some("spin-button-disabled"),
             Self::SpinButtonVertical => Some("spin-button-vertical"),
@@ -709,6 +727,8 @@ impl Command {
             Self::TextViewNonEditable => Some("text-view-non-editable"),
             Self::TextViewScrolled => Some("text-view-scrolled"),
             Self::TextViewScrolledLong => Some("text-view-scrolled-long"),
+            Self::TextViewWrap => Some("text-view-wrap"),
+            Self::TextViewWrapWords => Some("text-view-wrap-words"),
             Self::ToggleTextDefault => Some("toggle-text-default"),
             Self::ToggleTextChecked => Some("toggle-text-checked"),
             Self::ToggleTextFlat => Some("toggle-text-flat"),
@@ -1438,6 +1458,14 @@ fn create_widget_for_case(name: &str) -> Option<(gtk::Widget, bool)> {
                 false
             )
         }
+        "source-view-current-line" => Some(cases::source_view::current_line()),
+        "source-view-default" => Some(cases::source_view::default()),
+        "source-view-disabled" => Some(cases::source_view::disabled()),
+        "source-view-line-numbers" => Some(cases::source_view::line_numbers()),
+        "source-view-scrolled" => Some(cases::source_view::scrolled()),
+        "source-view-solarized" => Some(cases::source_view::solarized()),
+        "source-view-tab-width" => Some(cases::source_view::tab_width()),
+        "source-view-wrap" => Some(cases::source_view::wrap()),
         "spin-button-default" => {
             widget_case!(cases::spin_button_default::SpinButtonDefault, false)
         }
@@ -1511,6 +1539,8 @@ fn create_widget_for_case(name: &str) -> Option<(gtk::Widget, bool)> {
         "text-view-scrolled-long" => {
             widget_case!(cases::text_view_scrolled_long::TextViewScrolledLong, false)
         }
+        "text-view-wrap" => Some(cases::text_view_wrap::wrap()),
+        "text-view-wrap-words" => Some(cases::text_view_wrap::words()),
         "toggle-text-default" => widget_case!(cases::toggle_text_default::ToggleTextDefault, false),
         "toggle-text-checked" => widget_case!(cases::toggle_text_checked::ToggleTextChecked, false),
         "toggle-text-flat" => widget_case!(cases::toggle_text_flat::ToggleTextFlat, false),
@@ -1842,6 +1872,14 @@ fn is_known_case(name: &str) -> bool {
             | "separator-horizontal-default"
             | "separator-vertical"
             | "separator-spacer-horizontal"
+            | "source-view-current-line"
+            | "source-view-default"
+            | "source-view-disabled"
+            | "source-view-line-numbers"
+            | "source-view-scrolled"
+            | "source-view-solarized"
+            | "source-view-tab-width"
+            | "source-view-wrap"
             | "spin-button-default"
             | "spin-button-disabled"
             | "spin-button-vertical"
@@ -1872,6 +1910,8 @@ fn is_known_case(name: &str) -> bool {
             | "text-view-non-editable"
             | "text-view-scrolled"
             | "text-view-scrolled-long"
+            | "text-view-wrap"
+            | "text-view-wrap-words"
             | "toggle-text-default"
             | "toggle-text-checked"
             | "toggle-text-flat"

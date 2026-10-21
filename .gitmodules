@@ -4,6 +4,9 @@
 [submodule "upstream/libadwaita"]
 	path = upstream/libadwaita
 	url = https://github.com/GNOME/libadwaita.git
+[submodule "upstream/gtksourceview"]
+	path = upstream/gtksourceview
+	url = https://github.com/GNOME/gtksourceview.git
 [submodule "upstream/adwaita-icon-theme"]
 	path = upstream/adwaita-icon-theme
 	url = https://github.com/GNOME/adwaita-icon-theme.git

@@ -26,7 +26,7 @@ When adding a new widget, always check which layout manager it uses in the upstr
 
 ## Cross-Referencing Against Upstream
 
-**ALWAYS cross-verify against the actual GTK4 and libadwaita source code** in `upstream/gtk/` and `upstream/libadwaita/` (git submodules). This applies to ANY modification — styling, functionality, props, behavior, layout, or CSS/SCSS — not just when first implementing a widget. Any time a component or stylesheet is changed, check the relevant upstream source first.
+**ALWAYS cross-verify against the actual GTK4 and libadwaita source code** in `upstream/gtk/` and `upstream/libadwaita/` (git submodules), and GtkSourceView's in `upstream/gtksourceview/` for `@gtk-js/sourceview`. This applies to ANY modification — styling, functionality, props, behavior, layout, or CSS/SCSS — not just when first implementing a widget. Any time a component or stylesheet is changed, check the relevant upstream source first.
 
 When implementing OR modifying a widget, component, or stylesheet:
 

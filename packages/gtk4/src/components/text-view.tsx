@@ -1,10 +1,12 @@
 import React, {
   forwardRef,
+  type ReactNode,
   type TextareaHTMLAttributes,
   useCallback,
   useEffect,
   useImperativeHandle,
   useLayoutEffect,
+  useMemo,
   useRef,
   useState,
 } from "react";
@@ -15,6 +17,23 @@ import {
   type GtkJustification,
   type GtkWrapMode,
 } from "../types.ts";
+import {
+  type CursorRect,
+  cursorRect,
+  displayLine,
+  displayLineRange,
+  type GtkTextViewLayout,
+  offsetAtPoint,
+  paragraphRows,
+  paragraphStarts,
+  type SelectionRect,
+  selectionRects,
+  textColors,
+  textScale,
+  wordRange,
+} from "./text-view-layout.ts";
+import { pangoRowHeight } from "./text-view-metrics.ts";
+import { breakAttrs, type WrapRow, wrapParagraph } from "./text-view-wrap.ts";
 
 export interface GtkTextViewProps
   extends Omit<TextareaHTMLAttributes<HTMLTextAreaElement>, "wrap">,
@@ -45,7 +64,54 @@ export interface GtkTextViewProps
   acceptsTab?: boolean;
   /** Callback when text changes. */
   onChanged?: (text: string) => void;
+  /**
+   * Widgets beside the text, each in the border window on its side, which
+   * scrolls with the text along its length (gtk_text_view_set_gutter()).
+   * A function gets where the text's paragraphs are, once they're laid out.
+   */
+  gutters?: Partial<Record<GtkTextWindowType, ReactNode | GtkTextViewLayoutRenderer>>;
+  /**
+   * Drawn under the text, in the text window and scrolled with it, as a
+   * subclass draws GTK_TEXT_VIEW_LAYER_BELOW_TEXT (GtkTextViewClass.snapshot_layer()).
+   * A function gets where the text's paragraphs are, once they're laid out.
+   */
+  belowText?: ReactNode | GtkTextViewLayoutRenderer;
 }
+
+/** Draws from where a text view's paragraphs are: null until they're laid out. */
+export type GtkTextViewLayoutRenderer = (layout: GtkTextViewLayout | null) => ReactNode;
+
+export type { GtkTextViewLayout };
+
+interface TextSelection {
+  start: number;
+  end: number;
+  backward: boolean;
+  focused: boolean;
+}
+
+interface TextPaint {
+  selectionColor: string;
+  cursorColor: string;
+  rects: SelectionRect[];
+  cursor: CursorRect | null;
+}
+
+/** How a press and drag selects (SelectionGranularity). */
+type Granularity = "characters" | "words" | "lines";
+
+// The cursor blinks for this long a cycle, and stops, shown, after this long
+// (gtk-cursor-blink-time, gtk-cursor-blink-timeout); typing or moving it
+// keeps it shown for half a cycle first (gtk_text_view_pend_cursor_blink()).
+const CURSOR_BLINK_TIME = 1200;
+const CURSOR_BLINK_TIMEOUT = 10000;
+// Its stem's width per pixel of height, plus one (gtk-cursor-aspect-ratio).
+const CURSOR_ASPECT_RATIO = 0.04;
+
+/** The text view's border windows (GtkTextWindowType, but for the text window). */
+export type GtkTextWindowType = "left" | "right" | "top" | "bottom";
+
+const BORDER_WINDOWS: readonly GtkTextWindowType[] = ["left", "right", "top", "bottom"];
 
 // The on-screen keyboard GTK's input method shows for each purpose.
 const purposeToInputMode: Partial<
@@ -118,6 +184,16 @@ function editText(text: HTMLTextAreaElement, insert: string) {
   text.dispatchEvent(new Event("input", { bubbles: true }));
 }
 
+/** The text offset the view draws at a client point, under the textarea that takes the presses. */
+function hitTest(text: HTMLTextAreaElement, container: HTMLElement, x: number, y: number): number {
+  text.style.pointerEvents = "none";
+  try {
+    return offsetAtPoint(container, paragraphStarts(text.value), x, y) ?? text.value.length;
+  } finally {
+    text.style.pointerEvents = "";
+  }
+}
+
 /**
  * GtkTextView — A multi-line text editor widget.
  *
@@ -125,9 +201,19 @@ function editText(text: HTMLTextAreaElement, insert: string) {
  *   textview.view
  *     └── text
  *
- * The text node, a <textarea>, holds the text, its margins and the selection,
- * which themes style as `textview > text` and `textview text selection`. The
- * ref is the textarea; className, style and the alignment are the widget's.
+ * The text node, a <textarea>, holds the text and its margins, which themes
+ * style as `textview > text`, and takes the typing, input methods, pastes,
+ * undo and the keyboard's selection. The ref is the textarea; className,
+ * style and the alignment are the widget's.
+ *
+ * The view draws the text itself, laid out as GtkTextLayout lays it out: a
+ * <textarea> gives all its rows one height, where each paragraph is as tall
+ * as its rows to the nearest pixel (a wrapped paragraph of Adwaita Mono's
+ * 18.33px rows is 55px, not 54px). Over it, the textarea's own text, cursor
+ * and selection are transparent; the view draws the selection under the text
+ * and the cursor over it in the theme's colors, and maps presses to the text
+ * it draws. Gutters (`border.left` etc.) are laid out around the text window.
+ * In a GtkScrolledWindow the view scrolls, its text and gutters together.
  *
  * @see https://docs.gtk.org/gtk4/class.TextView.html
  */
@@ -155,7 +241,10 @@ export const GtkTextView = forwardRef<HTMLTextAreaElement, GtkTextViewProps>(fun
     onChange,
     onInput,
     onKeyDown,
+    onMouseDown,
     disabled,
+    gutters,
+    belowText,
     ...rest
   },
   ref,
@@ -168,6 +257,391 @@ export const GtkTextView = forwardRef<HTMLTextAreaElement, GtkTextViewProps>(fun
   const [ownCursorVisible, setOwnCursorVisible] = useState(true);
   const showCursor = cursorVisible ?? ownCursorVisible;
   const [dropActive, setDropActive] = useState(false);
+
+  // The text as the textarea has it, typed or set.
+  const [shown, setShown] = useState(() => String(rest.value ?? rest.defaultValue ?? ""));
+  const syncText = useCallback(() => {
+    const text = textRef.current;
+    if (text) setShown(text.value);
+  }, []);
+  useLayoutEffect(syncText);
+  const paragraphs = useMemo(() => shown.split("\n"), [shown]);
+  const starts = useMemo(() => paragraphStarts(shown), [shown]);
+
+  // A row is as tall as Pango's for the text's font; the view draws the text
+  // where it can measure that (not on the server).
+  const [rowHeight, setRowHeight] = useState<number | null>(null);
+  const [, setThemeChanges] = useState(0);
+  const measureRowHeight = useCallback(() => {
+    const text = textRef.current;
+    if (text) setRowHeight(pangoRowHeight(text));
+  }, []);
+  useLayoutEffect(measureRowHeight);
+  useEffect(() => {
+    const restyle = () => {
+      setThemeChanges((n) => n + 1);
+      measureRowHeight();
+    };
+    const dark = matchMedia?.("(prefers-color-scheme: dark)");
+    document.fonts?.addEventListener("loadingdone", restyle);
+    dark?.addEventListener("change", restyle);
+    return () => {
+      document.fonts?.removeEventListener("loadingdone", restyle);
+      dark?.removeEventListener("change", restyle);
+    };
+  }, [measureRowHeight]);
+  const drawn = rowHeight != null;
+  const lineHeight = rowHeight != null ? Math.round(rowHeight) : null;
+
+  // GTK_WRAP_CHAR and GTK_WRAP_WORD_CHAR rows, broken where Pango breaks
+  // them, with its hyphens (text-view-wrap.ts), by paragraph.
+  const breaksWords = wrapMode === "char" || wrapMode === "word-char";
+  const [wrapped, setWrapped] = useState<ReadonlyMap<string, WrapRow[]> | null>(null);
+
+  // Each paragraph's rows, as the text is laid out in the paragraphs' blocks.
+  const layerRef = useRef<HTMLDivElement>(null);
+  const paragraphsRef = useRef<HTMLDivElement>(null);
+  const [rows, setRows] = useState<number[] | null>(null);
+  const measureRows = useCallback(() => {
+    const container = paragraphsRef.current;
+    if (!container || rowHeight == null) return;
+    const next = paragraphRows(container, rowHeight);
+    setRows((prev) =>
+      prev && prev.length === next.length && prev.every((n, i) => n === next[i]) ? prev : next,
+    );
+  }, [rowHeight]);
+  // The rows change with the text and how it's laid out.
+  useLayoutEffect(measureRows, [
+    measureRows,
+    shown,
+    wrapMode,
+    leftMargin,
+    rightMargin,
+    indent,
+    wrapped,
+  ]);
+  useLayoutEffect(() => {
+    const container = paragraphsRef.current;
+    if (!container || !drawn) return;
+    const resizes = new ResizeObserver(measureRows);
+    resizes.observe(container);
+    return () => resizes.disconnect();
+  }, [measureRows, drawn]);
+
+  // Where the paragraphs are (gtk_text_layout_get_line_yrange()).
+  const layout = useMemo<GtkTextViewLayout | null>(() => {
+    if (rowHeight == null || !rows || rows.length !== paragraphs.length) return null;
+    let top = topMargin;
+    return {
+      rowHeight,
+      paragraphs: rows.map((n) => {
+        const height = Math.round(n * rowHeight);
+        const box = { top, height };
+        top += height;
+        return box;
+      }),
+    };
+  }, [rowHeight, rows, paragraphs.length, topMargin]);
+
+  // The selection and the cursor, as the textarea has them.
+  const [selection, setSelection] = useState<TextSelection | null>(null);
+  const selectionRef = useRef<TextSelection | null>(null);
+  const [blink, setBlink] = useState({ key: 0, delay: 0 });
+  const updateSelection = useCallback((e?: Event) => {
+    const text = textRef.current;
+    if (!text) return;
+    setShown(text.value);
+    const { selectionStart: start, selectionEnd: end } = text;
+    const backward = text.selectionDirection === "backward";
+    const focused = document.activeElement === text;
+    const prev = selectionRef.current;
+    if (
+      prev?.start === start &&
+      prev.end === end &&
+      prev.backward === backward &&
+      prev.focused === focused
+    ) {
+      return;
+    }
+    const next = { start, end, backward, focused };
+    selectionRef.current = next;
+    setSelection(next);
+    // The cursor shows again where it moves, for half a blink after it was
+    // typed or moved, from the start of one when the view takes the focus.
+    setBlink((b) => ({ key: b.key + 1, delay: e?.type === "focus" ? 0 : CURSOR_BLINK_TIME / 2 }));
+  }, []);
+  useLayoutEffect(updateSelection, [rest.value]);
+  // Firefox fires no `selectionchange` for a disabled textarea; an insensitive
+  // view keeps a cursor and a selection the app may set, so setting them
+  // fires one.
+  useEffect(() => {
+    const text = textRef.current;
+    if (!text || !disabled) return;
+    const notify = () => text.dispatchEvent(new Event("selectionchange"));
+    const proto = HTMLTextAreaElement.prototype;
+    const methods = ["setSelectionRange", "select", "setRangeText"] as const;
+    for (const name of methods) {
+      Object.defineProperty(text, name, {
+        configurable: true,
+        value(...args: unknown[]) {
+          const result = (proto[name] as (...a: unknown[]) => unknown).apply(this, args);
+          notify();
+          return result;
+        },
+      });
+    }
+    const properties = ["selectionStart", "selectionEnd", "selectionDirection"] as const;
+    for (const name of properties) {
+      const descriptor = Object.getOwnPropertyDescriptor(proto, name)!;
+      Object.defineProperty(text, name, {
+        configurable: true,
+        get() {
+          return descriptor.get!.call(this);
+        },
+        set(value) {
+          descriptor.set!.call(this, value);
+          notify();
+        },
+      });
+    }
+    return () => {
+      for (const name of [...methods, ...properties])
+        delete (text as unknown as Record<string, unknown>)[name];
+    };
+  }, [disabled]);
+  useEffect(() => {
+    const text = textRef.current;
+    if (!text) return;
+    updateSelection();
+    const onDocumentSelection = () => {
+      if (document.activeElement === text) updateSelection();
+    };
+    // Not on `input`: React reads an edit from it after this, and a render
+    // in between would take a controlled view's edit back. Edits update the
+    // text through onChange.
+    const events = [
+      "selectionchange",
+      "select",
+      "focus",
+      "blur",
+      "keyup",
+      "pointerup",
+      "compositionend",
+    ];
+    for (const type of events) text.addEventListener(type, updateSelection);
+    document.addEventListener("selectionchange", onDocumentSelection);
+    return () => {
+      for (const type of events) text.removeEventListener(type, updateSelection);
+      document.removeEventListener("selectionchange", onDocumentSelection);
+    };
+  }, [updateSelection]);
+
+  // The text in the text node's font and color, as the theme and the app
+  // give them, and the selection and the cursor in theirs.
+  const [paint, setPaint] = useState<TextPaint | null>(null);
+  useLayoutEffect(() => {
+    const text = textRef.current;
+    const container = paragraphsRef.current;
+    const layer = layerRef.current;
+    if (!text || !container || !layer || !drawn) return;
+    const css = getComputedStyle(text);
+    for (const property of [
+      "color",
+      "fontFamily",
+      "fontSize",
+      "fontWeight",
+      "fontStyle",
+      "fontStretch",
+      "fontVariant",
+      "fontFeatureSettings",
+      "fontVariationSettings",
+      "letterSpacing",
+      "wordSpacing",
+      "tabSize",
+    ] as const) {
+      layer.style[property] = css[property];
+    }
+  });
+  const wrapCache = useRef<{ key: string; rows: Map<string, WrapRow[]> }>({
+    key: "",
+    rows: new Map(),
+  });
+  const wrapText = useCallback(() => {
+    const container = paragraphsRef.current;
+    const layer = layerRef.current;
+    if (!breaksWords || !container || !layer || rowHeight == null) {
+      setWrapped(null);
+      return;
+    }
+    const block = container.firstElementChild?.firstElementChild as HTMLElement | null | undefined;
+    const probe = (name: string) =>
+      layer.querySelector<HTMLElement>(`:scope > .gtk-textview-probe[data-probe="${name}"]`);
+    const scaleProbe = probe("scale");
+    if (!block || !scaleProbe) return;
+    const scale = textScale(scaleProbe);
+    const width = block.getBoundingClientRect().width * scale;
+    const firstIndent = (Number.parseFloat(getComputedStyle(block).textIndent) || 0) * scale;
+    const hyphenWidth = (probe("hyphen")?.getBoundingClientRect().width ?? 0) * scale;
+    // Tab stops in pixels stay whole pixels (set_tab_stops_internal()).
+    const tabSize = getComputedStyle(layer).tabSize;
+    const tabStop =
+      (probe("tab")?.getBoundingClientRect().width ?? 0) * (tabSize.endsWith("px") ? 1 : scale);
+    const key = [
+      wrapMode,
+      width,
+      firstIndent,
+      hyphenWidth,
+      tabStop,
+      layer.style.font,
+      scale,
+    ].join();
+    const cache = wrapCache.current;
+    if (cache.key !== key) {
+      cache.key = key;
+      cache.rows = new Map();
+    }
+    const next = new Map<string, WrapRow[]>();
+    const range = document.createRange();
+    paragraphs.forEach((paragraph, i) => {
+      let rows = cache.rows.get(paragraph);
+      if (!rows) {
+        // The characters' widths, as the paragraph is drawn unbroken.
+        const node = container.children[i]?.firstElementChild?.firstElementChild?.firstChild;
+        if (!(node instanceof Text) || node.length !== paragraph.length + 1) return;
+        const advances: number[] = [];
+        for (let c = 0; c < paragraph.length; c++) {
+          const pair = /[\uD800-\uDBFF]/.test(paragraph[c]!) ? 2 : 1;
+          range.setStart(node, c);
+          range.setEnd(node, c + pair);
+          advances[c] = range.getBoundingClientRect().width * scale;
+          if (pair === 2) advances[++c] = 0;
+        }
+        rows = wrapParagraph(
+          paragraph,
+          breakAttrs(paragraph),
+          advances,
+          wrapMode as "char" | "word-char",
+          width,
+          tabStop,
+          hyphenWidth,
+          width - firstIndent,
+        );
+        cache.rows.set(paragraph, rows);
+      }
+      next.set(paragraph, rows);
+    });
+    setWrapped((prev) =>
+      prev &&
+      prev.size === next.size &&
+      [...next].every(([paragraph, rows]) => prev.get(paragraph) === rows)
+        ? prev
+        : next,
+    );
+  }, [breaksWords, rowHeight, paragraphs, wrapMode]);
+  // The rows change with the text, its font and the width.
+  useLayoutEffect(wrapText, [wrapText, leftMargin, rightMargin, indent]);
+  useLayoutEffect(() => {
+    const container = paragraphsRef.current;
+    if (!container || !breaksWords) return;
+    let width = container.clientWidth;
+    const resizes = new ResizeObserver(() => {
+      if (container.clientWidth === width) return;
+      width = container.clientWidth;
+      wrapText();
+    });
+    resizes.observe(container);
+    return () => resizes.disconnect();
+  }, [wrapText, breaksWords]);
+  useLayoutEffect(() => {
+    const text = textRef.current;
+    const container = paragraphsRef.current;
+    const layer = layerRef.current;
+    if (!text || !container || !layer || !selection || rowHeight == null || !layout) {
+      setPaint(null);
+      return;
+    }
+    const measure = () => {
+      const colors = textColors(text);
+      const probe = layer.querySelector<HTMLElement>(
+        ':scope > .gtk-textview-probe[data-probe="scale"]',
+      );
+      const hyphen = layer.querySelector<HTMLElement>(
+        ':scope > .gtk-textview-probe[data-probe="hyphen"]',
+      );
+      const scale = probe ? textScale(probe) : 1;
+      const rects = selectionRects(
+        container,
+        layer,
+        starts,
+        selection.start,
+        selection.end,
+        leftMargin,
+        rightMargin,
+        rowHeight,
+        scale,
+        (hyphen?.getBoundingClientRect().width ?? 0) * scale,
+        wrapMode === "none" ? "none" : wrapMode === "word" ? "word" : "char",
+      );
+      // The cursor is drawn while the view has the focus and nothing is
+      // selected (add_cursor()).
+      const cursor =
+        selection.focused && selection.start === selection.end && showCursor && !disabled
+          ? cursorRect(container, layer, starts, selection.start, rowHeight, scale)
+          : null;
+      const next: TextPaint = {
+        selectionColor: colors.selection,
+        cursorColor: colors.cursor,
+        rects,
+        cursor,
+      };
+      setPaint((prev) => (prev && JSON.stringify(prev) === JSON.stringify(next) ? prev : next));
+    };
+    measure();
+    const resizes = new ResizeObserver(measure);
+    resizes.observe(container);
+    return () => resizes.disconnect();
+  }, [
+    selection,
+    layout,
+    starts,
+    rowHeight,
+    leftMargin,
+    rightMargin,
+    showCursor,
+    disabled,
+    drawn,
+    wrapMode,
+  ]);
+
+  // An input method's text is underlined while it's composed (its preedit's
+  // attributes, gtk_text_layout_set_preedit_string()).
+  const [preedit, setPreedit] = useState<[number, number] | null>(null);
+  useEffect(() => {
+    const text = textRef.current;
+    if (!text) return;
+    let start = 0;
+    const begin = () => {
+      start = Math.min(text.selectionStart, text.selectionEnd);
+    };
+    const update = (e: CompositionEvent) => setPreedit([start, start + e.data.length]);
+    const end = () => setPreedit(null);
+    text.addEventListener("compositionstart", begin);
+    text.addEventListener("compositionupdate", update);
+    text.addEventListener("compositionend", end);
+    return () => {
+      text.removeEventListener("compositionstart", begin);
+      text.removeEventListener("compositionupdate", update);
+      text.removeEventListener("compositionend", end);
+    };
+  }, []);
+  const preeditRects = useMemo(() => {
+    const container = paragraphsRef.current;
+    const layer = layerRef.current;
+    if (!preedit || !container || !layer || rowHeight == null || !layout) return [];
+    return selectionRects(container, layer, starts, preedit[0], preedit[1], 0, 0, rowHeight)
+      .filter((rect) => rect.x >= 0)
+      .map((rect) => ({ ...rect, y: rect.y + rect.height - 2, height: 1 }));
+  }, [preedit, starts, rowHeight, layout]);
 
   const classes = ["gtk-textview", "view"];
   if (monospace) classes.push("monospace");
@@ -202,6 +676,7 @@ export const GtkTextView = forwardRef<HTMLTextAreaElement, GtkTextViewProps>(fun
 
   const handleChange = useCallback(
     (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+      setShown(e.target.value);
       onChanged?.(e.target.value);
       onChange?.(e);
     },
@@ -222,10 +697,116 @@ export const GtkTextView = forwardRef<HTMLTextAreaElement, GtkTextViewProps>(fun
     rootRef.current?.removeAttribute("data-cursor-obscured");
   }, []);
 
+  // A press places the cursor at the text the view draws under it, a double
+  // press selects a word, a triple one a display line, Shift extends the
+  // selection, and dragging extends it by the same steps
+  // (gtk_text_view_click_gesture_pressed(), gtk_text_view_start_selection_drag()).
+  const handleMouseDown = useCallback(
+    (e: React.MouseEvent<HTMLTextAreaElement>) => {
+      onMouseDown?.(e);
+      const text = e.currentTarget;
+      const container = paragraphsRef.current;
+      if (e.defaultPrevented || e.button !== 0 || !container || rowHeight == null) return;
+      e.preventDefault();
+      text.focus({ preventScroll: true });
+      const hit = (x: number, y: number) => hitTest(text, container, x, y);
+      const value = text.value;
+      const granularity: Granularity =
+        e.detail >= 3 ? "lines" : e.detail === 2 ? "words" : "characters";
+      const extent = (offset: number): [number, number] =>
+        granularity === "words"
+          ? wordRange(value, offset)
+          : granularity === "lines"
+            ? displayLineRange(container, starts, value, offset, rowHeight)
+            : [offset, offset];
+      const select = (from: number, to: number) => {
+        if (from <= to) text.setSelectionRange(from, to, "forward");
+        else text.setSelectionRange(to, from, "backward");
+      };
+      const at = hit(e.clientX, e.clientY);
+      let anchor = extent(at);
+      if (e.shiftKey && granularity === "characters") {
+        // Shift extends the selection from its other end (extend_selection()).
+        const other =
+          text.selectionDirection === "backward" ? text.selectionEnd : text.selectionStart;
+        anchor = [other, other];
+        select(other, at);
+      } else {
+        select(anchor[0], anchor[1]);
+      }
+      const move = (event: MouseEvent) => {
+        const [start, end] = extent(hit(event.clientX, event.clientY));
+        if (start < anchor[0]) select(anchor[1], start);
+        else select(anchor[0], Math.max(end, anchor[1]));
+      };
+      const up = () => {
+        document.removeEventListener("mousemove", move);
+        document.removeEventListener("mouseup", up);
+      };
+      document.addEventListener("mousemove", move);
+      document.addEventListener("mouseup", up);
+    },
+    [onMouseDown, rowHeight, starts],
+  );
+  // The cursor moves by the display lines the view draws: Up and Down to the
+  // same x on the line before or after, keeping that x while it goes on
+  // moving up or down, Home and End to the line's ends (move_cursor() with
+  // GTK_MOVEMENT_DISPLAY_LINES and GTK_MOVEMENT_DISPLAY_LINE_ENDS).
+  const cursorX = useRef<{ offset: number; x: number } | null>(null);
+  const moveCursor = useCallback(
+    (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+      const text = e.currentTarget;
+      const container = paragraphsRef.current;
+      const layer = layerRef.current;
+      const keys = ["ArrowUp", "ArrowDown", "Home", "End"];
+      if (!showCursor || !container || !layer || rowHeight == null || !keys.includes(e.key)) {
+        return false;
+      }
+      if (e.ctrlKey || e.altKey || e.metaKey) return false;
+      const backward = text.selectionDirection === "backward";
+      const insert = backward ? text.selectionStart : text.selectionEnd;
+      const anchor = backward ? text.selectionEnd : text.selectionStart;
+      const line = displayLine(container, starts, insert, rowHeight);
+      if (!line) return false;
+      let target: number;
+      if (e.key === "Home" || e.key === "End") {
+        // A line's end before the next line's start is its last character's
+        // start (gtk_text_layout_move_iter_to_line_end()).
+        target =
+          e.key === "Home" ? line.start : line.last ? line.end : Math.max(line.start, line.end - 1);
+        cursorX.current = null;
+      } else {
+        const up = e.key === "ArrowUp";
+        const rect = cursorRect(container, layer, starts, insert, rowHeight);
+        if (!rect) return false;
+        const x = cursorX.current?.offset === insert ? cursorX.current.x : rect.x;
+        if (up && line.start === 0) {
+          target = 0;
+        } else if (!up && line.last && line.paragraph === starts.length - 1) {
+          target = line.end;
+        } else {
+          const origin = layer.getBoundingClientRect();
+          const y = up ? rect.y - rowHeight / 2 : rect.y + rect.height + rowHeight / 2;
+          target = hitTest(text, container, origin.left + x + 0.5, origin.top + y);
+        }
+        cursorX.current = { offset: target, x };
+      }
+      const from = e.shiftKey ? anchor : target;
+      if (from <= target) text.setSelectionRange(from, target, "forward");
+      else text.setSelectionRange(target, from, "backward");
+      return true;
+    },
+    [showCursor, rowHeight, starts],
+  );
+
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
       onKeyDown?.(e);
       if (e.defaultPrevented) return;
+      if (moveCursor(e)) {
+        e.preventDefault();
+        return;
+      }
       const action = textViewKeyAction(e, { acceptsTab, editable, cursorVisible: showCursor });
       if (!action) return;
       e.preventDefault();
@@ -265,7 +846,7 @@ export const GtkTextView = forwardRef<HTMLTextAreaElement, GtkTextViewProps>(fun
           // The view's adjustments: it scrolls its own text, in a scrolled window
           // too (GtkScrollable). A step is a tenth of the page, a page nine
           // tenths (gtk_text_view_set_vadjustment_values()).
-          const scroller = text;
+          const scroller = rootRef.current ?? text;
           const [page, upper] =
             action.axis === "y"
               ? [scroller.clientHeight, scroller.scrollHeight]
@@ -277,7 +858,7 @@ export const GtkTextView = forwardRef<HTMLTextAreaElement, GtkTextViewProps>(fun
         }
       }
     },
-    [acceptsTab, editable, showCursor, cursorVisible, onKeyDown],
+    [acceptsTab, editable, showCursor, cursorVisible, onKeyDown, moveCursor],
   );
 
   // A view that isn't editable keeps its cursor (gtk_text_view_set_editable()),
@@ -310,52 +891,27 @@ export const GtkTextView = forwardRef<HTMLTextAreaElement, GtkTextViewProps>(fun
     };
   }, [editable]);
 
-  // The view is as tall as its text (gtk_text_view_measure()): reset.css sizes
-  // the text node with `field-sizing: content`, or else it's measured here.
-  const fitText = useCallback(() => {
-    const text = textRef.current;
-    if (!text || CSS.supports("field-sizing", "content")) return;
-    // In a GtkScrolledWindow, the window allocates the view and its text
-    // scrolls (GtkScrollable): it isn't fitted to the text.
-    if (rootRef.current?.parentElement?.classList.contains("gtk-scrolledwindow")) {
-      text.style.width = text.style.minWidth = text.style.height = text.style.minHeight = "";
-      return;
-    }
-    const css = getComputedStyle(text);
-    const paddingX = parseFloat(css.paddingLeft) + parseFloat(css.paddingRight);
-    const paddingY = parseFloat(css.paddingTop) + parseFloat(css.paddingBottom);
-    // Contained, it takes no width of its own and fills the widget; else it's
-    // as wide as its longest line.
-    const contained = css.contain.includes("size");
-    text.style.width = "0";
-    text.style.minWidth = contained ? `calc(100% - ${paddingX}px)` : "0";
-    text.style.height = text.style.minHeight = "0";
-    const { scrollWidth, scrollHeight } = text;
-    text.style.height = "";
-    text.style.minHeight = `${scrollHeight - paddingY}px`;
-    if (!contained) {
-      text.style.width = "";
-      text.style.minWidth = `${scrollWidth - paddingX}px`;
-    }
-  }, []);
-  useLayoutEffect(fitText);
+  // A scrolling view keeps the text the caret moves to out from under the
+  // border windows, which stay on their sides (GtkTextView scrolls the text
+  // window alone, beside them).
   useLayoutEffect(() => {
-    const text = textRef.current;
-    if (!text || CSS.supports("field-sizing", "content")) return;
-    // Wrapped text takes more or fewer lines at another width.
-    let width = text.clientWidth;
-    const resizes = new ResizeObserver(() => {
-      if (text.clientWidth === width) return;
-      width = text.clientWidth;
-      fitText();
+    const root = rootRef.current;
+    if (!root) return;
+    const sizes = new ResizeObserver(() => {
+      const size = (side: GtkTextWindowType) => {
+        const border = root.querySelector<HTMLElement>(`:scope > .gtk-border.${side}`);
+        if (!border) return 0;
+        return side === "left" || side === "right" ? border.offsetWidth : border.offsetHeight;
+      };
+      const sides = ["top", "right", "bottom", "left"] as const;
+      root.style.scrollPadding = sides.map((side) => `${size(side)}px`).join(" ");
     });
-    resizes.observe(text);
-    text.addEventListener("input", fitText);
+    for (const border of root.querySelectorAll(":scope > .gtk-border")) sizes.observe(border);
     return () => {
-      resizes.disconnect();
-      text.removeEventListener("input", fitText);
+      sizes.disconnect();
+      root.style.scrollPadding = "";
     };
-  }, [fitText]);
+  });
 
   // Text dragged over an editable view sets :drop(active) (its GtkDropTarget).
   const acceptsDrop = editable && !disabled;
@@ -370,14 +926,32 @@ export const GtkTextView = forwardRef<HTMLTextAreaElement, GtkTextViewProps>(fun
   }, []);
   const endDrop = useCallback(() => setDropActive(false), []);
 
+  const render = (content: ReactNode | GtkTextViewLayoutRenderer) =>
+    typeof content === "function" ? content(layout) : content;
+  const below = render(belowText);
+  const cursor = paint?.cursor;
+  const cursorHeight = cursor?.height ?? 0;
+  // The cursor blinks while the view is editable (cursor_blinks()).
+  const cursorBlinks = editable && !disabled;
+  const blinks = Math.max(0, (CURSOR_BLINK_TIMEOUT - blink.delay) / CURSOR_BLINK_TIME);
+
   return (
     <div
       ref={rootRef}
       className={classes.join(" ")}
-      style={style}
+      style={
+        rowHeight == null
+          ? style
+          : ({
+              ...style,
+              "--gtk-textview-line-height": `${lineHeight}px`,
+              "--gtk-textview-row-height": `${rowHeight}px`,
+            } as React.CSSProperties)
+      }
       {...alignAttrs(halign, valign, hexpand, vexpand)}
       data-disabled={disabled || undefined}
       data-drop-active={(dropActive && acceptsDrop) || undefined}
+      data-gtk-drawn={drawn || undefined}
       onPointerMove={unobscureCursor}
       onDragEnter={handleDragOver}
       onDragOver={handleDragOver}
@@ -385,10 +959,107 @@ export const GtkTextView = forwardRef<HTMLTextAreaElement, GtkTextViewProps>(fun
       onDrop={endDrop}
       onDragEnd={endDrop}
     >
+      {below != null && (
+        <div className="gtk-textview-layer" aria-hidden>
+          {below}
+        </div>
+      )}
+      <div ref={layerRef} className="gtk-textview-layer gtk-textview-text-layer" aria-hidden>
+        {paint?.rects.map((rect, i) => (
+          <div
+            key={i}
+            className="gtk-textview-selection"
+            style={{
+              left: rect.x,
+              top: rect.y,
+              width: rect.width,
+              height: rect.height,
+              backgroundColor: paint.selectionColor,
+            }}
+          />
+        ))}
+        <div
+          ref={paragraphsRef}
+          className="gtk-textview-paragraphs"
+          data-wrap={wrapMode}
+          style={
+            {
+              textAlign,
+              paddingLeft: textStyle.paddingLeft,
+              paddingRight: rightMargin,
+              paddingTop: topMargin,
+              paddingBottom: bottomMargin,
+              "--gtk-textview-indent": indent ? `${indent}px` : undefined,
+            } as React.CSSProperties
+          }
+        >
+          {paragraphs.map((paragraph, i) => {
+            const rows = breaksWords ? wrapped?.get(paragraph) : undefined;
+            return (
+              <div
+                key={i}
+                className="gtk-textview-paragraph"
+                style={layout ? { height: layout.paragraphs[i]!.height } : undefined}
+              >
+                <div>
+                  {rows ? (
+                    rows.map((row, r) => (
+                      <div
+                        key={r}
+                        className="gtk-textview-row"
+                        data-hyphen={row.hyphen || undefined}
+                      >
+                        {paragraph.slice(row.start, row.end) + (r === rows.length - 1 ? "\n" : "")}
+                      </div>
+                    ))
+                  ) : (
+                    <div className="gtk-textview-row">{`${paragraph}\n`}</div>
+                  )}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+        <span className="gtk-textview-probe" data-probe="scale">
+          MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM
+        </span>
+        <span className="gtk-textview-probe" data-probe="hyphen">
+          {"\u2010"}
+        </span>
+        <span className="gtk-textview-probe" data-probe="tab">
+          {"\t"}
+        </span>
+        {preeditRects.map((rect, i) => (
+          <div
+            key={`preedit-${i}`}
+            className="gtk-textview-preedit"
+            style={{ left: rect.x, top: rect.y, width: rect.width }}
+          />
+        ))}
+        {cursor && (
+          <div
+            key={blink.key}
+            className="gtk-textview-cursor"
+            data-blink={cursorBlinks || undefined}
+            style={{
+              left: cursor.x,
+              top: cursor.y,
+              width: Math.floor(cursorHeight * CURSOR_ASPECT_RATIO + 1),
+              height: cursorHeight,
+              backgroundColor: paint?.cursorColor,
+              animationDelay: `${blink.delay}ms`,
+              animationIterationCount: blinks,
+            }}
+          />
+        )}
+      </div>
       <textarea
         ref={textRef}
         className="gtk-text"
         rows={1}
+        // GtkTextView checks no spelling; the browser would mark it on the
+        // textarea, not the text the view draws.
+        spellCheck={false}
         aria-readonly={!editable || undefined}
         inputMode={editable ? purposeToInputMode[inputPurpose] : "none"}
         wrap={cssWrap}
@@ -397,8 +1068,19 @@ export const GtkTextView = forwardRef<HTMLTextAreaElement, GtkTextViewProps>(fun
         onChange={handleChange}
         onInput={handleInput}
         onKeyDown={handleKeyDown}
+        onMouseDown={handleMouseDown}
         {...rest}
       />
+      {BORDER_WINDOWS.map((side) => {
+        const gutter = render(gutters?.[side]);
+        return (
+          gutter != null && (
+            <div key={side} className={`gtk-border ${side}`}>
+              {gutter}
+            </div>
+          )
+        );
+      })}
     </div>
   );
 });

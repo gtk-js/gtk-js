@@ -78,6 +78,7 @@ import {
   GtkWindowTitle,
   useNavigation,
 } from "@gtk-js/adwaita";
+import { GtkSourceView, type GtkSourceViewProps } from "@gtk-js/sourceview";
 import {
   Fragment,
   type ReactElement,
@@ -102,6 +103,73 @@ function avatarGizmoTarget(el: HTMLDivElement | null) {
 // GtkTextView's ref is its text node; the native cases measure the textview node.
 function textViewTarget(el: HTMLTextAreaElement | null) {
   el?.parentElement?.setAttribute("data-testid", "target");
+}
+
+// GtkSourceView's ref is its text node too. The native cases place the cursor
+// at a line's start.
+function sourceViewTarget(cursorLine: number) {
+  return (el: HTMLTextAreaElement | null) => {
+    if (!el) return;
+    el.parentElement?.setAttribute("data-testid", "target");
+    let offset = 0;
+    for (let i = 0; i < cursorLine; i++) offset = el.value.indexOf("\n", offset) + 1;
+    el.setSelectionRange(offset, offset);
+  };
+}
+
+const SELECTION_TEXT = "one two\nthree\nfour";
+// Paragraphs of several rows, one, three and none: Pango rounds each one's
+// height, not each row's.
+// Words broken by character and word-character wrapping (text_view_wrap.rs).
+const WRAP_WORDS =
+  "The quick brown fox jumps over the lazy dog; extraordinarily long words like incomprehensibilities wrap.\nshort\n\tindented text-with-hyphens and_underscores 12345678901234567890123 end";
+const WRAP_TEXT = `Pango rounds each paragraph to whole pixels, not each row of it, so a paragraph that wraps onto several rows can be a pixel taller than its rows rounded one by one.\none\nThe third paragraph wraps onto a few rows as well.\n`;
+// Five rows of 22 characters at 200px in DejaVu Sans Mono, then short paragraphs.
+const EDITING_TEXT =
+  "alpha beta gamma delta epsilon zeta eta theta iota kappa lambda mu nu xi omicron pi rho sigma tau\nshort\n\nlast line";
+
+/** Controlled views whose app upper-cases what's typed. */
+function UpperCaseTextViews() {
+  const [value, setValue] = useState("");
+  const [source, setSource] = useState("");
+  return (
+    <>
+      <GtkTextView
+        id="controlled"
+        monospace
+        value={value}
+        onChange={(e) => setValue(e.target.value.toUpperCase())}
+        style={{ width: "200px" }}
+      />
+      <GtkSourceView
+        id="controlled-source"
+        showLineNumbers
+        value={source}
+        onChange={(e) => setSource(e.target.value.toUpperCase())}
+        style={{ width: "200px" }}
+      />
+    </>
+  );
+}
+
+const SOURCE_VIEW_TEXT = "int main (void)\n{\n\treturn 0;\n}";
+
+/** A GtkSourceView like tests/native/src/cases/source_view.rs builds one. */
+function SourceViewCase({
+  cursorLine = 0,
+  ...props
+}: GtkSourceViewProps & { cursorLine?: number }) {
+  return (
+    <GtkBox orientation="vertical" halign="start" valign="start">
+      <GtkSourceView
+        defaultValue={SOURCE_VIEW_TEXT}
+        monospace
+        style={{ width: "200px" }}
+        ref={sourceViewTarget(cursorLine)}
+        {...props}
+      />
+    </GtkBox>
+  );
 }
 
 /** What the password-entry-behavior case's entries report, for its test to read. */
@@ -838,6 +906,53 @@ const cases: Record<string, () => React.ReactElement> = {
   "separator-horizontal-default": () => <GtkSeparator data-testid="target" />,
   "separator-vertical": () => <GtkSeparator orientation="vertical" data-testid="target" />,
   "separator-spacer-horizontal": () => <GtkSeparator className="spacer" data-testid="target" />,
+
+  // GtkSourceView cases
+  "source-view-current-line": () => (
+    <SourceViewCase
+      styleScheme="Adwaita-dark"
+      showLineNumbers
+      highlightCurrentLine
+      cursorLine={2}
+    />
+  ),
+  "source-view-default": () => <SourceViewCase />,
+  "source-view-disabled": () => (
+    <SourceViewCase styleScheme="Adwaita" showLineNumbers highlightCurrentLine disabled />
+  ),
+  "source-view-line-numbers": () => (
+    <SourceViewCase styleScheme="Adwaita" showLineNumbers cursorLine={1} />
+  ),
+  "source-view-scrolled": () => (
+    <GtkScrolledWindow hasFrame style={{ width: "200px", height: "100px" }} data-testid="target">
+      <GtkSourceView
+        defaultValue={Array.from({ length: 120 }, (_, i) => `line ${i + 1}`).join("\n")}
+        styleScheme="Adwaita"
+        monospace
+        showLineNumbers
+        ref={(el) => el?.setSelectionRange(0, 0)}
+      />
+    </GtkScrolledWindow>
+  ),
+  "source-view-solarized": () => (
+    <SourceViewCase
+      styleScheme="solarized-light"
+      showLineNumbers
+      highlightCurrentLine
+      cursorLine={3}
+    />
+  ),
+  "source-view-tab-width": () => (
+    <SourceViewCase defaultValue={"tabs\n\t\t\tx"} tabWidth={4} wrapMode="char" />
+  ),
+  "source-view-wrap": () => (
+    <SourceViewCase
+      defaultValue={"int x = call (first argument, second argument);\nreturn x;"}
+      styleScheme="Adwaita"
+      showLineNumbers
+      wrapMode="word"
+    />
+  ),
 
   // GtkSpinner cases
   "spinner-default": () => <GtkSpinner data-testid="target" />,
@@ -2665,6 +2780,32 @@ const cases: Record<string, () => React.ReactElement> = {
   "button-text-default-wrong-bg": () => (
     <GtkButton label="Button" style={{ backgroundColor: "red" }} data-testid="target" />
   ),
+  // Last, so the gallery's other cases keep their places.
+  "text-view-wrap": () => (
+    <GtkBox orientation="vertical" halign="start" valign="start" data-testid="target">
+      <GtkTextView monospace wrapMode="char" defaultValue={WRAP_TEXT} style={{ width: "200px" }} />
+    </GtkBox>
+  ),
+  "text-view-wrap-words": () => (
+    <GtkBox orientation="vertical" spacing={12} halign="start" valign="start" data-testid="target">
+      {(
+        [
+          [true, "char"],
+          [true, "word-char"],
+          [false, "char"],
+          [false, "word-char"],
+        ] as const
+      ).map(([monospace, wrapMode]) => (
+        <GtkTextView
+          key={`${monospace}-${wrapMode}`}
+          monospace={monospace}
+          wrapMode={wrapMode}
+          defaultValue={WRAP_WORDS}
+          style={{ width: "200px" }}
+        />
+      ))}
+    </GtkBox>
+  ),
 };
 
 const container = document.getElementById("root")!;
@@ -2709,6 +2850,74 @@ if (caseName === "alert-dialog-body") {
         />
       </AdwaitaProvider>,
     ),
+  );
+} else if (caseName === "text-view-selection") {
+  // Page for tests/cases/text-view-selection.test.ts, which focuses and
+  // selects in the views itself.
+  createRoot(container).render(
+    <AdwaitaProvider colorScheme="light">
+      <GtkBox orientation="vertical" spacing={12} halign="start" valign="start">
+        <GtkTextView
+          id="text-view"
+          monospace
+          defaultValue={SELECTION_TEXT}
+          style={{ width: "200px" }}
+        />
+        <GtkSourceView
+          id="source-view"
+          styleScheme="Adwaita"
+          showLineNumbers
+          highlightCurrentLine
+          monospace
+          defaultValue={SELECTION_TEXT}
+          style={{ width: "200px" }}
+        />
+      </GtkBox>
+    </AdwaitaProvider>,
+  );
+} else if (caseName === "text-view-editing") {
+  // Page for tests/cases/text-view-editing.test.ts, which types, clicks and
+  // drags in the views itself.
+  createRoot(container).render(
+    <AdwaitaProvider colorScheme="light">
+      <GtkBox orientation="vertical" spacing={12} halign="start" valign="start">
+        <GtkTextView
+          id="editor"
+          monospace
+          wrapMode="char"
+          defaultValue={EDITING_TEXT}
+          style={{ width: "200px" }}
+        />
+        <UpperCaseTextViews />
+        <GtkTextView
+          id="read-only"
+          monospace
+          editable={false}
+          defaultValue="read only"
+          style={{ width: "200px" }}
+        />
+        <GtkTextView
+          id="no-cursor"
+          monospace
+          cursorVisible={false}
+          defaultValue="no cursor"
+          style={{ width: "200px" }}
+        />
+        <GtkTextView
+          id="disabled"
+          monospace
+          disabled
+          defaultValue="disabled"
+          style={{ width: "200px" }}
+        />
+        <GtkTextView
+          id="proportional"
+          wrapMode="word"
+          defaultValue={EDITING_TEXT}
+          style={{ width: "200px" }}
+        />
+      </GtkBox>
+    </AdwaitaProvider>,
   );
 } else if (caseName.startsWith("provider-gate-")) {
   // Pages for tests/cases/provider-gate.test.ts, which set up their own provider.

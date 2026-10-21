@@ -9,6 +9,7 @@
   "dependencies": {
     "@gtk-js/gtk4": "*",
     "@gtk-js/adwaita": "*",
+    "@gtk-js/sourceview": "*",
     "@gtk-js/icons-adwaita": "*",
     "@gtk-js/icons-whitesur": "*",
     "@gtk-js/icons-mactahoe": "*",
