@@ -88,7 +88,24 @@ describe("GtkTextView", () => {
       <GtkTextView gutters={{ left: <span>1</span>, right: null }} belowText={<i />} />,
     );
     expect(html).toMatch(
-      /<div class="gtk-textview-layer" aria-hidden="true"><i><\/i><\/div><textarea class="gtk-text"[^>]*><\/textarea><div class="gtk-border left"><span>1<\/span><\/div><\/div>$/,
+      /^<div class="gtk-textview view"><div class="gtk-textview-layer" aria-hidden="true"><i><\/i><\/div><div class="gtk-textview-layer gtk-textview-text-layer" aria-hidden="true">[\s\S]*<\/div><textarea class="gtk-text"[^>]*><\/textarea><div class="gtk-border left"><span>1<\/span><\/div><\/div>$/,
     );
+    // A gutter or layer drawn from the text's layout gets none on the server.
+    const drawn = renderToStaticMarkup(
+      <GtkTextView gutters={{ left: (layout) => String(layout) }} belowText={() => null} />,
+    );
+    expect(drawn).toContain('<div class="gtk-border left">null</div>');
+    expect(drawn.match(/gtk-textview-layer/g)).toHaveLength(1);
+  });
+
+  test("lays each paragraph out in a block of its own, to draw the text", () => {
+    const html = renderToStaticMarkup(
+      <GtkTextView defaultValue={"one\n\nthree"} wrapMode="char" />,
+    );
+    expect(html).toContain(
+      '<div class="gtk-textview-paragraphs" data-wrap="char" style="text-align:start;padding-left:0;padding-right:0;padding-top:0;padding-bottom:0"><div class="gtk-textview-paragraph"><div>one\n</div></div><div class="gtk-textview-paragraph"><div>\n</div></div><div class="gtk-textview-paragraph"><div>three\n</div></div></div>',
+    );
+    // Until it's laid out, the textarea draws its text itself.
+    expect(html).not.toContain("data-gtk-drawn");
   });
 });

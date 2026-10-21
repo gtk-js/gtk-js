@@ -118,6 +118,28 @@ function sourceViewTarget(cursorLine: number) {
 }
 
 const SELECTION_TEXT = "one two\nthree\nfour";
+// Paragraphs of eight rows, one, three and none: Pango rounds each one's
+// height, not each row's.
+const WRAP_TEXT = `${"0123456789".repeat(17)}\none\n${"9876543210".repeat(6)}\n`;
+// Five rows of 22 characters at 200px in DejaVu Sans Mono, then short paragraphs.
+const EDITING_TEXT =
+  "alpha beta gamma delta epsilon zeta eta theta iota kappa lambda mu nu xi omicron pi rho sigma tau\nshort\n\nlast line";
+
+/** Controlled views whose app upper-cases what's typed. */
+function UpperCaseTextViews() {
+  const [value, setValue] = useState("");
+  return (
+    <>
+      <GtkTextView
+        id="controlled"
+        monospace
+        value={value}
+        onChange={(e) => setValue(e.target.value.toUpperCase())}
+        style={{ width: "200px" }}
+      />
+    </>
+  );
+}
 
 const SOURCE_VIEW_TEXT = "int main (void)\n{\n\treturn 0;\n}";
 
@@ -2747,6 +2769,12 @@ const cases: Record<string, () => React.ReactElement> = {
   "button-text-default-wrong-bg": () => (
     <GtkButton label="Button" style={{ backgroundColor: "red" }} data-testid="target" />
   ),
+  // Last, so the gallery's other cases keep their places.
+  "text-view-wrap": () => (
+    <GtkBox orientation="vertical" halign="start" valign="start" data-testid="target">
+      <GtkTextView monospace wrapMode="char" defaultValue={WRAP_TEXT} style={{ width: "200px" }} />
+    </GtkBox>
+  ),
 };
 
 const container = document.getElementById("root")!;
@@ -2811,6 +2839,50 @@ if (caseName === "alert-dialog-body") {
           highlightCurrentLine
           monospace
           defaultValue={SELECTION_TEXT}
+          style={{ width: "200px" }}
+        />
+      </GtkBox>
+    </AdwaitaProvider>,
+  );
+} else if (caseName === "text-view-editing") {
+  // Page for tests/cases/text-view-editing.test.ts, which types, clicks and
+  // drags in the views itself.
+  createRoot(container).render(
+    <AdwaitaProvider colorScheme="light">
+      <GtkBox orientation="vertical" spacing={12} halign="start" valign="start">
+        <GtkTextView
+          id="editor"
+          monospace
+          wrapMode="char"
+          defaultValue={EDITING_TEXT}
+          style={{ width: "200px" }}
+        />
+        <UpperCaseTextViews />
+        <GtkTextView
+          id="read-only"
+          monospace
+          editable={false}
+          defaultValue="read only"
+          style={{ width: "200px" }}
+        />
+        <GtkTextView
+          id="no-cursor"
+          monospace
+          cursorVisible={false}
+          defaultValue="no cursor"
+          style={{ width: "200px" }}
+        />
+        <GtkTextView
+          id="disabled"
+          monospace
+          disabled
+          defaultValue="disabled"
+          style={{ width: "200px" }}
+        />
+        <GtkTextView
+          id="proportional"
+          wrapMode="word"
+          defaultValue={EDITING_TEXT}
           style={{ width: "200px" }}
         />
       </GtkBox>

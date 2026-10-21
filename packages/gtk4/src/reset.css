@@ -75,7 +75,7 @@ body:has(> :first-child:has([data-gtk-provider])) > :first-child {
   --monospace-font-size: var(--gtk-font-size);
   /* A text view's lines are the font's ascent + descent, to the nearest
      pixel (gtk_text_layout_get_line_yrange()), which the view measures (see
-     --gtk-textview-line-height). Until it has, they're this, rounded: `normal`
+     --gtk-textview-row-height). Until it has, they're this, rounded: `normal`
      for the monospace font, its metrics' (17.07px for DejaVu Sans Mono at
      11pt, so 17px lines, where 1.2em gives 17.6px, 18px lines). Set this
      along with --monospace-font-family. */
@@ -371,20 +371,26 @@ body:has(> :first-child:has([data-gtk-provider])) > :first-child {
 }
 
 /* It's as tall as its text and as wide as its margins (gtk_text_view_measure()),
-   not the size a <textarea> takes from `rows` and `cols`; text-view.tsx
-   measures it where `field-sizing` isn't supported. The text never scrolls
-   itself: the view does, in a GtkScrolledWindow. Its lines are the font's
-   line height to the nearest whole pixel, as Pango rounds a line's logical
-   extents (PANGO_PIXELS()): 18px for Cantarell's 17.6px at 11pt. The view
-   measures that in --gtk-textview-line-height (text-view-metrics.ts), since
-   browsers round `normal` their own ways. The indent
-   is each paragraph's where `each-line` is supported (gtk_text_view_set_indent()). */
+   not the size a <textarea> takes from `rows` and `cols`. The text never
+   scrolls itself: the view does, in a GtkScrolledWindow. Its rows are as tall
+   as Pango's for the font (--gtk-textview-row-height, text-view-metrics.ts),
+   and once the view draws the text itself (data-gtk-drawn), its paragraphs
+   size the text window and the textarea fills it. Until then (on the
+   server) the textarea sizes itself, its rows the font's line height to the
+   nearest pixel. The indent is each paragraph's where `each-line` is
+   supported (gtk_text_view_set_indent()). */
 :where([data-gtk-provider] .gtk-textview > .gtk-text) {
-  line-height: var(--gtk-textview-line-height, round(1lh, 1px));
+  line-height: var(--gtk-textview-row-height, round(1lh, 1px));
   field-sizing: content;
   contain: inline-size;
   overflow: hidden;
   text-indent: var(--gtk-textview-indent, 0);
+}
+
+:where([data-gtk-provider] .gtk-textview[data-gtk-drawn] > .gtk-text) {
+  field-sizing: fixed;
+  contain: size;
+  min-height: 0;
 }
 
 @supports (text-indent: 1px each-line) {
@@ -424,28 +430,94 @@ body:has(> :first-child:has([data-gtk-provider])) > :first-child {
   pointer-events: none;
 }
 
-/* The text view draws its selection under the text, like
-   gtk_text_layout_snapshot() (text-view.tsx), where the browser can read its
-   colors (data-gtk-selection): not the browser's, which stops at a line's
-   text and isn't drawn while the view is unfocused. */
+/* The text the view draws, laid out as GtkTextLayout lays it out: each
+   paragraph a block as tall as its rows to the nearest pixel, its rows at
+   their fractional height inside it (gtk_text_layout_get_line_display()). It
+   sizes the text window, as the textarea did: across, only in a scrolled
+   window. The textarea over it takes the presses, which the view maps to
+   the text here (offsetAtPoint()). */
+:where([data-gtk-provider] .gtk-textview-text-layer) {
+  contain: inline-size;
+}
+
+:where([data-gtk-provider] .gtk-textview-paragraphs) {
+  visibility: hidden;
+  pointer-events: auto;
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+}
+
+:where([data-gtk-provider] .gtk-textview[data-gtk-drawn] .gtk-textview-paragraphs) {
+  visibility: visible;
+}
+
+:where([data-gtk-provider] .gtk-textview-paragraphs[data-wrap="none"]) {
+  white-space: pre;
+}
+
+/* GTK_WRAP_WORD never breaks a word; one too long for the line runs past it. */
+:where([data-gtk-provider] .gtk-textview-paragraphs[data-wrap="word"]) {
+  overflow-wrap: normal;
+}
+
+:where([data-gtk-provider] .gtk-textview-paragraph > *) {
+  line-height: var(--gtk-textview-row-height, round(1lh, 1px));
+  text-indent: var(--gtk-textview-indent, 0);
+}
+
+/* While the view draws the text, the textarea's own text, cursor and
+   selection aren't seen (but for reading the theme's colors, data-gtk-probe). */
+:where([data-gtk-provider] .gtk-textview[data-gtk-drawn] > .gtk-text:not([data-gtk-probe])) {
+  -webkit-text-fill-color: transparent !important;
+  caret-color: transparent !important;
+}
+
 :where(
-    [data-gtk-provider] .gtk-textview > .gtk-text[data-gtk-selection]:not([data-gtk-probe])
+    [data-gtk-provider] .gtk-textview[data-gtk-drawn] > .gtk-text:not([data-gtk-probe])
   )::selection {
   background-color: transparent !important;
 }
 
-/* The text the selection is measured on: laid out like the text, unseen. */
-:where([data-gtk-provider] .gtk-textview-paragraphs) {
-  visibility: hidden;
-}
-
-:where([data-gtk-provider] .gtk-textview-paragraphs > *) {
-  line-height: var(--gtk-textview-line-height, round(1lh, 1px));
-  text-indent: var(--gtk-textview-indent, 0);
-}
-
-:where([data-gtk-provider] .gtk-textview-selection) {
+:where([data-gtk-provider] .gtk-textview-selection),
+:where([data-gtk-provider] .gtk-textview-cursor),
+:where([data-gtk-provider] .gtk-textview-preedit) {
   position: absolute;
+}
+
+/* Text the view measures how much wider Pango lays out than the browser in. */
+:where([data-gtk-provider] .gtk-textview-probe) {
+  position: absolute;
+  visibility: hidden;
+  white-space: pre;
+  font: inherit;
+}
+
+/* An input method's text is underlined while it's composed. */
+:where([data-gtk-provider] .gtk-textview-preedit) {
+  height: 1px;
+  background-color: currentColor;
+}
+
+/* The cursor blinks evenly between shown, fading out, hidden and fading in
+   (blink_alpha()), and stops, shown, after a while (text-view.tsx). */
+:where([data-gtk-provider] .gtk-textview-cursor[data-blink]) {
+  animation-name: gtk-textview-cursor-blink;
+  animation-duration: 1200ms;
+  animation-timing-function: linear;
+}
+
+@keyframes gtk-textview-cursor-blink {
+  0%,
+  25% {
+    opacity: 1;
+  }
+  50%,
+  75% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
 }
 
 /* The text scrolls under the border windows, which keep to their sides. */
@@ -483,8 +555,13 @@ body:has(> :first-child:has([data-gtk-provider])) > :first-child {
   grid-template-columns: auto minmax(max-content, 1fr) auto;
 }
 
-:where([data-gtk-provider] .gtk-scrolledwindow > .gtk-textview > .gtk-text) {
+:where([data-gtk-provider] .gtk-scrolledwindow > .gtk-textview > .gtk-text),
+:where([data-gtk-provider] .gtk-scrolledwindow > .gtk-textview > .gtk-textview-text-layer) {
   contain: none;
+}
+
+:where([data-gtk-provider] .gtk-scrolledwindow > .gtk-textview[data-gtk-drawn] > .gtk-text) {
+  contain: size;
 }
 
 /* GtkEntry / GtkSearchEntry: the entry's custom size_allocate lays out children

@@ -296,6 +296,7 @@ pub mod text_view_content_height;
 pub mod text_view_default;
 pub mod text_view_disabled;
 pub mod text_view_monospace;
+pub mod text_view_wrap;
 pub mod text_view_non_editable;
 pub mod text_view_scrolled;
 pub mod text_view_scrolled_long;

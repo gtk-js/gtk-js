@@ -90,7 +90,12 @@ export type {
 export { GtkStack, GtkStackPage, GtkStackSwitcher } from "./components/stack.tsx";
 export type { GtkSwitchProps } from "./components/switch.tsx";
 export { GtkSwitch } from "./components/switch.tsx";
-export type { GtkTextViewProps, GtkTextWindowType } from "./components/text-view.tsx";
+export type {
+  GtkTextViewLayout,
+  GtkTextViewLayoutRenderer,
+  GtkTextViewProps,
+  GtkTextWindowType,
+} from "./components/text-view.tsx";
 export { GtkTextView } from "./components/text-view.tsx";
 export type { GtkToggleButtonProps } from "./components/toggle-button.tsx";
 export { GtkToggleButton } from "./components/toggle-button.tsx";
