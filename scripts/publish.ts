@@ -15,6 +15,7 @@ const packages = [
   "icons/fluent",
   "packages/gtk4",
   "packages/adwaita",
+  "packages/sourceview",
 ];
 
 for (const dir of packages) {

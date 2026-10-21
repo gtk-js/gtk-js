@@ -1,8 +1,9 @@
 /**
- * Updates upstream git submodules (gtk and libadwaita) to their latest stable release tags.
+ * Updates the GNOME upstream git submodules (gtk, libadwaita, gtksourceview, adwaita-icon-theme)
+ * to their latest stable release tags.
  *
- * GNOME uses even minor versions for stable releases (e.g. 4.22.x, 1.8.x)
- * and odd minor versions for development (e.g. 4.21.x, 1.9.x).
+ * GNOME uses even minor versions for stable releases (e.g. 4.22.x, 1.8.x, 5.22.x)
+ * and odd minor versions for development (e.g. 4.21.x, 1.9.x, 5.21.x).
  *
  * Usage: node scripts/update-upstream.ts
  */
@@ -15,6 +16,11 @@ const submodules = [
     name: "libadwaita",
     path: "upstream/libadwaita",
     remote: "https://github.com/GNOME/libadwaita.git",
+  },
+  {
+    name: "gtksourceview",
+    path: "upstream/gtksourceview",
+    remote: "https://github.com/GNOME/gtksourceview.git",
   },
   {
     name: "adwaita-icon-theme",
