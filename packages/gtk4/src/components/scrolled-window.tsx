@@ -136,6 +136,18 @@ export function scrollBinding(
   }
 }
 
+/** Components that scroll themselves besides GtkTextView, e.g. its subclasses. */
+const scrollables = new WeakSet<object>();
+
+/**
+ * Declares that a component scrolls itself in a GtkScrolledWindow, as a
+ * GtkScrollable does, e.g. one that renders a GtkTextView: the window doesn't
+ * put it in a viewport.
+ */
+export function registerScrollable(component: object) {
+  scrollables.add(component);
+}
+
 /**
  * Whether a child scrolls itself (GtkScrollable): a text view, or a viewport or
  * list view a component builds itself. gtk_scrolled_window_set_child() puts
@@ -143,17 +155,20 @@ export function scrollBinding(
  */
 function isScrollable(child: ReactNode): boolean {
   if (!isValidElement<{ className?: unknown }>(child)) return false;
-  if (child.type === GtkTextView) return true;
+  if (child.type === GtkTextView || scrollables.has(child.type as object)) return true;
   const { className } = child.props;
   if (typeof className !== "string") return false;
   const classes = className.split(/\s+/);
   return classes.includes("gtk-viewport") || classes.includes("gtk-listview");
 }
 
-/** The element that scrolls: the viewport or list view, or a text view's text. */
+/**
+ * The element that scrolls: the viewport or list view, or a text view's text,
+ * or a text view with border windows, which it scrolls with its text.
+ */
 function findScroller(root: HTMLElement): HTMLElement | null {
   return root.querySelector<HTMLElement>(
-    ":scope > :is(.gtk-viewport, .gtk-listview), :scope > .gtk-textview > .gtk-text",
+    ":scope > :is(.gtk-viewport, .gtk-listview, .gtk-textview[data-text-windows]), :scope > .gtk-textview:not([data-text-windows]) > .gtk-text",
   );
 }
 

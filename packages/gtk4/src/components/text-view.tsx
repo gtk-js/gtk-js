@@ -1,5 +1,6 @@
 import React, {
   forwardRef,
+  type ReactNode,
   type TextareaHTMLAttributes,
   useCallback,
   useEffect,
@@ -45,7 +46,22 @@ export interface GtkTextViewProps
   acceptsTab?: boolean;
   /** Callback when text changes. */
   onChanged?: (text: string) => void;
+  /**
+   * Widgets beside the text, each in the border window on its side, which
+   * scrolls with the text along its length (gtk_text_view_set_gutter()).
+   */
+  gutters?: Partial<Record<GtkTextWindowType, ReactNode>>;
+  /**
+   * Drawn under the text, in the text window and scrolled with it, as a
+   * subclass draws GTK_TEXT_VIEW_LAYER_BELOW_TEXT (GtkTextViewClass.snapshot_layer()).
+   */
+  belowText?: ReactNode;
 }
+
+/** The text view's border windows (GtkTextWindowType, but for the text window). */
+export type GtkTextWindowType = "left" | "right" | "top" | "bottom";
+
+const BORDER_WINDOWS: readonly GtkTextWindowType[] = ["left", "right", "top", "bottom"];
 
 // The on-screen keyboard GTK's input method shows for each purpose.
 const purposeToInputMode: Partial<
@@ -129,6 +145,10 @@ function editText(text: HTMLTextAreaElement, insert: string) {
  * which themes style as `textview > text` and `textview text selection`. The
  * ref is the textarea; className, style and the alignment are the widget's.
  *
+ * With gutters (`border.left` etc. around the text) or a layer below the
+ * text, the view lays them out around its text window and, in a
+ * GtkScrolledWindow, scrolls them together: the view scrolls, not its text.
+ *
  * @see https://docs.gtk.org/gtk4/class.TextView.html
  */
 export const GtkTextView = forwardRef<HTMLTextAreaElement, GtkTextViewProps>(function GtkTextView(
@@ -156,6 +176,8 @@ export const GtkTextView = forwardRef<HTMLTextAreaElement, GtkTextViewProps>(fun
     onInput,
     onKeyDown,
     disabled,
+    gutters,
+    belowText,
     ...rest
   },
   ref,
@@ -163,6 +185,7 @@ export const GtkTextView = forwardRef<HTMLTextAreaElement, GtkTextViewProps>(fun
   const rootRef = useRef<HTMLDivElement>(null);
   const textRef = useRef<HTMLTextAreaElement>(null);
   useImperativeHandle(ref, () => textRef.current as HTMLTextAreaElement);
+  const windowed = belowText != null || BORDER_WINDOWS.some((side) => gutters?.[side] != null);
 
   // F7 toggles the cursor when the app doesn't set it (gtk_text_view_toggle_cursor_visible()).
   const [ownCursorVisible, setOwnCursorVisible] = useState(true);
@@ -265,7 +288,7 @@ export const GtkTextView = forwardRef<HTMLTextAreaElement, GtkTextViewProps>(fun
           // The view's adjustments: it scrolls its own text, in a scrolled window
           // too (GtkScrollable). A step is a tenth of the page, a page nine
           // tenths (gtk_text_view_set_vadjustment_values()).
-          const scroller = text;
+          const scroller = windowed ? (rootRef.current ?? text) : text;
           const [page, upper] =
             action.axis === "y"
               ? [scroller.clientHeight, scroller.scrollHeight]
@@ -277,7 +300,7 @@ export const GtkTextView = forwardRef<HTMLTextAreaElement, GtkTextViewProps>(fun
         }
       }
     },
-    [acceptsTab, editable, showCursor, cursorVisible, onKeyDown],
+    [acceptsTab, editable, showCursor, cursorVisible, onKeyDown, windowed],
   );
 
   // A view that isn't editable keeps its cursor (gtk_text_view_set_editable()),
@@ -316,8 +339,13 @@ export const GtkTextView = forwardRef<HTMLTextAreaElement, GtkTextViewProps>(fun
     const text = textRef.current;
     if (!text || CSS.supports("field-sizing", "content")) return;
     // In a GtkScrolledWindow, the window allocates the view and its text
-    // scrolls (GtkScrollable): it isn't fitted to the text.
-    if (rootRef.current?.parentElement?.classList.contains("gtk-scrolledwindow")) {
+    // scrolls (GtkScrollable): it isn't fitted to the text. With border
+    // windows the view scrolls, and the text is as large as its contents.
+    const root = rootRef.current;
+    if (
+      !root?.hasAttribute("data-text-windows") &&
+      root?.parentElement?.classList.contains("gtk-scrolledwindow")
+    ) {
       text.style.width = text.style.minWidth = text.style.height = text.style.minHeight = "";
       return;
     }
@@ -357,6 +385,28 @@ export const GtkTextView = forwardRef<HTMLTextAreaElement, GtkTextViewProps>(fun
     };
   }, [fitText]);
 
+  // A scrolling view keeps the text the caret moves to out from under the
+  // border windows, which stay on their sides (GtkTextView scrolls the text
+  // window alone, beside them).
+  useLayoutEffect(() => {
+    const root = rootRef.current;
+    if (!root || !windowed) return;
+    const sizes = new ResizeObserver(() => {
+      const size = (side: GtkTextWindowType) => {
+        const border = root.querySelector<HTMLElement>(`:scope > .gtk-border.${side}`);
+        if (!border) return 0;
+        return side === "left" || side === "right" ? border.offsetWidth : border.offsetHeight;
+      };
+      const sides = ["top", "right", "bottom", "left"] as const;
+      root.style.scrollPadding = sides.map((side) => `${size(side)}px`).join(" ");
+    });
+    for (const border of root.querySelectorAll(":scope > .gtk-border")) sizes.observe(border);
+    return () => {
+      sizes.disconnect();
+      root.style.scrollPadding = "";
+    };
+  });
+
   // Text dragged over an editable view sets :drop(active) (its GtkDropTarget).
   const acceptsDrop = editable && !disabled;
   const handleDragOver = useCallback(
@@ -378,6 +428,7 @@ export const GtkTextView = forwardRef<HTMLTextAreaElement, GtkTextViewProps>(fun
       {...alignAttrs(halign, valign, hexpand, vexpand)}
       data-disabled={disabled || undefined}
       data-drop-active={(dropActive && acceptsDrop) || undefined}
+      data-text-windows={windowed || undefined}
       onPointerMove={unobscureCursor}
       onDragEnter={handleDragOver}
       onDragOver={handleDragOver}
@@ -385,6 +436,11 @@ export const GtkTextView = forwardRef<HTMLTextAreaElement, GtkTextViewProps>(fun
       onDrop={endDrop}
       onDragEnd={endDrop}
     >
+      {belowText != null && (
+        <div className="gtk-textview-layer" aria-hidden>
+          {belowText}
+        </div>
+      )}
       <textarea
         ref={textRef}
         className="gtk-text"
@@ -399,6 +455,14 @@ export const GtkTextView = forwardRef<HTMLTextAreaElement, GtkTextViewProps>(fun
         onKeyDown={handleKeyDown}
         {...rest}
       />
+      {BORDER_WINDOWS.map(
+        (side) =>
+          gutters?.[side] != null && (
+            <div key={side} className={`gtk-border ${side}`}>
+              {gutters[side]}
+            </div>
+          ),
+      )}
     </div>
   );
 });

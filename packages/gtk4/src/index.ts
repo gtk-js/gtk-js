@@ -71,7 +71,7 @@ export type { GtkScrollbarProps } from "./components/scrollbar.tsx";
 export { GtkScrollbar } from "./components/scrollbar.tsx";
 export type { GtkScrolledWindowProps } from "./components/scrolled-window.tsx";
 // Phase 2: Container Components
-export { GtkScrolledWindow } from "./components/scrolled-window.tsx";
+export { GtkScrolledWindow, registerScrollable } from "./components/scrolled-window.tsx";
 export type { GtkSearchBarProps } from "./components/search-bar.tsx";
 export { GtkSearchBar } from "./components/search-bar.tsx";
 export type { GtkSearchEntryProps } from "./components/search-entry.tsx";
@@ -90,7 +90,7 @@ export type {
 export { GtkStack, GtkStackPage, GtkStackSwitcher } from "./components/stack.tsx";
 export type { GtkSwitchProps } from "./components/switch.tsx";
 export { GtkSwitch } from "./components/switch.tsx";
-export type { GtkTextViewProps } from "./components/text-view.tsx";
+export type { GtkTextViewProps, GtkTextWindowType } from "./components/text-view.tsx";
 export { GtkTextView } from "./components/text-view.tsx";
 export type { GtkToggleButtonProps } from "./components/toggle-button.tsx";
 export { GtkToggleButton } from "./components/toggle-button.tsx";
