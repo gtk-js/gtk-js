@@ -17,7 +17,7 @@
 .sourceview > .gtk-border > .gtk-gutter {
   position: relative;
   display: flex;
-  --gtk-source-line-height: round(1lh, 1px);
+  --gtk-source-line-height: var(--gtk-textview-line-height, round(1lh, 1px));
 }
 
 /* The current line's number's background, across the gutter. */
@@ -37,7 +37,7 @@
    the end (xalign 1) of the line's first row (GTK_SOURCE_GUTTER_RENDERER_ALIGNMENT_MODE_FIRST). */
 .sourceview .gtk-gutterrenderer > [data-line] {
   padding: 0 6px;
-  line-height: round(1lh, 1px);
+  line-height: var(--gtk-textview-line-height, round(1lh, 1px));
   text-align: end;
   white-space: nowrap;
 }
@@ -60,7 +60,7 @@
 }
 
 .gtk-source-line {
-  line-height: round(1lh, 1px);
+  line-height: var(--gtk-textview-line-height, round(1lh, 1px));
   white-space: pre;
   color: transparent;
 }
