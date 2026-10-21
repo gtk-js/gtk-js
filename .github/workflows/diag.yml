@@ -1,0 +1,69 @@
+name: Diag
+
+on:
+  push:
+    branches: [ccr-e83996bf-j8500f-sourceview-diag]
+
+permissions:
+  contents: read
+
+jobs:
+  diag:
+    runs-on: ubuntu-latest
+    container: ghcr.io/gtk-rs/gtk4-rs/gtk4:latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - name: Install needed dependencies
+        run: dnf install -y sassc unzip cargo libxml2-devel pcre2-devel fribidi-devel
+      - name: Fonts
+        run: |
+          esc() { python3 -c 'import sys; print(sys.stdin.read().replace("%","%25").replace("\r","%0D").replace("\n","%0A"))' 2>/dev/null || sed ':a;N;$!ba;s/\n/%0A/g'; }
+          { for f in monospace Monospace "Adwaita Mono" "DejaVu Sans Mono" "Source Code Pro" sans-serif Cantarell "Adwaita Sans"; do echo "$f -> $(fc-match "$f")"; done; echo; fc-list : family | sort -u; } > /tmp/fonts.txt
+          echo "::warning title=fonts::$(esc < /tmp/fonts.txt)"
+          { gsettings get org.gnome.desktop.interface monospace-font-name; gsettings get org.gnome.desktop.interface font-name; ls /usr/share/glib-2.0/schemas | grep -i desktop; rpm -q gsettings-desktop-schemas pango fontconfig; cat /etc/os-release | head -3; } > /tmp/settings.txt 2>&1 || true
+          echo "::warning title=settings::$(esc < /tmp/settings.txt)"
+          cat > /tmp/m.c <<'C'
+          #include <pango/pangocairo.h>
+          #include <stdio.h>
+          int main(void) {
+            const char *fams[] = {"Monospace 11", "Monospace 10", "Adwaita Mono 11", "DejaVu Sans Mono 11", "Source Code Pro 11", "Cantarell 11", "Adwaita Sans 11", NULL};
+            PangoFontMap *map = pango_cairo_font_map_get_default();
+            PangoContext *ctx = pango_font_map_create_context(map);
+            for (int i = 0; fams[i]; i++) {
+              PangoFontDescription *d = pango_font_description_from_string(fams[i]);
+              PangoFont *f = pango_font_map_load_font(map, ctx, d);
+              PangoFontDescription *r = pango_font_describe(f);
+              PangoFontMetrics *m = pango_font_get_metrics(f, NULL);
+              PangoLayout *l = pango_layout_new(ctx);
+              pango_layout_set_font_description(l, d);
+              pango_layout_set_text(l, "x\nx\nx", -1);
+              PangoRectangle ext; pango_layout_get_extents(l, NULL, &ext);
+              printf("%s -> %s size=%d asc=%d desc=%d height=%d (%.3fpx) 3lines=%.3fpx\n", fams[i], pango_font_description_to_string(r),
+                pango_font_description_get_size(r), pango_font_metrics_get_ascent(m), pango_font_metrics_get_descent(m),
+                pango_font_metrics_get_height(m), pango_font_metrics_get_height(m) / 1024.0, ext.height / 1024.0);
+            }
+            return 0;
+          }
+          C
+          gcc /tmp/m.c -o /tmp/m $(pkg-config --cflags --libs pangocairo) && /tmp/m > /tmp/pango.txt 2>&1 || echo "build failed" > /tmp/pango.txt
+          echo "::warning title=pango::$(esc < /tmp/pango.txt)"
+      - name: Build GtkSourceView
+        run: |
+          meson setup /tmp/gtksourceview upstream/gtksourceview --prefix=/usr --buildtype=release \
+            -Dintrospection=disabled -Dvapi=false -Dbuild-testsuite=false -Ddocumentation=false
+          meson install -C /tmp/gtksourceview
+      - uses: voidzero-dev/setup-vp@v1.21.2
+        with:
+          run-install: false
+      - name: Install dependencies
+        run: vp install
+        env:
+          HOME: /root
+      - name: Build packages
+        run: vp run build:packages
+      - name: Run diagnostics
+        run: vp test --reporter=github-actions --reporter=default tests/cases/zz-diag.test.ts tests/cases/source-view-tab-width.test.ts tests/cases/source-view-wrap.test.ts
+        env:
+          HOME: /root
