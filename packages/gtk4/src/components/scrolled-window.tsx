@@ -15,6 +15,7 @@ import {
   useRef,
   useState,
 } from "react";
+import { observeSize, scheduleLayout } from "../layouts/layout-pass.ts";
 import { alignAttrs, type GtkAlignProps, type GtkPolicyType } from "../types.ts";
 import { GtkScrollbar } from "./scrollbar.tsx";
 import { GtkTextView } from "./text-view.tsx";
@@ -292,24 +293,35 @@ export const GtkScrolledWindow = forwardRef<HTMLDivElement, GtkScrolledWindowPro
     const rtlOffset = (el: HTMLElement) =>
       getComputedStyle(el).direction === "rtl" ? el.scrollWidth - el.clientWidth : 0;
 
-    /** Reads the scroller, like the adjustments' value-changed and changed signals. */
-    const update = useCallback(() => {
+    /**
+     * Reads the scroller, like the adjustments' value-changed and changed
+     * signals, and returns its position and the write that updates the axes.
+     */
+    const read = useCallback(() => {
       const el = rootRef.current && findScroller(rootRef.current);
-      if (!el) return;
+      if (!el) return undefined;
       const left = el.scrollLeft + rtlOffset(el);
       const x = scrollAxis(left, el.scrollWidth, el.clientWidth);
       const y = scrollAxis(el.scrollTop, el.scrollHeight, el.clientHeight);
-      setAxes((prev) => {
-        const same = (a: ScrollAxis, b: ScrollAxis) =>
-          a.value === b.value &&
-          a.pageSize === b.pageSize &&
-          a.overflows === b.overflows &&
-          a.start === b.start &&
-          a.end === b.end;
-        return same(prev.x, x) && same(prev.y, y) ? prev : { x, y };
-      });
-      return { left, top: el.scrollTop };
+      const write = () =>
+        setAxes((prev) => {
+          const same = (a: ScrollAxis, b: ScrollAxis) =>
+            a.value === b.value &&
+            a.pageSize === b.pageSize &&
+            a.overflows === b.overflows &&
+            a.start === b.start &&
+            a.end === b.end;
+          return same(prev.x, x) && same(prev.y, y) ? prev : { x, y };
+        });
+      return { left, top: el.scrollTop, write };
     }, []);
+    const update = useCallback(() => {
+      const at = read();
+      at?.write();
+      return at;
+    }, [read]);
+    // In the layout pass, when the scroller or its content resizes.
+    const layout = useCallback(() => read()?.write, [read]);
 
     // Content that grows or shrinks moves the edges too.
     useLayoutEffect(() => {
@@ -318,11 +330,12 @@ export const GtkScrolledWindow = forwardRef<HTMLDivElement, GtkScrolledWindowPro
       if (!root || !el) return;
       const at = update();
       if (at) position.current = { x: at.left, y: at.top };
-      const resizes = new ResizeObserver(() => update());
+      let unobserve: (() => void)[] = [];
       const observe = () => {
-        resizes.disconnect();
-        resizes.observe(el);
-        for (const child of el.children) resizes.observe(child);
+        for (const stop of unobserve) stop();
+        unobserve = [el, ...el.children].map((target) =>
+          observeSize(target, () => scheduleLayout(layout)),
+        );
       };
       observe();
       const mutations = new MutationObserver(() => {
@@ -331,10 +344,10 @@ export const GtkScrolledWindow = forwardRef<HTMLDivElement, GtkScrolledWindowPro
       });
       mutations.observe(el, { childList: true });
       return () => {
-        resizes.disconnect();
+        for (const stop of unobserve) stop();
         mutations.disconnect();
       };
-    }, [update]);
+    }, [update, layout]);
 
     // Scroll events don't bubble; catch the scroller's on the way down.
     const handleScroll = (e: UIEvent<HTMLDivElement>) => {

@@ -1,3 +1,4 @@
+import { observeSize, scheduleLayout } from "@gtk-js/gtk4";
 import { forwardRef, type HTMLAttributes, type ReactNode, useLayoutEffect, useRef } from "react";
 import { flushSync } from "react-dom";
 import { lengthUnitToPx } from "../length-unit.ts";
@@ -173,8 +174,7 @@ export const AdwBreakpointBin = forwardRef<HTMLDivElement, AdwBreakpointBinProps
       if (!el) return;
       const checks = (JSON.parse(conditions) as string[]).map(parseBreakpointCondition);
 
-      const observer = new ResizeObserver(([entry]) => {
-        if (!entry) return;
+      return observeSize(el, (entry) => {
         const { width, height } = entry.contentRect;
         // Like adw_breakpoint_bin_size_allocate(): the last matching
         // breakpoint wins.
@@ -187,16 +187,16 @@ export const AdwBreakpointBin = forwardRef<HTMLDivElement, AdwBreakpointBinProps
         activeRef.current = index;
         // GTK applies breakpoints while allocating, before anything is drawn
         // at the new size: render the callbacks' updates before this frame
-        // is painted.
-        flushSync(() => {
-          // adw_breakpoint_transition(): unapply, then apply.
-          if (previous >= 0) breakpointsRef.current[previous]?.onUnapply?.();
-          if (index >= 0) breakpointsRef.current[index]?.onApply?.();
-        });
+        // is painted, after the layout pass's reads.
+        scheduleLayout(
+          () => () =>
+            flushSync(() => {
+              // adw_breakpoint_transition(): unapply, then apply.
+              if (previous >= 0) breakpointsRef.current[previous]?.onUnapply?.();
+              if (index >= 0) breakpointsRef.current[index]?.onApply?.();
+            }),
+        );
       });
-
-      observer.observe(el);
-      return () => observer.disconnect();
     }, [conditions]);
 
     const setRef = (el: HTMLDivElement | null) => {

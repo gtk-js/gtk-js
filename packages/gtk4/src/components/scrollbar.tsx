@@ -8,6 +8,7 @@ import React, {
   useState,
 } from "react";
 import { noFocusOnClick } from "../focus-on-click.ts";
+import { observeSize, scheduleLayout } from "../layouts/layout-pass.ts";
 import { alignAttrs, type GtkAlignProps, type GtkOrientation } from "../types.ts";
 
 export interface GtkScrollbarProps extends HTMLAttributes<HTMLDivElement>, GtkAlignProps {
@@ -134,6 +135,7 @@ export const GtkScrollbar = forwardRef<HTMLDivElement, GtkScrollbarProps>(functi
     const slider = sliderRef.current;
     if (!trough || !slider) return;
     const [start, end] = isHoriz ? ["left", "right"] : ["top", "bottom"];
+    // Reads the metrics, and returns the write that stores them.
     const measure = () => {
       const s = getComputedStyle(slider);
       const px = (...props: string[]) =>
@@ -151,16 +153,16 @@ export const GtkScrollbar = forwardRef<HTMLDivElement, GtkScrollbarProps>(functi
         min: px(isHoriz ? "min-width" : "min-height") + extra,
         extra,
       };
-      setMetrics((prev) =>
-        prev && prev.trough === next.trough && prev.min === next.min && prev.extra === next.extra
-          ? prev
-          : next,
-      );
+      return () =>
+        setMetrics((prev) =>
+          prev && prev.trough === next.trough && prev.min === next.min && prev.extra === next.extra
+            ? prev
+            : next,
+        );
     };
-    measure();
-    const resizes = new ResizeObserver(measure);
-    resizes.observe(trough);
-    return () => resizes.disconnect();
+    measure()();
+    // In the layout pass, when the trough resizes.
+    return observeSize(trough, () => scheduleLayout(measure));
   }, [isHoriz]);
 
   const setValue = useCallback(
