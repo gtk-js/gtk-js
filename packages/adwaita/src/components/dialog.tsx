@@ -1,4 +1,4 @@
-import { WindowControlsContext } from "@gtk-js/gtk4";
+import { useDecorationLayout, WindowControlsContext } from "@gtk-js/gtk4";
 import React, {
   forwardRef,
   type HTMLAttributes,
@@ -6,6 +6,7 @@ import React, {
   useCallback,
   useMemo,
 } from "react";
+import { sheetDecorationLayout } from "../sheet-controls.ts";
 import type { AdwDialogPresentationMode } from "../types.ts";
 import { FloatingSheet } from "./floating-sheet.tsx";
 import { HeaderBarTitleContext } from "./header-bar-title.ts";
@@ -77,7 +78,8 @@ export const AdwDialog = forwardRef<HTMLDivElement, AdwDialogProps>(function Adw
 
   // Header bars inside a dialog only get a close button (AdwSheetControls),
   // which is there even when the dialog can't close: it emits close-attempt.
-  const controls = useMemo(() => ({ close, decorationLayout: ":close" }), [close]);
+  const decorationLayout = sheetDecorationLayout(useDecorationLayout());
+  const controls = useMemo(() => ({ close, decorationLayout }), [close, decorationLayout]);
 
   const sheetStyle: React.CSSProperties = {
     width: contentWidth > 0 ? contentWidth : undefined,

@@ -5,6 +5,7 @@ import {
   GtkLabel,
   GtkScrolledWindow,
   GtkWindowTitle,
+  useDecorationLayout,
   useIcon,
   WindowControlsContext,
   wrapStyle,
@@ -20,6 +21,7 @@ import {
   useRef,
   useState,
 } from "react";
+import { sheetDecorationLayout } from "../sheet-controls.ts";
 import { AdwActionRow } from "./action-row.tsx";
 import { AdwClamp } from "./clamp.tsx";
 import { FloatingSheet } from "./floating-sheet.tsx";
@@ -562,7 +564,8 @@ export const AdwAboutDialog = forwardRef<HTMLDivElement, AdwAboutDialogProps>(
       }
     };
 
-    const controls = useMemo(() => ({ close, decorationLayout: ":close" }), [close]);
+    const decorationLayout = sheetDecorationLayout(useDecorationLayout());
+    const controls = useMemo(() => ({ close, decorationLayout }), [close, decorationLayout]);
 
     // update_credits(): the untranslated "translator-credits" placeholder means nobody.
     const translators =
