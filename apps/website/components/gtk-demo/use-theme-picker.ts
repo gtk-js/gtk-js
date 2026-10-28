@@ -1,6 +1,6 @@
 "use client";
 
-import type { IconMap } from "@gtk-js/gtk4";
+import { DecorationLayout, type IconMap } from "@gtk-js/gtk4";
 import * as adwaitaIcons from "@gtk-js/icons-adwaita";
 import * as fluentIcons from "@gtk-js/icons-fluent";
 import * as mactahoeIcons from "@gtk-js/icons-mactahoe";
@@ -81,6 +81,8 @@ export interface ThemePickerState extends ThemeChoice {
   cssHref: string | undefined;
   cssText: string | undefined;
   icons: IconMap;
+  /** The window buttons' order for GtkProvider: macOS's (on the left) for the macOS themes. */
+  decorationLayout: string | undefined;
   /** False while rendering the server HTML and hydrating it, true once the saved choice is in. */
   restored: boolean;
   setThemeName: (t: ThemeName) => void;
@@ -148,6 +150,8 @@ export function useThemePickerState(): ThemePickerState {
     cssHref: saved ? stylesheet.href : undefined,
     cssText: saved ? stylesheet.css : undefined,
     icons: THEME_ICONS[themeName],
+    decorationLayout:
+      themeName === "whitesur" || themeName === "mactahoe" ? DecorationLayout.MACOS : undefined,
     restored: saved !== null,
     setThemeName: set("themeName"),
     setColorScheme: set("colorScheme"),
