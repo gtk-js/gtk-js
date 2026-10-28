@@ -1,4 +1,5 @@
 import { createContext, type PointerEvent, useContext } from "react";
+import { DecorationLayout } from "./types.ts";
 
 /**
  * The enclosing window's actions and state, which GtkWindowControls and
@@ -29,6 +30,20 @@ export interface WindowControlsAPI {
 }
 
 export const WindowControlsContext = createContext<WindowControlsAPI | undefined>(undefined);
+
+/** GtkSettings:gtk-decoration-layout's default, as gtk-js has it. */
+export const DEFAULT_DECORATION_LAYOUT: string = DecorationLayout.FULL;
+
+/**
+ * GtkSettings:gtk-decoration-layout, which GtkProvider's `decorationLayout`
+ * sets: the window buttons of header bars and window controls whose window
+ * or dialog doesn't set its own.
+ */
+export const DecorationLayoutContext = createContext(DEFAULT_DECORATION_LAYOUT);
+
+export function useDecorationLayout(): string {
+  return useContext(DecorationLayoutContext);
+}
 
 export function useWindowControls(): WindowControlsAPI | undefined {
   return useContext(WindowControlsContext);
