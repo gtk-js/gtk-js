@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const PreferencesSystemNetworkServerBoot = createGtkIcon("preferences-system-network-server-boot", [["rect",{"width":"22","height":"22","rx":"6","ry":"6"}],["path",{"d":"M.287 5A7 7 0 0 0 0 7v1h22V7c0-.696-.1-1.367-.287-2ZM0 14v1c0 .696.1 1.367.287 2h21.426A7 7 0 0 0 22 15v-1z"}],["rect",{"width":"18","height":"18","x":"2","y":"2","rx":"5","ry":"5"}],["path",{"fill":"currentColor","d":"M10 5h2v5h-2zm3 .35v1.07A5 5 0 0 1 16 11a5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 3-4.576V5.352A6 6 0 0 0 5 11a6 6 0 0 0 6 6 6 6 0 0 0 6-6 6 6 0 0 0-4-5.65"}]]);

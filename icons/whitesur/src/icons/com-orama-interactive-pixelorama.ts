@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const ComOramaInteractivePixelorama = createGtkIcon("com-orama-interactive-pixelorama", [["rect",{"width":"56.002","height":"56.002","x":"4","y":"3.969","fill":"currentColor","rx":"13.002","ry":"13.002"}],["path",{"d":"M8.2 5A4.19 4.19 0 0 0 4 9.2v47.6A4.19 4.19 0 0 0 8.2 61h47.6a4.19 4.19 0 0 0 4.2-4.2V9.2A4.19 4.19 0 0 0 55.8 5H32z","opacity":".2"}],["path",{"fill":"currentColor","d":"M18 46v-4h-7V21h7v-7h7v7h-7v14h7v14h-7z"}],["path",{"fill":"currentColor","d":"M39 46v-4h7v-7h-7V14h7v7h7v21h-7v7h-7z"}],["path",{"fill":"currentColor","d":"M25 46v-4h14v7H25v-2.8zm0-28.5V14h14v7H25z"}],["path",{"fill":"currentColor","d":"M18 21h7v7h-7zm7 0h7v7h-7zm-7 7h7v7h-7zm21 7h7v7h-7z"}]]);

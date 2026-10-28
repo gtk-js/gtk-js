@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const Plexmediaserver = createGtkIcon("plexmediaserver", [["rect",{"width":"56.002","height":"56.002","x":"4","y":"3.969","fill":"currentColor","rx":"13.002","ry":"13.002"}],["path",{"fill":"currentColor","d":"M3068.929 210.125h-290.001l-289.999 500 289.999 500h289.748l-289.748-499.75z"}],["path",{"fill":"currentColor","d":"M2168.94 210.125h290l320 500.25-320 500.25h-290l319.999-500.25z"}],["path",{"fill":"currentColor","d":"M45.06 17.853h-8.425l-8.424 14.524L36.635 46.9h8.417l-8.417-14.517 8.424-14.531"}],["path",{"fill":"currentColor","d":"M2168.94 210.125h290l320 500.25-320 500.25h-290l319.999-500.25z","transform":"translate(-44.087 11.75)scale(.02905)"}]]);

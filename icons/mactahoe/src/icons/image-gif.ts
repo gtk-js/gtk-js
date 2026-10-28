@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const ImageGif = createGtkIcon("image-gif", [["path",{"fill":"currentColor","d":"M2 2v8.992l-1 1V12h1v2h12v-2.998h1v-.01l-1-1V2zm1 1h10v5.992L9.006 5H9v.002h-.006L6.498 7.494 6.004 7h-.008L3 9.994zm2 1c-.554 0-1 .446-1 1s.446 1 1 1 1-.446 1-1-.446-1-1-1m4 2.41l4 3.998V11h-2.992L7.207 8.203zm-3 2L8.59 11H3.408zM3 12h6.59l.002.002H11V12h2v1H3z"}]]);

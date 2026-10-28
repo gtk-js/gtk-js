@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const ApplicationVndOasisOpendocumentChartTemplate = createGtkIcon("application-vnd-oasis-opendocument-chart-template", [["rect",{"width":"46","height":"60","x":"9","y":"1","fill":"currentColor","rx":"3","ry":"3"}],["path",{"fill":"none","d":"M32.942-2.049h25.081V23.03H32.942z"}],["path",{"fill":"currentColor","d":"M19 21h6v32h-6z","opacity":".75","overflow":"visible"}],["path",{"fill":"currentColor","d":"M29 37h6v16h-6z","opacity":".75","overflow":"visible"}],["path",{"fill":"currentColor","d":"M39 29h6v24h-6z","opacity":".75","overflow":"visible"}]]);

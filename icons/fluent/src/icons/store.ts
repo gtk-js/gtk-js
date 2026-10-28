@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const Store = createGtkIcon("store", [["path",{"d":"m7 1037.4v1h-1.5c-1.939 0-3.5 1.561-3.5 3.5s1.561 3.5 3.5 3.5h1.5v5h-4v1h4v1h1v-1h1.5c1.939 0 3.5-1.561 3.5-3.5s-1.561-3.5-3.5-3.5h-0.5-1v-5h4v-1h-4v-1h-1zm-1.5 2h1.5v5h-1.5c-1.385 0-2.5-1.115-2.5-2.5s1.115-2.5 2.5-2.5zm2.5 6h1 0.5c1.385 0 2.5 1.115 2.5 2.5s-1.115 2.5-2.5 2.5h-1.5v-5z","fill":"currentColor","strokeLinecap":"round","strokeLinejoin":"round"}]]);
+export const Store = createGtkIcon("store", [["g",{"transform":"translate(0 -1036.4)"},[["path",{"d":"m7 1037.4v1h-1.5c-1.939 0-3.5 1.561-3.5 3.5s1.561 3.5 3.5 3.5h1.5v5h-4v1h4v1h1v-1h1.5c1.939 0 3.5-1.561 3.5-3.5s-1.561-3.5-3.5-3.5h-0.5-1v-5h4v-1h-4v-1h-1zm-1.5 2h1.5v5h-1.5c-1.385 0-2.5-1.115-2.5-2.5s1.115-2.5 2.5-2.5zm2.5 6h1 0.5c1.385 0 2.5 1.115 2.5 2.5s-1.115 2.5-2.5 2.5h-1.5v-5z","fill":"currentColor","strokeLinecap":"round","strokeLinejoin":"round"}]]]]);

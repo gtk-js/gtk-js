@@ -1,0 +1,3 @@
+import { createGtkIcon } from "@gtk-js/icon-helpers";
+
+export const BatteryLevel0Charging = createGtkIcon("battery-level-0-charging", [["g",{"fill":"currentColor"},[["path",{"d":"m6.834 4-3.334 5h3l-0.75 3h0.41602l3.334-5h-3l0.75-3z","style":"fill: var(--error-color, currentColor)"}],["path",{"d":"m2 3c-1.108 0-2 0.892-2 2v6c0 1.108 0.892 2 2 2h9c1.108 0 2-0.892 2-2v-6c0-1.108-0.892-2-2-2zm0 1h9c0.554 0 1 0.446 1 1v6c0 0.554-0.446 1-1 1h-9c-0.554 0-1-0.446-1-1v-6c0-0.554 0.446-1 1-1z","style":"fill: var(--error-color, currentColor)"}],["path",{"d":"m14 6v4a2 2 0 0 0 2-2 2 2 0 0 0-2-2z","style":"fill: var(--error-color, currentColor)"}]]]]);

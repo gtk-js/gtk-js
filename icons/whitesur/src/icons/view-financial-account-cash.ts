@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const ViewFinancialAccountCash = createGtkIcon("view-financial-account-cash", [["path",{"d":"m2 4v8h12v-8zm2 1h8v1h1v4h-1v1h-8v-1h-1v-4h1zm4 1c-1.1045695 0-2 0.895431-2 2 0 1.10457 0.8954305 2 2 2 1.1045701 0 2-0.89543 2-2 0-1.104569-0.8954299-2-2-2zm0 1c0.5522847 0 1 0.4477153 1 1 0 0.552285-0.4477153 1-1 1s-1-0.447715-1-1c0-0.5522847 0.4477153-1 1-1z","fill":"currentColor"}]]);

@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const MediaOptical = createGtkIcon("media-optical", [["path",{"d":"m8 0a8 8 0 0 0-8 8 8 8 0 0 0 8 8 8 8 0 0 0 8-8 8 8 0 0 0-8-8zm-0.09375 1a7 7 0 0 1 0.09375 0 7 7 0 0 1 7 7 7 7 0 0 1-7 7 7 7 0 0 1-7-7 7 7 0 0 1 6.9062-7zm0.09375 4c-1.68 0-3 1.32-3 3s1.32 3 3 3 3-1.32 3-3-1.32-3-3-3zm0.0058594 1.0059a2.002 2.002 0 0 1 1.9961 1.9961 2.002 2.002 0 0 1-1.9961 1.9961c-1.098 0-2.0137-0.89708-2.0137-1.9961 0-1.098 0.91564-1.9961 2.0137-1.9961z","fill":"currentColor"}]]);
+export const MediaOptical = createGtkIcon("media-optical", [["path",{"d":"M8 1C4.16 1 1 4.16 1 8s3.16 7 7 7 7-3.16 7-7-3.16-7-7-7zm0 1a6 6 0 0 1 6 6 6 6 0 0 1-6 6 6 6 0 0 1-6-6 6 6 0 0 1 6-6z","fill":"currentColor"}],["circle",{"cx":"8","cy":"8","r":"3","fill":"currentColor"}]]);

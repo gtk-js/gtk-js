@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const Moonfm = createGtkIcon("moonfm", [["rect",{"width":"56.002","height":"56.002","x":"4","y":"3.969","fill":"currentColor","rx":"13.002","ry":"13.002"}],["path",{"fill":"currentColor","d":"M80.799 20.031a2.7 2.7 0 0 1 1.603 2.469v19a2.7 2.7 0 0 1-2.699 2.699h-21c-2.469-.003-3.64-3.043-1.81-4.701l21-19a2.7 2.7 0 0 1 2.906-.467","transform":"translate(-51.8 -7.531)scale(1.2111)"}],["path",{"fill":"currentColor","d":"M57.584 20.031a2.7 2.7 0 0 0-1.603 2.469v19a2.7 2.7 0 0 0 2.699 2.699h21c2.469-.003 3.64-3.043 1.81-4.701l-21-19a2.7 2.7 0 0 0-2.906-.467","opacity":".85","transform":"translate(-51.8 -7.531)scale(1.2111)"}]]);

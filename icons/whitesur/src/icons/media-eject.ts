@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const MediaEject = createGtkIcon("media-eject", [["path",{"d":"M 8 4 L 3 10 L 13 10 L 8 4 z M 3 11 L 3 12 L 13 12 L 13 11 L 3 11 z "}]]);
+export const MediaEject = createGtkIcon("media-eject", [["g",{"transform":"translate(-413 23)"},[["path",{"d":"M421-20l-5 5v1h10v-1zm-5 8v2h10v-2z","fill":"currentColor","overflow":"visible"}]]]]);

@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const Aseprite = createGtkIcon("aseprite", [["rect",{"width":"56.002","height":"56.002","x":"4","y":"3.969","fill":"currentColor","rx":"13.002","ry":"13.002"}],["rect",{"width":"50.054","height":"50.054","x":"6.974","y":"6.943","fill":"currentColor","rx":"10.028","ry":"10.028"}],["rect",{"width":"50.054","height":"41.875","x":"6.974","y":"6.943","fill":"currentColor","rx":"10.028","ry":"10.028"}],["rect",{"width":"4.918","height":"18.404","x":"20","y":"20","fill":"currentColor","opacity":".99","rx":"1.707","ry":"1.534"}],["rect",{"width":"4.918","height":"18.404","x":"40","y":"20","fill":"currentColor","opacity":".99","rx":"1.707","ry":"1.534"}]]);

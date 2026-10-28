@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const SourceRuby = createGtkIcon("source-ruby", [["path",{"d":"M2 7l6 7 6-7H2zm2.156 1h7.688L8 12.469z","fontWeight":"400","strokeWidth":"2","overflow":"visible","fontFamily":"Sans"}],["path",{"d":"M4 5L2 7l.719.719L4.438 6h7.125l1.718 1.719L14 7l-2-2H4z","fontWeight":"400","strokeWidth":"2","overflow":"visible","fontFamily":"Sans"}],["path",{"d":"M7.5 6h1v7h-1z"}],["path",{"d":"M13.078 1.995L11.984 3.9l.875.5 1.094-1.938-.875-.468zM2.914 2.062l-.844.5 1.125 1.906.844-.5-1.125-1.906z","fontWeight":"400","overflow":"visible","fontFamily":"Sans"}],["path",{"d":"M5.5 2h1v2h-1zM9.5 2h1v2h-1z"}]]);

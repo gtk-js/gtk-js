@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const TextLineSpacing = createGtkIcon("text-line-spacing", [["path",{"d":"M 2 4 L 2 5 L 9 5 L 9 4 L 2 4 z M 2 6 L 2 7 L 8 7 L 8 6 L 2 6 z M 2 9 L 2 10 L 10 10 L 10 9 L 2 9 z M 2 11 L 2 12 L 5.5625 12 L 5.5625 11 L 2 11 z "}],["path",{"d":"m 12.5,2 -1.5,2 1,0 0,8 -1,0 1.5,2 1.5,-2 -1,0 0,-8 1,0 z"}]]);
+export const TextLineSpacing = createGtkIcon("text-line-spacing", [["path",{"d":"m7.143 0-2 7h1.039l.572-2H9.26l.558 2h1.04l-1.96-7Zm.753 1h.245l.84 3H7.038ZM7.143 9l-2 7h1.039l.572-2H9.26l.558 2h1.04l-1.96-7Zm.753 1h.245l.84 3H7.038Z","fill":"currentColor","fillOpacity":"1"}]]);

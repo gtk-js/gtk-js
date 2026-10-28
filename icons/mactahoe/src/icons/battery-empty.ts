@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const BatteryEmpty = createGtkIcon("battery-empty", [["path",{"d":"m15 6v4a1 2 0 0 0 1-2 1 2 0 0 0-1-2z","fill":"currentColor"}],["path",{"d":"m3 3c-1.662 0-3 1.338-3 3v4c0 1.662 1.338 3 3 3h8c1.662 0 3-1.338 3-3v-4c0-1.662-1.338-3-3-3zm0 1h8c1.108 0 2 0.892 2 2v4c0 1.108-0.892 2-2 2h-8c-1.108 0-2-0.892-2-2v-4c0-1.108 0.892-2 2-2z","fill":"currentColor"}]]);
+export const BatteryEmpty = createGtkIcon("battery-empty", [["path",{"d":"m2 3c-1.108 0-2 0.892-2 2v6c0 1.108 0.892 2 2 2h9c1.108 0 2-0.892 2-2v-6c0-1.108-0.892-2-2-2zm0 1h9c0.554 0 1 0.446 1 1v6c0 0.554-0.446 1-1 1h-9c-0.554 0-1-0.446-1-1v-6c0-0.554 0.446-1 1-1z","style":"fill: var(--error-color, currentColor)"}],["path",{"d":"m14 6v4a2 2 0 0 0 2-2 2 2 0 0 0-2-2z","style":"fill: var(--error-color, currentColor)"}]]);

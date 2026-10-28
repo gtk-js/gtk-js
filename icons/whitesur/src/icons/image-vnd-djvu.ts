@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const ImageVndDjvu = createGtkIcon("image-vnd-djvu", [["path",{"d":"M2 3v11h12V3zm1 1h10v9H3zM12 2h1v1h-1zM3 2h1v1H3zM5 2h1v1H5zM10 2h1v1h-1z"}],["path",{"d":"M4 5h8v1H4zM4 7h4v1H4zM10 11h2v1h-2zM4 9h6v1H4z"}]]);

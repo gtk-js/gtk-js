@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const ListAddUser = createGtkIcon("list-add-user", [["path",{"d":"M8 2A3 3 0 0 0 5 5 3 3 0 0 0 8 8 3 3 0 0 0 11 5 3 3 0 0 0 8 2M8 3A2 2 0 0 1 10 5 2 2 0 0 1 8 7 2 2 0 0 1 6 5 2 2 0 0 1 8 3M8 9A5 4.5 0 0 0 3 13.5 5 4.5 0 0 0 3.033203 14H8V13H4.045A4 3.5 0 0 1 8 10zM11 9V11H9V12H11V14H12V12H14V11H12V9z"}]]);

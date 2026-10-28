@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const FormatJustifyFill = createGtkIcon("format-justify-fill", [["rect",{}],["rect",{}],["rect",{}],["rect",{}],["rect",{}]]);
+export const FormatJustifyFill = createGtkIcon("format-justify-fill", [["g",{"transform":"translate(-633 -77)"},[["rect",{"fill":"currentColor","height":"1","overflow":"visible","width":"14","x":"634","y":"78"}],["rect",{"fill":"currentColor","height":"1","overflow":"visible","width":"14","x":"634","y":"81"}],["rect",{"fill":"currentColor","height":"1","overflow":"visible","width":"14","x":"634","y":"87"}],["rect",{"fill":"currentColor","height":"1","overflow":"visible","width":"14","x":"634","y":"90"}],["rect",{"fill":"currentColor","height":"1","overflow":"visible","width":"14","x":"634","y":"84"}]]]]);

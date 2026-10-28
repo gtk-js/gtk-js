@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const GtkDialogAuthentication = createGtkIcon("gtk-dialog-authentication", [["rect",{"x":"2","y":"2","width":"28","height":"28","rx":"6","ry":"6","fill":"currentColor"}],["path",{"d":"M16 27C9.925 27 5 22.075 5 16S9.925 5 16 5s11 4.925 11 11-4.925 11-11 11z","fill":"currentColor"}],["path",{"d":"M16.25 11a2.75 2.75 0 0 0-2.75 2.75c0 1.14.683 2.112 1.67 2.53L13.5 22H19l-1.67-5.72A2.735 2.735 0 0 0 19 13.75 2.75 2.75 0 0 0 16.25 11z","fill":"currentColor","overflow":"visible"}],["path",{"d":"M16 10.695a2.83 2.83 0 0 0-2.83 2.83c0 1.172.703 2.172 1.72 2.601l-1.72 5.886h5.66l-1.718-5.886a2.814 2.814 0 0 0 1.717-2.602A2.83 2.83 0 0 0 16 10.695z","fill":"none","overflow":"visible"}]]);

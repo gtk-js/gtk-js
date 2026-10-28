@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const CallMissed = createGtkIcon("call-missed", [["path",{}],["path",{}]]);
+export const CallMissed = createGtkIcon("call-missed", [["g",{"transform":"translate(-833 115)"},[["path",{"d":"M841.5-114a.5.5 0 1 0 0 1h3.793l-4.793 4.793-4.646-4.647a.5.5 0 1 0-.707.708l5.353 5.353 5.5-5.5v3.793a.5.5 0 1 0 1 0v-5.5z","fill":"currentColor","fillRule":"evenodd","fontFamily":"sans-serif","fontWeight":"400","overflow":"visible","whiteSpace":"normal"}],["path",{"d":"M834-101c0 1 1 1 1 1h2s1 0 1-1v-.5c0-1.5 2-1.5 2-1.5h2s2 0 2 1.5v.5c0 1 1 1 1 1h2s1 0 1-1v-1c0-3.5-5.5-3-5.5-3h-3s-5.5-.5-5.5 3z","fill":"currentColor","fillRule":"evenodd","opacity":".4"}]]]]);

@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const DistributeRemoveOverlaps = createGtkIcon("distribute-remove-overlaps", [["path",{"d":"M 3 3 L 3 7 L 7 7 L 7 3 L 3 3 z M 8 3 L 8 19 L 14 19 L 14 3 L 8 3 z M 15 3 L 15 19 L 19 19 L 19 3 L 15 3 z M 4 4 L 6 4 L 6 6 L 4 6 L 4 4 z M 9 4 L 13 4 L 13 18 L 9 18 L 9 4 z M 16 4 L 18 4 L 18 18 L 16 18 L 16 4 z M 3 8 L 3 19 L 7 19 L 7 8 L 3 8 z M 4 9 L 6 9 L 6 18 L 4 18 L 4 9 z "}]]);
+export const DistributeRemoveOverlaps = createGtkIcon("distribute-remove-overlaps", [["path",{"d":"M0 0v4h4V0Zm5 0v16h6V0Zm7 0v16h4V0ZM1 1h2v2H1Zm5 0h4v14H6Zm7 0h2v14h-2ZM0 5v11h4V5Zm1 1h2v9H1Z","fill":"currentColor"}]]);

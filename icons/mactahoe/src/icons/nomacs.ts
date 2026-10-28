@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const Nomacs = createGtkIcon("nomacs", [["rect",{"width":"56.002","height":"56.002","x":"4","y":"3.969","fill":"currentColor","rx":"13.002","ry":"13.002"}],["path",{"d":"M16 16.001v8.616h2.462v-6.154h6.154V16zm23.386 0v2.462h6.154v6.154H48V16zM16 39.386v8.616h8.615V45.54h-6.154v-6.154zm29.539 0v6.154h-6.154v2.462H48v-8.616zm-8.615-18.461 1.74 1.74-6.962 6.963-1.74-1.74z"}],["path",{"d":"m23.385 24.617 7.385 8.615v7.385h-4.923v2.462h12.308v-2.462h-4.923v-7.385l7.384-8.615z"}]]);

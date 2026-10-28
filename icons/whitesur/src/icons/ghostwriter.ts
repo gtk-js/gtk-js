@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const Ghostwriter = createGtkIcon("ghostwriter", [["rect",{"width":"56.002","height":"56.002","x":"4","y":"3.969","fill":"currentColor","rx":"13.002","ry":"13.002"}],["ellipse",{"cx":"128.047","cy":"924.231","rx":"94.011","ry":"98.285"}],["ellipse",{"cx":"209.783","cy":"889.259","rx":"20.764","ry":"20.304"}],["ellipse",{"cx":"46.311","cy":"887.726","rx":"20.764","ry":"20.304"}],["path",{"d":"M136.185 1022.14c43.477-2.291 77.423-9.098 90.446-13.128-21.635-6.988-18.447-35.15-10.666-50.308z"}],["ellipse",{"cx":"252.606","cy":"864.681","rx":"22.69","ry":"30.202","transform":"rotate(10)"}],["ellipse",{"cx":"-.402","cy":"909.151","rx":"22.589","ry":"30.202","transform":"rotate(-10)"}]]);

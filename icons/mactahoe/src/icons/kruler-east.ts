@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const KrulerEast = createGtkIcon("kruler-east", [["path",{"d":"m 13,2 -1,0 -4,0 -1,0 L 7,14 l 1,0 4,0 1,0 0,-12 z m -1,1 0,1 -2,0 0,1 2,0 0,2 -2,0 0,1 2,0 L 12,10 l -2,0 0,1 L 12,11 l 0,2 -4,0 0,-10 4,0 z m -6,2 -2,-3 -2,3 4,0 z M 6,11 2,11 4,14 6,11 Z"}]]);

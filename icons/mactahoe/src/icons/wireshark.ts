@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const Wireshark = createGtkIcon("wireshark", [["path",{"fill":"currentColor","d":"M1.559 2h60.882v62.001H1.559z"}],["path",{"fill":"currentColor","d":"M47 3.969H17.002C9.822 3.969 4 9.79 4 16.971v29.998c0 7.18 5.821 13.002 13.002 13.002H47c7.18 0 13.002-5.821 13.002-13.002V16.971c0-7.18-5.821-13.002-13.002-13.002"}],["path",{"stroke":"currentColor","strokeLinecap":"round","strokeLinejoin":"round","strokeWidth":"3","d":"M10 43h10.704c1.653 0 2.979-1.347 3.125-2.994.844-9.47 5.5-14.403 9.124-16.843 1.87-1.26 3.82.477 3.44 2.7C34.4 37.559 36.81 43 43.262 43H55"}],["path",{"fill":"currentColor","d":"M0 0h64v64H0z"}]]);
