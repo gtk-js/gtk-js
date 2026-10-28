@@ -1075,7 +1075,14 @@
 
 /* Layouts allocated in JS (center-allocation.ts): an expanding center child,
    or shrink-center-last FALSE. Their tracks and children's lines replace the
-   ones above, which stay as the server-rendered and first layout. */
+   ones above, which stay as the server-rendered and first layout. The tracks
+   change on every resize and only the layout reads them, so they aren't
+   inherited: a new value restyles the layout, not everything inside it. */
+@property --gtk-center-tracks {
+  syntax: "*";
+  inherits: false;
+}
+
 .gtk-center-layout[data-allocated]:not([data-measuring]):not(.vertical) {
   grid-template-columns: var(--gtk-center-tracks) !important;
 }
@@ -1294,7 +1301,19 @@
    the pseudo-elements take the rest, half on each side (100% resolves against
    the clamp here), and the child grows into the middle, never below its
    minimum size. Once mounted, AdwClamp sets the exact spacers: GTK's
-   whole-pixel offset, the odd pixel after the child, room for its minimum. */
+   whole-pixel offset, the odd pixel after the child, room for its minimum.
+   They change on every resize, so they aren't inherited, which would restyle
+   everything in the clamp: only the pseudo-elements take them. */
+@property --adw-clamp-before {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --adw-clamp-after {
+  syntax: "*";
+  inherits: false;
+}
+
 .gtk-clamp::before,
 .gtk-clamp::after {
   content: "";
@@ -1302,10 +1321,12 @@
 }
 
 .gtk-clamp::before {
+  --adw-clamp-before: inherit;
   flex-basis: var(--adw-clamp-before, calc((100% - var(--adw-clamp-size)) / 2));
 }
 
 .gtk-clamp::after {
+  --adw-clamp-after: inherit;
   flex-basis: var(--adw-clamp-after, calc((100% - var(--adw-clamp-size)) / 2));
 }
 

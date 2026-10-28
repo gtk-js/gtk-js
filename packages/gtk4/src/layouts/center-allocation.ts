@@ -11,13 +11,15 @@
  * allocation is worked out from them, and the layout gets it as grid tracks and
  * lines in custom properties that layout.css applies.
  *
- * It runs before paint: from a layout effect after each render, when a child's
- * computed expand changes (expand.ts), and from a ResizeObserver when the
- * layout or a child changes size. It writes only when the allocation changes,
- * so its own writes don't make the observer loop.
+ * It runs in the layout pass (layout-pass.ts), before paint: after a render,
+ * when a child's computed expand changes (expand.ts), and when the layout or a
+ * child changes size. It writes only when the allocation changes, so its own
+ * writes don't make the observer loop, and measures the children again only
+ * when they may have changed.
  */
 
 import { type RefObject, useLayoutEffect } from "react";
+import { observeSize, scheduleLayout } from "./layout-pass.ts";
 
 /** Dispatched at a center layout when a child's computed expand changes. */
 export const CENTER_EXPAND_CHANGE = "gtk-center-expand-change";
@@ -164,12 +166,29 @@ function layoutChildren(box: HTMLElement): (HTMLElement | null)[] {
 }
 
 interface Layout {
-  observed: HTMLElement[];
+  /** The children observed, each with the function that stops observing it. */
+  observed: Map<HTMLElement, () => void>;
+  /** Stops observing the layout itself. */
+  unobserve: () => void;
   written?: string;
+  /**
+   * The children's minimum and natural track sizes, kept until they may have
+   * changed, as GTK keeps a widget's measurements until it queues a resize:
+   * a new size for the layout alone doesn't measure them again.
+   */
+  measured?: { mins: number[]; nats: number[] };
+  /** Whether the children have to be measured again. */
+  stale?: boolean;
+  /**
+   * Whether an allocation was just written: the children's resizes it causes
+   * don't change their measurements.
+   */
+  wrote?: boolean;
 }
 
 const layouts = new Map<HTMLElement, Layout>();
-let observer: ResizeObserver | null = null;
+/** Layouts to allocate in the next layout pass, together. */
+const dirty = new Set<HTMLElement>();
 
 function expandAttribute(box: HTMLElement) {
   return box.classList.contains("vertical") ? "data-computed-vexpand" : "data-computed-hexpand";
@@ -189,12 +208,14 @@ function readTracks(style: CSSStyleDeclaration, vertical: boolean): number[] {
 }
 
 /**
- * Measures the layouts' children and writes their allocations. Reads and
- * writes are batched: the current sizes, then the minimum sizes, then the
- * natural sizes, then every write.
+ * The layout pass's read for the dirty layouts: their current sizes, then
+ * their children's minimum and natural sizes where those may have changed,
+ * then their allocations, which it returns as writes.
  */
-function allocate(boxes: Iterable<HTMLElement>): void {
-  const jobs = [...boxes].flatMap((box) => {
+function allocate(): (() => void) | undefined {
+  const boxes = [...dirty];
+  dirty.clear();
+  const jobs = boxes.flatMap((box) => {
     const layout = layouts.get(box);
     if (!layout || !box.isConnected) return [];
     const vertical = box.classList.contains("vertical");
@@ -207,15 +228,26 @@ function allocate(boxes: Iterable<HTMLElement>): void {
     const children = layoutChildren(box);
     return [{ box, vertical, style, size, spacing: spacing || 0, children, layout }];
   });
-  if (!jobs.length) return;
+  if (!jobs.length) return undefined;
 
-  for (const job of jobs) job.box.setAttribute("data-measuring", "min");
-  const mins = jobs.map((job) => readTracks(job.style, job.vertical));
-  for (const job of jobs) job.box.setAttribute("data-measuring", "max");
-  const nats = jobs.map((job) => readTracks(job.style, job.vertical));
-  for (const job of jobs) job.box.removeAttribute("data-measuring");
+  // Measuring forces a style and layout pass for each of the minimum and
+  // natural sizes, so only the layouts whose children may have changed do.
+  const measuring = jobs.filter((job) => job.layout.stale || !job.layout.measured);
+  if (measuring.length) {
+    for (const job of measuring) job.box.setAttribute("data-measuring", "min");
+    const mins = measuring.map((job) => readTracks(job.style, job.vertical));
+    for (const job of measuring) job.box.setAttribute("data-measuring", "max");
+    const nats = measuring.map((job) => readTracks(job.style, job.vertical));
+    for (const job of measuring) job.box.removeAttribute("data-measuring");
+    measuring.forEach((job, i) => {
+      job.layout.measured = { mins: mins[i]!, nats: nats[i]! };
+      job.layout.stale = false;
+    });
+  }
 
-  jobs.forEach((job, i) => {
+  const writes: { layout: Layout; box: HTMLElement; tracks: string; lines: string[] }[] = [];
+  for (const job of jobs) {
+    const { mins, nats } = job.layout.measured!;
     const measured = job.children.map((element, slot): Child | null => {
       // A slot whose element is left out is an empty child (AdwHeaderBar's
       // start and end bins stay, empty, when their boxes are hidden).
@@ -226,8 +258,8 @@ function allocate(boxes: Iterable<HTMLElement>): void {
       }
       return {
         // The children sit in tracks 1, 3 and 5 while measuring.
-        min: mins[i]![slot * 2] ?? 0,
-        nat: nats[i]![slot * 2] ?? 0,
+        min: mins[slot * 2] ?? 0,
+        nat: nats[slot * 2] ?? 0,
         expand: element.hasAttribute(expandAttribute(job.box)),
       };
     });
@@ -245,37 +277,44 @@ function allocate(boxes: Iterable<HTMLElement>): void {
     );
     const { tracks, lines } = centerTracks(allocations, minimum, natural);
     const written = [tracks, ...lines].join(";");
-    if (written === job.layout.written) return;
+    if (written === job.layout.written) continue;
     job.layout.written = written;
-    job.box.style.setProperty("--gtk-center-tracks", tracks);
-    SLOTS.forEach((slot, s) => job.box.style.setProperty(`--gtk-center-${slot}`, lines[s]!));
-    job.box.setAttribute("data-allocated", "");
-  });
+    writes.push({ layout: job.layout, box: job.box, tracks, lines });
+  }
+  if (!writes.length) return undefined;
+  return () => {
+    for (const { layout, box, tracks, lines } of writes) {
+      box.style.setProperty("--gtk-center-tracks", tracks);
+      SLOTS.forEach((slot, s) => box.style.setProperty(`--gtk-center-${slot}`, lines[s]!));
+      box.setAttribute("data-allocated", "");
+      // The children resize to their new allocation before the next frame.
+      layout.wrote = true;
+      requestAnimationFrame(() => {
+        layout.wrote = false;
+      });
+    }
+  };
 }
 
-function onResize(entries: ResizeObserverEntry[]): void {
-  const boxes = new Set<HTMLElement>();
-  for (const { target } of entries) {
-    // A layout, a layout's child, or both (a nested layout).
-    for (const box of [target, target.parentElement]) {
-      if (box instanceof HTMLElement && layouts.has(box)) boxes.add(box);
-    }
-  }
-  allocate(boxes);
+/** Allocates `box` in the next layout pass, measuring its children again if `stale`. */
+function invalidate(box: HTMLElement, stale: boolean): void {
+  const layout = layouts.get(box);
+  if (!layout) return;
+  if (stale) layout.stale = true;
+  dirty.add(box);
+  scheduleLayout(allocate);
 }
 
 function release(box: HTMLElement): void {
   const layout = layouts.get(box);
   if (!layout) return;
-  for (const element of [box, ...layout.observed]) observer?.unobserve(element);
+  layout.unobserve();
+  for (const unobserve of layout.observed.values()) unobserve();
   layouts.delete(box);
+  dirty.delete(box);
   box.removeAttribute("data-allocated");
   box.style.removeProperty("--gtk-center-tracks");
   for (const slot of SLOTS) box.style.removeProperty(`--gtk-center-${slot}`);
-  if (!layouts.size) {
-    observer?.disconnect();
-    observer = null;
-  }
 }
 
 /** Starts, updates or stops allocating the layout in JS, as it needs. */
@@ -284,20 +323,32 @@ function update(box: HTMLElement): void {
     release(box);
     return;
   }
-  observer ??= new ResizeObserver(onResize);
   let layout = layouts.get(box);
   if (!layout) {
-    layout = { observed: [] };
+    // A new size for the layout alone doesn't change its children's measurements.
+    layout = { observed: new Map(), unobserve: observeSize(box, () => invalidate(box, false)) };
     layouts.set(box, layout);
-    observer.observe(box);
   }
-  // The children too: one that changes size changes the allocation.
+  // The children too: one that changes size changes the allocation. One that
+  // resized on its own may have new measurements, one that only took its new
+  // allocation doesn't.
   const children = layoutChildren(box).filter((child): child is HTMLElement => !!child);
-  for (const element of layout.observed)
-    if (!children.includes(element)) observer.unobserve(element);
-  for (const element of children) if (!layout.observed.includes(element)) observer.observe(element);
-  layout.observed = children;
-  allocate([box]);
+  for (const [element, unobserve] of layout.observed) {
+    if (children.includes(element)) continue;
+    unobserve();
+    layout.observed.delete(element);
+  }
+  for (const element of children) {
+    if (layout.observed.has(element)) continue;
+    const observed = layout;
+    layout.observed.set(
+      element,
+      observeSize(element, () => invalidate(box, !observed.wrote)),
+    );
+  }
+  // A render may have changed the children. The layouts rendered together are
+  // measured together, in one layout pass before paint.
+  invalidate(box, true);
 }
 
 /**

@@ -116,6 +116,7 @@ export { GtkBoxLayout } from "./layouts/box-layout.tsx";
 export { useCenterLayout } from "./layouts/center-allocation.ts";
 export type { GtkCenterLayoutProps } from "./layouts/center-layout.tsx";
 export { GtkCenterLayout } from "./layouts/center-layout.tsx";
+export { type LayoutRead, observeSize, scheduleLayout } from "./layouts/layout-pass.ts";
 export {
   GtkListBoxRowContext,
   type GtkRowContainer,

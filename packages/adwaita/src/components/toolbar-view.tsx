@@ -1,4 +1,4 @@
-import { GtkRevealer, GtkWindowHandle } from "@gtk-js/gtk4";
+import { GtkRevealer, GtkWindowHandle, observeSize } from "@gtk-js/gtk4";
 import { forwardRef, type HTMLAttributes, type ReactNode, useLayoutEffect, useState } from "react";
 import type { AdwToolbarStyle } from "../types.ts";
 
@@ -36,7 +36,11 @@ function useCollapseSpacing(box: HTMLDivElement | null): boolean {
       setCollapse(visible.length > 1);
     };
     update();
-    const observer = new MutationObserver(update);
+    // Only the bars themselves showing or hiding counts: changes further in,
+    // like a header bar's layout writing its tracks on every resize, don't.
+    const observer = new MutationObserver((records) => {
+      if (records.some((r) => r.target === box || r.target.parentNode === box)) update();
+    });
     observer.observe(box, {
       childList: true,
       subtree: true,
@@ -56,9 +60,11 @@ function useHasHeight(bar: HTMLDivElement | null, initial: boolean): boolean {
   const [hasHeight, setHasHeight] = useState(initial);
   useLayoutEffect(() => {
     if (!bar) return;
-    const observer = new ResizeObserver(() => setHasHeight(bar.offsetHeight > 0));
-    observer.observe(bar);
-    return () => observer.disconnect();
+    // The entry has the border-box height, so this reads nothing from layout.
+    return observeSize(bar, (entry) => {
+      const height = entry.borderBoxSize?.[0]?.blockSize ?? bar.offsetHeight;
+      setHasHeight(height > 0);
+    });
   }, [bar]);
   return hasHeight;
 }

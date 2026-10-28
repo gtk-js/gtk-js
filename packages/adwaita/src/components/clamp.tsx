@@ -1,4 +1,4 @@
-import type { GtkOrientation } from "@gtk-js/gtk4";
+import { type GtkOrientation, observeSize, scheduleLayout } from "@gtk-js/gtk4";
 import {
   type CSSProperties,
   forwardRef,
@@ -94,14 +94,20 @@ export const AdwClamp = forwardRef<HTMLDivElement, AdwClampProps>(function AdwCl
   );
   const range = Math.max(0, lengthUnitToPx(maximumSize, unit) - lower);
 
+  // The child's minimum size, kept until its content may have changed, as
+  // GTK keeps a widget's measurements until it queues a resize: a new size
+  // for the clamp alone doesn't measure the child again.
+  const minimumRef = useRef<number | null>(null);
+
   // The child's size is CSS (layout.css), so it's right before hydration too.
   // Once mounted, the allocation also takes the child's minimum size and
   // GTK's whole-pixel centering into account, and sets the style classes,
-  // which CSS can't do.
-  const allocate = useCallback(() => {
+  // which CSS can't do. It runs in the layout pass: this reads, and returns
+  // the writes.
+  const allocate = useCallback((): (() => void) | undefined => {
     const clamp = containerRef.current;
     const child = clamp?.firstElementChild as HTMLElement | null | undefined;
-    if (!clamp || !child) return;
+    if (!clamp || !child) return undefined;
     const cs = getComputedStyle(clamp);
     const [a, b] = horizontal ? ["left", "right"] : ["top", "bottom"];
     const edges = (style: CSSStyleDeclaration, boxes: string[]) =>
@@ -127,17 +133,17 @@ export const AdwClamp = forwardRef<HTMLDivElement, AdwClampProps>(function AdwCl
     const extra = edges(ccs, ["margin", "border", "padding"]);
     // The child's minimum size along the orientation (gtk_widget_measure()):
     // its min-content size, in whole pixels, measured out of the flex layout.
-    const { flex, [dimension]: size0 } = child.style;
-    child.style.flex = "none";
-    child.style[dimension] = "min-content";
-    const minimum = Math.ceil(parseFloat(ccs[dimension]) + extra);
-    child.style.flex = flex;
-    child.style[dimension] = size0;
+    let minimum = minimumRef.current;
+    if (minimum === null) {
+      const { flex, [dimension]: size0 } = child.style;
+      child.style.flex = "none";
+      child.style[dimension] = "min-content";
+      minimum = Math.ceil(parseFloat(ccs[dimension]) + extra);
+      child.style.flex = flex;
+      child.style[dimension] = size0;
+      minimumRef.current = minimum;
+    }
     const { size, sizeClass } = clampChildSize(available, lower + range, lower, minimum);
-    applySizeClass(child, sizeClass);
-    // The clamp is never smaller than its child's minimum size
-    // (clamp_size_from_child()).
-    clamp.style[horizontal ? "minWidth" : "minHeight"] = `${minimum}px`;
     // adw_clamp_layout_allocate() centers the child at (size - child size) / 2
     // in whole pixels: an odd pixel left over goes after the child (to its
     // right, in RTL too), not half a pixel to each side. The ::before and
@@ -146,22 +152,31 @@ export const AdwClamp = forwardRef<HTMLDivElement, AdwClampProps>(function AdwCl
     const leftover = Math.max(0, available - size);
     const left = Math.floor(leftover / 2);
     const rtl = horizontal && cs.direction === "rtl";
-    clamp.style.setProperty("--adw-clamp-before", `${rtl ? leftover - left : left}px`);
-    clamp.style.setProperty("--adw-clamp-after", `${rtl ? left : leftover - left}px`);
+    return () => {
+      applySizeClass(child, sizeClass);
+      // The clamp is never smaller than its child's minimum size
+      // (clamp_size_from_child()).
+      clamp.style[horizontal ? "minWidth" : "minHeight"] = `${minimum}px`;
+      clamp.style.setProperty("--adw-clamp-before", `${rtl ? leftover - left : left}px`);
+      clamp.style.setProperty("--adw-clamp-after", `${rtl ? left : leftover - left}px`);
+    };
   }, [horizontal, lower, range]);
 
-  // Children can change on any render.
-  useLayoutEffect(allocate);
+  // Children can change on any render, so they're measured again.
+  const remeasure = useCallback(() => {
+    minimumRef.current = null;
+    scheduleLayout(allocate);
+  }, [allocate]);
+  useLayoutEffect(remeasure);
 
   useLayoutEffect(() => {
     const clamp = containerRef.current;
     if (!clamp) return;
-    const observer = new ResizeObserver(allocate);
-    observer.observe(clamp);
+    const unobserve = observeSize(clamp, () => scheduleLayout(allocate));
     // Allocate again when the child is replaced or its content changes, which
     // can change its minimum size, and put back the size class, which isn't
     // in the child's className: React drops it when that changes.
-    const mutations = new MutationObserver(allocate);
+    const mutations = new MutationObserver(remeasure);
     mutations.observe(clamp, {
       subtree: true,
       childList: true,
@@ -169,10 +184,10 @@ export const AdwClamp = forwardRef<HTMLDivElement, AdwClampProps>(function AdwCl
       attributeFilter: ["class"],
     });
     return () => {
-      observer.disconnect();
+      unobserve();
       mutations.disconnect();
     };
-  }, [allocate]);
+  }, [allocate, remeasure]);
 
   const setRef = (el: HTMLDivElement | null) => {
     containerRef.current = el;
