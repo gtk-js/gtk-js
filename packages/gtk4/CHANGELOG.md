@@ -1,5 +1,12 @@
 # @gtk-js/gtk4
 
+## [0.1.11](https://github.com/gtk-js/gtk-js/compare/gtk4-v0.1.10...gtk4-v0.1.11) (2026-10-28)
+
+
+### Performance Improvements
+
+* lay out JS-allocated widgets in one pass per frame ([#155](https://github.com/gtk-js/gtk-js/issues/155)) ([9797722](https://github.com/gtk-js/gtk-js/commit/97977228bc24a20f2689b117ad7532fededd1fc2))
+
 ## [0.1.10](https://github.com/gtk-js/gtk-js/compare/gtk4-v0.1.9...gtk4-v0.1.10) (2026-10-20)
 
 
