@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const RotationLocked = createGtkIcon("rotation-locked", [["path",{}]]);
+export const RotationLocked = createGtkIcon("rotation-locked", [["g",{"transform":"translate(-813 191.003)"},[["path",{"d":"M821.488-189.982A7.006 7.006 0 0 0 814-183a7.006 7.006 0 0 0 5.192 6.762c3.059.819 6.293-.52 7.877-3.262a.5.5 0 1 0-.868-.5 5.999 5.999 0 0 1-6.752 2.795A5.996 5.996 0 0 1 815-183a5.996 5.996 0 0 1 10.71-3.709L824-185h4v-4l-1.58 1.58a7.012 7.012 0 0 0-4.932-2.562zM821-187c-1.108 0-2 .91-2 2.031v.969h-.5s-.5 0-.5.5v3s0 .5.5.5h5s.5 0 .5-.5v-3c0-.5-.5-.5-.5-.5h-.5v-.969c0-1.12-.892-2.031-2-2.031zm0 1c.554 0 1 .442 1 1v1h-2v-1c0-.558.446-1 1-1z","fill":"currentColor","fontFamily":"sans-serif","fontWeight":"400","overflow":"visible","whiteSpace":"normal"}]]]]);

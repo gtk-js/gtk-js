@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const UtilitiesTerminalSu = createGtkIcon("utilities-terminal-su", [["rect",{"width":"14.817","height":"14.817","x":"1.058","y":"1.05","fill":"currentColor","rx":"3.44","ry":"3.44"}],["rect",{"width":"13.757","height":"13.742","x":"1.588","y":"1.587","fill":"currentColor","rx":"2.91","ry":"2.91"}],["rect",{"width":"12.171","height":"12.171","x":"2.381","y":"2.381","fill":"currentColor","rx":"2.117","ry":"2.117"}],["path",{"fill":"currentColor","d":"M3.969 4.277v-.569L5.82 4.762V5.3L3.969 6.354v-.57l1.394-.75z","ariaLabel":"&gt;"}],["rect",{"width":"2.117","height":".529","x":"6.614","y":"6.614","fill":"currentColor","rx":"0","ry":"0"}]]);

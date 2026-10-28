@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const DistributeVerticalTop = createGtkIcon("distribute-vertical-top", [["path",{"d":"M 2 2 L 2 3 L 3 3 L 3 4 L 3 5 L 3 7 L 9 7 L 9 5 L 9 4 L 9 3 L 10 3 L 10 2 L 9 2 L 3 2 L 2 2 z M 12 2 L 10 5 L 14 5 L 12 2 z M 4 3 L 8 3 L 8 6 L 4 6 L 4 3 z M 10 7 L 12 10 L 14 7 L 10 7 z M 2 9 L 2 10 L 3 10 L 3 14 L 4 14 L 9 14 L 9 10 L 10 10 L 10 9 L 2 9 z M 4 10 L 8 10 L 8 13 L 4 13 L 4 10 z "}]]);
+export const DistributeVerticalTop = createGtkIcon("distribute-vertical-top", [["path",{"d":"M0 0v1h4v6h7V1h2V0H4Zm5 1h5v5H5Zm9 0-2 3h4zm-2 5 2 3 2-3zM0 9v1h2v6h9v-6h2V9H2Zm3 1h7v5H3Z","fill":"currentColor"}]]);

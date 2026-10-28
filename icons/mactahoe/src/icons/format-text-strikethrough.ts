@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const FormatTextStrikethrough = createGtkIcon("format-text-strikethrough", [["path",{"d":"M 8.28125 2 C 5.87276 1.9779 2.98125 3.61871 4.59375 7.3125 L 10.25 7.3125 C 1.25 5.0625 8.75114 -0.1875 10.28125 5.8125 L 11 5.8125 L 11 3.75 C 10.9887 2.625 9.72635 2.01328 8.28125 2 z M 2 8 L 2 8.75 L 2 9 L 14 9 L 14 8.75 L 14 8 L 2 8 z M 8.75 9.5 C 12.71497 13.43247 6.77502 14.69352 5 10.25 L 4.25 10.25 L 4.25 12.5 C 4.39332 14.38685 13.25 15.5 11.75 9.5 L 8.75 9.5 z "}]]);
+export const FormatTextStrikethrough = createGtkIcon("format-text-strikethrough", [["path",{"d":"m1 7v1h14v-1z","fill":"currentColor","overflow":"visible","strokeWidth":".70711"}],["path",{"d":"m4 3v1h6c1.108 0 2 0.892 2 2h1c0-1.662-1.338-3-3-3h-6zm-0.81836 6c-0.11095 0.31399-0.18164 0.64708-0.18164 1 0 1.662 1.338 3 3 3h6 1v-1-3h-1v3h-6c-1.108 0-2-0.892-2-2 0-0.36693 0.10429-0.705 0.27539-1h-1.0938z","fill":"currentColor"}]]);

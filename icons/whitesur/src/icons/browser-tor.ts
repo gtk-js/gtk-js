@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const BrowserTor = createGtkIcon("browser-tor", [["rect",{"width":"14.817","height":"14.817","x":"1.058","y":"1.05","fill":"currentColor","rx":"3.44","ry":"3.44"}],["path",{"fill":"currentColor","d":"M32 8.002v4c11.069 0 19.998 8.929 19.998 19.998S43.069 51.998 32 51.998v4c13.231 0 23.998-10.767 23.998-23.998S45.231 8.002 32 8.002m0 7.994v4A11.97 11.97 0 0 1 43.996 32 11.963 11.963 0 0 1 32 43.996v4c8.813 0 15.996-7.183 15.996-15.996S40.813 15.996 32 15.996m0 8.002v16a8 8 0 0 0 7.998-8 8 8 0 0 0-7.998-8","transform":"scale(.26458)"}]]);

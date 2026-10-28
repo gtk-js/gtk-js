@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const ApplicationXSrt = createGtkIcon("application-x-srt", [["path",{"fill":"currentColor","d":"M2 2v8h3V3h3v2h3V2H3zm1 1h1v1H3zm6 0h1v1H9zM3 5h1v2H3zm3 1v6l2 2v-2h6V6zm1 1h6v4H7zM3 8h1v1H3z"}]]);

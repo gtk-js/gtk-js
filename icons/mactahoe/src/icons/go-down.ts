@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const GoDown = createGtkIcon("go-down", [["path",{"d":"m8 11.5l-6-6.251.719-.749 4.125 4.298 1.156 1.237 1.156-1.237 4.125-4.298.719.749-4.125 4.298z"}]]);
+export const GoDown = createGtkIcon("go-down", [["path",{"d":"M 1.6367,4.6367 8,11 14.3633,4.6367 13.65627,3.92967 8.00007,9.58587 2.34387,3.92967 1.63684,4.6367 Z","style":"fill: currentColor"}]]);

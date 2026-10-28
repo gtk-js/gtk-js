@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const MediaRecord = createGtkIcon("media-record", [["path",{"d":"M 13 8 A 5 5 0 0 1 8 13 5 5 0 0 1 3 8 5 5 0 0 1 8 3 5 5 0 0 1 13 8 Z"}]]);
+export const MediaRecord = createGtkIcon("media-record", [["path",{"d":"M8 3C5.24 3 3 5.24 3 8s2.24 5 5 5 5-2.24 5-5-2.24-5-5-5z","fill":"currentColor"}]]);

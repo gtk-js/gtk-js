@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const PreferencesDesktopFiletypeAssociation = createGtkIcon("preferences-desktop-filetype-association", [["rect",{"width":"22","height":"22","fill":"currentColor","rx":"6","ry":"6"}],["path",{"d":"M7 3C5.338 3 4 4.338 4 6v10c0 1.662 1.338 3 3 3h8c1.662 0 3-1.338 3-3V8l-5-5h-1zm0 1h5v5h5v7c0 1.108-.892 2-2 2H7c-1.108 0-2-.892-2-2V6c0-1.108.892-2 2-2m6 .414L16.586 8H13Z"}],["path",{"d":"M9.5 10.5a.5.5 0 1 0 0 1 .5.5 0 1 0 0-1m2.5 0-1 1 1 1-1 1 1 1 2-2-1-1zm-3.5 3a.5.5 0 1 0 0 1 .5.5 0 1 0 0-1m2 2a.5.5 0 1 0 0 1 .5.5 0 1 0 0-1","opacity":".35"}]]);

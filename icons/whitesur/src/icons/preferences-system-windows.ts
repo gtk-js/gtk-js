@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const PreferencesSystemWindows = createGtkIcon("preferences-system-windows", [["rect",{"width":"22","height":"22","rx":"6","ry":"6","fill":"currentColor","strokeWidth":".49998"}],["path",{"d":"m6 0c-3.324 0-6 2.676-6 6v1h22v-1c0-3.324-2.676-6-6-6h-10z","fill":"currentColor","fillRule":"evenodd","opacity":".35","strokeLinecap":"round","strokeLinejoin":"round","strokeWidth":"1.0174"}],["rect",{"y":"7","width":"22","height":"1","rx":"0","ry":"0","fillRule":"evenodd","opacity":".15","strokeLinecap":"round","strokeLinejoin":"round","strokeWidth":".8864"}],["circle",{"cx":"5","cy":"4","r":"1","fill":"currentColor","strokeLinecap":"round","strokeLinejoin":"round","strokeWidth":".83157"}]]);

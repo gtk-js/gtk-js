@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const Tcl = createGtkIcon("tcl", [["path",{"d":"M3.715 3L3 3.695l2.639 2.797-2.621 2.813.714.695 2.944-3.162L7 6.492l-.324-.347L3.715 3zM7 12v1h6v-1H7z","overflow":"visible","fill":"currentColor","strokeWidth":".1"}]]);

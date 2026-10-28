@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const ZorinConnect = createGtkIcon("zorin-connect", [["rect",{"width":"56.002","height":"56.002","x":"4","y":"3.969","fill":"currentColor","rx":"13.002","ry":"13.002"}],["path",{"fill":"currentColor","d":"M22 20c-2.77 0-5 2.23-5 5v16h-2v5h19v-5H22V25h25v-5zm18 9c-1.108 0-2 .892-2 2v13c0 1.108.892 2 2 2h7c1.108 0 2-.892 2-2V31c0-1.108-.892-2-2-2zm0 2h7v11h-7z","opacity":".15"}],["path",{"fill":"currentColor","d":"M22 19c-2.77 0-5 2.23-5 5v16h-2v5h19v-5H22V24h25v-5zm18 9c-1.108 0-2 .892-2 2v13c0 1.108.892 2 2 2h7c1.108 0 2-.892 2-2V30c0-1.108-.892-2-2-2zm0 2h7v11h-7z"}]]);

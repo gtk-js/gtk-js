@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const Kig = createGtkIcon("kig", [["rect",{"width":"56.002","height":"56.002","x":"4","y":"3.969","fill":"currentColor","rx":"13.002","ry":"13.002"}],["rect",{"width":"22","height":"24","x":"13","y":"13","fill":"currentColor","rx":"1.745","ry":"1.745"}],["path",{"fill":"currentColor","d":"M21 20a6 6 0 0 0-6 6 6 6 0 0 0 3 5.18V35h11V24h-2.344A6 6 0 0 0 21 20m0 1a5 5 0 0 1 4.58 3H18v5.992A5 5 0 0 1 16 26a5 5 0 0 1 5-5m-2 4h6.896A5 5 0 0 1 26 26a5 5 0 0 1-5 5 5 5 0 0 1-2-.434zm7.914 0H28v9h-9v-2.36a6 6 0 0 0 2 .36 6 6 0 0 0 6-6 6 6 0 0 0-.086-1"}],["path",{"fill":"currentColor","d":"m19 11 18 22V11m-9.7 4H33v7"}]]);

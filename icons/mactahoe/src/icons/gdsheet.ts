@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const Gdsheet = createGtkIcon("gdsheet", [["path",{"fill":"currentColor","d":"M36.001.998H10.999a1.996 1.996 0 0 0-2 2.003V59c0 1.107.893 2 2.004 2h41.995A2 2 0 0 0 55 58.995V20.002c0-.536-.185-1.247-.56-2.003H40a1.996 1.996 0 0 1-2.004-2.003V1.426a5 5 0 0 0-1.991-.427z"}],["path",{"fill":"currentColor","d":"M37.981 1.417v14.578c0 1.108.892 2 2.003 2h14.461a7.6 7.6 0 0 0-1.444-2.003L40 2.998a5.2 5.2 0 0 0-2-1.573z"}],["path",{"fill":"currentColor","d":"M46 24v26H18V24zm-2 2H30v6h14zm-16 0h-8v6h8zm16 8H30v6h14zm-16 0h-8v6h8zm16 8H30v6h14zm-16 0h-8v6h8z"}]]);

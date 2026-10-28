@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const FluentReader = createGtkIcon("fluent-reader", [["rect",{"width":"56.002","height":"56.002","x":"4","y":"3.969","fill":"currentColor","rx":"13.002","ry":"13.002"}],["rect",{"width":"50","height":"50","x":"9","y":"5","fill":"currentColor","rx":"2.778","ry":"2.778"}],["rect",{"width":"42","height":"42","x":"7","y":"15","fill":"currentColor","rx":"2.8","ry":"2.8"}],["rect",{"width":"30","height":"30","x":"5","y":"29","fill":"currentColor","rx":"2.727","ry":"2.727"}],["path",{"fill":"currentColor","d":"M13 35v18h4v-7h10v-3H17v-5h10v-3H17z"}]]);

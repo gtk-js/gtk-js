@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const NetworkCellularConnected = createGtkIcon("network-cellular-connected", [["path",{"d":"M20.5 6c-.277 0-.5.223-.5.5v11c0 .277.223.5.5.5h1c.277 0 .5-.223.5-.5v-11c0-.277-.223-.5-.5-.5zm-4 3c-.277 0-.5.223-.5.5v8c0 .277.223.5.5.5h1c.277 0 .5-.223.5-.5v-8c0-.277-.223-.5-.5-.5zm-4 3c-.277 0-.5.223-.5.5v5c0 .277.223.5.5.5h1c.277 0 .5-.223.5-.5v-5c0-.277-.223-.5-.5-.5zm-4 3c-.277 0-.5.223-.5.5v2c0 .277.223.5.5.5h1c.277 0 .5-.223.5-.5v-2c0-.277-.223-.5-.5-.5z","opacity":".4","overflow":"visible"}],["path",{"d":"M1.469 10L1 11l3 3v4h1v-4l3-3-.375-1zm.906 1H4v1.625zM5 11h1.625L5 12.625z","overflow":"visible"}]]);
+export const NetworkCellularConnected = createGtkIcon("network-cellular-connected", [["g",{"fill":"currentColor"},[["path",{"d":"M4.469 6L4 7l3 3v4h1v-4l3-3-.375-1zm.906 1H7v1.625zM8 7h1.625L8 8.625z","overflow":"visible"}],["path",{"d":"M0 3l3 4-3 4zm15 0l-3 4 3 4z"}]]]]);

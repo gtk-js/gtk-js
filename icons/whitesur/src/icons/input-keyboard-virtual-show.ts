@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const InputKeyboardVirtualShow = createGtkIcon("input-keyboard-virtual-show", [["path",{"d":"m11 2-5 5 0.70703 0.70703 4.293-4.293 4.293 4.293 0.70703-0.70703z","fill":"currentColor"}],["path",{"d":"m4 9c-1.108 0-2 0.892-2 2v7c0 1.108 0.892 2 2 2h14c1.108 0 2-0.892 2-2v-7c0-1.108-0.892-2-2-2zm0 1h14c0.554 0 1 0.446 1 1h-16c0-0.554 0.446-1 1-1zm-1 2h16v6c0 0.554-0.446 1-1 1h-14c-0.554 0-1-0.446-1-1zm1 1v1h2v-1zm3 0v1h2v-1zm3 0v1h2v-1zm3 0v1h2v-1zm3 0v1h2v-1zm-12 2v1h2v-1zm3 0v1h2v-1zm3 0v1h2v-1zm3 0v1h2v-1zm3 0v1h2v-1zm-12 2v1h2v-1zm3 0v1h8v-1zm9 0v1h2v-1z","fill":"currentColor"}]]);

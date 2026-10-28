@@ -1,0 +1,3 @@
+import { createGtkIcon } from "@gtk-js/icon-helpers";
+
+export const OrgBuddiesofbudgieSettingsNetwork = createGtkIcon("org-buddiesofbudgie-settings-network", [["path",{"d":"m4 0c-1.108 0-2 0.892-2 2v5c0 1.108 0.892 2 2 2h1v2h-0.5c-0.277 0-0.5 0.223-0.5 0.5s0.223 0.5 0.5 0.5h3v3h-6c-0.277 0-0.5 0.223-0.5 0.5s0.223 0.5 0.5 0.5h6 1 6c0.277 0 0.5-0.223 0.5-0.5s-0.223-0.5-0.5-0.5h-6v-3h3c0.277 0 0.5-0.223 0.5-0.5s-0.223-0.5-0.5-0.5h-0.5v-2h1c1.108 0 2-0.892 2-2v-5c0-1.108-0.892-2-2-2h-8zm0 1h8c0.554 0 1 0.446 1 1v5c0 0.554-0.446 1-1 1h-8c-0.554 0-1-0.446-1-1v-5c0-0.554 0.446-1 1-1zm2 8h4v2h-4v-2z","fill":"currentColor","stopColor":"#000000","strokeLinecap":"round","strokeLinejoin":"round","strokeWidth":"2"}]]);

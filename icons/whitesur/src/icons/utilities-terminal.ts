@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const UtilitiesTerminal = createGtkIcon("utilities-terminal", [["rect",{"width":"22","height":"22","y":"1030.362","rx":"6","ry":"6"}],["path",{"d":"m9.385 1036.864-.636.636 3.863 3.863-3.863 3.864.636.636 4.5-4.5-.637-.636z"}]]);
+export const UtilitiesTerminal = createGtkIcon("utilities-terminal", [["path",{"d":"m2 1c-1.108 0-2 0.892-2 2v10c0 1.108 0.892 2 2 2h12c1.108 0 2-0.892 2-2v-10c0-1.108-0.892-2-2-2zm0 1h12c0.554 0 1 0.446 1 1v10c0 0.554-0.446 1-1 1h-12c-0.554 0-1-0.446-1-1v-10c0-0.554 0.446-1 1-1z","fill":"currentColor"}],["rect",{"x":"7","y":"10","width":"4","height":"1","fill":"currentColor"}],["rect",{"transform":"matrix(.70711 -.70711 -.70711 -.70711 0 0)","x":"-4.7071","y":"-10.607","width":"4","height":"1","fill":"currentColor"}],["rect",{"transform":"rotate(45)","x":"6.6066","y":".70711","width":"4","height":"1","fill":"currentColor"}]]);

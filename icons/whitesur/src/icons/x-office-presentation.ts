@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const XOfficePresentation = createGtkIcon("x-office-presentation", [["path",{"opacity":".9","d":"M2 1.5v2H1v11h14v-11h-1v-2zm1 1h10v1H3zm-1 2h12v9H2zm4 2v5l4.61-2.475z","fill":"currentColor"}]]);
+export const XOfficePresentation = createGtkIcon("x-office-presentation", [["path",{"d":"M0 2v1h1v8.035c0 .546.455 1 1 1h5v1.215l-2.72 1.844c-.26.125-.352.513-.188.75.164.236.541.26.75.062L7.5 14.094l2.658 1.812c.209.198.587.174.75-.062.164-.237.071-.625-.187-.75L8 13.25v-1.215h5c.545 0 1-.454 1-1V3h1V2zm2 1h11v7.5c0 .5-.5.5-.5.5h-10c-.5 0-.5-.5-.5-.5zm3 2a2 2 0 1 0 2 2H5zm3 0v1h4V5zm0 2v1h3V7z","fill":"currentColor","fontFamily":"sans-serif","fontWeight":"400","overflow":"visible"}]], "0 0 16 16.04");

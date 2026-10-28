@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const YandexBrowser = createGtkIcon("yandex-browser", [["rect",{"width":"56.002","height":"56.002","x":"4","y":"3.969","fill":"currentColor","rx":"13.002","ry":"13.002"}],["path",{"d":"M28.086 31.999v19.564h7.826V32z"}],["path",{"d":"m19.527 16.426-5.03 5.994 14.988 12.577L34.514 29z"}],["path",{"d":"M44.472 16.426 29.485 29l5.029 5.997L49.503 22.42z"}]]);

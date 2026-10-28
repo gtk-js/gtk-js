@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const ApplicationVndMsAccess = createGtkIcon("application-vnd-ms-access", [["path",{"fill":"currentColor","d":"M7.964 2a6 2 0 0 0-6 2v8a6 2 0 0 0 6 2 6 2 0 0 0 6-2V4a6 2 0 0 0-6-2m0 1a5 1 0 0 1 5 1 5 1 0 0 1-5 1 5 1 0 0 1-5-1 5 1 0 0 1 5-1m-5 2.102a6 2 0 0 0 5 .898 6 2 0 0 0 5-.896V8a5 1 0 0 1-5 1 5 1 0 0 1-5-1zm0 4a6 2 0 0 0 5 .898 6 2 0 0 0 5-.896V12a5 1 0 0 1-5 1 5 1 0 0 1-5-1z"}]]);

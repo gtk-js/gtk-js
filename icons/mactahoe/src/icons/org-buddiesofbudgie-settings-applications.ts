@@ -1,0 +1,3 @@
+import { createGtkIcon } from "@gtk-js/icon-helpers";
+
+export const OrgBuddiesofbudgieSettingsApplications = createGtkIcon("org-buddiesofbudgie-settings-applications", [["g",{"fill":"currentColor"},[["path",{"d":"m1 0h5c0.554 0 1 0.446 1 1v5c0 0.554-0.446 1-1 1h-5c-0.554 0-1-0.446-1-1v-5c0-0.554 0.446-1 1-1z"}],["path",{"d":"m9 0c-0.554 0-1 0.446-1 1v5c0 0.554 0.446 1 1 1h5c0.554 0 1-0.446 1-1v-5c0-0.554-0.446-1-1-1h-5zm0 1h5v5h-5v-5z"}],["path",{"d":"m9 8c-0.554 0-1 0.446-1 1v5c0 0.554 0.446 1 1 1h5c0.554 0 1-0.446 1-1v-5c0-0.554-0.446-1-1-1zm0 1h5v5h-5z"}],["path",{"d":"m1 8c-0.554 0-1 0.446-1 1v5c0 0.554 0.446 1 1 1h5c0.554 0 1-0.446 1-1v-5c0-0.554-0.446-1-1-1zm0 1h5v5h-5z"}]]]], "0 0 16.006 16");

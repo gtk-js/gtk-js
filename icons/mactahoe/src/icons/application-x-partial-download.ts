@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const ApplicationXPartialDownload = createGtkIcon("application-x-partial-download", [["path",{"fill":"currentColor","d":"M8 2a6 6 0 1 0 0 12A6 6 0 0 0 8 2m0 1a5 5 0 1 1-.001 10.001A5 5 0 0 1 8 3M7 4v5h5V8H8V4z"}]]);

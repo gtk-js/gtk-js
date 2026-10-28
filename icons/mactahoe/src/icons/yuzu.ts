@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const Yuzu = createGtkIcon("yuzu", [["rect",{"width":"56.002","height":"56.002","x":"4","y":"3.969","fill":"currentColor","rx":"13.002","ry":"13.002"}],["path",{"d":"M38 21a16 16 0 0 1 16 16 16 16 0 0 1-16 16h-4V21zm0 4v24a12 12 0 0 0 12-12 12 12 0 0 0-12-12","opacity":".1"}],["path",{"fill":"currentColor","d":"M38 20a16 16 0 0 1 16 16 16 16 0 0 1-16 16h-4V20zm0 4v24a12 12 0 0 0 12-12 12 12 0 0 0-12-12"}],["path",{"d":"M26 13a16 16 0 0 0-16 16 16 16 0 0 0 16 16h4V13zm0 4v24a12 12 0 0 1-12-12 12 12 0 0 1 12-12","opacity":".1"}],["path",{"fill":"currentColor","d":"M26 12a16 16 0 0 0-16 16 16 16 0 0 0 16 16h4V12zm0 4v24a12 12 0 0 1-12-12 12 12 0 0 1 12-12"}]]);

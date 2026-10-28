@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const MullvadBrowser = createGtkIcon("mullvad-browser", [["rect",{"width":"56","height":"56","x":"4","y":"4","fill":"currentColor","rx":"13","ry":"13"}],["path",{"d":"M15.998 16.518v34h7.273v-17l4.364 8.727h8.726l4.364-8.729v17h7.273V16.52h-7.273l-8.727 17.727-8.727-17.727Z"}],["path",{"fill":"currentColor","d":"M15.999 14.999v4.912l16 17.89 15.999-17.89V15h-7.273l-8.727 17.727L23.271 15z"}],["path",{"fill":"currentColor","d":"M15.999 18.998v30h7.272v-17l4.364 8.726h8.727l4.363-8.727v17h7.273V18.999h-7.273l-8.727 17.073-8.727-17.073z"}]]);

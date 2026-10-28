@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const PreferencesDesktopPlasma = createGtkIcon("preferences-desktop-plasma", [["rect",{"width":"22","height":"22","rx":"6","ry":"6"}],["path",{"d":"M7.5 4a.873.873 0 0 0-.875.875c0 .485.39.875.875.875s.875-.39.875-.875A.873.873 0 0 0 7.5 4M13 4l-2 2 3 3-3 3 2 2 3-3 2-2-2-2zM5.313 9.25A1.31 1.31 0 0 0 4 10.563a1.31 1.31 0 0 0 1.313 1.312 1.31 1.31 0 0 0 1.312-1.313A1.31 1.31 0 0 0 5.313 9.25M9.25 14.5c-.97 0-1.75.78-1.75 1.75S8.28 18 9.25 18 11 17.22 11 16.25s-.78-1.75-1.75-1.75"}]]);

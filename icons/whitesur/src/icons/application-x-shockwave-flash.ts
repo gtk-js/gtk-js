@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const ApplicationXShockwaveFlash = createGtkIcon("application-x-shockwave-flash", [["path",{"d":"M13 2.01v2.414c-2.511.042-3.128 2.393-3.128 2.393H12v2.414H8.83C7.064 14.461 3 13.995 3 13.995v-2.414s2.579.459 3.894-4.15C8.539 1.665 13 2.01 13 2.01","fill":"currentColor"}]]);

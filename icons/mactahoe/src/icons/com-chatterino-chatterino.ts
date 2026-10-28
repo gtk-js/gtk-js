@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const ComChatterinoChatterino = createGtkIcon("com-chatterino-chatterino", [["rect",{"width":"56","height":"56","x":"4","y":"4","fill":"currentColor","rx":"13","ry":"13"}],["path",{"fill":"currentColor","d":"M57.4 99.9C93.2 64.1 145 57.6 174 84.7a55 55 0 1 0 16 66.3l50.6 51a125.8 125.8 0 0 1-168.2 30.3c-14 16.7-25.2 21.3-49.3 22.2 19.4-16.5 19.9-35 10.8-60.7-2.9-4.5-5.5-9.2-7.8-14-2.9-26.3 8-56.5 31.4-79.9z"}],["path",{"fill":"currentColor","d":"M140 0c42 0 79.3 20.6 102.2 52.3l-52.4 52.4a55.2 55.2 0 0 0-15.9-20C145 57.6 93.2 64.1 57.4 100 34 123.3 24 154 26 179.7A126 126 0 0 1 140 0"}]]);
