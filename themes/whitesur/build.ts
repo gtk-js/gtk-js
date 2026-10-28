@@ -37,6 +37,10 @@ for (const file of files) {
   assetMap.set(virtualPath, physicalPath);
 }
 
+// Installed for libadwaita apps (install.sh --libadwaita), the theme is loaded
+// over libadwaita's own stylesheet, which styles what it doesn't.
+const libadwaita = new URL("../../upstream/libadwaita/src/stylesheet/", import.meta.url).pathname;
+
 const accents = ["default"] as const;
 const schemes = ["light", "dark"] as const;
 
@@ -77,7 +81,7 @@ $accent_type: 'fixed';
     writeFileSync(`${sassDir}/_gtk-base-temp.scss`, gtkBaseContent);
 
     try {
-      const css = await compileGtkCSS(scssEntry, { scheme, assetMap });
+      const css = await compileGtkCSS(scssEntry, { scheme, assetMap, libadwaita });
       const key = `${scheme}_${accent}`;
       results[key] = css;
       process.stdout.write(`  ${key}: ${css.length}b\n`);

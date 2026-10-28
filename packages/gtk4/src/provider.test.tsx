@@ -48,6 +48,14 @@ test("server HTML has the reset, layout and theme CSS, once per document", () =>
   expect(html.indexOf("gtk-js-theme")).toBeLessThan(html.indexOf("data-gtk-provider"));
 });
 
+test("the reset is in the lowest cascade layer, under any theme", () => {
+  const html = renderToStaticMarkup(<GtkProvider cssText="label {}">Hello</GtkProvider>);
+  const reset = html.match(/data-href="gtk-js-reset">([\s\S]*?)<\/style>/)?.[1] ?? "";
+  // Declared first, so the order holds whichever stylesheet loads first: a
+  // theme over libadwaita's stylesheet (gtk-libadwaita) outranks the reset too.
+  expect(reset.startsWith("@layer gtk-reset, gtk-libadwaita;\n@layer gtk-reset {")).toBe(true);
+});
+
 test("server HTML links a cssHref theme", () => {
   const html = renderToStaticMarkup(<GtkProvider cssHref="/theme.css">Hello</GtkProvider>);
   expect(html).toContain(
