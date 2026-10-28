@@ -1,5 +1,19 @@
 # @gtk-js/adwaita
 
+## [0.1.11](https://github.com/gtk-js/gtk-js/compare/adwaita-v0.1.10...adwaita-v0.1.11) (2026-10-28)
+
+
+### Performance Improvements
+
+* lay out JS-allocated widgets in one pass per frame ([#155](https://github.com/gtk-js/gtk-js/issues/155)) ([9797722](https://github.com/gtk-js/gtk-js/commit/97977228bc24a20f2689b117ad7532fededd1fc2))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @gtk-js/gtk4 bumped from 0.1.10 to 0.1.11
+
 ## [0.1.10](https://github.com/gtk-js/gtk-js/compare/adwaita-v0.1.9...adwaita-v0.1.10) (2026-10-20)
 
 
