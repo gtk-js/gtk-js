@@ -2686,6 +2686,42 @@ if (caseName === "alert-dialog-body") {
       </AdwaitaProvider>,
     ),
   );
+} else if (caseName === "scrolled-window-shrink") {
+  // Page for tests/cases/scrolled-window-shrink.test.ts: a scrolled window
+  // with a wrapping text view, in a box the test narrows after it renders.
+  createRoot(container).render(
+    <AdwaitaProvider colorScheme="light">
+      <div id="shrink-box" style={{ display: "grid", width: 600 }}>
+        <GtkScrolledWindow hasFrame minContentHeight={100}>
+          <GtkTextView
+            value={
+              'couldn\'t list files: Propfind "http://127.0.0.1:8099/": dial tcp 127.0.0.1:8099: connect: connection refused'
+            }
+            editable={false}
+            monospace
+            wrapMode="word-char"
+          />
+        </GtkScrolledWindow>
+      </div>
+    </AdwaitaProvider>,
+  );
+} else if (caseName === "alert-dialog-long-heading") {
+  // Page for tests/cases/alert-dialog-long-heading.test.ts: a heading longer
+  // on one line than the widest the dialog gets.
+  void import("@gtk-js/adwaita").then(({ AdwAlertDialog }) =>
+    createRoot(container).render(
+      <AdwaitaProvider colorScheme="light">
+        <GtkWindow style={{ width: 760, height: 480 }}>
+          <AdwAlertDialog
+            visible
+            heading="Unable to Connect to the Synchronization Server"
+            body="Try again."
+            responses={[{ id: "ok", label: "OK", appearance: "suggested" }]}
+          />
+        </GtkWindow>
+      </AdwaitaProvider>,
+    ),
+  );
 } else if (caseName === "about-dialog-toast") {
   // Page for tests/cases/about-dialog-toast.test.ts. The copy goes to a stub,
   // so the toast doesn't depend on the browser granting clipboard access.

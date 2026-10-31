@@ -1627,9 +1627,9 @@
 /* The range expands in the scrollbar's box (gtk_scrollbar_init() sets it
  * hexpand and vexpand) and its trough fills it (gtk_range_size_allocate()).
  * The trough is as thick as the slider, which stays in flow across it; along
- * the trough, JS sizes the slider and offsets it with position: relative
- * (gtk_range_compute_slider_position()), so its length doesn't size the
- * trough. */
+ * the trough, JS sizes the slider, as a percentage of it, and offsets it
+ * with position: relative (gtk_range_compute_slider_position()), so its
+ * length doesn't size the trough: only its min-width/min-height does. */
 .gtk-scrollbar > .gtk-range {
   display: flex;
   flex: 1;
