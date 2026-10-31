@@ -267,6 +267,23 @@ export async function extractWebStyles(
     }
 
     const raw: RawElementData = await page.locator(selector).evaluate((el: HTMLElement) => {
+      // The family of a font-family list the text is drawn in: the first one
+      // installed, as Pango resolves a list (the native side reports that
+      // one). An installed family changes how wide text measures from what
+      // either generic family alone gives it.
+      const context = document.createElement("canvas").getContext("2d")!;
+      const installed = (family: string) =>
+        ["monospace", "serif"].some((generic) => {
+          context.font = `72px ${generic}`;
+          const fallback = context.measureText("mmmmmmmmmmlli1WQ@").width;
+          context.font = `72px "${family}", ${generic}`;
+          return context.measureText("mmmmmmmmmmlli1WQ@").width !== fallback;
+        });
+      const resolvedFamily = (list: string) => {
+        const families = list.split(",").map((f) => f.replace(/['"]/g, "").trim());
+        return families.find((f) => GENERIC.includes(f) || installed(f)) ?? families[0]!;
+      };
+      const GENERIC = ["sans-serif", "serif", "monospace", "system-ui", "cursive", "fantasy"];
       function extractElement(
         element: HTMLElement,
         origin?: { x: number; y: number },
@@ -317,7 +334,7 @@ export async function extractWebStyles(
             left: cs.borderLeftColor,
           },
           color: cs.color,
-          font_family: cs.fontFamily.replace(/['"]/g, "").split(",")[0].trim(),
+          font_family: resolvedFamily(cs.fontFamily),
           font_weight: parseInt(cs.fontWeight),
           box_shadow: cs.boxShadow,
           opacity: parseFloat(cs.opacity),

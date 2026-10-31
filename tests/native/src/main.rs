@@ -1917,6 +1917,21 @@ fn configure_rendering() {
 
     let style_manager = adw::StyleManager::default();
     style_manager.set_color_scheme(adw::ColorScheme::ForceLight);
+
+    // $GTK_JS_TEST_THEME: compare in another theme of themes/, loaded over
+    // libadwaita's like a user stylesheet (~/.config/gtk-4.0/gtk.css). The
+    // web client loads the same theme (tests/client.tsx).
+    if let Ok(theme) = std::env::var("GTK_JS_TEST_THEME") {
+        let path = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+            .join(format!("../../themes/{theme}/dist/gtk-4.0/gtk.css"));
+        let provider = gtk::CssProvider::new();
+        provider.load_from_path(&path);
+        gtk::style_context_add_provider_for_display(
+            &gtk::gdk::Display::default().expect("No display"),
+            &provider,
+            gtk::STYLE_PROVIDER_PRIORITY_USER,
+        );
+    }
 }
 
 fn render_snapshot_json(widget: &gtk::Widget, use_inner: bool) -> Result<String, String> {
