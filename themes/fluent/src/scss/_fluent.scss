@@ -317,7 +317,8 @@ headerbar {
   > windowhandle > box {
     padding: 0;
 
-    // Room for the window's corner, as the title bar's start padding.
+    // 4px from the edges, like the buttons' 4px from the top and bottom.
+    // Caption buttons stay flush with the corner (see windowcontrols).
     > box.start:dir(ltr),
     > box.end:dir(rtl) {
       margin-left: 4px;
@@ -325,7 +326,7 @@ headerbar {
 
     > box.start:dir(rtl),
     > box.end:dir(ltr) {
-      margin-right: 0;
+      margin-right: 4px;
     }
 
     > box.start,
@@ -1836,6 +1837,12 @@ window.dialog.message.csd .dialog-action-area {
   }
 }
 
+// SmokeFillColorDefault behind dialogs.
+floating-sheet > dimming,
+bottom-sheet > dimming {
+  background-color: RGB(0 0 0 / 30%);
+}
+
 floating-sheet > sheet,
 dialog-host > dialog.floating sheet {
   border-radius: $fluent_overlay_radius;
@@ -1875,6 +1882,17 @@ expander-widget > box > title {
 // Icons' chrome glyphs. Close turns red.
 windowcontrols {
   border-spacing: 0;
+
+  // Flush with the window's corner, past the header bar's 4px.
+  &.end:dir(ltr),
+  &.start:dir(rtl) {
+    margin-right: -4px;
+  }
+
+  &.start:dir(ltr),
+  &.end:dir(rtl) {
+    margin-left: -4px;
+  }
 
   > button,
   > button.image-button {
