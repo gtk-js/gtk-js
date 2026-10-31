@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const FormatJustifyCenter = createGtkIcon("format-justify-center", [["g",{"transform":"translate(-653 -77)"},[["rect",{"fill":"currentColor","height":"1","overflow":"visible","width":"14","x":"654","y":"78"}],["rect",{"fill":"currentColor","height":"1","overflow":"visible","width":"10","x":"656","y":"81"}],["rect",{"fill":"currentColor","height":"1","overflow":"visible","width":"10","x":"656","y":"87"}],["rect",{"fill":"currentColor","height":"1","overflow":"visible","width":"14","x":"654","y":"90"}],["rect",{"fill":"currentColor","height":"1","overflow":"visible","width":"14","x":"654","y":"84"}]]]]);
+export const FormatJustifyCenter = createGtkIcon("format-justify-center", [["path",{"d":"M3 3.5c0-.28.22-.5.5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5m-2 4c0-.28.22-.5.5-.5h13a.5.5 0 0 1 0 1h-13a.5.5 0 0 1-.5-.5m4 4c0-.28.22-.5.5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5"}]]);

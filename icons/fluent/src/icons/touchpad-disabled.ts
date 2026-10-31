@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const TouchpadDisabled = createGtkIcon("touchpad-disabled", [["g",{"fill":"currentColor"},[["path",{"d":"M1.5 1.01c-.822 0-1.5.677-1.5 1.5v11c0 .822.678 1.5 1.5 1.5H10v-1H8.01V12H10v-1H1V2.51c0-.286.215-.5.5-.5h12c.286 0 .5.214.5.5V10h1V2.51c0-.823-.677-1.5-1.5-1.5zM1 12h6.01v2.01H1.5a.488.488 0 01-.5-.5z","fontFamily":"sans-serif","fontWeight":"400","opacity":".4","overflow":"visible"}],["path",{"d":"M11 11h1.375l1.125 1.094L14.594 11H16v1.469l-1.093 1.062L16 14.594V16h-1.437L13.5 14.937 12.438 16H11v-1.406l1.063-1.063L11 12.47z","overflow":"visible"}]]]], "0 0 16.01 16");

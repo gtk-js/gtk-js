@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const LayoutVertical = createGtkIcon("layout-vertical", [["g",{"transform":"translate(-542.5,-492.5)"},[["g",{"transform":"rotate(90,550,500)","fill":"currentColor","fillRule":"evenodd","strokeLinecap":"round","strokeLinejoin":"round","strokeWidth":"2"},[["path",{"d":"m544.5 492.5c-1.108 0-2 0.892-2 2v11c0 1.108 0.892 2 2 2h11c1.108 0 2-0.892 2-2v-11c0-1.108-0.892-2-2-2zm0 1h11c0.554 0 1 0.446 1 1v11c0 0.554-0.446 1-1 1h-11c-0.554 0-1-0.446-1-1v-11c0-0.554 0.446-1 1-1z"}],["path",{"d":"m544.5 494.5v11h5v-11zm1 1h3v9h-3z"}],["path",{"d":"m550.5 494.5v11h5v-11zm1 1h3v9h-3z"}]]]]]]);

@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const NetworkCellularAcquiringRtl = createGtkIcon("network-cellular-acquiring-rtl", [["path",{"d":"m3 2v5.2695a2 2 0 0 0-1 1.7305v-6h-1v10h1v-4a2 2 0 0 0 1 1.7227v3.2773h-3v-12zm4 3v2a2 2 0 0 0-1 0.27148v-1.2715h-1v1.2715a2 2 0 0 0-1-0.27148v-2zm1.5 5.3223a2 2 0 0 0 0.5 0.40625v2.2715h1v-2a2 2 0 0 0 1-0.27734v3.2773h-3v-3.2715a2 2 0 0 0 0.5-0.40625zm-2.5 0.40625a2 2 0 0 0 1 0.27148v3h-3v-3a2 2 0 0 0 1-0.27148v2.2715h1zm9 0.27148v3h-3v-3zm-1 1h-1v1h1z","fill":"currentColor"}],["g",{"transform":"matrix(-1,0,0,1,15,0)","fill":"currentColor"},[["path",{"d":"m5 8a1 1 0 1 0 0 2 1 1 0 0 0 0-2zm3 0a1 1 0 1 0 0 2 1 1 0 0 0 0-2zm3 0a1 1 0 1 0 0 2 1 1 0 0 0 0-2z","fill":"currentColor","overflow":"visible"}]]]]);

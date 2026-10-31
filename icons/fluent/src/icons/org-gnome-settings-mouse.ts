@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const OrgGnomeSettingsMouse = createGtkIcon("org-gnome-settings-mouse", [["path",{"d":"m6 0c-2.216 0-4 1.784-4 4v8c0 2.216 1.784 4 4 4h4c2.216 0 4-1.784 4-4v-8c0-2.216-1.784-4-4-4h-4zm0 1h4c1.662 0 3 1.338 3 3v8c0 1.662-1.338 3-3 3h-4c-1.662 0-3-1.338-3-3v-8c0-1.662 1.338-3 3-3z","fill":"currentColor","stopColor":"#000000","strokeLinecap":"round","strokeLinejoin":"round","strokeWidth":"2"}],["rect",{"x":"7","y":"3","width":"2","height":"4","rx":"1","ry":"1","fill":"currentColor","stopColor":"#000000","strokeLinecap":"round","strokeLinejoin":"round","strokeWidth":"2"}]]);

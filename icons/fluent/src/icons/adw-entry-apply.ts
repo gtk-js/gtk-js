@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const AdwEntryApply = createGtkIcon("adw-entry-apply", [["path",{"d":"m1.7574 7.7574 4.2426 4.2426 8.4853-8.4853-0.70711-0.70711-7.7782 7.7782-3.5355-3.5355z","fill":"currentColor","fillRule":"evenodd","stopColor":"#000000"}]]);
+export const AdwEntryApply = createGtkIcon("adw-entry-apply", [["path",{"d":"M13.86 3.66a.5.5 0 0 1-.02.7l-7.93 7.48a.6.6 0 0 1-.84-.02L2.4 9.1a.5.5 0 0 1 .72-.7l2.4 2.44 7.65-7.2a.5.5 0 0 1 .7.02"}]]);

@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const OrientAngle = createGtkIcon("orient-angle", [["g",{"fill":"currentColor","fillOpacity":"1"},[["path",{"d":"M11.957 2.13 0 13h16v-1H2.586l10.043-9.13Z","fill":"currentColor","fillOpacity":"1"}],["path",{"d":"M10.352 4.648 9.305 5.725a8.748 8.748 0 0 1 2.65 6.271h1.5c0-2.767-1.12-5.418-3.103-7.348z","opacity":".6","fill":"currentColor","fillOpacity":"1"}]]],["path",{"d":"M10.5 16h4l-2-3zM8.696.994l-2.951 2.7 3.5.864Z","stroke":"none","strokeWidth":"1px","strokeLinecap":"butt","strokeLinejoin":"miter","strokeOpacity":"1","fill":"currentColor","fillOpacity":"1"}]]);

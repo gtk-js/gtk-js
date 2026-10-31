@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const FormatTextItalic = createGtkIcon("format-text-italic", [["path",{"d":"m7 2v1l0.94336-0.0058594-0.0019532 0.0058594h0.3418l-1.8027 9h-1.4805v1h4v-1h-1.5l1.8047-9h0.63867l0.001953-0.0058594 1.0547 0.0058594v-1z","fill":"currentColor"}]]);
+export const FormatTextItalic = createGtkIcon("format-text-italic", [["path",{"d":"M13 2H7a.5.5 0 0 0 0 1h2.47L5.66 13H3a.5.5 0 0 0 0 1h6a.5.5 0 0 0 0-1H6.73l3.81-10H13a.5.5 0 0 0 0-1"}]]);

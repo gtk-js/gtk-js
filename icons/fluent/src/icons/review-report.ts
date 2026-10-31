@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const ReviewReport = createGtkIcon("review-report", [["path",{"d":"m4.002 2c-1.6625 0-3.002 1.3394-3.002 3.002v4.9961c0 1.6625 1.3394 3.002 3.002 3.002h0.99805l-0.00195 3 3.002-3h3.998c1.6625 0 3.002-1.3394 3.002-3.002v-4.9961c0-1.6625-1.3394-3.002-3.002-3.002h-7.9961zm-0.00195 1h8c1.108 0 2 0.892 2 2v5c0 1.108-0.892 2-2 2h-4.4141l-1.5879 1.5859 0.00195-1.5859h-2c-1.108 0-2-0.892-2-2v-5c0-1.108 0.892-2 2-2z","fill":"currentColor"}],["rect",{"x":"7.5","y":"5","width":"1","height":"3","fill":"currentColor","strokeLinecap":"round","strokeLinejoin":"round","strokeWidth":".7746"}],["rect",{"x":"7.5","y":"9","width":"1","height":"1","fill":"currentColor","strokeLinecap":"round","strokeLinejoin":"round"}]]);

@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const OpenMenu = createGtkIcon("open-menu", [["g",{"fill":"currentColor"},[["circle",{"cx":"3","cy":"8","r":"1"}],["circle",{"cx":"8","cy":"8","r":"1"}],["circle",{"cx":"13","cy":"8","r":"1"}]]]]);
+export const OpenMenu = createGtkIcon("open-menu", [["path",{"d":"M2 3.5c0-.28.22-.5.5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5m0 4c0-.28.22-.5.5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5m0 4c0-.28.22-.5.5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5"}]]);

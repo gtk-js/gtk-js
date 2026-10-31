@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const PackMore = createGtkIcon("pack-more", [["path",{"d":"M1 1v4h4V1H1zm1 1h2v2H2V2zm4-1v4h4V1Zm1 1h2v2H7Zm4-1v4h4V1Zm1 1h2v2h-2zM1 6v4h4V6Zm1 1h2v2H2Zm4-1v4h4V6Zm1 1h2v2H7Zm4-1v4h4V6Zm1 1h2v2h-2zM1 11v4h4v-4zm1 1h2v2H2Zm4-1v4h4v-4zm1 1h2v2H7Zm4-1v4h4v-4zm1 1h2v2h-2z","fill":"currentColor","strokeWidth":".99092","strokeLinecap":"round","strokeLinejoin":"round"}]]);

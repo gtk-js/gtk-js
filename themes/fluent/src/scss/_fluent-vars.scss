@@ -1,0 +1,60 @@
+// Variables libadwaita's widgets read, set to Windows 11's values. Only
+// assignments here: build.ts imports this file twice, after _colors.scss's
+// variables and after _common.scss's. The values come from WinUI 3's theme
+// resources (microsoft-ui-xaml: Common_themeresources_any.xaml,
+// CornerRadius_themeresources.xaml and the controls' *_themeresources.xaml).
+
+// ControlCornerRadius and OverlayCornerRadius
+$fluent_control_radius: 4px;
+$fluent_overlay_radius: 8px;
+
+$button_radius: $fluent_control_radius;
+$card_radius: $fluent_overlay_radius;
+$menu_radius: $fluent_control_radius;
+$menu_margin: 4px; // MenuFlyoutItemMargin
+$menu_padding: 11px; // MenuFlyoutItemThemePadding
+$popover_radius: $fluent_overlay_radius;
+$dialog_radius: $fluent_overlay_radius;
+
+// Fluent's motion: fast, decelerating.
+$fluent_ease: cubic-bezier(0, 0, 0, 1);
+$button_transition: background 83ms linear, box-shadow 83ms linear, border-color 83ms linear,
+  color 83ms linear;
+$focus_transition: none;
+
+// The hover and pressed fills of subtle (flat) controls, SubtleFillColorSecondary
+// and SubtleFillColorTertiary: black on light, white on dark, so currentColor.
+$hover_color: color-mix(in srgb, currentColor 6%, transparent);
+$active_color: color-mix(in srgb, currentColor 4%, transparent);
+$selected_color: color-mix(in srgb, currentColor 6%, transparent);
+$selected_hover_color: color-mix(in srgb, currentColor 9%, transparent);
+$selected_active_color: color-mix(in srgb, currentColor 5%, transparent);
+
+$view_hover_color: color-mix(in srgb, currentColor 4%, transparent);
+$view_active_color: color-mix(in srgb, currentColor 3%, transparent);
+$view_selected_color: color-mix(in srgb, currentColor 6%, transparent);
+$view_selected_hover_color: color-mix(in srgb, currentColor 9%, transparent);
+$view_selected_active_color: color-mix(in srgb, currentColor 5%, transparent);
+
+// ControlStrongFillColorDefault, the trough of sliders and progress bars.
+$trough_color: var(--fluent-control-strong-fill);
+$trough_hover_color: var(--fluent-control-strong-fill);
+$trough_active_color: var(--fluent-control-strong-fill);
+
+$slider_color: var(--fluent-control-solid-fill);
+$slider_hover_color: var(--fluent-control-solid-fill);
+
+$border_opacity: 15%;
+$dim_label_opacity: 62%; // TextFillColorSecondary
+$dimmer_opacity: 45%; // TextFillColorTertiary
+$disabled_opacity: 40%;
+
+// The keyboard focus rectangle: FocusStrokeColorOuter, 2px, just outside.
+$focus_border_color: var(--fluent-focus-stroke-outer);
+
+$osd_fg_color: white;
+$osd_bg_color: RGB(32 32 32 / 85%);
+$tooltip_border_color: var(--fluent-surface-stroke-flyout);
+$toast_bg_color: #2c2c2c;
+$toast_fg_color: white;
+$window_outline_color: transparent;

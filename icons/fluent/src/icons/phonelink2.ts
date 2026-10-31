@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const Phonelink2 = createGtkIcon("phonelink2", [["path",{"d":"m3.957 2c-1.0842 0-1.957 0.87284-1.957 1.957v9.043h1v-9c0-0.554 0.446-1 1-1h9c0.554 0 1 0.446 1 1v2h1v-2.043c0-1.0842-0.87284-1.957-1.957-1.957z","fill":"currentColor","strokeLinecap":"round","strokeLinejoin":"round","strokeWidth":"2"}],["rect",{"y":"12","width":"10","height":"1","rx":"0","ry":"0","fill":"currentColor","strokeLinecap":"round","strokeLinejoin":"round","strokeWidth":"2"}],["path",{"d":"m12 7c-0.554 0-1 0.446-1 1v5c0 0.554 0.446 1 1 1h3c0.554 0 1-0.446 1-1v-5c0-0.554-0.446-1-1-1h-3zm0 1h3v5h-3v-5z","fill":"currentColor","strokeLinecap":"round","strokeLinejoin":"round","strokeWidth":"2"}]]);

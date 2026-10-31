@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const EmblemDefault = createGtkIcon("emblem-default", [["path",{"d":"m11.126 4.828 0.835 0.835-5.141 5.14-2.78-2.778 0.836-0.837 1.944 1.944z","fill":"currentColor"}],["path",{"d":"m8 0a8 8 0 0 0-8 8 8 8 0 0 0 8 8 8 8 0 0 0 8-8 8 8 0 0 0-8-8zm-0.09375 1a7 7 0 0 1 0.09375 0 7 7 0 0 1 7 7 7 7 0 0 1-7 7 7 7 0 0 1-7-7 7 7 0 0 1 6.9062-7z","fill":"currentColor","strokeLinecap":"round","strokeLinejoin":"round","strokeWidth":"2"}]]);
+export const EmblemDefault = createGtkIcon("emblem-default", [["path",{"d":"M2 8a6 6 0 1 1 12 0A6 6 0 0 1 2 8m6-7a7 7 0 1 0 0 14A7 7 0 0 0 8 1m2.85 5.85a.5.5 0 0 0-.7-.7l-2.9 2.9-1.4-1.4a.5.5 0 1 0-.7.7L6.9 10.1c.2.2.5.2.7 0z"}]]);

@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const LayerNext = createGtkIcon("layer-next", [["path",{"d":"M7.5 3h1v9h-1z","fill":"currentColor","strokeWidth":"2.12132","strokeLinecap":"square"}],["path",{"d":"M9.849 2.536h5v1h-5z","transform":"rotate(45)","fill":"currentColor","strokeWidth":"2","strokeLinecap":"square"}],["path",{"d":"M-1.464 13.849h5v1h-5z","transform":"scale(-1 1) rotate(45)","fill":"currentColor","strokeWidth":"2","strokeLinecap":"square"}],["path",{"d":"M1 14h14v1H1z","fill":"currentColor","strokeWidth":"2","strokeLinecap":"square"}],["path",{"d":"M1 1h14v1H1z","fill":"currentColor","strokeWidth":"2","strokeLinecap":"square","opacity":".5"}]]);

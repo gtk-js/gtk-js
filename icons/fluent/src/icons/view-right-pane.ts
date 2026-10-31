@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const ViewRightPane = createGtkIcon("view-right-pane", [["g",{"transform":"translate(100 72.989)"},[["g",{"transform":"rotate(-90 -82 -55.001)","fill":"currentColor"},[["rect",{"x":"-78","y":"-63","width":"12","height":"1","colorRendering":"auto","imageRendering":"auto","shapeRendering":"auto","solidColor":"#000000"}],["path",{"transform":"translate(-80,-72.989)","d":"m3 0.98828c-1.108 0-2 0.892-2 2v10c0 1.108 0.892 2 2 2h10c1.108 0 2-0.892 2-2v-10c0-1.108-0.892-2-2-2zm0 1h10c0.554 0 1 0.446 1 1v10c0 0.554-0.446 1-1 1h-10c-0.554 0-1-0.446-1-1v-10c0-0.554 0.446-1 1-1z"}]]]]]]);

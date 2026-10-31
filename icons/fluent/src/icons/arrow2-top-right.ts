@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const Arrow2TopRight = createGtkIcon("arrow2-top-right", [["rect",{"transform":"scale(-1,1)","x":"-14","y":"2","width":"1","height":"12","fill":"currentColor","strokeLinecap":"round","strokeLinejoin":"round","strokeWidth":"2"}],["rect",{"transform":"scale(-1,1)","x":"-14","y":"2","width":"12","height":"1","fill":"currentColor","strokeLinecap":"round","strokeLinejoin":"round","strokeWidth":"2"}],["rect",{"transform":"matrix(-.70711 .70711 .70711 .70711 0 0)","x":"-7.0711","y":"10.814","width":"15","height":"1","fill":"currentColor","strokeLinecap":"round","strokeLinejoin":"round","strokeWidth":"2"}]]);

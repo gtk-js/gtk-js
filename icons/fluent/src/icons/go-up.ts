@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const GoUp = createGtkIcon("go-up", [["path",{"d":"M 14.3633,10.3633 8,4 l -6.3633,6.3633 0.70703,0.70703 5.6562,-5.6562 5.6562,5.6562 0.70703,-0.70703 z","style":"fill: currentColor"}]]);
+export const GoUp = createGtkIcon("go-up", [["path",{"d":"M7.5 13.5a.5.5 0 0 0 1 0V3.8l3.63 4.03a.5.5 0 0 0 .74-.66l-4.5-5a.5.5 0 0 0-.74 0l-4.5 5a.5.5 0 0 0 .74.66L7.5 3.8z"}]]);

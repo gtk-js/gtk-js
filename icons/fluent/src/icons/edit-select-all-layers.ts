@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const EditSelectAllLayers = createGtkIcon("edit-select-all-layers", [["path",{"d":"m2 5 3-3h8l-3 3z","fill":"currentColor","fillOpacity":"1"}],["path",{"d":"M0 0h1v1H0Z","strokeLinecap":"round","fill":"currentColor","fillOpacity":"1"}],["path",{"d":"M2 0h1v1H2Zm2 0h1v1H4Zm2 0h1v1H6Zm2 0h1v1H8Zm2 0h1v1h-1zm2 0h1v1h-1zm2 0h1v1h-1zM0 2h1v1H0Zm0 2h1v1H0Zm0 2h1v1H0Zm0 2h1v1H0Zm0 2h1v1H0Zm0 2h1v1H0Zm0 2h1v1H0Zm2-5 3-3h8l-3 3zm0 4 3-3h8l-3 3zM14 2h1v1h-1zm0 2h1v1h-1zm0 2h1v1h-1zm0 2h1v1h-1zm0 2h1v1h-1zm0 2h1v1h-1zm0 2h1v1h-1zM2 14h1v1H2Zm2 0h1v1H4Zm2 0h1v1H6Zm2 0h1v1H8Zm2 0h1v1h-1zm2 0h1v1h-1z","fill":"currentColor","fillOpacity":"1"}]]);

@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const EphyPermissionCamera = createGtkIcon("ephy-permission-camera", [["path",{"d":"m6 3c-1.108 0-2 0.892-2 2v6c0 1.108 0.892 2 2 2h8c1.108 0 2-0.892 2-2v-6c0-1.108-0.892-2-2-2h-8zm0 1h8c0.554 0 1 0.446 1 1v6c0 0.554-0.446 1-1 1h-8c-0.554 0-1-0.446-1-1v-6c0-0.554 0.446-1 1-1z","fill":"currentColor","stopColor":"#000000","strokeLinecap":"round","strokeLinejoin":"round","strokeWidth":"3"}],["path",{"d":"m0 4v8h1.207l3.793-3.793v-0.41406l-3.793-3.793h-1.207zm1 1.207 2.793 2.793-2.793 2.793v-5.5859z","fill":"currentColor"}],["rect",{"x":"13","y":"5","width":"1","height":"1","fill":"currentColor","stopColor":"#000000","strokeLinecap":"round","strokeLinejoin":"round","strokeWidth":"3"}]]);

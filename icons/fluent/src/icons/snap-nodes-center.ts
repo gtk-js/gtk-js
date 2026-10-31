@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const SnapNodesCenter = createGtkIcon("snap-nodes-center", [["path",{"d":"M927 506.362h1v15h-1z","transform":"translate(-919 -506.362)","opacity":"1","fill":"currentColor","fillOpacity":"1"}],["path",{"d":"M920 513.362h15v1h-15z","transform":"translate(-919 -506.362)","opacity":"1","fill":"currentColor","fillOpacity":"1"}],["path",{"d":"M922-4v4h4v-4h-4zm7 0v4h4v-4h-4zm-6 1h2v2h-2v-2zm7 0h2v2h-2v-2zm-8 6v4h4V3h-4zm7 0v4h4V3h-4zm-6 1h2v2h-2V4zm7 0h2v2h-2V4z","transform":"translate(-919 6)","opacity":"1","fill":"currentColor","fillOpacity":"1"}]]);

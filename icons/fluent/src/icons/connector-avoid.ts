@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const ConnectorAvoid = createGtkIcon("connector-avoid", [["path",{"fill":"currentColor","fillOpacity":".998","d":"M7.074 3.504A.5.5 0 0 0 7 3.508V4h-.492a.5.5 0 0 0 .234.43L11.5 7.283V12h1V6.717L7.258 3.57a.5.5 0 0 0-.184-.066z","opacity":".5"}],["path",{"fill":"currentColor","d":"M3 7c-.554 0-1 .446-1 1v1c0 .554.446 1 1 1h4c.554 0 1-.446 1-1V8c0-.554-.446-1-1-1Zm0 1h4v1H3Zm1-6c-.554 0-1 .446-1 1v1c0 .554.446 1 1 1h3c.554 0 1-.446 1-1V3c0-.554-.446-1-1-1Zm0 1h3v1H4Zm6 8c-.554 0-1 .446-1 1v1c0 .554.446 1 1 1h3c.554 0 1-.446 1-1v-1c0-.554-.446-1-1-1zm0 1h3v1h-3z"}]]);

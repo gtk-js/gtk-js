@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const DataIconsSelection = createGtkIcon("data-icons-selection", [["g",{"fill":"currentColor"},[["path",{"d":"m1.017 4.995h1v1h-1zm2 0h1v1h-1zm2 0h1v1h-1zm2 0h1v1h-1zm2 0h1v1h-1zm2.032 0h1v1h-1zm0 2h1v1h-1zm0 2h1v1h-1zm0 2h1v1h-1zm0 2h1v1h-1zm-2.032 0h1v1h-1zm-2 0h1v1h-1zm-2 0h1v1h-1zm-2 0h1v1h-1zm-2 0h1v1h-1zm0-2h1v1h-1zm0-2h1v1h-1zm0-2h1v1h-1z","fill":"currentColor"}]]],["path",{"d":"m7 1c-1.108 0-2 0.892-2 2v1h1v-1c0-0.554 0.446-1 1-1h7c0.554 0 1 0.446 1 1v7c0 0.554-0.446 1-1 1h-1v1h1c1.108 0 2-0.892 2-2v-7c0-1.108-0.892-2-2-2h-7zm-2 6v3c0 1.108 0.892 2 2 2h3v-1h-3c-0.554 0-1-0.446-1-1v-3h-1z","fill":"currentColor","strokeLinecap":"round","strokeLinejoin":"round","strokeWidth":"1.0016"}]]);

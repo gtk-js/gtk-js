@@ -61,10 +61,6 @@ export function ThemeControls({
   setAdwaitaAccent,
   fluentAccent,
   setFluentAccent,
-  fluentTitlebutton,
-  setFluentTitlebutton,
-  fluentWindow,
-  setFluentWindow,
   preloadOptions,
 }: ThemeControlsProps) {
   const [open, setOpen] = useState(false);
@@ -145,46 +141,16 @@ export function ThemeControls({
             </GtkBox>
           )}
 
-          {/* Fluent-specific controls */}
+          {/* Accent (Fluent: Windows' accent color) */}
           {themeName === "fluent" && (
-            <>
-              <GtkBox orientation="vertical" spacing={6}>
-                <GtkLabel label="Accent" className="caption-heading dimmed" />
-                <AccentPicker
-                  presets={FLUENT_ACCENT_PRESETS}
-                  value={fluentAccent}
-                  onChange={setFluentAccent}
-                />
-              </GtkBox>
-
-              <GtkBox orientation="vertical" spacing={6}>
-                <GtkLabel label="Buttons" className="caption-heading dimmed" />
-                <GtkBox spacing={6}>
-                  {(["circular", "square"] as const).map((t) => (
-                    <GtkButton
-                      key={t}
-                      label={t.charAt(0).toUpperCase() + t.slice(1)}
-                      className={fluentTitlebutton === t ? "suggested-action" : ""}
-                      onClicked={() => setFluentTitlebutton(t)}
-                    />
-                  ))}
-                </GtkBox>
-              </GtkBox>
-
-              <GtkBox orientation="vertical" spacing={6}>
-                <GtkLabel label="Corners" className="caption-heading dimmed" />
-                <GtkBox spacing={6}>
-                  {(["default", "round"] as const).map((w) => (
-                    <GtkButton
-                      key={w}
-                      label={w.charAt(0).toUpperCase() + w.slice(1)}
-                      className={fluentWindow === w ? "suggested-action" : ""}
-                      onClicked={() => setFluentWindow(w)}
-                    />
-                  ))}
-                </GtkBox>
-              </GtkBox>
-            </>
+            <GtkBox orientation="vertical" spacing={6}>
+              <GtkLabel label="Accent" className="caption-heading dimmed" />
+              <AccentPicker
+                presets={FLUENT_ACCENT_PRESETS}
+                value={fluentAccent}
+                onChange={setFluentAccent}
+              />
+            </GtkBox>
           )}
         </GtkBox>
       </GtkPopover>

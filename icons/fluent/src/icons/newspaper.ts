@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const Newspaper = createGtkIcon("newspaper", [["path",{"transform":"translate(-680,-240)","d":"m683 240c-1.662 0-3 1.338-3 3v10c0 1.662 1.338 3 3 3h10c1.662 0 3-1.338 3-3v-6c0-1.662-1.338-3-3-3h-2v-1c0-1.662-1.338-3-3-3zm0 1h5c1.108 0 2 0.892 2 2v10c0 0.76959 0.28666 1.47 0.75977 2h-7.7598c-1.108 0-2-0.892-2-2v-10c0-1.108 0.892-2 2-2zm0 2v2h5v-2zm8 2h2c1.108 0 2 0.892 2 2v6c0 1.108-0.892 2-2 2s-2-0.892-2-2v-5zm-8 1v1h5v-1zm0 2v1h5v-1zm0 2v1h5v-1z","fill":"currentColor"}]]);

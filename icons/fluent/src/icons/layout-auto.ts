@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const LayoutAuto = createGtkIcon("layout-auto", [["g",{"transform":"translate(-542.5,-492)","fill":"currentColor"},[["path",{"d":"m557 501.79-4.707 4.707 0.70703 0.70703 4.707-4.707zm0 3-1.707 1.707 0.70703 0.70703 1.707-1.707z","strokeLinecap":"square","strokeMiterlimit":"2"}],["path",{"d":"m544.5 492c-1.108 0-2 0.892-2 2v11c0 1.108 0.892 2 2 2h7v-1h-7c-0.554 0-1-0.446-1-1v-11c0-0.554 0.446-1 1-1h11c0.554 0 1 0.446 1 1v7h1v-7c0-1.108-0.892-2-2-2h-11z","fillRule":"evenodd","strokeLinecap":"round","strokeLinejoin":"round","strokeWidth":"2"}],["path",{"d":"m544.5 494v4 7h4v-7h7v-4h-7-4zm1 1h2 7v2h-7v7h-2v-7-2z","fillRule":"evenodd","strokeLinecap":"round","strokeLinejoin":"round","strokeWidth":"2"}]]]]);

@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const ZoomIn = createGtkIcon("zoom-in", [["path",{"d":"m7 5v3h-3v1h3v3h1v-3h3v-1h-3v-3z","fill":"currentColor","strokeLinecap":"round","strokeLinejoin":"round","strokeWidth":"1.1851"}],["path",{"d":"M 7.4628906,1 A 7.5,7.5 0 0 0 0,8.5 7.5,7.5 0 0 0 7.5,16 7.5,7.5 0 0 0 15,8.5 7.5,7.5 0 0 0 7.5,1 7.5,7.5 0 0 0 7.4628906,1 Z M 7.5,2 A 6.5,6.5 0 0 1 14,8.5 6.5,6.5 0 0 1 7.5,15 6.5,6.5 0 0 1 1,8.5 6.5,6.5 0 0 1 7.5,2 Z","fill":"currentColor","strokeLinecap":"round","strokeLinejoin":"round","strokeWidth":"1.0016"}]]);
+export const ZoomIn = createGtkIcon("zoom-in", [["path",{"d":"M6.5 4c.28 0 .5.22.5.5V6h1.5a.5.5 0 0 1 0 1H7v1.5a.5.5 0 0 1-1 0V7H4.5a.5.5 0 0 1 0-1H6V4.5c0-.28.22-.5.5-.5m0-3a5.5 5.5 0 0 1 4.23 9.02l3.12 3.13a.5.5 0 1 1-.7.7l-3.13-3.12A5.5 5.5 0 1 1 6.5 1m0 1a4.5 4.5 0 1 0 0 9 4.5 4.5 0 0 0 0-9"}]]);

@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const LangInclude = createGtkIcon("lang-include", [["rect",{"x":"2","y":"4","width":"12","height":"1","fill":"currentColor","fillRule":"evenodd","stopColor":"#000000","strokeWidth":"1.0445"}],["rect",{"x":"2","y":"10","width":"12","height":"1","fill":"currentColor","fillRule":"evenodd","stopColor":"#000000","strokeWidth":"1.0445"}],["rect",{"x":"5","y":"1","width":"1","height":"13","fill":"currentColor","fillRule":"evenodd","stopColor":"#000000","strokeWidth":".96362"}],["rect",{"x":"10","y":"1","width":"1","height":"13","fill":"currentColor","fillRule":"evenodd","stopColor":"#000000","strokeWidth":".96362"}]]);

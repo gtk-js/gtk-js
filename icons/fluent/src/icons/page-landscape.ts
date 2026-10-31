@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const PageLandscape = createGtkIcon("page-landscape", [["path",{"d":"M2 2C.892 2 0 2.892 0 4v8c0 1.108.892 2 2 2h10v-1H2c-.554 0-1-.446-1-1V4c0-.554.446-1 1-1h12c.554 0 1 .446 1 1v6h1V4c0-1.108-.892-2-2-2H2z","fill":"currentColor","strokeLinecap":"round","strokeLinejoin":"round"}],["path",{"d":"M12 9c-.554 0-1 .446-1 1v4h1v-4h4V9h-4z","fill":"currentColor","strokeLinecap":"round","strokeLinejoin":"round"}],["path",{"d":"m15.293 9.293-4 4L12 14l4-4Z","fill":"currentColor","fillOpacity":"1"}]]);

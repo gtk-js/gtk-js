@@ -1,90 +1,85 @@
+// Builds the Fluent theme: a Windows 11 (WinUI 3 / Fluent 2) look for GTK 4
+// and libadwaita. It's libadwaita's own stylesheet, compiled with the values
+// in src/scss/_fluent-vars.scss and followed by the rules in
+// src/scss/_fluent.scss, so it styles every widget libadwaita does.
+//
+// Two outputs:
+// - dist/{light,dark,auto}.css: the web CSS gtk-js injects.
+// - dist/gtk-4.0/gtk.css: the native GTK CSS, before the web transform. Copy
+//   it to ~/.config/gtk-4.0/gtk.css to theme native GTK 4/libadwaita apps.
 import { compileGtkCSS } from "@gtk-js/gtk-css/compile";
-import { mkdirSync, readdirSync, unlinkSync, writeFileSync } from "fs";
+import { spawnSync } from "child_process";
+import { cpSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "fs";
+import { tmpdir } from "os";
+import { join } from "path";
 
-const upstreamDir = new URL("../../upstream/fluent-gtk-theme/src", import.meta.url).pathname;
+const upstreamDir = new URL("../../upstream/libadwaita/src/stylesheet", import.meta.url).pathname;
+const srcDir = new URL("src/scss", import.meta.url).pathname;
 const outDir = new URL("dist/", import.meta.url).pathname;
-mkdirSync(outDir, { recursive: true });
+mkdirSync(join(outDir, "gtk-4.0"), { recursive: true });
 
-const sassDir = `${upstreamDir}/_sass`;
-
-// The url()s are relative to gtk-4.0/, where install.sh copies gtk/assets as
-// assets/ and gtk/scalable into it as assets/scalable/.
-const assetMap = new Map<string, string>();
-for (const [dir, prefix] of [
-  [`${upstreamDir}/gtk/assets`, "assets/"],
-  [`${upstreamDir}/gtk/scalable`, "assets/scalable/"],
-]) {
-  for (const name of readdirSync(dir)) assetMap.set(prefix + name, `${dir}/${name}`);
+// gtk-js's default font (reset.css), which GTK takes from gtk-font-name: the
+// theme's, so `font: initial` resolves to it too. The line height is Pango's
+// for Segoe UI at 14px (its ascent and descent rounded up: 20px), which is
+// also Windows' Body line height.
+const WEB_CSS = `
+:where([data-gtk-provider]) {
+  --gtk-font-family: "Segoe UI Variable Text", "Segoe UI", Selawik, "Noto Sans", "Open Sans", sans-serif;
+  --gtk-font-size: 10.5pt;
+  --gtk-line-height: 1.428;
 }
-
-const schemes = ["light", "dark"] as const;
-const titlebuttons = ["circular", "square"] as const;
-const windows = ["default", "round"] as const;
-
-// Accent hex baked in by the SCSS theme() function for $theme: 'default'
-const ACCENT_HEX: Record<"light" | "dark", { hex: string; r: number; g: number; b: number }> = {
-  light: { hex: "#1A73E8", r: 26, g: 115, b: 232 },
-  dark: { hex: "#3281EA", r: 50, g: 129, b: 234 },
-};
-
-/**
- * Post-process compiled CSS to replace the baked-in accent hex and all
- * rgba(R,G,B,A) derived forms with CSS custom property references.
- * This allows the accent color to be overridden at runtime.
- */
-function replaceAccentWithVar(css: string, scheme: "light" | "dark"): string {
-  const { hex, r, g, b } = ACCENT_HEX[scheme];
-
-  // Replace bare hex (case-insensitive)
-  css = css.replace(new RegExp(hex, "gi"), "var(--fluent-accent)");
-
-  // Replace rgba(R, G, B, A) derived forms → color-mix(in srgb, var(--fluent-accent) A%, transparent)
-  css = css.replace(
-    new RegExp(`rgba\\(${r},\\s*${g},\\s*${b},\\s*([\\d.]+)\\)`, "g"),
-    (_, a: string) =>
-      `color-mix(in srgb, var(--fluent-accent) ${Math.round(parseFloat(a) * 100)}%, transparent)`,
-  );
-
-  return css;
-}
-
-const results: Record<string, string> = {};
-
-for (const scheme of schemes) {
-  const scssEntry = `${upstreamDir}/gtk/4.0/gtk-${scheme === "light" ? "Light" : "Dark"}.scss`;
-
-  for (const titlebutton of titlebuttons) {
-    for (const win of windows) {
-      const tweaksTempContent = `
-$panel_style: 'compact';
-$opacity: 'default';
-$window: '${win}';
-$theme: 'default';
-$blur: 'false';
-$outline: 'true';
-$titlebutton: '${titlebutton}';
 `;
-      writeFileSync(`${sassDir}/_tweaks-temp.scss`, tweaksTempContent);
 
-      try {
-        let css = await compileGtkCSS(scssEntry, { scheme, assetMap });
-        css = replaceAccentWithVar(css, scheme);
+// libadwaita's SCSS sets its variables unconditionally, so they're overridden
+// in a copy: _fluent-vars.scss goes after _colors.scss's variables (which
+// _common.scss's own rules read) and after _common.scss's (which the widgets
+// read), _fluent.scss at the end.
+const work = mkdtempSync(join(tmpdir(), "gtk-js-fluent-"));
+try {
+  cpSync(upstreamDir, work, { recursive: true });
+  cpSync(srcDir, work, { recursive: true });
 
-        const key = `${scheme}_${titlebutton}_${win}`;
-        results[key] = css;
-        process.stdout.write(`  ${key}: ${css.length}b\n`);
-      } finally {
-        try {
-          unlinkSync(`${sassDir}/_tweaks-temp.scss`);
-        } catch {}
-      }
-    }
+  const patch = (file: string, from: string, to: string) => {
+    const path = join(work, file);
+    const text = readFileSync(path, "utf8");
+    if (!text.includes(from)) throw new Error(`${file}: "${from}" not found; update build.ts`);
+    writeFileSync(path, text.replace(from, to));
+  };
+  patch("_common.scss", "@import 'widgets';", "@import 'fluent-vars';\n@import 'widgets';");
+  // Corners libadwaita derives from the button radius, negative at Windows' 4px.
+  patch(
+    "widgets/_buttons.scss",
+    "border-radius: $button_radius - 4.5px;",
+    "border-radius: max($button_radius - 4.5px, 0px);",
+  );
+  patch(
+    "widgets/_buttons.scss",
+    "border-radius: $button_radius - 5px;",
+    "border-radius: max($button_radius - 5px, 0px);",
+  );
+  patch("default.scss", "@import 'colors';", "@import 'colors';\n@import 'fluent-vars';");
+  patch("default.scss", "@import 'compat-colors';", "@import 'compat-colors';\n@import 'fluent';");
+
+  const entry = join(work, "default.scss");
+
+  const sassc = spawnSync("sassc", ["-t", "expanded", entry], { maxBuffer: 256 * 1024 * 1024 });
+  if (sassc.status !== 0) throw new Error(`sassc failed:\n${sassc.stderr}`);
+  writeFileSync(join(outDir, "gtk-4.0", "gtk.css"), sassc.stdout);
+  // Its url()s are relative to it.
+  cpSync(join(work, "assets"), join(outDir, "gtk-4.0", "assets"), { recursive: true });
+
+  const variants = [
+    { name: "light", scheme: "light" as const },
+    { name: "dark", scheme: "dark" as const },
+    { name: "auto", scheme: undefined },
+  ];
+  for (const { name, scheme } of variants) {
+    const css = (await compileGtkCSS(entry, scheme ? { scheme } : undefined)) + WEB_CSS;
+    writeFileSync(`${outDir}${name}.css`, css);
+    process.stdout.write(`  ${name}: ${css.length}b\n`);
   }
+} finally {
+  rmSync(work, { recursive: true, force: true });
 }
 
-// Write individual CSS files
-for (const [key, css] of Object.entries(results)) {
-  writeFileSync(`${outDir}${key}.css`, css);
-}
-
-console.log(`Built ${Object.keys(results).length} Fluent variants.`);
+console.log("Built the Fluent theme.");

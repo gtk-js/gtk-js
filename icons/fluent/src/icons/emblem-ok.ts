@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const EmblemOk = createGtkIcon("emblem-ok", [["path",{"d":"m11.126 4.828 0.835 0.835-5.141 5.14-2.78-2.778 0.836-0.837 1.944 1.944z","fill":"currentColor"}]]);
+export const EmblemOk = createGtkIcon("emblem-ok", [["path",{"d":"M13.86 3.66a.5.5 0 0 1-.02.7l-7.93 7.48a.6.6 0 0 1-.84-.02L2.4 9.1a.5.5 0 0 1 .72-.7l2.4 2.44 7.65-7.2a.5.5 0 0 1 .7.02"}]]);

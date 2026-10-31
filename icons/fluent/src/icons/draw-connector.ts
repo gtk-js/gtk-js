@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const DrawConnector = createGtkIcon("draw-connector", [["path",{"d":"M1 12v4h4v-4H1zm1 1h2v2H2v-2zm9-1v4h4v-4zm1 1h2v2h-2zM5 1v4h4V1Zm1 1h2v2H6Z","fill":"currentColor","strokeWidth":"2","strokeLinecap":"round","strokeLinejoin":"round"}],["path",{"d":"M5.416 6 2.57 10.742a.5.5 0 0 0-.066.258h1.08L6.43 6.258A.5.5 0 0 0 6.502 6H5.416z","fill":"currentColor","strokeLinecap":"round","fillOpacity":"1"}],["path",{"d":"M10.033 2.502a.5.5 0 0 0-.033.002v1.098l2.5 1.666V11h1V5a.5.5 0 0 0-.223-.416l-3-2a.5.5 0 0 0-.244-.082z","fill":"currentColor","strokeLinecap":"round","strokeLinejoin":"round","fillOpacity":"1"}]]);

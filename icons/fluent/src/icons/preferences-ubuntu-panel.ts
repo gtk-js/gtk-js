@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const PreferencesUbuntuPanel = createGtkIcon("preferences-ubuntu-panel", [["g",{"fill":"currentColor"},[["g",{"fillRule":"evenodd"},[["rect",{"x":"2","y":"9","width":"2","height":"2","rx":"0","ry":"0"}],["rect",{"x":"2","y":"6","width":"2","height":"2","rx":"0","ry":"0"}],["rect",{"x":"2","y":"4","width":"2","height":"1","rx":"0","ry":"0","strokeWidth":".70711"}]]],["path",{"d":"m4.5 14h7c0.277 0 0.5 0.223 0.5 0.5s-0.223 0.5-0.5 0.5h-7c-0.277 0-0.5-0.223-0.5-0.5s0.223-0.5 0.5-0.5z"}],["path",{"d":"m2 2c-1.108 0-2 0.892-2 2v7c0 1.108 0.892 2 2 2h12c1.108 0 2-0.892 2-2v-7c0-1.108-0.892-2-2-2zm0 1h12c0.554 0 1 0.446 1 1v7c0 0.554-0.446 1-1 1h-12c-0.554 0-1-0.446-1-1v-7c0-0.554 0.446-1 1-1z"}]]]]);

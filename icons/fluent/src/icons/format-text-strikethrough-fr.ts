@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const FormatTextStrikethroughFr = createGtkIcon("format-text-strikethrough-fr", [["path",{"d":"m3 2v2 3h2v-3h3.5c0.831 0 1.5 0.669 1.5 1.5s-0.669 1.5-1.5 1.5h3.1504c0.21778-0.45514 0.34961-0.95957 0.34961-1.5 0-1.939-1.561-3.5-3.5-3.5h-1.5-2-2zm0 8v4h2 1.5 0.5 1.5c1.939 0 3.5-1.561 3.5-3.5 0-0.17146-0.028978-0.33544-0.052734-0.5h-2.0391c0.055658 0.15722 0.091797 0.32324 0.091797 0.5 0 0.831-0.669 1.5-1.5 1.5h-1.5-2v-2h-2z","fill":"currentColor","strokeLinecap":"square","strokeWidth":"2"}],["g",{"fill":"currentColor"},[["path",{"d":"m2 8v1h12v-1z"}]]]]);

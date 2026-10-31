@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const SwapValues = createGtkIcon("swap-values", [["g",{"transform":"translate(-81 -687)","fill":"currentColor","fillRule":"evenodd","strokeLinecap":"round","strokeLinejoin":"round","strokeWidth":"2"},[["path",{"transform":"rotate(45)","d":"m550.79 422.14v0.9999h3.2925l-5.3641 5.3641 0.70711 0.70711 5.3641-5.3641v3.2925h0.9999v-3.9996-0.29279-0.70711h-0.9999-3.9996z","stopColor":"#000000"}],["path",{"d":"m87.035 693.96 0.70704 0.70703-2.3281 2.3281h7.5859v1l-7.5859-1e-5 2.3281 2.3281-0.70704 0.70704-3.5352-3.5352 0.70704-0.70704z","stopColor":"#000000"}]]]]);

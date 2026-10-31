@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const Vertical = createGtkIcon("vertical", [["rect",{"width":"6","height":"12","x":"-14","y":"2","rx":"0","ry":"0","transform":"rotate(-90)","opacity":".5","fill":"currentColor","strokeWidth":"2","strokeLinecap":"square"}],["path",{"d":"M1 13c0 1.108.892 2 2 2h10c1.108 0 2-.892 2-2V3c0-1.108-.892-2-2-2H3c-1.108 0-2 .892-2 2Zm1 0V3c0-.554.446-1 1-1h10c.554 0 1 .446 1 1v10c0 .554-.446 1-1 1H3c-.554 0-1-.446-1-1Z","fill":"currentColor","strokeWidth":"2","strokeLinecap":"square"}]]);

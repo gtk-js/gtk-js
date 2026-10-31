@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const LibreofficeMath = createGtkIcon("libreoffice-math", [["g",{"fill":"currentColor"},[["path",{"d":"M11 6H9l-2 4-1-2H4v2h1.46L7 13l2.6-5H11z"}],["path",{"d":"m10.826 0 4.1738 4.1738v-3.1738c0-0.554-0.446-1-1-1z"}],["path",{"d":"m3 0c-1.0907 0-2 0.9093-2 2v12c0 1.0907 0.9093 2 2 2h10c1.0907 0 2-0.9093 2-2v-8a1.0001 1.0001 0 0 0-0.29297-0.70703l-5-5a1.0001 1.0001 0 0 0-0.70703-0.29297zm0 1h6l5 5v8c0 0.554-0.446 1-1 1h-10c-0.554 0-1-0.446-1-1v-12c0-0.554 0.446-1 1-1z","colorRendering":"auto","dominantBaseline":"auto","imageRendering":"auto","shapeRendering":"auto","solidColor":"#000000"}]]]]);

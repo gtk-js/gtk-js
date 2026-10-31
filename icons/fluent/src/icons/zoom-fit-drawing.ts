@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const ZoomFitDrawing = createGtkIcon("zoom-fit-drawing", [["path",{"d":"M78 610.362h9v9h-9zm1 1v7h7v-7zm1 1h5v5h-5z","transform":"translate(-75 -607.362)","opacity":"1","fill":"currentColor","fillOpacity":"1"}],["path",{"d":"M12.803 2.197a7.5 7.5 0 0 0-10.606 0 7.5 7.5 0 0 0 0 10.606 7.5 7.5 0 0 0 10.606 0 7.5 7.5 0 0 0 0-10.606zm-.707.707a6.5 6.5 0 0 1 0 9.192 6.5 6.5 0 0 1-9.192 0 6.5 6.5 0 0 1 0-9.192 6.5 6.5 0 0 1 9.192 0z","fill":"currentColor","fillRule":"evenodd","strokeWidth":"2","strokeLinecap":"square"}],["path",{"d":"M17.107-.5h6v1h-6z","transform":"rotate(45)","fill":"currentColor","fillRule":"evenodd","strokeWidth":"2","strokeLinecap":"square"}]]);

@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const BitmapTrace = createGtkIcon("bitmap-trace", [["path",{"d":"M170.5 567.362a5.5 5.5 0 1 0 0 11 5.5 5.5 0 0 0 0-11zm0 1a4.5 4.5 0 0 1 4.5 4.5 4.5 4.5 0 0 1-4.5 4.5 4.5 4.5 0 0 1-4.5-4.5 4.5 4.5 0 0 1 4.5-4.5z","transform":"translate(-165 -567.362)","opacity":"1","fill":"currentColor","fillOpacity":"1"}],["path",{"d":"M176.969 572.362c.013.168.031.33.031.5 0 .169-.01.335-.025.5H180v9h-9v-3.025a5.714 5.714 0 0 1-.5.025c-.171 0-.332-.018-.5-.031v4.031h11v-11h-4.031z","transform":"translate(-165 -567.362)","opacity":"1","fill":"currentColor","fillOpacity":"1"}]]);

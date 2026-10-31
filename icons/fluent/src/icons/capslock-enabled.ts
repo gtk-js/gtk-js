@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const CapslockEnabled = createGtkIcon("capslock-enabled", [["path",{"d":"M3 1c-1.108 0-2 .892-2 2v7c0 1.108.892 2 2 2h10c1.108 0 2-.892 2-2V3c0-1.108-.892-2-2-2H3zm0 1h10c.554 0 1 .446 1 1v7c0 .554-.446 1-1 1H3c-.554 0-1-.446-1-1V3c0-.554.446-1 1-1zm-2 9v2c0 1.108.892 2 2 2h10c1.108 0 2-.892 2-2v-2c0 1.108-.892 2-2 2H3c-1.108 0-2-.892-2-2z","fill":"currentColor","strokeLinecap":"square","strokeWidth":"2"}],["path",{"d":"M8 3.933L6.715 7.417H9.29zM7.466 3h1.073l2.668 7h-.985l-.637-1.796H6.429L5.792 10h-.999z","fill":"currentColor","strokeWidth":".24","ariaLabel":"A"}]]);

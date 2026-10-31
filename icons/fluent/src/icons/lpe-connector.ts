@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const LpeConnector = createGtkIcon("lpe-connector", [["path",{"d":"m10.988 10.015-.41.006c-3.033 0-1.082-6-5.115-6L5 4.015l-.011 1 .469.006c3.035 0 1.083 6 5.127 6l.416-.006z","fillRule":"nonzero","stroke":"none","strokeWidth":"1px","strokeLinecap":"butt","strokeLinejoin":"miter","strokeOpacity":"1","fill":"currentColor","fillOpacity":"1"}],["path",{"d":"M13.5 9a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zm0 1a.5.5 0 0 1 .5.5.5.5 0 0 1-.5.5.5.5 0 0 1-.5-.5.5.5 0 0 1 .5-.5zm-11-7a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zm0 1a.5.5 0 0 1 .5.5.5.5 0 0 1-.5.5.5.5 0 0 1-.5-.5.5.5 0 0 1 .5-.5z","fill":"currentColor","strokeWidth":"3.19471","fillOpacity":"1"}]]);

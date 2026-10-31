@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const PhoneBattery = createGtkIcon("phone-battery", [["path",{"d":"m9 3-3 5h2l-1 4 3-5h-2z","fill":"currentColor"}],["path",{"d":"m7 13c-0.27614 0-0.5 0.2239-0.5 0.5s0.22386 0.5 0.5 0.5h2c0.2761 0 0.5-0.2239 0.5-0.5s-0.2239-0.5-0.5-0.5zm-2-13c-1.1046 0-2 0.89543-2 2v12c0 1.1046 0.89543 2 2 2h6c1.1046 0 2-0.8954 2-2v-12c0-1.1046-0.8954-2-2-2zm-1 2c0-0.55228 0.44772-1 1-1h6c0.5523 0 1 0.44772 1 1v12c0 0.5523-0.4477 1-1 1h-6c-0.55228 0-1-0.4477-1-1z","fill":"currentColor"}]]);

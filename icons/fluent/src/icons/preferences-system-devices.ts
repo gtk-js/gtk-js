@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const PreferencesSystemDevices = createGtkIcon("preferences-system-devices", [["path",{"d":"m8.002 5c-0.55329-0.0016618-1.0026 0.4467-1.002 1v5c0 0.554 0.447 1 1.002 1h6.996c0.5533 0.0017 1.0026-0.4467 1.002-1v-5c0-0.554-0.447-1-1.002-1zm-2e-3 1h7v5h-7z","fill":"currentColor"}],["rect",{"x":"9","y":"13","width":"5","height":"1","rx":"0","ry":"0","fill":"currentColor"}],["path",{"d":"m5 0c-1.108 0-2 0.892-2 2v3h-2c-0.554 0-1 0.446-1 1v5c0 0.554 0.446 1 1 1h2v2c0 1.108 0.892 2 2 2h6v-1h-6c-0.554 0-1-0.446-1-1v-2h2v-1-6h-2v-3c0-0.554 0.446-1 1-1h6c0.554 0 1 0.446 1 1v2h1v-2c0-1.108-0.892-2-2-2h-6zm-4 6h4v5h-4v-5zm1 1v1h1v-1h-1z","fill":"currentColor"}]]);

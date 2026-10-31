@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const ListRemoveAll = createGtkIcon("list-remove-all", [["path",{"d":"M12.5 9a3.5 3.5 0 1 0 0 7 3.5 3.5 0 0 0 0-7zm0 3H15v1h-5v-1z","overflow":"visible","style":"fill: var(--error-color, currentColor)"}],["path",{"d":"m2 3v1h12v-1h-12zm0 4v1h11 1v-1h-12zm0 4v1h6.1016a5 5 0 0 1 0.31836-1h-6.4199z","fill":"currentColor"}]]);
+export const ListRemoveAll = createGtkIcon("list-remove-all", [["path",{"d":"M7 3h2a1 1 0 0 0-2 0M6 3a2 2 0 1 1 4 0h4a.5.5 0 0 1 0 1h-.56l-1.2 8.84A2.5 2.5 0 0 1 9.74 15h-3.5a2.5 2.5 0 0 1-2.48-2.16L2.57 4H2a.5.5 0 0 1 0-1zm1 3.5a.5.5 0 0 0-1 0v5a.5.5 0 0 0 1 0zM9.5 6c.28 0 .5.22.5.5v5a.5.5 0 0 1-1 0v-5c0-.28.22-.5.5-.5m-4.74 6.7c.1.75.74 1.3 1.49 1.3h3.5a1.5 1.5 0 0 0 1.5-1.3L12.42 4H3.57z"}]]);

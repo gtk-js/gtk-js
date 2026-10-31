@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const ViewFilter = createGtkIcon("view-filter", [["g",{"transform":"translate(-873 -57)"},[["path",{"d":"M880 59v12h1V59zm-6 1v1h4v-1zm9.5 0s-.5 0-.5.5v3s0 .5.5.5h3s.5 0 .5-.5v-3s0-.5-.5-.5zm.5 1h2v2h-2zm-10 2v1h4v-1zm0 3v1h4v-1zm9.5 0s-.5 0-.5.5v3s0 .5.5.5h3s.5 0 .5-.5v-3s0-.5-.5-.5zm.5 1h2v2h-2zm-10 2v1h4v-1z","fill":"currentColor","overflow":"visible"}]]]]);
