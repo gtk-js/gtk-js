@@ -183,10 +183,15 @@ export const GtkScrollbar = forwardRef<HTMLDivElement, GtkScrollbarProps>(functi
   let troughStyle: React.CSSProperties | undefined;
   if (metrics) {
     const { position, length } = sliderGeometry(value, pageSize, metrics.trough, metrics.min);
+    // The length is a share of the trough, not pixels: a percentage counts as
+    // auto in the trough's intrinsic size, so the slider adds only its
+    // minimum to the scrollbar's (gtk_range_measure_trough()). In pixels, a
+    // slider sized for a wide scrolled window would keep it that wide.
     const size = Math.max(0, length - metrics.extra);
+    const share = metrics.trough > 0 ? `${(size / metrics.trough) * 100}%` : 0;
     sliderStyle = {
       ...sliderStyle,
-      ...(isHoriz ? { left: position, width: size } : { top: position, height: size }),
+      ...(isHoriz ? { left: position, width: share } : { top: position, height: share }),
     };
     troughStyle = isHoriz ? { minWidth: metrics.min } : { minHeight: metrics.min };
   } else {
