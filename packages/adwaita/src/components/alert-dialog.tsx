@@ -258,9 +258,13 @@ export const AdwAlertDialog = forwardRef<HTMLDivElement, AdwAlertDialogProps>(
         // allocate_responses(): never stacked in a short host.
         setCompact(!isShort && n > 1 && wideNat - responsePadding > available + 0.5);
         // allocate_heading(): the title-4 label, wrapping, once the title-2
-        // one doesn't fit on one line, and always in a short host.
+        // one doesn't fit on one line in the width the dialog gives the
+        // heading, and always in a short host. Not the bin's own width: the
+        // title-2 label, which doesn't wrap, widens it (measure_heading()
+        // gives the heading the smaller of the two labels' minimums).
         if (headingBin) {
-          setSmallHeading(isShort || largeNat > headingBin.clientWidth - binPadding + 0.5);
+          const headingWidth = next - messagePadding - binPadding;
+          setSmallHeading(isShort || largeNat > headingWidth + 0.5);
         }
       };
       measure();
