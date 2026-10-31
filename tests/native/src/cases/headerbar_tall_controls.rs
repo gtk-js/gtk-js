@@ -21,13 +21,14 @@ impl SimpleComponent for HeaderbarTallControls {
         let model = Self;
         let widgets = view_output!();
         // Taller than its buttons, as in a theme whose buttons are shorter
-        // than the bar (the class keeps the rule to this case).
+        // than the bar (the class keeps the rule to this case). Above
+        // $GTK_JS_TEST_THEME's stylesheet, which is a user one.
         let provider = gtk::CssProvider::new();
         provider.load_from_string("headerbar.tall-controls-case { min-height: 72px; }");
         gtk::style_context_add_provider_for_display(
             &root.display(),
             &provider,
-            gtk::STYLE_PROVIDER_PRIORITY_APPLICATION,
+            gtk::STYLE_PROVIDER_PRIORITY_USER + 1,
         );
         ComponentParts { model, widgets }
     }
