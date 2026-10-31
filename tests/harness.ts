@@ -115,13 +115,21 @@ function parseColor(value: string): Color | null {
   //   https://gitlab.gnome.org/GNOME/gtk/-/blob/5957885ec/gtk/gtkcolorutils.c#L358-376
   // GTK skips gamut mapping entirely (FIXME in source):
   //   https://gitlab.gnome.org/GNOME/gtk/-/blob/5957885ec/gtk/gtkcsscolor.c#L659
-  const oklab = value.match(
-    /oklab\(([-\d.e+]+)\s+([-\d.e+]+)\s+([-\d.e+]+)(?:\s*\/\s*([-\d.e+]+))?\)/,
+  // oklch(L C H / alpha) is oklab in polar form.
+  const oklch = value.match(
+    /oklch\(([-\d.e+]+)\s+([-\d.e+]+)\s+([-\d.e+]+)(?:\s*\/\s*([-\d.e+]+))?\)/,
   );
+  const oklab = oklch
+    ? (() => {
+        const C = parseFloat(oklch[2]);
+        const H = (parseFloat(oklch[3]) * Math.PI) / 180;
+        return [value, oklch[1], `${C * Math.cos(H)}`, `${C * Math.sin(H)}`, oklch[4]];
+      })()
+    : value.match(/oklab\(([-\d.e+]+)\s+([-\d.e+]+)\s+([-\d.e+]+)(?:\s*\/\s*([-\d.e+]+))?\)/);
   if (oklab) {
-    const L = parseFloat(oklab[1]),
-      a = parseFloat(oklab[2]),
-      b = parseFloat(oklab[3]);
+    const L = parseFloat(oklab[1]!),
+      a = parseFloat(oklab[2]!),
+      b = parseFloat(oklab[3]!);
     const alpha = oklab[4] != null ? parseFloat(oklab[4]) : 1.0;
     const l_ = L + 0.3963377774 * a + 0.2158037573 * b;
     const m_ = L - 0.1055613458 * a - 0.0638541728 * b;
@@ -187,7 +195,9 @@ function parseBoxShadow(value: string): {
 
     // Extract color — find the last color-like token (rgb/rgba/color/oklab or named color)
     // CSS computed style always gives the color first, then the numbers
-    const colorMatch = cleaned.match(/^((?:rgba?\([^)]+\)|color\([^)]+\)|oklab\([^)]+\)))\s+(.*)/);
+    const colorMatch = cleaned.match(
+      /^((?:rgba?\([^)]+\)|color\([^)]+\)|okl(?:ab|ch)\([^)]+\)))\s+(.*)/,
+    );
     if (!colorMatch) continue;
 
     const color = parseColor(colorMatch[1]);
