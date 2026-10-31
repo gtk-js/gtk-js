@@ -38,6 +38,10 @@ pub struct WidgetSnapshot {
     /// links and Pango color attributes give runs their own color.
     #[serde(skip_serializing_if = "Vec::is_empty")]
     pub text_colors: Vec<Color>,
+    /// The outlines of the border nodes the walk met: width, height and
+    /// corner radii (the widget's own border and its descendants').
+    #[serde(skip)]
+    pub border_outlines: Vec<(f32, f32, [f32; 4])>,
 }
 
 #[derive(Debug, Serialize, Default)]
@@ -99,6 +103,68 @@ fn rgba_to_color(rgba: &gdk::RGBA) -> Color {
     }
 }
 
+unsafe extern "C" {
+    fn gdk_color_state_get_oklab() -> *const std::ffi::c_void;
+    fn gdk_color_state_get_oklch() -> *const std::ffi::c_void;
+    fn gdk_color_state_get_srgb_linear() -> *const std::ffi::c_void;
+}
+
+/// The sRGB color of a color, inset shadow or outset shadow node, from what
+/// its C getter returns: a pointer to the components of the node's GdkColor,
+/// in whatever color state it has ("only correct for nodes with sRGB
+/// colors", gskcolornode.c), so an oklch() or color-mix(in oklab, …) color
+/// gives oklch or oklab components. (The Rust getters return a copy.)
+/// GdkColor is { GdkColorState *color_state; float values[4]; }
+/// (gdkcolorprivate.h), so its color state is the pointer before the values.
+/// Converted like gtkcolorutils.c does, without gamut mapping, as the web side
+/// does (tests/harness.ts).
+fn node_color(values: *const gdk::ffi::GdkRGBA) -> Color {
+    let (state, v) = unsafe {
+        (
+            *((values as *const u8).sub(std::mem::size_of::<*const std::ffi::c_void>())
+                as *const *const std::ffi::c_void),
+            *values,
+        )
+    };
+    let (c0, c1, c2) = (v.red, v.green, v.blue);
+    let gamma = |c: f32| {
+        if c > 0.0031308 {
+            1.055 * c.powf(1.0 / 2.4) - 0.055
+        } else {
+            12.92 * c
+        }
+    };
+    let from_oklab = |l: f32, a: f32, b: f32| {
+        let l_ = l + 0.396_337_78 * a + 0.215_803_76 * b;
+        let m_ = l - 0.105_561_346 * a - 0.063_854_17 * b;
+        let s_ = l - 0.089_484_18 * a - 1.291_485_5 * b;
+        let (l, m, s) = (l_ * l_ * l_, m_ * m_ * m_, s_ * s_ * s_);
+        (
+            gamma(4.076_741_7 * l - 3.307_711_6 * m + 0.230_969_93 * s),
+            gamma(-1.268_438 * l + 2.609_757_4 * m - 0.341_319_4 * s),
+            gamma(-0.004_196_086_3 * l - 0.703_418_6 * m + 1.707_614_7 * s),
+        )
+    };
+    let (r, g, b) = unsafe {
+        if state == gdk_color_state_get_oklab() {
+            from_oklab(c0, c1, c2)
+        } else if state == gdk_color_state_get_oklch() {
+            let h = c2.to_radians();
+            from_oklab(c0, c1 * h.cos(), c1 * h.sin())
+        } else if state == gdk_color_state_get_srgb_linear() {
+            (gamma(c0), gamma(c1), gamma(c2))
+        } else {
+            (c0, c1, c2)
+        }
+    };
+    Color {
+        r,
+        g,
+        b,
+        a: v.alpha,
+    }
+}
+
 #[allow(deprecated)]
 pub fn extract_with_widget<W: IsA<gtk::Widget>>(
     node: &gsk::RenderNode,
@@ -133,6 +199,39 @@ pub fn extract_with_widget<W: IsA<gtk::Widget>>(
         bottom: border.bottom() as f32,
         left: border.left() as f32,
     };
+
+    // The border-radius is the corners of the widget's own border box. The
+    // first rounded clip the walk meets may be the background's, clipped to
+    // the padding box with the radius less the border's width
+    // (background-clip: padding-box).
+    let border_box = (
+        snapshot.width
+            + padding.left() as f32
+            + padding.right() as f32
+            + border.left() as f32
+            + border.right() as f32,
+        snapshot.height
+            + padding.top() as f32
+            + padding.bottom() as f32
+            + border.top() as f32
+            + border.bottom() as f32,
+    );
+    // (The widget's size may already be its border box's.)
+    let own = |(w, h): (f32, f32)| {
+        snapshot
+            .border_outlines
+            .iter()
+            .find(|(ow, oh, _)| (ow - w).abs() < 0.5 && (oh - h).abs() < 0.5)
+            .map(|(_, _, corners)| *corners)
+    };
+    if let Some(corners) = own(border_box).or_else(|| own((snapshot.width, snapshot.height))) {
+        snapshot.border_radius = Corners {
+            top_left: corners[0],
+            top_right: corners[1],
+            bottom_right: corners[2],
+            bottom_left: corners[3],
+        };
+    }
 
     snapshot
 }
@@ -174,6 +273,7 @@ pub fn extract_widget_tree<W: IsA<gtk::Widget>>(widget: &W) -> WidgetSnapshot {
             css_classes: Vec::new(),
             children: Vec::new(),
             text_colors: Vec::new(),
+            border_outlines: Vec::new(),
         };
         // Still extract widget API properties even without render nodes
         let color = w.color();
@@ -242,6 +342,7 @@ pub fn extract_snapshot(node: &gsk::RenderNode) -> WidgetSnapshot {
         css_classes: Vec::new(),
         children: Vec::new(),
         text_colors: Vec::new(),
+        border_outlines: Vec::new(),
     };
 
     walk_node(node, &mut snapshot);
@@ -276,7 +377,11 @@ fn walk_node(node: &gsk::RenderNode, snapshot: &mut WidgetSnapshot) {
                 let area = bounds.width() * bounds.height();
                 let min_bg_area = snapshot.width * snapshot.height * 0.1;
                 if area >= min_bg_area {
-                    snapshot.background_color = Some(rgba_to_color(&color_node.color()));
+                    snapshot.background_color = Some(node_color(unsafe {
+                        gsk::ffi::gsk_color_node_get_color(
+                            color_node.as_ptr() as *const gsk::ffi::GskColorNode
+                        )
+                    }));
                 }
             }
         }
@@ -326,6 +431,25 @@ fn walk_node(node: &gsk::RenderNode, snapshot: &mut WidgetSnapshot) {
                 left: widths[3],
             };
 
+            // The border's outline is the border box, whose corners are the
+            // CSS border-radius. A background clipped to the padding box
+            // (background-clip: padding-box) comes first with smaller
+            // corners, the radius less the border's width.
+            // The widget's own border box gives its border-radius
+            // (extract_with_widget() picks it out of these).
+            let outline = border_node.outline();
+            let corners = outline.corner();
+            snapshot.border_outlines.push((
+                outline.bounds().width(),
+                outline.bounds().height(),
+                [
+                    corners[0].width(),
+                    corners[1].width(),
+                    corners[2].width(),
+                    corners[3].width(),
+                ],
+            ));
+
             let colors = border_node.colors();
             snapshot.border_colors = SideColors {
                 top: Some(rgba_to_color(&colors[0])),
@@ -346,7 +470,7 @@ fn walk_node(node: &gsk::RenderNode, snapshot: &mut WidgetSnapshot) {
             // (get_color() in gskpango.c).
             let rgba = unsafe {
                 *gsk::ffi::gsk_text_node_get_color(
-                    text_node.as_ptr() as *const gsk::ffi::GskTextNode,
+                    text_node.as_ptr() as *const gsk::ffi::GskTextNode
                 )
             };
             snapshot.text_colors.push(Color {
@@ -383,7 +507,11 @@ fn walk_node(node: &gsk::RenderNode, snapshot: &mut WidgetSnapshot) {
         RenderNodeType::InsetShadowNode => {
             let inset_node: gsk::InsetShadowNode = node.clone().downcast().unwrap();
             snapshot.inset_shadows.push(InsetShadowInfo {
-                color: rgba_to_color(&inset_node.color()),
+                color: node_color(unsafe {
+                    gsk::ffi::gsk_inset_shadow_node_get_color(
+                        inset_node.as_ptr() as *const gsk::ffi::GskInsetShadowNode
+                    )
+                }),
                 dx: inset_node.dx(),
                 dy: inset_node.dy(),
                 spread: inset_node.spread(),
@@ -415,7 +543,11 @@ fn walk_node(node: &gsk::RenderNode, snapshot: &mut WidgetSnapshot) {
         RenderNodeType::OutsetShadowNode => {
             let outset_node: gsk::OutsetShadowNode = node.clone().downcast().unwrap();
             snapshot.shadows.push(ShadowInfo {
-                color: rgba_to_color(&outset_node.color()),
+                color: node_color(unsafe {
+                    gsk::ffi::gsk_outset_shadow_node_get_color(
+                        outset_node.as_ptr() as *const gsk::ffi::GskOutsetShadowNode
+                    )
+                }),
                 dx: outset_node.dx(),
                 dy: outset_node.dy(),
                 spread: outset_node.spread(),
