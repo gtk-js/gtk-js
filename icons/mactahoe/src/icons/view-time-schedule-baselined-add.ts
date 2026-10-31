@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const ViewTimeScheduleBaselinedAdd = createGtkIcon("view-time-schedule-baselined-add", [["path",{"d":"m16 14v2h-2v1h2v2h1v-2h2v-1h-2v-2z","fill":"currentColor"}],["rect",{"x":"12","y":"6","width":"1","height":"12","ry":"3.7993e-5","fill":"currentColor"}],["path",{"d":"m6 8v3h1v-1h3v1h1v-3h-1v1h-3v-1z","fill":"currentColor"}],["path",{"d":"m10 13v3h1v-1h4v-2h-1v1h-3v-1z","fill":"currentColor"}],["path",{"d":"m5 3c-1.662 0-3 1.338-3 3v10c0 1.662 1.338 3 3 3h9v-1h-9c-1.108 0-2-0.892-2-2v-8c0-1.108 0.892-2 2-2h11c1.108 0 2 0.892 2 2v6h1v-8c0-1.662-1.338-3-3-3z","fill":"currentColor"}]]);

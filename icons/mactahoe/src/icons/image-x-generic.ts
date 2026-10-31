@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const ImageXGeneric = createGtkIcon("image-x-generic", [["path",{"d":"M2 2v12h12V2H3zm1 1h1.912A1.5 1.5 0 0 1 3 4.912zm2.947 0h7.05v10h-10v-.783l1.326-1.299 1.408-1.404.564.418L7.397 11l2.6-2.398 4 3.891-1-2.492-3-3-2.6 2.6-1.6-1.6-2.801 2.801V5.948a2.5 2.5 0 0 0 2.947-2.947","fill":"currentColor"}]]);
+export const ImageXGeneric = createGtkIcon("image-x-generic", [["path",{"d":"m2 1c-1.108 0-2 0.892-2 2v9c0 1.108 0.892 2 2 2h12c1.108 0 2-0.892 2-2v-9c0-1.108-0.892-2-2-2zm0 1h12c0.554 0 1 0.446 1 1v9l-5-5-3.4794 4-2.5206-2-3 3v-9c0-0.554 0.446-1 1-1zm2.5 2c-0.82843 0-1.5 0.67157-1.5 1.5s0.67157 1.5 1.5 1.5 1.5-0.67157 1.5-1.5-0.67157-1.5-1.5-1.5z","style":"fill: currentColor"}]]);

@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const XOfficeDocument = createGtkIcon("x-office-document", [["path",{"fill":"currentColor","strokeWidth":"1.4","d":"M2 2v1h6V2zm0 3v1h12V5zm0 3v1h5V8zm6 0v6h6V8zm1 1h4v4H9zm-7 1v1h5v-1zm0 3v1h5v-1z"}]]);
+export const XOfficeDocument = createGtkIcon("x-office-document", [["g",{"fill":"currentColor"},[["path",{"d":"M6.432 6c-.86 0-1.568.708-1.568 1.568 0 .86.708 1.569 1.568 1.569.86 0 1.568-.708 1.568-1.569C8 6.708 7.292 6 6.432 6zm0 1A.56.56 0 0 1 7 7.568c0 .32-.248.569-.568.569a.56.56 0 0 1-.568-.569A.56.56 0 0 1 6.432 7zM9 8v1h2V8zm-4 2v1h6v-1zm0 2v1h4v-1z","fontFamily":"sans-serif","fontWeight":"400","overflow":"visible"}]]],["path",{"d":"m4 0c-1.662 0-3 1.338-3 3v10c0 1.662 1.338 3 3 3h8c1.662 0 3-1.338 3-3v-9l-4-4zm0 1h6v2c0 1.108 0.892 2 2 2h2v8c0 1.108-0.892 2-2 2h-8c-1.108 0-2-0.892-2-2v-10c0-1.108 0.892-2 2-2z","style":"fill: currentColor"}]]);

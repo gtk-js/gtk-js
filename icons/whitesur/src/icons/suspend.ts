@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const Suspend = createGtkIcon("suspend", [["rect",{"width":"56.002","height":"56.002","x":"4","y":"3.969","fill":"currentColor","rx":"13.002","ry":"13.002"}],["path",{"d":"M32 14a19 19 0 1 0 0 38 19 19 0 0 0 0-38m0 4a15 15 0 0 1 14.876 13h-29.75A15 15 0 0 1 32 18M17.124 35h29.752A15 15 0 0 1 32 48a15 15 0 0 1-14.876-13","opacity":".15","overflow":"visible"}],["path",{"fill":"currentColor","d":"M32 13a19 19 0 1 0 0 38 19 19 0 0 0 0-38m0 4a15 15 0 0 1 14.876 13h-29.75A15 15 0 0 1 32 17M17.124 34h29.752A15 15 0 0 1 32 47a15 15 0 0 1-14.876-13","overflow":"visible"}]]);

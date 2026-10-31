@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const Doublecmd = createGtkIcon("doublecmd", [["rect",{"width":"56.002","height":"56.002","x":"4","y":"3.969","fill":"currentColor","rx":"13.002","ry":"13.002"}],["path",{"fill":"currentColor","fillRule":"evenodd","d":"M13 16a16 16 0 0 0-9 2.844v5.29A12 12 0 0 1 13 20a12 12 0 0 1 12 12 12 12 0 0 1-12 12 12 12 0 0 1-9-4.135v5.291A16 16 0 0 0 13 48a16 16 0 0 0 16-16 16 16 0 0 0-16-16m38 0a16 16 0 0 0-16 16 16 16 0 0 0 16 16 16 16 0 0 0 9-2.844v-5.29A12 12 0 0 1 51 44a12 12 0 0 1-12-12 12 12 0 0 1 12-12 12 12 0 0 1 9 4.074v-5.293A16 16 0 0 0 51 16"}]]);

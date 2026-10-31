@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const Gitbutler = createGtkIcon("gitbutler", [["rect",{"width":"56.002","height":"56.002","x":"4","y":"3.969","fill":"currentColor","rx":"13.002","ry":"13.002"}],["path",{"d":"M24.982 20.329 5.457 31.6a2.037 2.037 30 0 1-3.055-1.763V7.55a2 2 150 0 1 3-1.732l19.58 11.305a1.85 1.85 90 0 1 0 3.205","transform":"matrix(-1.13751 0 0 1 55.846 13.355)"}],["path",{"d":"M24.982 20.329 5.457 31.6a2.037 2.037 30 0 1-3.055-1.763V7.55a2 2 150 0 1 3-1.732l19.58 11.305a1.85 1.85 90 0 1 0 3.205","transform":"matrix(1.13751 0 0 1 8.278 13.225)"}]]);

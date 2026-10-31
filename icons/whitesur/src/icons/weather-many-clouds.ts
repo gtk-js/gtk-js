@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const WeatherManyClouds = createGtkIcon("weather-many-clouds", [["path",{"d":"M14.98 3A10 10 0 0 0 5 13a10 10 0 0 0 10 10h9a7 7 0 0 0 7-7 7 7 0 0 0-6.834-6.998A10 10 0 0 0 15 3a10 10 0 0 0-.02 0z","fill":"currentColor"}],["path",{"d":"M7.906 15A7 7 0 0 0 1 22a7 7 0 0 0 7 7 7 7 0 0 0 .094 0H14a4.997 4.997 0 0 0 .332-9.984A7 7 0 0 0 8 15a7 7 0 0 0-.094 0z","fill":"currentColor"}]]);
+export const WeatherManyClouds = createGtkIcon("weather-many-clouds", [["path",{"d":"m8 3c-1.8364 0-3.3667 1.2018-3.9375 2.8437-1.7231 0.21836-3.0625 1.6738-3.0625 3.4563 0 1.933 1.567 3.5 3.5 3.5h7.7c1.5464 0 2.8-1.2536 2.8-2.8 0-1.5464-1.2536-2.8-2.8-2.8 0-2.3195-1.8805-4.2-4.2-4.2z","style":"fill: currentColor"}]]);

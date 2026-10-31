@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const MarkLocation = createGtkIcon("mark-location", [["path",{}]]);
+export const MarkLocation = createGtkIcon("mark-location", [["g",{"transform":"translate(-393 -77)"},[["path",{"d":"M401 77a5 5 0 0 0-5 5c0 .345.028.675.094 1 .375 2.84 3.933 4.926 4.938 8.969.985-3.986 4.997-6.918 5-9.969H406a5 5 0 0 0-5-5zm0 2a3 3 0 1 1 0 6 3 3 0 0 1 0-6z","fill":"currentColor","overflow":"visible"}]]]]);

@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const DebugExecuteFromCursor = createGtkIcon("debug-execute-from-cursor", [["path",{"d":"M 2 2 L 2 3 L 4 3 L 4 13 L 2 13 L 2 14 L 7 14 L 7 13 L 5 13 L 5 3 L 7 3 L 7 2 L 2 2 z M 7 5 L 7 11 L 8 11 L 8 9 L 11 9 L 11 11 L 14 8 L 11 5 L 11 7 L 8 7 L 8 5 L 7 5 z "}]]);
+export const DebugExecuteFromCursor = createGtkIcon("debug-execute-from-cursor", [["path",{"d":"m6 3v10l8-5zm1 1.8047 5.1133 3.1953-5.1133 3.1953z","fill":"currentColor"}],["rect",{"x":"3","y":"1","width":"1","height":"14","fill":"currentColor","fillRule":"evenodd","stopColor":"#000000"}]]);

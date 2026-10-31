@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const ViewFileColumns = createGtkIcon("view-file-columns", [["path",{"d":"M 2 2 L 2 14 L 5 14 L 5 2 L 2 2 z M 6 2 L 6 14 L 10 14 L 10 2 L 6 2 z M 11 2 L 11 14 L 14 14 L 14 2 L 11 2 z M 7 3 L 9 3 L 9 13 L 7 13 L 7 3 z "}]]);

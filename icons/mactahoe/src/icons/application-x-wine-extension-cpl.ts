@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const ApplicationXWineExtensionCpl = createGtkIcon("application-x-wine-extension-cpl", [["path",{"fill":"currentColor","d":"M9.525.264H2.91a.53.53 0 0 0-.529.53V15.61c0 .293.236.529.53.529h11.111c.293 0 .53-.236.53-.53V5.292c0-.142-.049-.33-.148-.53h-3.821a.53.53 0 0 1-.53-.53V.377a1.3 1.3 0 0 0-.527-.113z"}],["path",{"fill":"currentColor","d":"M10.049.375v3.857c0 .293.236.529.53.529h3.826a2 2 0 0 0-.382-.53L10.583.793a1.4 1.4 0 0 0-.529-.416z"}],["path",{"fill":"currentColor","d":"M8.466 5.556 6.41 7.614l2.058 2.058 2.057-2.058zm2.246 2.245L8.654 9.86l2.058 2.058 2.057-2.058zm-4.49 0L4.164 9.86l2.058 2.058L8.279 9.86zm2.245 2.245-2.058 2.058 2.058 2.058 2.057-2.058z"}]]);

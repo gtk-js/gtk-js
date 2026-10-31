@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const DistributorLogoLinuxMint = createGtkIcon("distributor-logo-linux-mint", [["rect",{"width":"56","height":"56","x":"4","y":"4","fill":"currentColor","rx":"13","ry":"13"}],["path",{"d":"M14 16v23.715C14 45.365 18.635 50 24.285 50h15.43c5.554 0 10.13-4.481 10.285-10V27a8 8 0 0 0-13-6.242A8 8 0 0 0 31.879 19a8 8 0 0 0-7.88 8v13h6V27a2 2 0 1 1 4 0v13h6V27a2 2 0 1 1 4 0v12c0 3-2 5-5.284 5h-13.63C22 44 20 42 20 39V16Z"}],["path",{"d":"M14 15v23.715C14 44.365 18.635 49 24.285 49h15.43c5.554 0 10.13-4.481 10.285-10V26a8 8 0 0 0-13-6.242A8 8 0 0 0 31.879 18a8 8 0 0 0-7.88 8v13h6V26a2 2 0 1 1 4 0v13h6V26a2 2 0 1 1 4 0v12c0 3-2 5-5.284 5h-13.63C22 43 20 41 20 38V15Z"}]]);

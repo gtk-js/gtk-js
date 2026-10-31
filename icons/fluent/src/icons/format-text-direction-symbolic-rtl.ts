@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const FormatTextDirectionSymbolicRtl = createGtkIcon("format-text-direction-symbolic-rtl", [["rect",{}],["rect",{}],["path",{}],["rect",{}]]);
+export const FormatTextDirectionSymbolicRtl = createGtkIcon("format-text-direction-symbolic-rtl", [["g",{"transform":"translate(-553 -57)"},[["rect",{"fill":"currentColor","height":"1","overflow":"visible","transform":"scale(-1 1)","width":"14","x":"-568.001","y":"58"}],["rect",{"fill":"currentColor","height":"1","overflow":"visible","transform":"scale(-1 1)","width":"14","x":"-568.001","y":"61"}],["path",{"d":"M568.001 67h-10v1h10zM556.001 68v2h10v1h-10v2l-3-2.5z","fill":"currentColor","overflow":"visible"}],["rect",{"fill":"currentColor","height":"1","overflow":"visible","transform":"scale(-1 1)","width":"14","x":"-568.001","y":"64"}]]]]);

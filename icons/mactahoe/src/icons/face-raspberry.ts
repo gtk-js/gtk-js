@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const FaceRaspberry = createGtkIcon("face-raspberry", [["rect",{"width":"5.291667","x":"0.264583","y":"291.70834","rx":"2.116651","height":"4.762512"}],["circle",{"cx":"1.719791","cy":"293.42813","r":"0.396875"}],["circle",{"cx":"4.101042","cy":"293.42813","r":"0.396875"}],["path",{"inkscape:connectorCurvature":"0","d":"M 8.0000001,16 C 8.0000001,17 10,17 10,17 l 2,0 c 0,0 2,0 2,-1 z","transform":"matrix(0.26458334 0 0 0.26458334 0 291.17916)"}],["path",{"inkscape:connectorCurvature":"0","d":"m 2.3812498,295.41249 0,0.26462 c 0,0.29316 0.2360083,0.52917 0.5291667,0.52917 0.2931583,0 0.5291667,-0.23601 0.5291667,-0.52917 l 0,-0.26462 z"}]]);

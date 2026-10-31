@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const Dependency = createGtkIcon("dependency", [["path",{"d":"M 7.5 2 L 4 9 L 4.8945312 9.4472656 L 7 5.2363281 L 7 8 L 8 8 L 8 5.2363281 L 10.105469 9.4472656 L 11 9 L 7.5 2 z M 7 9 L 7 11 L 8 11 L 8 9 L 7 9 z M 7 12 L 7 14 L 8 14 L 8 12 L 7 12 z "}]]);

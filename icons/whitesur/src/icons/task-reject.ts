@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const TaskReject = createGtkIcon("task-reject", [["path",{"d":"m8 0a8 8 0 0 0-8 8 8 8 0 0 0 8 8 8 8 0 0 0 8-8 8 8 0 0 0-8-8zm0 1a7 7 0 0 1 7 7 7 7 0 0 1-7 7 7 7 0 0 1-7-7 7 7 0 0 1 7-7z","fill":"currentColor"}],["rect",{"transform":"rotate(45)","x":"6.3137","y":"-.5","width":"10","height":"1","fill":"currentColor","strokeLinecap":"round","strokeLinejoin":"round","strokeWidth":"2"}],["rect",{"transform":"matrix(-.70711 .70711 .70711 .70711 0 0)","x":"-5","y":"10.814","width":"10","height":"1","fill":"currentColor","strokeLinecap":"round","strokeLinejoin":"round","strokeWidth":"2"}]]);

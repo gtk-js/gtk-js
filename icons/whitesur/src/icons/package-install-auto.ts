@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const PackageInstallAuto = createGtkIcon("package-install-auto", [["rect",{"width":"16","height":"16","rx":"2","fill":"currentColor"}],["path",{"d":"m2 0c-1.108 0-2 .892-2 2v12c0 1.108.892 2 2 2h12c1.108 0 2-.892 2-2v-12c0-1.108-.892-2-2-2zm0 1h12c.554 0 1 .446 1 1v12c0 .554-.446 1-1 1h-12c-.554 0-1-.446-1-1v-12c0-.554.446-1 1-1z","fill":"currentColor","fillOpacity":".6"}],["rect",{"x":"3","y":"6.5","width":"10","height":"1"}],["rect",{"x":"7.5","y":"2","width":"1","height":"10"}],["circle",{"cx":"13.5","cy":"13.5","r":".5"}],["circle",{"cx":"11.5","cy":"13.5","r":".5"}],["circle",{"cx":"9.5","cy":"13.5","r":".5"}]]);

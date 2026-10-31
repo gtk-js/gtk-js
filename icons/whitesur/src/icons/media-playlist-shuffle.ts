@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const MediaPlaylistShuffle = createGtkIcon("media-playlist-shuffle", [["path",{"d":"m11 3.5v1.5h-2c-1.662 0-3 1.338-3 3 0 1.108-.892 2-2 2h-2v1h2c1.662 0 3-1.338 3-3 0-1.108.892-2 2-2h2v1.5l3-2zm-9 1.5v1h2c.401 0 .772.119 1.084.32.077-.333.21-.642.387-.922-.436-.246-.933-.398-1.471-.398zm9 3.5v1.5h-2c-.401 0-.772-.119-1.084-.32-.077.333-.21.642-.387.922.436.246.933.398 1.471.398h2v1.5l3-2z"}]]);
+export const MediaPlaylistShuffle = createGtkIcon("media-playlist-shuffle", [["path",{"d":"m1.707 1-0.70703 0.70703 5.5859 5.5859 0.70703-0.70703-5.5859-5.5859zm7.707 7.707-0.70703 0.70703 4.5859 4.5859h-3.293v1h4 1v-1-4h-1v3.293l-4.5859-4.5859z","fill":"currentColor"}],["path",{"d":"m1 14.293 12.293-12.293h-3.293v-1h5v5h-1v-3.293l-12.293 12.293z","fill":"currentColor"}]]);

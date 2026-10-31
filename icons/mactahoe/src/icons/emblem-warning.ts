@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const EmblemWarning = createGtkIcon("emblem-warning", [["path",{"d":"M8.008 0a1 1 0 0 0-.903.553l-7 14A1 1 0 0 0 1 16h14a1 1 0 0 0 .895-1.447l-7-14A1 1 0 0 0 8.008 0z","fill":"currentColor"}],["path",{"d":"M8.008 0a1 1 0 0 0-.903.553l-7 14A1 1 0 0 0 1 16h14a1 1 0 0 0 .895-1.447l-7-14A1 1 0 0 0 8.008 0zM8 1l7 14H1z","fill":"currentColor","fillOpacity":".6"}],["rect",{"x":"7.5","y":"4","width":"1","height":"7","rx":".5","ry":".5","fill":"currentColor","strokeOpacity":".26047"}],["rect",{"x":"7.5","y":"13","width":"1","height":"1","rx":".5","ry":".5","fill":"currentColor","strokeOpacity":".26047"}]]);

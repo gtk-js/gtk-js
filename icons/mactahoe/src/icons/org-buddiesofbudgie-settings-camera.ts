@@ -1,0 +1,3 @@
+import { createGtkIcon } from "@gtk-js/icon-helpers";
+
+export const OrgBuddiesofbudgieSettingsCamera = createGtkIcon("org-buddiesofbudgie-settings-camera", [["path",{"d":"m6 1-2 2h-1c-1.108 0-2 0.89201-2 2v7c0 1.108 0.89201 2 2 2h10c1.108 0 2-0.89201 2-2v-7c0-1.108-0.89201-2-2-2h-1l-2-2zm0.41406 1h3.1719l2 2h1.414c0.55399 0 1 0.446 1 1v7c0 0.55399-0.44601 1-1 1h-10c-0.554 0-1-0.44601-1-1v-7c0-0.554 0.446-1 1-1h1.414z","fill":"currentColor","strokeLinecap":"round","strokeLinejoin":"round","strokeWidth":"2"}],["path",{"d":"m8 5a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3zm0 1a2 2 0 0 1 2 2 2 2 0 0 1-2 2 2 2 0 0 1-2-2 2 2 0 0 1 2-2z","fill":"currentColor","strokeLinecap":"round","strokeLinejoin":"round","strokeWidth":"2"}]]);

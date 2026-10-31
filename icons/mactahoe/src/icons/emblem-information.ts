@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const EmblemInformation = createGtkIcon("emblem-information", [["rect",{"width":"16","height":"16","rx":"2","fill":"currentColor"}],["path",{"d":"M2 0C.892 0 0 .892 0 2v12c0 1.108.892 2 2 2h12c1.108 0 2-.892 2-2V2c0-1.108-.892-2-2-2zm0 1h12c.554 0 1 .446 1 1v12c0 .554-.446 1-1 1H2c-.554 0-1-.446-1-1V2c0-.554.446-1 1-1z","fill":"currentColor","fillOpacity":".6"}],["circle",{"cx":"8","cy":"4.5","r":".5","fill":"currentColor","strokeLinejoin":"round","strokeWidth":"2"}],["rect",{"x":"7.5","y":"6","width":"1","height":"7","rx":".5","ry":".5","fill":"currentColor","strokeLinejoin":"round","strokeWidth":"2"}]]);

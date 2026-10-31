@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const OrgUbuntubudgieBudgieExtrasHotcorners = createGtkIcon("org-ubuntubudgie-budgie-extras-hotcorners", [["rect",{"width":"56.002","height":"56.002","x":"4","y":"3.969","fill":"currentColor","rx":"13.002","ry":"13.002"}],["circle",{"cx":"32.02","cy":"32.044","r":"30.001","fill":"none"}],["path",{"fill":"currentColor","d":"M17 11c-3.324 0-6 2.676-6 6v11h4V17c0-1.108.892-2 2-2h11v-4zm19 0v4h11c1.108 0 2 .892 2 2v11h4V17c0-3.324-2.676-6-6-6zM11 36v11c0 3.324 2.676 6 6 6h11v-4H17c-1.108 0-2-.892-2-2V36zm38 0v11c0 1.108-.892 2-2 2H36v4h11c3.324 0 6-2.676 6-6V36z"}]]);

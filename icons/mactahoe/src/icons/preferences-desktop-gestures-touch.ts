@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const PreferencesDesktopGesturesTouch = createGtkIcon("preferences-desktop-gestures-touch", [["rect",{"width":"22","height":"22","rx":"6","ry":"6"}],["path",{"fill":"currentColor","fillRule":"evenodd","d":"M6 10h10v5H6Z","transform":"translate(-2.16 -3.546)scale(.85464)"}],["path",{"fill":"currentColor","d":"M16.594 24.041 23 24l.725-7.251c.152-1.47-1.67-2.082-2.175-.725.006-1.63-1.67-1.834-2.176-.726.064-1.346-1.647-1.867-2.175-.725v-2.9c0-2.175-2.175-2.175-2.175 0v6.526c-3.626-3.626-4.515-1.02-4.515-1.02 2.464 1.663 3.97 6.876 6.085 6.862","transform":"translate(-2.16 -3.546)scale(.85464)"}]]);

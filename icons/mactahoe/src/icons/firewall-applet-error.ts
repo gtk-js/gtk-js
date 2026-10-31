@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const FirewallAppletError = createGtkIcon("firewall-applet-error", [["path",{"d":"M7 2L4 5h4V2zm2 0v3h5V2zM2 7v2h2V6H3zm3-1v3h1V6zm-3 4v3h4v-3z"}],["path",{"d":"M8 6c-.554 0-1 .446-1 1v6c0 .554.446 1 1 1h6c.554 0 1-.446 1-1V7c0-.554-.446-1-1-1z"}],["path",{"d":"M9 7L8 8l2 2-2 2 1 1 2-2 2 2 1-1-2-2 2-2-1-1-2 2z","fill":"currentColor"}]]);

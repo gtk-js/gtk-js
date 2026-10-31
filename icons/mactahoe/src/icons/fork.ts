@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const Fork = createGtkIcon("fork", [["path",{"d":"M 3 2 L 3 14 L 10 14 L 13 11 L 13 8 L 12 8 L 12 10 L 9 10 L 9 13 L 4 13 L 4 3 L 9 3 L 9 2 L 3 2 z M 12 2 L 8 5 L 10.699219 5.9003906 L 10 8 L 14 5 L 11.300781 4.0996094 L 12 2 z "}]]);

@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const FormatSegmentCurve = createGtkIcon("format-segment-curve", [["path",{"d":"m16 3v1 1 1h3v-3h-3m1 1h1v1h-1v-1m-14 12v3h3v-3h-1-1-1m1 1h1v1h-1v-1"}],["path",{"d":"M16 4A12 12 0 0 0 4 16H5A11 11 0 0 1 16 5V4"}]]);

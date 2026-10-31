@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const MsOnenote = createGtkIcon("ms-onenote", [["rect",{"width":"56","height":"56","x":"4","y":"4","fill":"currentColor","rx":"13.002","ry":"13.002"}],["path",{"fill":"currentColor","d":"M25 4v56h21.998A12.974 12.974 0 0 0 60 46.998V17.002A12.974 12.974 0 0 0 46.998 4Z"}],["circle",{"cx":"32","cy":"32","r":"24","fillRule":"evenodd","opacity":".15","transform":"matrix(.75 0 0 .75 21 21)"}],["circle",{"cx":"45","cy":"45","r":"18","fill":"currentColor","fillRule":"evenodd"}],["path",{"d":"M41.034 35h-5.076l-.055 20h5.13V42.919L48.967 55h5.077l.054-20h-5.13v12.081z","opacity":".25"}],["path",{"fill":"currentColor","d":"M41.034 35h-5.076l-.055 20h5.13V42.919L48.967 55h5.077l.054-20h-5.13v12.081z"}]]);

@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const ViewSidetree = createGtkIcon("view-sidetree", [["path",{"d":"m2 2c-1.108 0-2 0.892-2 2v9.0547c0 1.108 0.892 2 2 2h12c1.108 0 2-0.892 2-2v-9.0547c0-1.108-0.892-2-2-2zm0 1h12c0.554 0 1 0.446 1 1v9.0547c0 0.554-0.446 1-1 1h-12c-0.554 0-1-0.446-1-1v-9.0547c0-0.554 0.446-1 1-1z"}],["rect",{"transform":"rotate(-90)","x":"-7","y":"2.7113e-15","width":"1","height":"16","ry":"0"}],["rect",{"x":"5","y":"7","width":"1","height":"7.7603","ry":"0"}],["rect",{"transform":"rotate(-90)","x":"-10","y":"8","width":"1","height":"5","ry":"0","strokeWidth":".55902"}],["rect",{"transform":"rotate(-90)","x":"-12","y":"8","width":"1","height":"5","ry":"0","strokeWidth":".55902"}]]);

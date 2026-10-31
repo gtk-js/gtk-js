@@ -18,14 +18,46 @@ export type GtkIcon = ForwardRefExoticComponent<
 >;
 
 /**
+ * An SVG element of an icon: its tag, its attributes (as React props, but
+ * `style` as CSS text) and, for a group, the elements in it.
+ */
+export type SvgNode = [tag: string, attrs: Record<string, string>, children?: SvgNode[]];
+
+/** A `style` attribute's declarations as a React style object. */
+function styleObject(style: string): Record<string, string> {
+  const object: Record<string, string> = {};
+  for (const declaration of style.split(";")) {
+    const colon = declaration.indexOf(":");
+    if (colon < 0) continue;
+    const name = declaration.slice(0, colon).trim();
+    object[name.replace(/-([a-z])/g, (_, c: string) => c.toUpperCase())] = declaration
+      .slice(colon + 1)
+      .trim();
+  }
+  return object;
+}
+
+function renderNodes(nodes: SvgNode[]): ReturnType<typeof createElement>[] {
+  return nodes.map(([tag, { style, ...attrs }, children], i) =>
+    createElement(
+      tag,
+      { key: i, ...attrs, ...(style ? { style: styleObject(style) } : {}) },
+      ...(children ? renderNodes(children) : []),
+    ),
+  );
+}
+
+/**
  * Factory to create a GTK icon React component from SVG child nodes.
  *
  * GTK symbolic icons use `fill="currentColor"` so they inherit the
- * text color of their parent, matching native GTK behavior.
+ * text color of their parent, matching native GTK behavior. The icon's
+ * viewBox (default 16×16, a symbolic icon's grid) is scaled to its size.
  */
 export function createGtkIcon(
   displayName: string,
-  children: [tag: string, attrs: Record<string, string>][],
+  children: SvgNode[],
+  viewBox = "0 0 16 16",
 ): GtkIcon {
   const Component = forwardRef<SVGSVGElement, GtkIconProps>(
     ({ size = 16, className, ...props }, ref) => {
@@ -36,7 +68,7 @@ export function createGtkIcon(
           xmlns: "http://www.w3.org/2000/svg",
           width: size,
           height: size,
-          viewBox: "0 0 16 16",
+          viewBox,
           fill: "currentColor",
           className: className
             ? `gtk-icon gtk-icon-${displayName} ${className}`
@@ -44,7 +76,7 @@ export function createGtkIcon(
           "aria-hidden": true,
           ...props,
         },
-        ...children.map(([tag, attrs], i) => createElement(tag, { key: i, ...attrs })),
+        ...renderNodes(children),
       );
     },
   );

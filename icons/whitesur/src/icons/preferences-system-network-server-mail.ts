@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const PreferencesSystemNetworkServerMail = createGtkIcon("preferences-system-network-server-mail", [["rect",{"width":"22","height":"22","rx":"6","ry":"6","fill":"currentColor","strokeWidth":".49998"}],["path",{"d":"M.287 5A7 7 0 0 0 0 7v1h22V7c0-.696-.1-1.367-.287-2ZM0 14v1c0 .696.1 1.367.287 2h21.426A7 7 0 0 0 22 15v-1z","opacity":".5","strokeLinecap":"round","strokeLinejoin":"round"}],["rect",{"x":"3","y":"3","width":"16","height":"16","rx":"3","ry":"3","fill":"currentColor","strokeWidth":".36362"}],["path",{"d":"M4 5v12h14V5Zm1.707 1h10.586L11 11.293ZM5 6.707l3.934 3.934L5 15.23Zm12 0v8.525l-3.934-4.591ZM9.643 11.35 11 12.707l1.357-1.357L16.342 16H5.656Z","fill":"currentColor"}]]);
