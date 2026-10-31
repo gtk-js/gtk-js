@@ -38,6 +38,10 @@ pub struct WidgetSnapshot {
     /// links and Pango color attributes give runs their own color.
     #[serde(skip_serializing_if = "Vec::is_empty")]
     pub text_colors: Vec<Color>,
+    /// The outlines of the border nodes the walk met: width, height and
+    /// corner radii (the widget's own border and its descendants').
+    #[serde(skip)]
+    pub border_outlines: Vec<(f32, f32, [f32; 4])>,
 }
 
 #[derive(Debug, Serialize, Default)]
@@ -134,6 +138,39 @@ pub fn extract_with_widget<W: IsA<gtk::Widget>>(
         left: border.left() as f32,
     };
 
+    // The border-radius is the corners of the widget's own border box. The
+    // first rounded clip the walk meets may be the background's, clipped to
+    // the padding box with the radius less the border's width
+    // (background-clip: padding-box).
+    let border_box = (
+        snapshot.width
+            + padding.left() as f32
+            + padding.right() as f32
+            + border.left() as f32
+            + border.right() as f32,
+        snapshot.height
+            + padding.top() as f32
+            + padding.bottom() as f32
+            + border.top() as f32
+            + border.bottom() as f32,
+    );
+    // (The widget's size may already be its border box's.)
+    let own = |(w, h): (f32, f32)| {
+        snapshot
+            .border_outlines
+            .iter()
+            .find(|(ow, oh, _)| (ow - w).abs() < 0.5 && (oh - h).abs() < 0.5)
+            .map(|(_, _, corners)| *corners)
+    };
+    if let Some(corners) = own(border_box).or_else(|| own((snapshot.width, snapshot.height))) {
+        snapshot.border_radius = Corners {
+            top_left: corners[0],
+            top_right: corners[1],
+            bottom_right: corners[2],
+            bottom_left: corners[3],
+        };
+    }
+
     snapshot
 }
 
@@ -174,6 +211,7 @@ pub fn extract_widget_tree<W: IsA<gtk::Widget>>(widget: &W) -> WidgetSnapshot {
             css_classes: Vec::new(),
             children: Vec::new(),
             text_colors: Vec::new(),
+            border_outlines: Vec::new(),
         };
         // Still extract widget API properties even without render nodes
         let color = w.color();
@@ -242,6 +280,7 @@ pub fn extract_snapshot(node: &gsk::RenderNode) -> WidgetSnapshot {
         css_classes: Vec::new(),
         children: Vec::new(),
         text_colors: Vec::new(),
+        border_outlines: Vec::new(),
     };
 
     walk_node(node, &mut snapshot);
@@ -326,6 +365,25 @@ fn walk_node(node: &gsk::RenderNode, snapshot: &mut WidgetSnapshot) {
                 left: widths[3],
             };
 
+            // The border's outline is the border box, whose corners are the
+            // CSS border-radius. A background clipped to the padding box
+            // (background-clip: padding-box) comes first with smaller
+            // corners, the radius less the border's width.
+            // The widget's own border box gives its border-radius
+            // (extract_with_widget() picks it out of these).
+            let outline = border_node.outline();
+            let corners = outline.corner();
+            snapshot.border_outlines.push((
+                outline.bounds().width(),
+                outline.bounds().height(),
+                [
+                    corners[0].width(),
+                    corners[1].width(),
+                    corners[2].width(),
+                    corners[3].width(),
+                ],
+            ));
+
             let colors = border_node.colors();
             snapshot.border_colors = SideColors {
                 top: Some(rgba_to_color(&colors[0])),
@@ -346,7 +404,7 @@ fn walk_node(node: &gsk::RenderNode, snapshot: &mut WidgetSnapshot) {
             // (get_color() in gskpango.c).
             let rgba = unsafe {
                 *gsk::ffi::gsk_text_node_get_color(
-                    text_node.as_ptr() as *const gsk::ffi::GskTextNode,
+                    text_node.as_ptr() as *const gsk::ffi::GskTextNode
                 )
             };
             snapshot.text_colors.push(Color {
