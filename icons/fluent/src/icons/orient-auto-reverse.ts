@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const OrientAutoReverse = createGtkIcon("orient-auto-reverse", [["rect",{"width":"5","height":"1","x":"4","rx":"0","ry":"0"}],["rect",{"width":"5","height":"1","y":"4","rx":"0","ry":"0","transform":"matrix(0 1 1 0 0 0)"}],["path",{"d":"M3.828-3.328h14v1h-14z","transform":"rotate(45)"}],["rect",{"width":"5","height":"1","x":"-16","y":"-12","rx":"0","ry":"0","transform":"matrix(0 -1 -1 0 0 0)"}],["rect",{"width":"5","height":"1","x":"-12","y":"-16","rx":"0","ry":"0","transform":"scale(-1)"}],["path",{"d":"M-18.799 2.328h14v1h-14z","transform":"scale(-1 1) rotate(-45)"}]]);

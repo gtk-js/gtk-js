@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const SprayModeUnion = createGtkIcon("spray-mode-union", [["path",{"d":"M2 6C.892 6 0 6.892 0 8v6c0 1.108.892 2 2 2h7c1.108 0 2-.892 2-2V8c0-1.108-.892-2-2-2Zm0 1h7c.554 0 1 .446 1 1v6c0 .554-.446 1-1 1H2c-.554 0-1-.446-1-1V8c0-.554.446-1 1-1Z"}],["rect",{"width":"7","height":"6","x":"2","y":"8","rx":"0","ry":"0"}],["path",{"d":"M7 1c-1.108 0-2 .892-2 2v2h1V3c0-.554.446-1 1-1h7c.554 0 1 .446 1 1v6c0 .554-.446 1-1 1h-2v1h2c1.108 0 2-.892 2-2V3c0-1.108-.892-2-2-2Z"}],["path",{"d":"M7 3v2h2c1.662 0 3 1.338 3 3v1h2V3H7z"}]]);

@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const FaceShutmouth = createGtkIcon("face-shutmouth", [["path",{"d":"m5 5c0.55 0 1 0.45 1 1s-0.45 1-1 1-1-0.45-1-1 0.45-1 1-1zm6 0c0.55 0 1 0.45 1 1s-0.45 1-1 1-1-0.45-1-1 0.45-1 1-1zm-7 4 4 1 4-1c0.02 0.14 0.02 0.27 0 0.4-0.06 0.39-0.27 0.67-0.66 0.75l-1.34 0.35 1.31 0.31c0.54 0.14 0.66 0.5 0.69 0.84 0.01 0.12 0 0.24 0 0.35l-4-1-4 1c-0.07-0.64 0.05-0.98 0.53-1.13l1.47-0.37-1.5-0.35c-0.47-0.13-0.58-0.67-0.5-1.15z","fill":"currentColor"}],["path",{"d":"m8 0a8 8 0 0 0-8 8 8 8 0 0 0 8 8 8 8 0 0 0 8-8 8 8 0 0 0-8-8zm0 1a7 7 0 0 1 7 7 7 7 0 0 1-7 7 7 7 0 0 1-7-7 7 7 0 0 1 7-7z","fill":"currentColor","strokeLinecap":"round","strokeLinejoin":"round","strokeWidth":"2"}]]);

@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const BudgieCountdown = createGtkIcon("budgie-countdown", [["path",{"d":"m3 1v1h2v3c0 1.0464 0.53024 1.9635 1.3379 2.5-0.80765 0.53647-1.3379 1.4536-1.3379 2.5v4h-2v1h10v-1h-2v-4c0-1.0464-0.53024-1.9635-1.3379-2.5 0.80765-0.53647 1.3379-1.4536 1.3379-2.5v-3h2v-1h-10zm3 1h4v3c0 1.108-0.892 2-2 2s-2-0.892-2-2v-3zm2 6c1.108 0 2 0.892 2 2v4h-4v-4c0-1.108 0.892-2 2-2z","fill":"currentColor","stopColor":"#000000","strokeWidth":"0"}],["rect",{"x":"6","y":"11","width":"4","height":"3","fill":"currentColor","opacity":".35","stopColor":"#000000","strokeWidth":"0"}]]);

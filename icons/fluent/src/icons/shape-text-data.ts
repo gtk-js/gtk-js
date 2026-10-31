@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const ShapeTextData = createGtkIcon("shape-text-data", [["path",{"d":"M12.5 9A3.5 3.5 0 0 0 9 12.5a3.5 3.5 0 0 0 3.5 3.5 3.5 3.5 0 0 0 3.5-3.5A3.5 3.5 0 0 0 12.5 9zm0 1a2.5 2.5 0 0 1 2.5 2.5 2.5 2.5 0 0 1-2.5 2.5 2.5 2.5 0 0 1-2.5-2.5 2.5 2.5 0 0 1 2.5-2.5z"}],["path",{"d":"M3 2h10v1H3z"}],["path",{"d":"M7.5 3h1v9h-1z"}],["path",{"d":"M12 11h1v3h-1z"}],["path",{"d":"M11 12h3v1h-3z"}]]);

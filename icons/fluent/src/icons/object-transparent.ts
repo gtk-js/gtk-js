@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const ObjectTransparent = createGtkIcon("object-transparent", [["path",{"d":"m4 1c-1.662 0-3 1.338-3 3v8c0 1.662 1.338 3 3 3h8c1.662 0 3-1.338 3-3v-8c0-1.662-1.338-3-3-3zm0 1h8c1.108 0 2 0.892 2 2v8c0 1.108-0.892 2-2 2h-8c-1.108 0-2-0.892-2-2v-8c0-1.108 0.892-2 2-2z","fill":"currentColor","fillRule":"evenodd","strokeLinecap":"round","strokeLinejoin":"round","strokeWidth":"2"}],["rect",{"transform":"rotate(45)","x":"5.3137","y":"-.5","width":"12","height":"1","fill":"currentColor","fillRule":"evenodd","strokeLinecap":"round","strokeLinejoin":"round","strokeWidth":"1.8516"}]]);

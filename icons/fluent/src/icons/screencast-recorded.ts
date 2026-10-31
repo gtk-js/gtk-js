@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const ScreencastRecorded = createGtkIcon("screencast-recorded", [["path",{"d":"m6 8.0116a1.0001 1.0001 0 0 0-1 1v5a1.0001 1.0001 0 0 0 1 1h6a1.0001 1.0001 0 0 0 1-1v-0.61133l1.6836 0.56055a1.0001 1.0001 0 0 0 1.3164-0.94922v-3a1.0001 1.0001 0 0 0-1.3164-0.94922l-1.6836 0.56055v-0.61133a1.0001 1.0001 0 0 0-1-1zm0 1h6v2l3-1v3l-3-1v2h-6z","fill":"currentColor","strokeLinecap":"round","strokeLinejoin":"round"}],["path",{"d":"m2 1c-1.108 0-2 0.892-2 2v7c0 1.108 0.892 2 2 2h2v-1h-2c-0.554 0-1-0.446-1-1v-7c0-0.554 0.446-1 1-1h10c0.554 0 1 0.446 1 1v4h1v-4c0-1.108-0.892-2-2-2h-10z","fill":"currentColor","fillRule":"evenodd","stopColor":"#000000","strokeLinecap":"round","strokeLinejoin":"round","strokeWidth":"2"}]]);

@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const ViewList = createGtkIcon("view-list", [["rect",{"x":"4","y":"4","width":"9","height":"1"}],["rect",{"x":"4","y":"8","width":"9","height":"1"}],["rect",{"x":"4","y":"12","width":"9","height":"1"}],["rect",{"x":"2","y":"4","width":"1","height":"1"}],["rect",{"x":"2","y":"8","width":"1","height":"1"}],["rect",{"x":"2","y":"12","width":"1","height":"1"}]]);
+export const ViewList = createGtkIcon("view-list", [["path",{"d":"M2 3.5c0-.28.22-.5.5-.5h8a.5.5 0 0 1 0 1h-8a.5.5 0 0 1-.5-.5m0 8c0-.28.22-.5.5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5M2.5 7a.5.5 0 0 0 0 1h11a.5.5 0 0 0 0-1z"}]]);

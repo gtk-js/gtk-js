@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const StrokeJoinRound = createGtkIcon("stroke-join-round", [["path",{"d":"M6 6h1v1H6zm0 2h1v1H6zm0 2h1v1H6zm0 2h1v1H6zm0 2h1v1H6zm2-8h1v1H8zm2 0h1v1h-1zm2 0h1v1h-1zm2 0h1v1h-1zM8 8h1v7H8z"}],["path",{"d":"M8 8h7v1H8zm3 3h1v4h-1z"}],["path",{"d":"M11 11h4v1h-4z"}],["path",{"d":"M14 8h1v4h-1zm-6 6h4v1H8zM4 4h1v11H4zm1 0h10v1H5zm0-3h10v1H5zM1 5h1v10H1z"}],["path",{"d":"M1 14h4v1H1zM14 1h1v4h-1z"}],["path",{"d":"M5 1a4 4 0 0 0-4 4h1a3 3 0 0 1 3-3V1z"}]]);

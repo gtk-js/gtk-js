@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const ZoomCenterPage = createGtkIcon("zoom-center-page", [["path",{"d":"M.529 0h.794v.265H.529z"}],["path",{"d":"M.529 0h.265v.794H.529z"}],["path",{"d":"M-3.704 0h.794v.265h-.794z","transform":"scale(-1 1)"}],["path",{"d":"M-3.704 0h.265v.794h-.265z","transform":"scale(-1 1)"}],["path",{"d":"M.529-4.233h.794v.265H.529z","transform":"scale(1 -1)"}],["path",{"d":"M.529-4.233h.265v.794H.529z","transform":"scale(1 -1)"}],["path",{"d":"M-3.704-4.233h.794v.265h-.794z","transform":"scale(-1)"}],["path",{"d":"M-3.704-4.233h.265v.794h-.265z","transform":"scale(-1)"}],["path",{"d":"M1.058.53v3.174h2.117V.529zm.265.264H2.91v2.645H1.323z"}]]);

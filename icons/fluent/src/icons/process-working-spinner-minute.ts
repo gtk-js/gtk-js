@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const ProcessWorkingSpinnerMinute = createGtkIcon("process-working-spinner-minute", [["path",{"d":"m0 3e-3h16v16h-16z","fill":"currentColor","fillOpacity":".01"}],["path",{"d":"m8 0a8 8.0015 0 0 1 8 8.002 8 8.0015 0 0 1-8 8.002 8 8.0015 0 0 1-8-8.002 8 8.0015 0 0 1 8-8.002zm0 1a7 7 0 0 0-7 7 7 7 0 0 0 7 7 7 7 0 0 0 7-7 7 7 0 0 0-7-7z","fill":"currentColor","fillRule":"evenodd"}],["path",{"d":"m4.4621 4.4658 2.6669 4.0811c0.30305 0.46376 1.0787 0.65861 1.5758 0.16155 0.50561-0.50561 0.30221-1.2727-0.16155-1.5758z","fill":"currentColor","fillRule":"evenodd"}]]);

@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const PagesOrderBackwards = createGtkIcon("pages-order-backwards", [["path",{"d":"M983 527.362c-1.108 0-2 .892-2 2v3h1v-3c0-.554.446-1 1-1h6v-1zm9 4v10c0 .554-.446 1-1 1h-8c-.554 0-1-.446-1-1v-1h-1v1c0 1.108.892 2 2 2h8c1.108 0 2-.892 2-2v-10z"}],["path",{"d":"M988 531.362c0 .554.446 1 1 1h4v-1h-4v-4h-1z"}],["path",{"d":"m988.293 528.07 4 4 .707-.708-4-4z"}],["path",{"d":"M312.992 1071.523h5v1h-5z","transform":"rotate(-45)"}],["path",{"d":"M1071.523 312.992h5v1h-5z","transform":"scale(1 -1) rotate(-45)"}],["path",{"d":"M980 535.862h7v1h-7z"}]]);

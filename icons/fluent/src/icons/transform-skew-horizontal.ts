@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const TransformSkewHorizontal = createGtkIcon("transform-skew-horizontal", [["path",{"d":"M0 0v7h5.994L5 5.838V6H1V1.166L.707.824Z"}],["path",{"d":"m0 0 .707.824L8.563 10h7.894L7.926 0Zm2.172 1h5.293l6.824 8H9.023Z"}],["path",{"d":"M0 12h9v1H0z"}],["path",{"d":"m7.172 9.672-.707.707 2.12 2.121-2.12 2.121.707.707 2.121-2.121L10 12.5l-.707-.707Z"}]]);

@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const SnapTextBaseline = createGtkIcon("snap-text-baseline", [["path",{"d":"M4.203 12v1H16v-1z"}],["path",{"d":"M3.214 10.386a.998.998 0 0 0-1.414 0L.386 11.801a.998.998 0 0 0 0 1.414L1.8 14.629a.998.998 0 0 0 1.414 0l1.414-1.414a.998.998 0 0 0 0-1.414zm-.707.707 1.414 1.415-1.414 1.414-1.414-1.414z"}],["rect",{"width":"2","height":"2","x":"9.617","y":"6.072","rx":"0","ry":"0","transform":"rotate(45)"}],["path",{"d":"M8.65 0 4.648 11h1.067L9.35 1h1.3l3.635 10h1.067L11.35 0h-2.7z"}],["path",{"d":"M7 5h6v1H7z"}]]);

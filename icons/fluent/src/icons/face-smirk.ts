@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const FaceSmirk = createGtkIcon("face-smirk", [["path",{"d":"M8 0C3.588 0 0 3.588 0 8s3.588 8 8 8 8-3.588 8-8-3.588-8-8-8zm0 1c3.872 0 7 3.128 7 7s-3.128 7-7 7-7-3.128-7-7 3.128-7 7-7zM6 6.012c-2.5 0-4 1-1 1a1 1 0 1 0 1-1zm5 0c-2.5 0-4 1-1 1a1 1 0 1 0 1-1zm.738 3.668s-1.171 1.293-2.633 1.328C7.386 11.048 6 11 6 11l-.035 1s1.413.05 3.164.008c2.01-.048 3.365-1.672 3.365-1.672z","fill":"currentColor","overflow":"visible"}]]);

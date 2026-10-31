@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const SelectionMakeBitmapCopy = createGtkIcon("selection-make-bitmap-copy", [["path",{"d":"M3 4c-1.108 0-2 .892-2 2v6c0 1.108.892 2 2 2h10c1.108 0 2-.892 2-2V6c0-1.108-.892-2-2-2h-3v1h3c.554 0 1 .446 1 1v6c0 .554-.446 1-1 1H3c-.554 0-1-.446-1-1V6c0-.554.446-1 1-1h3V4H3z"}],["path",{"d":"M7 2c-1.108 0-2 .892-2 2v1h1V4c0-.554.446-1 1-1h2c.554 0 1 .446 1 1v1h1V4c0-1.108-.892-2-2-2H7z"}],["path",{"d":"M8 6a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3zm0 1a2 2 0 0 1 2 2 2 2 0 0 1-2 2 2 2 0 0 1-2-2 2 2 0 0 1 2-2z"}],["circle",{"cx":"8","cy":"9","r":"1"}]]);

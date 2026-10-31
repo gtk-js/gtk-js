@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const LayoutHorizontal = createGtkIcon("layout-horizontal", [["path",{"d":"m544.5 492.5c-1.108 0-2 0.892-2 2v11c0 1.108 0.892 2 2 2h11c1.108 0 2-0.892 2-2v-11c0-1.108-0.892-2-2-2h-11zm0 1h11c0.554 0 1 0.446 1 1v11c0 0.554-0.446 1-1 1h-11c-0.554 0-1-0.446-1-1v-11c0-0.554 0.446-1 1-1z"}],["path",{"d":"m544.5 494.5v11h5v-11h-5zm1 1h3v9h-3v-9z"}],["path",{"d":"m550.5 494.5v11h5v-11zm1 1h3v9h-3z"}]]);

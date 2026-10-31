@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const TextXCpp = createGtkIcon("text-x-cpp", [["rect",{"x":"2","y":"7","width":"5","height":"1","rx":"0","ry":"0","fill":"currentColor","fillRule":"evenodd","stopColor":"#000000"}],["rect",{"x":"4","y":"5","width":"1","height":"5","fill":"currentColor","fillRule":"evenodd","stopColor":"#000000"}],["rect",{"x":"9","y":"7","width":"5","height":"1","rx":"0","ry":"0","fill":"currentColor","fillRule":"evenodd","stopColor":"#000000"}],["rect",{"x":"11","y":"5","width":"1","height":"5","fill":"currentColor","fillRule":"evenodd","stopColor":"#000000"}]]);

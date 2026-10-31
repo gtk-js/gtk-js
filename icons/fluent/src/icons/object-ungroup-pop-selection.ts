@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const ObjectUngroupPopSelection = createGtkIcon("object-ungroup-pop-selection", [["path",{"d":"M4 0h2v2H4zm10 0h2v2h-2zM4 10h2v2H4zm10 0h2v2h-2z"}],["path",{"d":"M2 7C.892 7 0 7.892 0 9v5c0 1.108.892 2 2 2h7c1.108 0 2-.892 2-2V9c0-1.108-.892-2-2-2H2zm0 1h7c.554 0 1 .446 1 1v5c0 .554-.446 1-1 1H2c-.554 0-1-.446-1-1V9c0-.554.446-1 1-1z"}],["path",{"d":"M10 1a5 5 0 0 0-5 5 5 5 0 0 0 5 5 5 5 0 0 0 5-5 5 5 0 0 0-5-5zm0 1a4 4 0 0 1 4 4 4 4 0 0 1-4 4 4 4 0 0 1-4-4 4 4 0 0 1 4-4z"}]]);

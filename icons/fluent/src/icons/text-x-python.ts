@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const TextXPython = createGtkIcon("text-x-python", [["path",{"d":"m6 1c-1.108 0-2 0.892-2 2v1h-1c-1.108 0-2 0.89201-2 2v4c0 1.108 0.89201 2 2 2h1v1c0 1.108 0.89201 2 2 2h4c1.108 0 2-0.892 2-2v-1h1c1.108 0 2-0.892 2-2v-4c0-1.108-0.892-2-2-2h-1v-1c0-1.108-0.892-2-2-2h-4zm1 2a1 1 0 0 1 1 1 1 1 0 0 1-1 1 1 1 0 0 1-1-1 1 1 0 0 1 1-1zm5 2h1c0.554 0 1 0.446 1 1v4c0 0.554-0.446 1-1 1h-1-1v1 1c0 0.554-0.446 1-1 1h-4c-0.554 0-1-0.446-1-1v-1-1c0-1.108 0.892-2 2-2h2 1c1.108 0 2-0.892 2-2v-2z","fill":"currentColor","fillRule":"evenodd","stopColor":"#000000"}]]);

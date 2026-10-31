@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const NvidiaRam = createGtkIcon("nvidia-ram", [["path",{"d":"m1 3c-0.554 0-1 0.446-1 1v1a1 1 0 0 1 1 1 1 1 0 0 1-1 1v1a1 1 0 0 1 1 1 1 1 0 0 1-1 1v1a1 1 0 0 1 1 1h14a1 1 0 0 1 1-1v-1a1 1 0 0 1-1-1 1 1 0 0 1 1-1v-1a1 1 0 0 1-1-1 1 1 0 0 1 1-1v-1c0-0.554-0.446-1-1-1zm2 1h10c0.554 0 1 0.446 1 1v5c0 0.554-0.446 1-1 1h-10c-0.554 0-1-0.446-1-1v-5c0-0.554 0.446-1 1-1zm-3 9v1c0 0.554 0.446 1 1 1h6v-2zm8 0v2h7c0.554 0 1-0.446 1-1v-1z","strokeWidth":"2.089"}],["rect",{"x":"4","y":"5","width":"2","height":"5","rx":".014","ry":"0"}],["rect",{"x":"7","y":"5","width":"2","height":"5","rx":"0","ry":"0"}],["rect",{"x":"10","y":"5","width":"2","height":"5","rx":"0","ry":"0"}]]);

@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const Library = createGtkIcon("library", [["rect",{"x":"2","y":"2","width":"1","height":"13","fill":"currentColor","stopColor":"#000000","strokeLinecap":"square","strokeWidth":"2"}],["rect",{"x":"5","y":"4","width":"1","height":"11","fill":"currentColor","stopColor":"#000000","strokeLinecap":"square","strokeWidth":"2"}],["rect",{"x":"8","y":"3","width":"1","height":"12","fill":"currentColor","stopColor":"#000000","strokeLinecap":"square","strokeWidth":"2"}],["rect",{"transform":"rotate(-15)","x":"9.6407","y":"4.1124","width":"1","height":"14","fill":"currentColor","stopColor":"#000000","strokeLinecap":"square","strokeWidth":"1.9322"}]]);

@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const BuilderTodo = createGtkIcon("builder-todo", [["path",{"d":"m3 1c-1.108 0-2 0.892-2 2v10c0 1.108 0.892 2 2 2h10c1.108 0 2-0.892 2-2v-7.584l-1 1v6.584c0 0.554-0.446 1-1 1h-10c-0.554 0-1-0.446-1-1v-10c0-0.554 0.446-1 1-1h10c0.32063 0 0.6024 0.1515 0.78516 0.38477l0.71094-0.71094c-0.36586-0.41261-0.89874-0.67383-1.4961-0.67383h-10z","fill":"currentColor"}],["path",{"d":"m3.0503 6.0503 4.9497 4.9497 8.4853-8.4853-0.70711-0.70711-7.7782 7.7782-4.2426-4.2426z","fill":"currentColor","fillRule":"evenodd","strokeLinecap":"round","strokeLinejoin":"round","strokeWidth":"2"}]]);

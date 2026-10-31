@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const GradientSpreadRepeat = createGtkIcon("gradient-spread-repeat", [["path",{"d":"M5.314 0h6v1h-6z","transform":"rotate(45)"}],["path",{"d":"M-6-11.314h6v1h-6z","transform":"scale(1 -1) rotate(45)"}],["path",{"d":"M10.971-5.657h6v1h-6z","transform":"rotate(45)"}],["path",{"d":"M-.343-16.971h6v1h-6z","transform":"scale(1 -1) rotate(45)"}],["path",{"d":"M0 7.5h7v1H0z"}],["path",{"d":"M-15 7.5h7v1h-7z","transform":"scale(-1 1)"}]]);

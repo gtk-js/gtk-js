@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const OrgGnomeSettingsMultitasking = createGtkIcon("org-gnome-settings-multitasking", [["path",{"d":"m4 1c-0.554 0-1 0.446-1 1v1h-2c-0.554 0-1 0.446-1 1v8c0 0.554 0.446 1 1 1h2v1c0 0.554 0.446 1 1 1h8c0.554 0 1-0.446 1-1v-1h2c0.554 0 1-0.446 1-1v-8c0-0.554-0.446-1-1-1h-2v-1c0-0.554-0.446-1-1-1h-8zm0 1h8v12h-8v-12zm-3 2h2v8h-2v-8zm12 0h2v8h-2v-8z","fill":"currentColor"}]]);

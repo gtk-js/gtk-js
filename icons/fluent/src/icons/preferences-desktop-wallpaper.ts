@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const PreferencesDesktopWallpaper = createGtkIcon("preferences-desktop-wallpaper", [["path",{"d":"m6 4-4 4h4z"}],["path",{"d":"m4.5 14h7c0.277 0 0.5 0.223 0.5 0.5s-0.223 0.5-0.5 0.5h-7c-0.277 0-0.5-0.223-0.5-0.5s0.223-0.5 0.5-0.5z"}],["path",{"d":"m2 2c-1.108 0-2 0.892-2 2v7c0 1.108 0.892 2 2 2h12c1.108 0 2-0.892 2-2v-7c0-1.108-0.892-2-2-2zm0 1h12c0.554 0 1 0.446 1 1v7c0 0.554-0.446 1-1 1h-12c-0.554 0-1-0.446-1-1v-7c0-0.554 0.446-1 1-1z"}]]);
+export const PreferencesDesktopWallpaper = createGtkIcon("preferences-desktop-wallpaper", [["path",{"d":"M11.5 5.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0M2 4.5A2.5 2.5 0 0 1 4.5 2h7A2.5 2.5 0 0 1 14 4.5v7a2.5 2.5 0 0 1-2.5 2.5h-7A2.5 2.5 0 0 1 2 11.5zM4.5 3C3.67 3 3 3.67 3 4.5v7q0 .35.15.65L6.8 8.49a1.7 1.7 0 0 1 2.4 0l3.65 3.66q.15-.3.15-.65v-7c0-.83-.67-1.5-1.5-1.5zm7.65 9.85L8.5 9.2a.7.7 0 0 0-1 0l-3.65 3.65q.3.15.65.15h7q.35 0 .65-.15"}]]);

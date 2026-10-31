@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const GoLast = createGtkIcon("go-last", [["path",{"d":"M 14.3633,12.3633 8,6 l -6.3633,6.3633 0.70703,0.70703 5.6562,-5.6562 5.6562,5.6562 0.70703,-0.70703 z"}],["circle",{"cx":"8","cy":"4","r":"1"}]]);
+export const GoLast = createGtkIcon("go-last", [["path",{"d":"M3.65 3.85a.5.5 0 1 1 .7-.7l4.5 4.5c.2.2.2.5 0 .7l-4.5 4.5a.5.5 0 0 1-.7-.7L7.79 8zM12 3.5a.5.5 0 0 0-1 0v9a.5.5 0 0 0 1 0z"}]]);

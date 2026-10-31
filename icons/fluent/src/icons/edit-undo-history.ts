@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const EditUndoHistory = createGtkIcon("edit-undo-history", [["path",{"d":"M12 1.969V6H8V5h3V2z"}],["path",{"d":"M11 0a5 5 0 0 0-5 5 5 5 0 0 0 5 5 5 5 0 0 0 5-5 5 5 0 0 0-5-5zm0 1a4 4 0 0 1 4 4 4 4 0 0 1-4 4 4 4 0 0 1-4-4 4 4 0 0 1 4-4z"}],["rect",{"width":"6","height":"1","x":"-7.071","y":"7.071","rx":"0","ry":"0","transform":"rotate(-45)"}],["rect",{"width":"6","height":"1","x":"7.071","y":"-7.071","rx":"0","ry":"0","transform":"scale(1 -1) rotate(-45)"}],["path",{"d":"M1 9.5v1h7.623a6 6 0 0 1-1.588-1H1zm9 1.408V16.5h1V11a6 6 0 0 1-1-.092z"}]]);

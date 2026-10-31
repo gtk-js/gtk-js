@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const ViewSortDescending = createGtkIcon("view-sort-descending", [["path",{"d":"M3 2v3h3V2zm8 0v8.002H9c.348.76.736 1.534 1.166 2.322.43.781.876 1.535 1.334 2.26.45-.725.89-1.479 1.32-2.26A43.07 43.07 0 0 0 14 10h-2V2zM4 3h1v1H4zM3 6v3h3V6zm1 1h1v1H4zm-1 3v3h3v-3zm1 1h1v1H4z","fill":"currentColor","fontFamily":"sans-serif","fontWeight":"400","overflow":"visible","whiteSpace":"normal"}]]);
+export const ViewSortDescending = createGtkIcon("view-sort-descending", [["path",{"d":"M7.15 13.85c.2.2.5.2.7 0l3-3a.5.5 0 0 0-.7-.7L8 12.29V2.5a.5.5 0 0 0-1 0v9.8l-2.15-2.15a.5.5 0 0 0-.7.7z"}]]);

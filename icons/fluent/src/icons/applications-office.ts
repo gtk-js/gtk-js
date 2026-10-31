@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const ApplicationsOffice = createGtkIcon("applications-office", [["path",{"d":"M12.213 1a.83.83 0 0 0-.59.246l-.906.912 3.125 3.125.91-.906c.33-.33.33-.85 0-1.18l-1.95-1.95a.83.83 0 0 0-.59-.247zM9.658 3.22L.992 11.887v3.119h3.121l8.664-8.664zM2 12h1v1h1v1H2z","fill":"currentColor"}]]);
+export const ApplicationsOffice = createGtkIcon("applications-office", [["path",{"d":"M9.25 1c.97 0 1.75.78 1.75 1.75V4h1.5A2.5 2.5 0 0 1 15 6.5v5a2.5 2.5 0 0 1-2.5 2.5h-9A2.5 2.5 0 0 1 1 11.5v-5A2.5 2.5 0 0 1 3.5 4H5V2.75C5 1.78 5.78 1 6.75 1zM14 9.5q-.64.48-1.5.5H9v.5a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5V10H3.5q-.85-.02-1.5-.5v2c0 .83.67 1.5 1.5 1.5h9c.83 0 1.5-.67 1.5-1.5zM3.5 5C2.67 5 2 5.67 2 6.5v1C2 8.33 2.67 9 3.5 9H7v-.5c0-.28.22-.5.5-.5h1c.28 0 .5.22.5.5V9h3.5c.83 0 1.5-.67 1.5-1.5v-1c0-.83-.67-1.5-1.5-1.5zm3.25-3a.75.75 0 0 0-.75.75V4h4V2.75A.75.75 0 0 0 9.25 2z"}]]);

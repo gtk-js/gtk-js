@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const ViewRefresh = createGtkIcon("view-refresh", [["path",{"d":"m8 3a6 6 0 0 0-6 6 6 6 0 0 0 6 6 6 6 0 0 0 6-6h-1a5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5z"}],["path",{"d":"m8.1719 0.67188-0.70703 0.70703 2.1211 2.1211-2.1211 2.1211 0.70703 0.70703 2.8281-2.8281-0.70703-0.70703z"}],["rect",{"x":"8","y":"3","width":"2","height":"1"}]]);
+export const ViewRefresh = createGtkIcon("view-refresh", [["path",{"d":"M3 8a5 5 0 0 1 9-3h-2a.5.5 0 0 0 0 1h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-1 0v1.53A5.99 5.99 0 0 0 2 8a6 6 0 0 0 11.98.54.5.5 0 0 0-1-.08A5 5 0 0 1 3 8"}]]);

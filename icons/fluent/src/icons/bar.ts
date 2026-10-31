@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const Bar = createGtkIcon("bar", [["path",{"d":"m5 5h6l-3 3z","fill":"currentColor","opacity":".15"}],["path",{"transform":"rotate(45)","d":"m2.1213 0.70711h8.8996 0.29279l3.8891 3.8891-2.4749 2.4749c-0.39174 0.39174-0.39174 1.0225 0 1.4142l7.0711-7.0711c-0.39174-0.39174-1.0225-0.39174-1.4142 0l-2.4749 2.4749-3.8891-3.8891v-9.1924l-0.99989 0.99989v2.8284l-5.0713 5.0713h-2.8284l-0.99989 0.99989zm5.2425-0.99989 3.6571-3.6571v3.6571h-3.6571z","fill":"currentColor","stopColor":"#000000","strokeLinecap":"round","strokeLinejoin":"round"}]]);

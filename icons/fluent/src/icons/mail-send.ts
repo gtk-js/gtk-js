@@ -1,0 +1,3 @@
+import { createGtkIcon } from "@gtk-js/icon-helpers";
+
+export const MailSend = createGtkIcon("mail-send", [["path",{"d":"M1.18 1.12a.5.5 0 0 1 .54-.07l13 6.5a.5.5 0 0 1 0 .9l-13 6.5a.5.5 0 0 1-.7-.6L2.98 8 1.02 1.65a.5.5 0 0 1 .16-.53M3.87 8.5l-1.55 5.03L13.38 8 2.32 2.47 3.87 7.5H9.5a.5.5 0 0 1 0 1z"}]]);

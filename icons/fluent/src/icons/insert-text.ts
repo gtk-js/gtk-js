@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const InsertText = createGtkIcon("insert-text", [["path",{"d":"m5 12 3 4 3-4z","fill":"currentColor"}],["path",{"d":"m4-4e-8v1h6c1.108 0 2 0.892 2 2v1h-6c-1.662 0-3 1.338-3 3s1.338 3 3 3h7v-7c0-1.662-1.338-3-3-3zm2 5h6v4h-6c-1.108 0-2-0.892-2-2s0.892-2 2-2z","fill":"currentColor"}]]);
+export const InsertText = createGtkIcon("insert-text", [["path",{"d":"M3 2.5c0-.28.22-.5.5-.5h8c.28 0 .5.22.5.5v2a.5.5 0 0 1-1 0V3H8v10h1a.5.5 0 0 1 0 1H6a.5.5 0 0 1 0-1h1V3H4v1.5a.5.5 0 0 1-1 0z"}]]);

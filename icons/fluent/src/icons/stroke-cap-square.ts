@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const StrokeCapSquare = createGtkIcon("stroke-cap-square", [["path",{"d":"M7 6h1v1H7zm0 2h1v1H7zm0 2h1v1H7zm0 2h1v1H7zm0 2h1v1H7zM1 1h13v1H1z"}],["path",{"d":"M1 1h1v14H1zm12 0h1v14h-1zM4 4h1v11H4zm6 0h1v11h-1z"}],["path",{"d":"M4 4h7v1H4zM1 14h4v1H1zm9 0h4v1h-4z"}]]);

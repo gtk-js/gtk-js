@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const Pda = createGtkIcon("pda", [["path",{"d":"m3 1c-0.554 0-1 0.446-1 1v13c0 0.554 0.446 1 1 1h10c0.554 0 1-0.446 1-1v-13c0-0.554-0.446-1-1-1h-10zm0 1h10v13h-10v-13z","fill":"currentColor","strokeLinecap":"round","strokeLinejoin":"round","strokeWidth":"2"}],["path",{"d":"m15.5 3c-0.12781 0-0.25558 0.04855-0.35352 0.14648l-7.1465 7.1465v0.70703h0.70703l7.1465-7.1465c0.19587-0.19587 0.19587-0.51116 0-0.70703-0.097935-0.097934-0.22571-0.14648-0.35352-0.14648z","fill":"currentColor","strokeLinecap":"round","strokeLinejoin":"round","strokeWidth":"2"}],["circle",{"cx":"4.5","cy":"3.5","r":".5","fill":"currentColor","strokeLinecap":"round","strokeLinejoin":"round","strokeWidth":"2"}]]);

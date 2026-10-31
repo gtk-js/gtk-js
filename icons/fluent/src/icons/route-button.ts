@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const RouteButton = createGtkIcon("route-button", [["rect",{"transform":"rotate(45)","x":"4.5135","y":".62868","width":"8","height":"1","stopColor":"#000000"}],["rect",{"transform":"matrix(-.70711 .70711 .70711 .70711 0 0)","x":"-6.3713","y":"11.513","width":"8","height":"1","stopColor":"#000000"}],["rect",{"x":"10","y":"2.9896","width":"4","height":"1","stopColor":"#000000"}],["rect",{"x":"13","y":"2.9896","width":"1","height":"4","stopColor":"#000000"}],["rect",{"x":"7","y":"9","width":"1","height":"6","stopColor":"#000000"}]]);
