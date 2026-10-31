@@ -14,11 +14,12 @@
 
   --window-radius: #{$fluent_overlay_radius};
 
-  // AccentFillColorDefault is SystemAccentColorDark1 on light.
-  --accent-bg-color: oklch(from var(--fluent-accent) Min(l, 0.5) c h);
+  // AccentFillColorDefault is SystemAccentColorDark1 on light: darker, mixed
+  // in sRGB so it stays in gamut (GTK clips other colors, browsers map them).
+  --accent-bg-color: color-mix(in srgb, var(--fluent-accent) 85%, black);
   --accent-fg-color: white;
   // AccentTextFillColorPrimary, SystemAccentColorDark2
-  --accent-color: oklch(from var(--fluent-accent) Min(l, 0.42) c h);
+  --accent-color: color-mix(in srgb, var(--fluent-accent) 65%, black);
 
   --destructive-bg-color: #c42b1c; // SystemFillColorCritical
   --destructive-fg-color: white;
@@ -113,10 +114,10 @@
 @media (prefers-color-scheme: dark) {
   :root {
     // AccentFillColorDefault is SystemAccentColorLight2 on dark.
-    --accent-bg-color: oklch(from var(--fluent-accent) Max(l, 0.8) calc(c * 0.85) h);
+    --accent-bg-color: color-mix(in srgb, var(--fluent-accent) 60%, white);
     --accent-fg-color: black;
     // AccentTextFillColorPrimary, SystemAccentColorLight3
-    --accent-color: oklch(from var(--fluent-accent) Max(l, 0.88) calc(c * 0.7) h);
+    --accent-color: color-mix(in srgb, var(--fluent-accent) 40%, white);
 
     --destructive-bg-color: #c42b1c;
     --destructive-color: #ff99a4;
@@ -2112,5 +2113,18 @@ calendar {
     &:checked {
       border-radius: 999px;
     }
+  }
+}
+
+// Entry and spin rows: focused, a TextBox's 2px accent line along the bottom
+// instead of the focus rectangle around the row.
+row.entry,
+row.spin {
+  &.focused,
+  list.boxed-list > &.focused:not(:last-child),
+  list.content > &.focused:not(:last-child) {
+    outline-color: transparent;
+    outline-width: 0;
+    box-shadow: inset 0 -2px var(--accent-bg-color);
   }
 }
