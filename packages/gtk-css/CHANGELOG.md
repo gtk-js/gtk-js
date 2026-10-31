@@ -1,5 +1,13 @@
 # @gtk-js/gtk-css
 
+## [0.1.9](https://github.com/gtk-js/gtk-js/compare/gtk-css-v0.1.8...gtk-css-v0.1.9) (2026-10-31)
+
+
+### Bug Fixes
+
+* **gtk-css:** keep a :root rule's dark values where the rule is ([#162](https://github.com/gtk-js/gtk-js/issues/162)) ([8a48e41](https://github.com/gtk-js/gtk-js/commit/8a48e41587a00b865a7e9fd91e4be360dbe5df61))
+* layer libadwaita's stylesheet under the mac themes, as GTK does ([#158](https://github.com/gtk-js/gtk-js/issues/158)) ([a9e0d23](https://github.com/gtk-js/gtk-js/commit/a9e0d237916d7bdc65c4c07b3f1b51d0427629c2))
+
 ## [0.1.8](https://github.com/gtk-js/gtk-js/compare/gtk-css-v0.1.7...gtk-css-v0.1.8) (2026-10-20)
 
 

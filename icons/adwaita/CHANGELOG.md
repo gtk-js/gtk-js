@@ -1,5 +1,12 @@
 # @gtk-js/icons-adwaita
 
+## [0.1.7](https://github.com/gtk-js/gtk-js/compare/icons-adwaita-v0.1.6...icons-adwaita-v0.1.7) (2026-10-31)
+
+
+### Bug Fixes
+
+* draw mac icons like GTK, from the icons GTK picks ([#157](https://github.com/gtk-js/gtk-js/issues/157)) ([c7b1ac4](https://github.com/gtk-js/gtk-js/commit/c7b1ac4eebee4c26dce77a30ea00db7e1b2a2868))
+
 ## [0.1.6](https://github.com/gtk-js/gtk-js/compare/icons-adwaita-v0.1.5...icons-adwaita-v0.1.6) (2026-10-15)
 
 
