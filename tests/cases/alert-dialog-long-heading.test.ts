@@ -1,9 +1,10 @@
-// A heading too long for an AdwAlertDialog's width wraps: allocate_heading()
-// shows the wrapping title-4 label once the title-2 one doesn't fit the width
-// the dialog gives it (DIALOG_MIN_WIDTH here, with one response), and
-// measure_heading() gives the heading the smaller label's minimum, so it never
-// widens the dialog's contents. The text view below wraps in that width too.
-// Web only: the native harness can't present a dialog as a case widget.
+// A heading too long for an AdwAlertDialog's width wraps: the dialog grows to
+// DIALOG_MAX_WIDTH for it (measure_child()), and allocate_heading() shows the
+// wrapping title-4 label once the title-2 one doesn't fit the width the
+// heading is allocated. The unwrapped title-2 label mustn't widen the heading
+// past that and keep itself shown. As in libadwaita 1.8 and 1.9: a 372px
+// sheet, the title-4 heading. Web only: the native harness can't present a
+// dialog as a case widget.
 
 import { expect, inject, test } from "vite-plus/test";
 
@@ -19,7 +20,7 @@ for (const [browserName, browser] of Object.entries(globalThis.__testBrowsers)) 
       const layout = await page.evaluate(() => {
         const sheet = document.querySelector(".gtk-dialog .gtk-sheet")!;
         const s = sheet.getBoundingClientRect();
-        const wider = Array.from(sheet.querySelectorAll("*"))
+        const wider = Array.from(sheet.querySelectorAll(".message-area *"))
           .filter((el) => el.getBoundingClientRect().right > s.right + 0.5)
           .map((el) => el.className);
         return {
@@ -29,7 +30,7 @@ for (const [browserName, browser] of Object.entries(globalThis.__testBrowsers)) 
           wider,
         };
       });
-      expect(layout.sheetWidth).toBeCloseTo(300, 0);
+      expect(layout.sheetWidth).toBeCloseTo(372, 0);
       expect(layout.heading).toContain("title-4");
       expect(layout.messageAreaWidth).toBeLessThanOrEqual(layout.sheetWidth + 0.5);
       expect(layout.wider).toEqual([]);

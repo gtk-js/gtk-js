@@ -2713,29 +2713,16 @@ if (caseName === "alert-dialog-body") {
     ),
   );
 } else if (caseName === "alert-dialog-long-heading") {
-  // Page for tests/cases/alert-dialog-long-heading.test.ts: a heading too
-  // long for the dialog's width, and a wrapping text view below the body,
-  // like an error dialog with its details.
-  void import("@gtk-js/adwaita").then(({ AdwAlertDialog, GtkScrolledWindow, GtkTextView }) =>
+  // Page for tests/cases/alert-dialog-long-heading.test.ts: a heading longer
+  // on one line than the widest the dialog gets.
+  void import("@gtk-js/adwaita").then(({ AdwAlertDialog }) =>
     createRoot(container).render(
       <AdwaitaProvider colorScheme="light">
         <GtkWindow style={{ width: 760, height: 480 }}>
           <AdwAlertDialog
             visible
-            heading="Unable to Connect to the Server"
-            body="Check your server address and try again."
-            extraChild={
-              <GtkScrolledWindow hasFrame minContentHeight={100}>
-                <GtkTextView
-                  value={
-                    'couldn\'t list files: Propfind "http://127.0.0.1:8099/": dial tcp 127.0.0.1:8099: connect: connection refused'
-                  }
-                  editable={false}
-                  monospace
-                  wrapMode="word-char"
-                />
-              </GtkScrolledWindow>
-            }
+            heading="Unable to Connect to the Synchronization Server"
+            body="Try again."
             responses={[{ id: "ok", label: "OK", appearance: "suggested" }]}
           />
         </GtkWindow>
