@@ -3,6 +3,13 @@
 // meanings. The 16px regular icon, or the filled one after a ":filled".
 // Names Fluent has no icon for fall back to GTK's own (GtkProvider).
 export const ICON_MAP: Record<string, string> = {
+  // libadwaita's own icons
+  "adw-entry-apply": "checkmark",
+  // Pointing up: expander rows turn it down while collapsed.
+  "adw-expander-arrow": "chevron_up",
+  "adw-external-link": "open",
+  "adw-mail-send": "send",
+
   // Window and navigation
   "window-close": "dismiss",
   "window-minimize": "subtract",

@@ -2,6 +2,10 @@ export type { GtkIconProps, GtkIcon } from "@gtk-js/icon-helpers";
 
 export { ActionUnavailable } from "./icons/action-unavailable.ts";
 export { AddressBookNew } from "./icons/address-book-new.ts";
+export { AdwEntryApply } from "./icons/adw-entry-apply.ts";
+export { AdwExpanderArrow } from "./icons/adw-expander-arrow.ts";
+export { AdwExternalLink } from "./icons/adw-external-link.ts";
+export { AdwMailSend } from "./icons/adw-mail-send.ts";
 export { AirplaneMode } from "./icons/airplane-mode.ts";
 export { Alarm } from "./icons/alarm.ts";
 export { ApplicationsEngineering } from "./icons/applications-engineering.ts";

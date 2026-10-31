@@ -272,24 +272,27 @@ tooltip {
  * Window *
  **********/
 
+// Windows 11's window shadow, tightened: CSD windows (and gtk-js's
+// allocateShadow in Electron) give the shadow room around the window. The
+// backdrop shadow keeps the same extents, so the window doesn't move.
 window.csd {
   border-radius: var(--window-radius);
   outline: none;
-  box-shadow: 0 0 0 1px RGB(0 0 0 / 20%), 0 2px 21px RGB(0 0 0 / 22%),
-    0 32px 64px RGB(0 0 0 / 28%);
+  box-shadow: 0 0 0 1px RGB(0 0 0 / 20%), 0 2px 8px RGB(0 0 0 / 18%),
+    0 8px 18px RGB(0 0 0 / 22%);
 
   &:backdrop {
-    box-shadow: 0 0 0 1px RGB(0 0 0 / 15%), 0 2px 10.67px RGB(0 0 0 / 15%),
-      0 16px 32px RGB(0 0 0 / 19%);
+    box-shadow: 0 0 0 1px RGB(0 0 0 / 15%), 0 2px 8px RGB(0 0 0 / 10%),
+      0 8px 18px RGB(0 0 0 / 14%);
   }
 
   @media (prefers-color-scheme: dark) {
-    box-shadow: 0 0 0 1px RGB(117 117 117 / 40%), 0 2px 21px RGB(0 0 0 / 37%),
-      0 32px 64px RGB(0 0 0 / 37%);
+    box-shadow: 0 0 0 1px RGB(117 117 117 / 40%), 0 2px 8px RGB(0 0 0 / 30%),
+      0 8px 18px RGB(0 0 0 / 37%);
 
     &:backdrop {
-      box-shadow: 0 0 0 1px RGB(117 117 117 / 40%), 0 2px 10.67px RGB(0 0 0 / 30%),
-        0 16px 32px RGB(0 0 0 / 30%);
+      box-shadow: 0 0 0 1px RGB(117 117 117 / 40%), 0 2px 8px RGB(0 0 0 / 22%),
+        0 8px 18px RGB(0 0 0 / 28%);
     }
   }
 

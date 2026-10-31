@@ -26,7 +26,7 @@ const WEB_CSS = `
 :where([data-gtk-provider]) {
   --gtk-font-family: "Segoe UI Variable Text", "Segoe UI", Selawik, "Noto Sans", "Open Sans", sans-serif;
   --gtk-font-size: 10.5pt;
-  --gtk-line-height: 1.43;
+  --gtk-line-height: 1.428;
 }
 `;
 
