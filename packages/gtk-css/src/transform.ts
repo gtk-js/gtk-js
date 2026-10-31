@@ -104,11 +104,16 @@ export function preprocess(rawCSS: string, options?: CompileOptions): string {
   // themselves: libadwaita derives e.g. `--accent-color` from
   // `var(--accent-bg-color)` in CSS, which must keep following the accent
   // AdwStyleManager sets at runtime, not the @accent_color built from the default.
-  const darkOverrides: string[] = [];
+  // The dark values go right after their :root rule, where the declarations
+  // are: a stylesheet that sets the same properties later (a theme built on
+  // libadwaita's) still overrides them, as in GTK.
+  const withDark: string[] = [];
+  let darkOverrides: string[] = [];
   let depth = 0;
   let inRoot = false;
   for (const line of output) {
     const trimmed = line.trim();
+    withDark.push(line);
     if (depth === 0 && trimmed === ":root {") inRoot = true;
     const decl = trimmed.match(/^(--[\w-]+):\s*(.*@[a-z][a-z0-9]*_.*);$/);
     if (decl) {
@@ -126,10 +131,25 @@ export function preprocess(rawCSS: string, options?: CompileOptions): string {
       if (ch === "{") depth++;
       else if (ch === "}") depth--;
     }
-    if (depth === 0) inRoot = false;
+    if (depth === 0) {
+      if (inRoot && darkOverrides.length > 0) {
+        if (scheme === "dark") {
+          // Dark-only output: the base :root variables take their dark values.
+          withDark.push(`:root {\n${darkOverrides.join("\n")}\n}`);
+        } else if (scheme !== "light") {
+          // Auto: the page's prefers-color-scheme picks the scheme. Light-only
+          // output has no dark values: the light ones are the base.
+          withDark.push(
+            `@media (prefers-color-scheme: dark) {\n  :root {\n${darkOverrides.join("\n")}\n  }\n}`,
+          );
+        }
+      }
+      darkOverrides = [];
+      inRoot = false;
+    }
   }
 
-  let result = output.join("\n");
+  let result = withDark.join("\n");
 
   // Convert remaining GTK @color_name references to resolved values.
   // Uses light colors as default since they appear at the top level.
@@ -141,18 +161,6 @@ export function preprocess(rawCSS: string, options?: CompileOptions): string {
     }
     return `var(--${name.replace(/_/g, "-")})`;
   });
-
-  if (scheme === "dark") {
-    // Dark-only output: rewrite base :root variables to dark values, emit nothing else
-    if (darkOverrides.length > 0) {
-      result += `\n:root {\n${darkOverrides.join("\n")}\n}\n`;
-    }
-  } else if (scheme === "light") {
-    // Light-only output: no dark overrides at all — light values are already the base
-  } else if (darkOverrides.length > 0) {
-    // Auto: the page's prefers-color-scheme picks the scheme
-    result += `\n@media (prefers-color-scheme: dark) {\n  :root {\n${darkOverrides.join("\n")}\n  }\n}\n`;
-  }
 
   return result;
 }

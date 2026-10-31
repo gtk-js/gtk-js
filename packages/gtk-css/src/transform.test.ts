@@ -549,6 +549,16 @@ describe("named colors", () => {
     expect(out).not.toContain("data-color-scheme");
   });
 
+  test.each([
+    ["forced dark", "dark"],
+    ["auto", undefined],
+  ] as const)("%s: a later :root rule still overrides the dark values, as in GTK", (_name, scheme) => {
+    // A theme built on libadwaita's stylesheet sets the same properties after it.
+    const out = preprocess(`${scss}\n:root {\n  --window-bg-color: #f3f3f3;\n}`, { scheme });
+    expect(out).toMatch(/--window-bg-color: #222226;[^]*--window-bg-color: #f3f3f3;/);
+    expect(out.trimEnd()).toMatch(/--window-bg-color: #f3f3f3;\s*\}$/);
+  });
+
   test("a dark value outside :root throws instead of being applied to :root", () => {
     expect(() => preprocess(scss.replace(":root {", ".osd {"), { scheme: "dark" })).toThrow(
       "Dark value of --window-bg-color outside a top-level :root rule",
