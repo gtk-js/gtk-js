@@ -2722,7 +2722,9 @@ if (caseName === "alert-dialog-body") {
             extraChild={
               <GtkScrolledWindow hasFrame minContentHeight={100}>
                 <GtkTextView
-                  value={'couldn\'t list files: Propfind "http://127.0.0.1:8099/": dial tcp 127.0.0.1:8099: connect: connection refused'}
+                  value={
+                    'couldn\'t list files: Propfind "http://127.0.0.1:8099/": dial tcp 127.0.0.1:8099: connect: connection refused'
+                  }
                   editable={false}
                   monospace
                   wrapMode="word-char"
