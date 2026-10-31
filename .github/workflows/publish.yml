@@ -27,7 +27,9 @@ jobs:
     name: Publish to npm
     needs: release-please
     if: ${{ needs.release-please.outputs.releases_created == 'true' }}
-    runs-on: ubuntu-latest
+    # Not ubuntu-latest (26.04): `vp install` runs the tests package's
+    # `playwright install`, and Playwright doesn't support Ubuntu 26.04 yet.
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
         with:
