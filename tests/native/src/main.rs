@@ -148,6 +148,7 @@ enum Command {
     FrameDefault,
     FrameLabelXalign,
     HeaderbarControlsPressed,
+    HeaderbarTallControls,
     HeaderbarDefault,
     HeaderbarNarrowTitle,
     HeaderbarStartEnd,
@@ -520,6 +521,7 @@ impl Command {
             Self::FrameDefault => Some("frame-default"),
             Self::FrameLabelXalign => Some("frame-label-xalign"),
             Self::HeaderbarControlsPressed => Some("headerbar-controls-pressed"),
+            Self::HeaderbarTallControls => Some("headerbar-tall-controls"),
             Self::HeaderbarDefault => Some("headerbar-default"),
             Self::HeaderbarNarrowTitle => Some("headerbar-narrow-title"),
             Self::HeaderbarStartEnd => Some("headerbar-start-end"),
@@ -1033,6 +1035,9 @@ fn create_widget_for_case(name: &str) -> Option<(gtk::Widget, bool)> {
         }
         "headerbar-controls-pressed" => {
             widget_case!(cases::headerbar_controls_pressed::HeaderbarControlsPressed, false)
+        }
+        "headerbar-tall-controls" => {
+            widget_case!(cases::headerbar_tall_controls::HeaderbarTallControls, false)
         }
         "headerbar-default" => {
             widget_case!(cases::headerbar_default::HeaderbarDefault, false)
@@ -1686,6 +1691,7 @@ fn is_known_case(name: &str) -> bool {
             | "frame-label-xalign"
             | "frame-no-label"
             | "headerbar-controls-pressed"
+            | "headerbar-tall-controls"
             | "headerbar-default"
             | "headerbar-narrow-title"
             | "headerbar-start-end"

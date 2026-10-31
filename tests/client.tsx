@@ -1761,6 +1761,10 @@ const cases: Record<string, () => React.ReactElement> = {
   "headerbar-controls-pressed": () => (
     <GtkHeaderBar decorationLayout=":close" data-testid="target" />
   ),
+  // Taller than its buttons (the native case sets the same min-height).
+  "headerbar-tall-controls": () => (
+    <GtkHeaderBar decorationLayout=":close" style={{ minHeight: 72 }} data-testid="target" />
+  ),
   "headerbar-default": () => <GtkHeaderBar showWindowControls={false} data-testid="target" />,
   // The native case fills the test window, which AdwWindow's minimum size makes
   // 352px wide for the bar (its -1px margins included).

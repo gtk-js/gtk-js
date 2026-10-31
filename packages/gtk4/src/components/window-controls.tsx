@@ -66,7 +66,9 @@ function WindowControlButton({
       {...noFocusOnClick()}
       onClick={onClick}
     >
-      <span className="gtk-image">
+      {/* Centered in the button (update_window_buttons()'s images are created
+          with valign and halign GTK_ALIGN_CENTER). */}
+      <span className="gtk-image" {...alignAttrs("center", "center")}>
         <Icon size={16} />
       </span>
     </button>
