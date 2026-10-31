@@ -911,6 +911,13 @@ checkbutton {
   &.text-button {
     padding: 6px 0;
   }
+
+  // The focus rectangle goes around the control (FocusVisualMargin
+  // -7,-3,-7,-3), not inside it: with no padding at the sides, libadwaita's
+  // inset ring would cross the label.
+  &:focus:focus-visible {
+    outline-offset: 3px;
+  }
 }
 
 check,
