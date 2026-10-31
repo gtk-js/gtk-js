@@ -161,6 +161,7 @@ pub mod grid_default;
 pub mod grid_hexpand;
 pub mod grid_span;
 pub mod headerbar_controls_pressed;
+pub mod headerbar_tall_controls;
 pub mod headerbar_default;
 pub mod headerbar_narrow_title;
 pub mod headerbar_start_end;

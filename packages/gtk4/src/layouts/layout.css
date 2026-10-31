@@ -1163,6 +1163,17 @@
   justify-self: end;
 }
 
+/* GtkHeaderBar's start and end boxes are plain horizontal GtkBoxes in its
+   center box (gtk_header_bar_init()): like any child of a center layout they
+   get its full height (valign FILL), and like any box's children, theirs fill
+   it unless their valign says otherwise. Window controls are as tall as the
+   header bar, in a theme whose buttons are shorter than it. */
+.gtk-center-layout:not(.vertical)
+> .gtk-box-layout.horizontal:is(.gtk-center-layout-start, .gtk-center-layout-end) {
+  align-self: stretch;
+  align-items: stretch;
+}
+
 /* Vertically, GtkCenterLayout allocates the start child at the top and the end
    child at the bottom (gtk_center_layout_allocate()), and gives every child
    the full width, which it fills unless its halign says otherwise. */
