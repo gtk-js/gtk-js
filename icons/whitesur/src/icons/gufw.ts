@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const Gufw = createGtkIcon("gufw", [["rect",{"width":"22","height":"22","fill":"currentColor","rx":"6","ry":"6"}],["path",{"fill":"currentColor","d":"M3.422 3v6.826c.036 2.573.187 4.704 1.276 6.278C6.01 17.991 8.19 19.657 11 21c2.805-1.34 5-3.008 6.309-4.896 1.088-1.574 1.233-3.705 1.27-6.278V3"}],["path",{"fill":"currentColor","d":"M17.632 5.938 7.46 17.515c1 .864 2.153 1.599 3.54 2.276 2.454-1.198 4.375-2.685 5.52-4.373.954-1.408 1.08-3.315 1.112-5.616"}],["path",{"fill":"currentColor","d":"M4.369 3.75v6.052c.025 1.838.232 3.34.752 4.621L15.144 3.75"}]]);

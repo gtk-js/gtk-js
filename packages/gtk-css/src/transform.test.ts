@@ -549,6 +549,28 @@ describe("named colors", () => {
     expect(out).not.toContain("data-color-scheme");
   });
 
+  test.each([
+    ["forced dark", "dark"],
+    ["auto", undefined],
+  ] as const)("%s: a later :root rule still overrides the dark values, as in GTK", (_name, scheme) => {
+    // A theme built on libadwaita's stylesheet sets the same properties after it.
+    const out = preprocess(`${scss}\n:root {\n  --window-bg-color: #f3f3f3;\n}`, { scheme });
+    expect(out).toMatch(/--window-bg-color: #222226;[^]*--window-bg-color: #f3f3f3;/);
+    expect(out.trimEnd()).toMatch(/--window-bg-color: #f3f3f3;\s*\}$/);
+  });
+
+  test("a theme's own accent replaces the default in both schemes", () => {
+    // A theme with a fixed accent, built for dark (gtk-Dark.scss defines its
+    // colors at the top level), keeps it in dark mode too.
+    const fixed =
+      "@define-color accent_bg_color #0860F2;\n:root {\n  --accent-bg-color: @accent_bg_color;\n}";
+    for (const scheme of ["dark", "light", undefined] as const) {
+      const out = preprocess(fixed, { scheme });
+      expect(out).toContain("--accent-bg-color: #0860F2;");
+      expect(out).not.toContain("#3584e4");
+    }
+  });
+
   test("a dark value outside :root throws instead of being applied to :root", () => {
     expect(() => preprocess(scss.replace(":root {", ".osd {"), { scheme: "dark" })).toThrow(
       "Dark value of --window-bg-color outside a top-level :root rule",

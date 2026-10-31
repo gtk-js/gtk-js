@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const DistributeVerticalCenter = createGtkIcon("distribute-vertical-center", [["path",{"d":"m 14,7 -2,-3 -2,3 4,0 z m 0,2 -4,0 2,3 2,-3 z M 10,4 9,4 9,2 4,2 3,2 3,4 2,4 2,5 3,5 3,6 3,7 9,7 9,6 9,5 10,5 10,4 Z m 0,7 -1,0 0,-2 -5,0 -1,0 0,2 -1,0 0,1 1,0 0,1 0,1 6,0 0,-1 0,-1 1,0 0,-1 z M 8,3 8,6 4,6 4,3 8,3 Z m 0,7 0,3 -4,0 0,-3 4,0 z","inkscape:connectorCurvature":"0"}]]);
+export const DistributeVerticalCenter = createGtkIcon("distribute-vertical-center", [["g",{"transform":"translate(-721.334 -497.575) scale(.66667)"},[["g",{"transform":"translate(-.278 -.814)"},[["path",{"d":"m1106.278 756.175-3-4.5-3 4.5zm0 6h-6l3 4.5zm-4.5-10.5h-3v-4.5h-10.5v4.5h-6v1.5h6v4.5h10.5v-4.5h3zm0 13.5h-3v-4.5h-13.5v4.5h-3v1.5h3v4.5h13.5v-4.5h3zm-4.5-16.5v7.5h-7.5v-7.5zm0 13.5v7.5h-10.5v-7.5z","fill":"currentColor"}]]]]]]);

@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const Ausweisapp = createGtkIcon("ausweisapp", [["rect",{"width":"56.002","height":"56.002","x":"4","y":"3.969","fill":"currentColor","rx":"13.002","ry":"13.002"}],["rect",{"width":"48.119","height":"48.119","x":"7.941","y":"7.91","fill":"currentColor","rx":"11.172","ry":"11.172"}],["path",{"d":"M30.104 51.273v-6.83A11.63 11.63 0 0 1 20.37 33a11.63 11.63 0 0 1 9.733-11.443v-6.832A18.423 18.423 0 0 0 13.576 33a18.423 18.423 0 0 0 16.528 18.273","transform":"translate(.001 -1.005)"}],["path",{"d":"M33.896 14.676v6.88A11.63 11.63 0 0 1 43.63 33a11.63 11.63 0 0 1-9.733 11.443v6.83A18.423 18.423 0 0 0 50.424 33a18.423 18.423 0 0 0-16.528-18.324","transform":"translate(.001 -1.005)"}]]);

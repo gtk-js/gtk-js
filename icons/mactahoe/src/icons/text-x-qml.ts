@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const TextXQml = createGtkIcon("text-x-qml", [["path",{"fill":"currentColor","d":"M3 3c-.554 0-1 .446-1 1v8c0 .554.446 1 1 1h10c.554 0 1-.446 1-1V4c0-.554-.446-1-1-1zm5.5 1a.499.499 0 1 1 0 1 .499.499 0 1 1 0-1m2 0a.499.499 0 1 1 0 1 .499.499 0 1 1 0-1m2 0a.499.499 0 1 1 0 1 .499.499 0 1 1 0-1M3 6h10v6H3z"}]]);

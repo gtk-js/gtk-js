@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const UserOffline = createGtkIcon("user-offline", [["path",{"transform":"translate(-421.71-531.79)","d":"m429.71 533.79c-1.657 0-3 1.343-3 3 0 1.657 1.343 3 3 3 1.657 0 3-1.343 3-3 0-1.657-1.343-3-3-3m-2 2.5h4v1h-4zm2 4.5c-2.761 0-5 2.01-5 4.5.001.167.012.334.033.5h9.93c.023-.166.035-.333.037-.5 0-2.485-2.239-4.5-5-4.5m0 1c1.987.002 3.671 1.279 3.955 3h-7.91c.284-1.721 1.968-2.998 3.955-3"}],["path",{"fill":"currentColor","d":"m427.71 536.29h4v1h-4z","transform":"translate(-421.71-531.79)"}]]);
+export const UserOffline = createGtkIcon("user-offline", [["path",{"d":"M2 1C.892 1 0 1.892 0 3v8c0 1.108.892 2 2 2h1.522L6 16l2-3h6c1.108 0 2-.892 2-2V3c0-1.108-.892-2-2-2zm0 1h12c.554 0 1 .446 1 1v8c0 .554-.446 1-1 1H7.566L6 14.4 4.034 12H2c-.554 0-1-.446-1-1V3c0-.554.446-1 1-1zm-.7 11c.153.017.322.021.524 0z","opacity":".5","fill":"currentColor"}]]);

@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const ApplicationXPlasma = createGtkIcon("application-x-plasma", [["path",{"fill":"currentColor","d":"M5 2a1 1 0 0 0-1 1 1 1 0 0 0 1 1 1 1 0 0 0 1-1 1 1 0 0 0-1-1m5 0L8.06 3.563l2.596 3.218-2.437 2.438L10 11l4-4zM3.5 6A1.5 1.5 0 0 0 2 7.5 1.5 1.5 0 0 0 3.5 9 1.5 1.5 0 0 0 5 7.5 1.5 1.5 0 0 0 3.5 6m3 5A1.5 1.5 0 0 0 5 12.5 1.5 1.5 0 0 0 6.5 14 1.5 1.5 0 0 0 8 12.5 1.5 1.5 0 0 0 6.5 11"}]]);

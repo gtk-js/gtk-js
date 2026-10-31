@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const PackageDowngrade = createGtkIcon("package-downgrade", [["rect",{"width":"16","height":"16","rx":"2","fill":"currentColor"}],["path",{"d":"m2 0c-1.108 0-2 .892-2 2v12c0 1.108.892 2 2 2h12c1.108 0 2-.892 2-2v-12c0-1.108-.892-2-2-2zm0 1h12c.554 0 1 .446 1 1v12c0 .554-.446 1-1 1h-12c-.554 0-1-.446-1-1v-12c0-.554.446-1 1-1z","fill":"currentColor","fillOpacity":".6"}],["path",{"transform":"rotate(45)","d":"m5.6859 1.3714v0.99989h6.9993 0.99989v-0.99989-6.9993h-0.99989v6.9993h-6.9993z","fill":"currentColor","strokeOpacity":".26047"}]]);

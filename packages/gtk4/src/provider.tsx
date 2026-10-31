@@ -1,4 +1,4 @@
-import { type GtkTheme, type SystemColorScheme } from "@gtk-js/gtk-css";
+import { GTK_LAYERS, type GtkTheme, type SystemColorScheme } from "@gtk-js/gtk-css";
 import * as defaultIcons from "@gtk-js/icons-gtk4";
 import {
   type CSSProperties,
@@ -20,6 +20,7 @@ import layoutCSS from "./layouts/layout.css?raw";
 import { weighGtkNodeClasses } from "./layouts/specificity.ts";
 import resetCSS from "./reset.css?raw";
 import { GtkTooltipLayer, trackTooltips } from "./tooltip.tsx";
+import { DEFAULT_DECORATION_LAYOUT, DecorationLayoutContext } from "./window-controls-context.tsx";
 
 export interface GtkProviderProps {
   /** Theme instance. Call theme.getCSS() to get the CSS to inject. */
@@ -40,6 +41,12 @@ export interface GtkProviderProps {
    * Like GtkIconTheme, names it lacks fall back to GTK's own icons (@gtk-js/icons-gtk4).
    */
   icons?: IconMap;
+  /**
+   * GtkSettings:gtk-decoration-layout: where header bars put the window
+   * buttons, e.g. "close,minimize,maximize:" for macOS's order on the left.
+   * Default: "appmenu:minimize,maximize,close".
+   */
+  decorationLayout?: string;
   /** Style applied to the root scoping div. */
   style?: CSSProperties;
   /**
@@ -104,7 +111,12 @@ const RESET_ID = "gtk-js-reset";
  */
 const THEME_ID = "gtk-js-theme";
 const THEME_TEXT_ID = "gtk-js-theme-text";
-const BASE_CSS = resetCSS + "\n" + weighGtkNodeClasses(layoutCSS);
+/**
+ * The reset is in the lowest cascade layer (GTK_LAYERS): like the browser's
+ * defaults it strips, it's under everything, libadwaita's stylesheet under a
+ * theme for libadwaita apps included. Layout is unlayered, weighed with the theme.
+ */
+const BASE_CSS = `${GTK_LAYERS}\n@layer gtk-reset {\n${resetCSS}\n}\n${weighGtkNodeClasses(layoutCSS)}`;
 
 /**
  * Takes over the server-rendered element for `id`, if there is one. Each has a
@@ -320,6 +332,7 @@ export function GtkProvider({
   cssHref,
   cssText,
   icons = defaultIcons,
+  decorationLayout = DEFAULT_DECORATION_LAYOUT,
   style,
   hideUntilReady = true,
   children,
@@ -397,48 +410,50 @@ export function GtkProvider({
     <ThemeContext.Provider value={theme}>
       <ProviderStyleContext.Provider value={style}>
         <IconProvider value={iconMap}>
-          {/* The CSS in the server HTML, so it's styled at first paint. Rendered while
+          <DecorationLayoutContext.Provider value={decorationLayout}>
+            {/* The CSS in the server HTML, so it's styled at first paint. Rendered while
               hydrating too, to match; the effects above then take the elements over. */}
-          {HOISTS_STYLESHEETS && serverRender && (
-            <>
-              <style href={RESET_ID} precedence={RESET_ID}>
-                {BASE_CSS}
-              </style>
-              {resolvedCSSText ? (
-                <style href={THEME_ID} precedence={THEME_ID}>
-                  {resolvedCSSText}
+            {HOISTS_STYLESHEETS && serverRender && (
+              <>
+                <style href={RESET_ID} precedence={RESET_ID}>
+                  {BASE_CSS}
                 </style>
-              ) : (
-                linkedHref && (
-                  <>
-                    <link rel="stylesheet" href={linkedHref} precedence={THEME_ID} />
-                    {linkedText && (
-                      <style href={THEME_TEXT_ID} precedence={THEME_TEXT_ID}>
-                        {linkedText}
-                      </style>
-                    )}
-                  </>
-                )
-              )}
-            </>
-          )}
-          {!ready && (
-            <noscript>
-              <style>{NOSCRIPT_CSS}</style>
-            </noscript>
-          )}
-          <div
-            ref={rootRef}
-            data-gtk-provider=""
-            data-gtk-ready={ready ? "" : undefined}
-            aria-busy={ready ? undefined : true}
-            className="background"
-            // Hidden, not display: none, so the content is laid out (and measured) already.
-            style={ready ? style : { ...style, visibility: "hidden" }}
-          >
-            {children}
-            <GtkTooltipLayer rootRef={rootRef} />
-          </div>
+                {resolvedCSSText ? (
+                  <style href={THEME_ID} precedence={THEME_ID}>
+                    {resolvedCSSText}
+                  </style>
+                ) : (
+                  linkedHref && (
+                    <>
+                      <link rel="stylesheet" href={linkedHref} precedence={THEME_ID} />
+                      {linkedText && (
+                        <style href={THEME_TEXT_ID} precedence={THEME_TEXT_ID}>
+                          {linkedText}
+                        </style>
+                      )}
+                    </>
+                  )
+                )}
+              </>
+            )}
+            {!ready && (
+              <noscript>
+                <style>{NOSCRIPT_CSS}</style>
+              </noscript>
+            )}
+            <div
+              ref={rootRef}
+              data-gtk-provider=""
+              data-gtk-ready={ready ? "" : undefined}
+              aria-busy={ready ? undefined : true}
+              className="background"
+              // Hidden, not display: none, so the content is laid out (and measured) already.
+              style={ready ? style : { ...style, visibility: "hidden" }}
+            >
+              {children}
+              <GtkTooltipLayer rootRef={rootRef} />
+            </div>
+          </DecorationLayoutContext.Provider>
         </IconProvider>
       </ProviderStyleContext.Provider>
     </ThemeContext.Provider>

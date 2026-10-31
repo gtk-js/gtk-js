@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const Glade = createGtkIcon("glade", [["rect",{"width":"56.002","height":"56.002","x":"4","y":"3.969","fill":"currentColor","rx":"13.002","ry":"13.002"}],["path",{"d":"M11 16h42v1H11zm0 4h42v1H11zm0 23h42v1H11zm0 4h42v1H11z","opacity":".5"}],["path",{"d":"M15 14v36h-1V14zm35 0v36h-1V14z","opacity":".5"}],["path",{"d":"M8 54h48V22zm41-7H31l18-12z","opacity":".15"}],["path",{"fill":"currentColor","d":"M8 54h48V22zm41-7H31l18-12z"}],["circle",{"cx":"21.5","cy":"26.5","r":"2","fill":"none","stroke":"currentColor","strokeMiterlimit":"10"}],["circle",{"cx":"21.5","cy":"36.5","r":"2","fill":"none","stroke":"currentColor","strokeMiterlimit":"10"}]]);

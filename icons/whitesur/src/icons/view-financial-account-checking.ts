@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const ViewFinancialAccountChecking = createGtkIcon("view-financial-account-checking", [["path",{"d":"m3 2v6h-2v6h12v-6h-9v-5h10v11h1v-12h-12zm2 2v1h4v-1h-4zm0 2v1h3v-1h-3zm-3 3h10v4h-10v-4zm1 2v1h6v-1h-6zm7 0v1h1v-1h-1z"}],["path",{"d":"m10 4v1h3v-1z"}]]);

@@ -1,0 +1,3 @@
+import { createGtkIcon } from "@gtk-js/icon-helpers";
+
+export const ReplyAllSymbolicRtl = createGtkIcon("reply-all-symbolic-rtl", [["g",{"fontWeight":"400","fontFamily":"Sans","fill":"currentColor"},[["path",{"d":"M9.5 1.5L15.97 6 9.5 10.5V9.457L14.47 6 9.5 2.543z","overflow":"visible"}],["path",{"d":"M6 1.503v2.5H5c-3 0-5 2.127-5 5.25 0 3.25 4 4.75 4 4.75s-1.875-2.652-1.438-4c.366-1.126 1.573-2 2.938-2H6v2.5l6.469-4.5L6 1.503zM7 3.41l3.75 2.593L7 8.597V7.003H5.5c-1.791 0-3.356 1.091-3.875 2.688-.15.46-.09.866-.031 1.281C1.243 10.474 1 9.925 1 9.253c0-1.348.414-2.377 1.094-3.093.68-.717 1.642-1.157 2.906-1.157h2V3.41z","overflow":"visible"}]]]]);

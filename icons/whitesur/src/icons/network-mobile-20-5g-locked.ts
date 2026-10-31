@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const NetworkMobile205gLocked = createGtkIcon("network-mobile-20-5g-locked", [["rect",{"width":"22","height":"22","x":"66","y":"-88"}],["path",{"d":"m 85,-85 -16,16 h 11 v -3 l 1,-1 v -2 l 1,-1 1,-1 h 2 z"}],["path",{"d":"m 84,-76 c -1.108,0 -2,0.892 -2,2 v 2 h -1 v 3 h 6 v -3 h -1 v -2 c 0,-1.108 -0.892,-2 -2,-2 z m 0,1 c 0.554,0 1,0.446 1,1 v 2 h -2 v -2 c 0,-0.554 0.446,-1 1,-1 z"}],["path",{"d":"m 76,-76 -7,7 h 7 z"}],["path",{"d":"m 74,-85 v 4 1 h 4 v -1 -1 -1 h -2 v 1 h 1 v 1 h -2 v -3 h 3 v -1 h -3 z"}],["path",{"d":"m 69,-85 v 3 h 3 v 1 h -3 v 1 h 3 1 v -3 h -3 v -1 h 3 v -1 z"}]]);

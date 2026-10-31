@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const DistributorLogoZorin = createGtkIcon("distributor-logo-zorin", [["rect",{"width":"56","height":"56","x":"4","y":"4","fill":"currentColor","rx":"13","ry":"13"}],["path",{"d":"M19.154 60c-1.71 0-3.81-1.227-4.664-2.726L1.64 34.726c-.854-1.5-.854-3.953 0-5.452L14.49 6.726C15.345 5.226 17.443 4 19.154 4h25.692c1.71 0 3.81 1.227 4.663 2.726l12.85 22.548c.855 1.5.855 3.953 0 5.452L49.51 57.274c-.854 1.5-2.952 2.726-4.663 2.726Z","transform":"matrix(.75 0 0 .75 8 8)"}],["path",{"d":"m10.348 14-4.563 8h36.813L5.387 41.297 10.347 50h43.305l4.563-8H21.402l37.211-19.297L53.653 14Z","transform":"matrix(.75 0 0 .75 8 8)"}]]);

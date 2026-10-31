@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const DistributorLogoQubes = createGtkIcon("distributor-logo-qubes", [["rect",{"width":"56.002","height":"56.002","x":"4","y":"3.969","fill":"currentColor","rx":"13.002","ry":"13.002"}],["path",{"fill":"currentColor","d":"m31.999 13.09-16 9.455c.847 4.016 4.061 3.66 7.273 4.363l8.727-5.09 8.727 5.09c4.087 1.52 6.081-.093 7.272-4.363z"}],["path",{"fill":"currentColor","d":"M40.726 26.908V37.09l-8.727 5.09c-2.998 2.91-1.783 5.818 0 8.727l16-9.454V22.545z"}],["path",{"fill":"currentColor","d":"M16 22.545v18.908l15.999 9.454V42.18l-8.727-5.09V26.908z"}],["path",{"fill":"currentColor","d":"m37.817 40.726 10.181 5.818v2.909l-2.909 1.454H42.18L32 45.09z"}]]);

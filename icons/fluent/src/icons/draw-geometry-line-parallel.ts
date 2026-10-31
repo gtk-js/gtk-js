@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const DrawGeometryLineParallel = createGtkIcon("draw-geometry-line-parallel", [["path",{"d":"M14.962 12.887a.537.528 0 0 0-.075-.12L4.926.223a.538.528 0 1 0-.848.65l9.961 12.543a.537.528 0 0 0 .923-.529zm-2.994 2.325a.537.528 0 0 0-.05-.075L1.957 2.593a.538.528 0 1 0-.848.65l9.961 12.544a.537.528 0 0 0 .898-.575z"}]]);
+export const DrawGeometryLineParallel = createGtkIcon("draw-geometry-line-parallel", [["path",{"d":"M14.962 12.887a.537.528 0 0 0-.075-.12L4.926.223a.538.528 0 1 0-.848.65l9.961 12.543a.537.528 0 0 0 .923-.529zm-2.994 2.325a.537.528 0 0 0-.05-.075L1.957 2.593a.538.528 0 1 0-.848.65l9.961 12.544a.537.528 0 0 0 .898-.575z","strokeWidth":"1.06538","strokeLinecap":"round","fill":"currentColor","fillOpacity":"1"}]]);

@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const ChartLine = createGtkIcon("chart-line", [["rect",{"x":"1","y":"9","width":"1","height":"6","fill":"currentColor","strokeLinecap":"round","strokeLinejoin":"round","strokeWidth":"2"}],["rect",{"x":"5","y":"1","width":"1","height":"14","fill":"currentColor","strokeLinecap":"round","strokeLinejoin":"round","strokeWidth":"2"}],["rect",{"x":"9","y":"7","width":"1","height":"8","fill":"currentColor","strokeLinecap":"round","strokeLinejoin":"round","strokeWidth":"2"}],["rect",{"x":"13","y":"3","width":"1","height":"12","fill":"currentColor","strokeLinecap":"round","strokeLinejoin":"round","strokeWidth":"2"}]]);

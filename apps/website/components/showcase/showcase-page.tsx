@@ -83,8 +83,11 @@ export function ShowcasePage() {
   const [codeBadge, setCodeBadge] = useState<CodeBadgeState>("visible");
 
   // Theme state — extracted to shared hook
-  const { cssHref, cssText, icons, restored, ...controls } = useThemePicker();
-  const theme = useMemo(() => ({ cssHref, cssText }), [cssHref, cssText]);
+  const { cssHref, cssText, icons, decorationLayout, restored, ...controls } = useThemePicker();
+  const theme = useMemo(
+    () => ({ cssHref, cssText, decorationLayout }),
+    [cssHref, cssText, decorationLayout],
+  );
 
   // Committed theme lags behind `theme`: on change, content slides out over 400ms,
   // the CSS swaps while hidden, waits 1s, then slides back in. Changing theme resets.

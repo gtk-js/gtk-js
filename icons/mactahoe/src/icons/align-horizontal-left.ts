@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const AlignHorizontalLeft = createGtkIcon("align-horizontal-left", [["path",{"d":"M 2 2 L 2 14 L 3 14 L 3 2 L 2 2 z M 4 2 L 4 7 L 14 7 L 14 2 L 4 2 z M 5 3 L 13 3 L 13 6 L 5 6 L 5 3 z M 4 9 L 4 14 L 9 14 L 9 9 L 4 9 z M 5 10 L 8 10 L 8 13 L 5 13 L 5 10 z "}]]);
+export const AlignHorizontalLeft = createGtkIcon("align-horizontal-left", [["path",{"d":"m0.52912 0v4.233h0.26488v-0.529h2.778c0.072902 0 0.132-0.059098 0.132-0.132v-1.058c5.553e-4 -0.073292-0.058706-0.133-0.132-0.133h-2.778v-0.264h1.984c0.073294 2.1e-6 0.13256-0.059708 0.132-0.133v-1.058c0-0.072902-0.059098-0.132-0.132-0.132h-1.984v-0.794h-0.26588zm0.26488 1.058h1.852v0.794h-1.852zm0 1.588h2.646v0.794h-2.646z","fill":"currentColor"}]], "0 0 4.233 4.233");

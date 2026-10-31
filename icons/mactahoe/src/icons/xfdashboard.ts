@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const Xfdashboard = createGtkIcon("xfdashboard", [["rect",{"width":"22","height":"22","fill":"currentColor","rx":"6","ry":"6"}],["rect",{"width":"4","height":"4","x":"7","y":"7","rx":"1","ry":"1"}],["rect",{"width":"4","height":"4","x":"7","y":"12","rx":"1","ry":"1"}],["rect",{"width":"4","height":"4","x":"7","y":"17","rx":"1","ry":"1"}],["rect",{"width":"4","height":"4","x":"7","y":"7","fill":"currentColor","rx":"1","ry":"1","transform":"translate(5 -3)"}],["rect",{"width":"4","height":"4","x":"7","y":"7","fill":"currentColor","rx":"1","ry":"1","transform":"translate(5 2)"}]]);

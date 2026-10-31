@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const WorkspaceSwitcherRightTop = createGtkIcon("workspace-switcher-right-top", [["rect",{"width":"56.002","height":"56.002","x":"4","y":"3.969","fill":"currentColor","rx":"13.002","ry":"13.002"}],["rect",{"width":"49.998","height":"49.939","x":"7.002","y":"7","fill":"currentColor","rx":"10","ry":"10"}],["rect",{"width":"50","height":"1","x":"7","y":"31.5","opacity":".35","rx":"0","ry":"0"}],["rect",{"width":"50","height":"1","x":"7","y":"-32.5","opacity":".35","rx":"0","ry":"0","transform":"rotate(90)"}],["path",{"fill":"currentColor","d":"M17.002 3.969A12.973 12.973 0 0 0 4 16.97V30h26V3.969z"}]]);

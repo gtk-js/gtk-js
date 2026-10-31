@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const SoftwareUpdatesAdditional = createGtkIcon("software-updates-additional", [["path",{"sodipodi:nodetypes":"ccccccccccccccccccccccccc","inkscape:connectorCurvature":"0","d":"M 7,7 4,10 4,19 9.0996094,19 13,19 l 5.099609,0 0,-9 -3,-3 L 13,7 9.0996094,7 Z m 0.3,1 3.7,0 3.7,0 2,2 -11.4,0 z m 1.7,3 4,0 0,5 -1,-1 -1,1 -1,-1 -1,1 z"}],["path",{"inkscape:connectorCurvature":"0","d":"M 16,3 A 3,3 0 0 0 13,6 3,3 0 0 0 16,9 3,3 0 0 0 19,6 3,3 0 0 0 16,3 Z"}],["path",{"inkscape:connectorCurvature":"0","d":"m 16,4 2,2 -1,0 0,2 -2,0 0,-2 -1,0 1,-1 1,-1 z"}],["rect",{"width":"22","height":"22","x":"0","y":"-2.6645353e-15"}]]);

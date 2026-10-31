@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const ApplicationXClassFile = createGtkIcon("application-x-class-file", [["path",{"d":"M1.852.53v.793h.265V.529zm-.53.264v.529h.265v-.53zm1.06 0v.529h.264v-.53zm-1.588.264v.265h.264v-.265zm-.265.53v1.058c0 .48.267.794.794.794h-.53v.264H2.91V3.44h-.529c.416 0 .664-.193.794-.53h.265c.264 0 .264 0 .264-.289v-.29c0-.48 0-.48-.264-.48h-.265v-.264zm.265.264H2.91v.794c0 .4-.354.529-.793.529h-.53c-.44 0-.793-.13-.793-.53zm2.381.265h.265v.529h-.265z","fill":"currentColor"}]]);
+export const ApplicationXClassFile = createGtkIcon("application-x-class-file", [["path",{"d":"m9.025 4-2.91 8h0.861l2.91-8zm-5.255 1.333-3.77 2.222v0.89l3.77 2.222v-0.889l-2.932-1.776 2.932-1.78zm8.46 0v0.889l2.932 1.78-2.932 1.776v0.889l3.77-2.222v-0.89z","fill":"currentColor","overflow":"visible"}]]);

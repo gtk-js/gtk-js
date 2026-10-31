@@ -1,6 +1,6 @@
 // Unit tests — no Playwright/cargo preload needed.
 
-import { IconProvider } from "@gtk-js/gtk4";
+import { DecorationLayout, DecorationLayoutContext, IconProvider } from "@gtk-js/gtk4";
 import { renderToStaticMarkup } from "react-dom/server";
 import { expect, test } from "vite-plus/test";
 import { AdwDialog } from "./dialog.tsx";
@@ -61,4 +61,18 @@ test("an empty start or end box is hidden, theme margin and all, like update_box
     boxes(render(<AdwHeaderBar showStartTitleButtons={false} showEndTitleButtons={false} />)),
   ).toEqual([]);
   expect(boxes(render(<AdwHeaderBar decorationLayout="close:" />))).toEqual(["start"]);
+});
+
+test("puts the window buttons where the provider's decoration layout says, like GtkSettings", () => {
+  const sides = (html: string) =>
+    [...html.matchAll(/gtk-windowcontrols gtk-box-layout horizontal (start|end)/g)].map(
+      (m) => m[1],
+    );
+  const html = render(
+    <DecorationLayoutContext.Provider value={DecorationLayout.MACOS}>
+      <AdwHeaderBar />
+    </DecorationLayoutContext.Provider>,
+  );
+  expect(sides(html)).toEqual(["start"]);
+  expect(sides(render(<AdwHeaderBar />))).toEqual(["end"]);
 });

@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const Zrythm = createGtkIcon("zrythm", [["rect",{"width":"56.002","height":"56.002","x":"4","y":"3.969","fill":"currentColor","rx":"13.002","ry":"13.002"}],["path",{"fillRule":"evenodd","d":"M49.502 14.469H14.5V49.47h35.002zm-29.751 5.25v11.516l6.86-6.616 3.43 3.675-10.29 9.8v6.126h24.5V32.46l-6.86 6.86-3.43-3.675 10.29-10.29v-5.636z","opacity":".15"}],["path",{"fill":"currentColor","fillRule":"evenodd","d":"M49.502 14.469H14.5V49.47h35.002zm-29.751 5.25v11.516l6.86-6.616 3.43 3.675-10.29 9.8v6.126h24.5V32.46l-6.86 6.86-3.43-3.675 10.29-10.29v-5.636z","clipRule":"evenodd"}]]);

@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const MsWord = createGtkIcon("ms-word", [["rect",{"width":"56","height":"56","x":"4","y":"4","fill":"currentColor","rx":"13.002","ry":"13.002"}],["circle",{"cx":"32","cy":"32","r":"24","fillRule":"evenodd","opacity":".15","transform":"matrix(.75 0 0 .75 21 21)"}],["circle",{"cx":"45","cy":"45","r":"18","fill":"currentColor","fillRule":"evenodd"}],["path",{"d":"M35 37.177h4.177l1.8 9.854 2.308-9.854h3.434l2.243 9.946 1.938-9.946H55L51.454 54h-4.252l-2.183-9.139L42.961 54H38.6z","opacity":".25"}],["path",{"fill":"currentColor","d":"M35 37.177h4.177l1.8 9.854 2.308-9.854h3.434l2.243 9.946 1.938-9.946H55L51.454 54h-4.252l-2.183-9.139L42.961 54H38.6z"}]]);

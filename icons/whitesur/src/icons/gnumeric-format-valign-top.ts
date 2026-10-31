@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const GnumericFormatValignTop = createGtkIcon("gnumeric-format-valign-top", [["path",{"d":"M 4 4 L 4 5 L 28 5 L 28 4 L 4 4 z M 16 7 L 11 13 L 15 13 L 15 28 L 17 28 L 17 13 L 21 13 L 16 7 z "}]]);

@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const Paraview = createGtkIcon("paraview", [["rect",{"width":"13.229","height":"13.213","x":"165.225","y":"160.956","fill":"currentColor","opacity":".15","rx":"2.646","ry":"2.646"}],["rect",{"width":"14.817","height":"14.817","x":"164.431","y":"160.154","fill":"currentColor","rx":"3.44","ry":"3.44"}],["path",{"d":"M36.59 113.8H0L30.08 0h36.59z","transform":"translate(166.462 163.67)scale(.06841)"}],["path",{"d":"M81.86 113.8h-36.6L75.34 0h36.6z","transform":"translate(166.462 163.67)scale(.06841)"}],["path",{"d":"M127.12 113.8H90.53L120.61 0h36.59z","transform":"translate(166.462 163.67)scale(.06841)"}]]);

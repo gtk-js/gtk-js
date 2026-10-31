@@ -89,6 +89,7 @@ import {
 } from "react";
 import { createRoot } from "react-dom/client";
 import { renderToStaticMarkup } from "react-dom/server";
+import { TestProvider } from "./test-provider.tsx";
 
 const caseName = window.location.pathname.slice(1);
 const isGallery = caseName === "gallery";
@@ -1761,6 +1762,10 @@ const cases: Record<string, () => React.ReactElement> = {
   "headerbar-controls-pressed": () => (
     <GtkHeaderBar decorationLayout=":close" data-testid="target" />
   ),
+  // Taller than its buttons (the native case sets the same min-height).
+  "headerbar-tall-controls": () => (
+    <GtkHeaderBar decorationLayout=":close" style={{ minHeight: 72 }} data-testid="target" />
+  ),
   "headerbar-default": () => <GtkHeaderBar showWindowControls={false} data-testid="target" />,
   // The native case fills the test window, which AdwWindow's minimum size makes
   // 352px wide for the bar (its -1px margins included).
@@ -2686,11 +2691,32 @@ if (caseName === "alert-dialog-body") {
       </AdwaitaProvider>,
     ),
   );
+} else if (caseName === "alert-dialog-in-window") {
+  // Page for tests/cases/alert-dialog-in-window.test.ts: open from the start,
+  // the dialog moves into its window once the window's element is known.
+  void import("@gtk-js/adwaita").then(({ AdwAlertDialog }) =>
+    createRoot(container).render(
+      <AdwaitaProvider colorScheme="light">
+        <GtkWindow style={{ width: 760, height: 480 }}>
+          <AdwAlertDialog
+            visible
+            heading="Save Changes?"
+            body="Your changes will be lost if you don’t save them."
+            responses={[
+              { id: "cancel", label: "Cancel" },
+              { id: "discard", label: "Don’t Save" },
+              { id: "save", label: "Save", appearance: "suggested" },
+            ]}
+          />
+        </GtkWindow>
+      </AdwaitaProvider>,
+    ),
+  );
 } else if (caseName === "scrolled-window-shrink") {
   // Page for tests/cases/scrolled-window-shrink.test.ts: a scrolled window
   // with a wrapping text view, in a box the test narrows after it renders.
   createRoot(container).render(
-    <AdwaitaProvider colorScheme="light">
+    <TestProvider colorScheme="light">
       <div id="shrink-box" style={{ display: "grid", width: 600 }}>
         <GtkScrolledWindow hasFrame minContentHeight={100}>
           <GtkTextView
@@ -2703,7 +2729,7 @@ if (caseName === "alert-dialog-body") {
           />
         </GtkScrolledWindow>
       </div>
-    </AdwaitaProvider>,
+    </TestProvider>,
   );
 } else if (caseName === "alert-dialog-long-heading") {
   // Page for tests/cases/alert-dialog-long-heading.test.ts: a heading longer
@@ -2751,7 +2777,7 @@ if (caseName === "alert-dialog-body") {
   void import("./provider-gate.tsx").then((m) => m.render(caseName, container));
 } else if (isGallery) {
   createRoot(container).render(
-    <AdwaitaProvider colorScheme="light">
+    <TestProvider>
       <div style={{ display: "grid", gridTemplateColumns: "repeat(4, max-content)", gap: 24 }}>
         {Object.entries(cases).map(([name, renderCase]) => (
           <div
@@ -2763,15 +2789,13 @@ if (caseName === "alert-dialog-body") {
           </div>
         ))}
       </div>
-    </AdwaitaProvider>,
+    </TestProvider>,
   );
 } else {
   const renderCase = cases[caseName];
   if (!renderCase) {
     container.textContent = `Unknown case: ${caseName}`;
   } else {
-    createRoot(container).render(
-      <AdwaitaProvider colorScheme="light">{renderCase()}</AdwaitaProvider>,
-    );
+    createRoot(container).render(<TestProvider>{renderCase()}</TestProvider>);
   }
 }

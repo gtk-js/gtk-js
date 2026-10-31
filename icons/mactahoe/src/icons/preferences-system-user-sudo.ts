@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const PreferencesSystemUserSudo = createGtkIcon("preferences-system-user-sudo", [["rect",{"width":"22","height":"22","rx":"6","ry":"6"}],["path",{"fill":"currentColor","d":"M16 9a3.49 3.49 0 0 0-3.5 3.5c0 1.939 1.561 3.5 3.5 3.5s3.5-1.561 3.5-3.5S17.939 9 16 9m0 7c-3.878 0-7 3.122-7 7h8v-1h-6.91A5.98 5.98 0 0 1 16 17c.359 0 .707.038 1.045.104l.26-.973A6.7 6.7 0 0 0 16 16m0-6c1.385 0 2.5 1.115 2.5 2.5S17.385 15 16 15a2.495 2.495 0 0 1-2.5-2.5c0-1.385 1.115-2.5 2.5-2.5","transform":"translate(-5.5 -5)"}],["path",{"d":"M406.571 532.798v6h1v-6z"}],["path",{"d":"M402.571 537.798h6v-1h-6zm0-3h6v-1h-6z"}],["path",{"d":"M403.571 532.798v6h1v-6z"}]]);

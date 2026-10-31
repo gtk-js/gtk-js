@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const LibreofficeDrawing = createGtkIcon("libreoffice-drawing", [["path",{"colorInterpolationFilters":"linearRGB","imageRendering":"auto","colorRendering":"auto","fillRule":"evenodd","d":"m4 2v3h1v1.65a1.500006 1.500006 0 0 0 -1 1.41211 1.500006 1.500006 0 0 0 1 1.41211v1.525h-1v3h3v-1.809a6.999994 6 0 0 0 5 1.80859v-1a5.999996 5.00001 0 0 1 -5.76953 -3.63086 1.500006 1.500006 0 0 0 .76953 -1.30664 1.500006 1.500006 0 0 0 -.79883 -1.32227 5.999996 5.00001 0 0 1 5.79883 -3.74023v-1a6.999994 6 0 0 0 -5 1.80273v-1.803zm1 1h1v1h-1zm0 9h1v1h-1z","colorInterpolation":"sRGB","textRendering":"auto","fill":"currentColor","shapeRendering":"auto"}]]);

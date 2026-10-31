@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const Btop = createGtkIcon("btop", [["rect",{"width":"56","height":"56","x":"4","y":"4","fill":"currentColor","rx":"13","ry":"13"}],["path",{"d":"M23 14h17v7H23zm0 7h6v7h-6zm14 0h6v7h-6zm-14 7h17v7H23zm0 7h6v7h-6zm14 0h6v7h-6zm-14 7h17v7H23z"}],["path",{"fill":"currentColor","d":"M23 14h17v7H23z"}],["path",{"fill":"currentColor","d":"M23 21h6v7h-6zm14 0h6v7h-6z"}],["path",{"fill":"currentColor","d":"M23 28h17v7H23z"}],["path",{"fill":"currentColor","d":"M23 35h6v7h-6zm14 0h6v7h-6z"}],["path",{"fill":"currentColor","d":"M23 42h17v7H23z"}]]);

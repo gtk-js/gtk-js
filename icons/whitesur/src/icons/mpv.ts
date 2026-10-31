@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const Mpv = createGtkIcon("mpv", [["rect",{"width":"56.002","height":"56.002","x":"4","y":"3.969","fill":"currentColor","rx":"13.002","ry":"13.002"}],["circle",{"cx":"34","cy":"30","r":"23","fill":"currentColor","opacity":".3"}],["circle",{"cx":"32","cy":"33","r":"15","opacity":".25"}],["circle",{"cx":"32","cy":"32","r":"15","fill":"currentColor"}],["circle",{"cx":"32","cy":"32","r":"15","fill":"currentColor"}],["path",{"fill":"currentColor","d":"M28.674 26.012a1 1 0 0 0-1.16.988v10a1 1 0 0 0 1.486.875l9-5a1 1 0 0 0 0-1.75l-9-5a1 1 0 0 0-.326-.113"}]]);

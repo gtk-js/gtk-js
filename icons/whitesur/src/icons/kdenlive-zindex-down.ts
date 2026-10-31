@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const KdenliveZindexDown = createGtkIcon("kdenlive-zindex-down", [["path",{"d":"M 6 3 L 6 10.09375 L 3.71875 7.875 L 3 8.59375 L 6.28125 11.78125 L 6.5 12 L 6.71875 11.78125 L 10 8.59375 L 9.28125 7.875 L 7 10.09375 L 7 3 L 6 3 z M 9 3 L 9 4 L 19 4 L 19 3 L 9 3 z M 11 8 L 11 9 L 19 9 L 19 8 L 11 8 z M 3 13 L 3 14 L 19 14 L 19 13 L 3 13 z M 11 18 L 11 19 L 19 19 L 19 18 L 11 18 z "}]]);

@@ -1,7 +1,8 @@
 import { spawnSync } from "child_process";
 import { existsSync, readFileSync } from "fs";
-import { dirname, extname, resolve } from "path";
+import { dirname, extname, join, resolve } from "path";
 import { type Plugin } from "postcss";
+import { GTK_LAYERS } from "./theme.ts";
 import { buildGtkToWeb, preprocess } from "./transform.ts";
 
 export interface CompileOptions {
@@ -27,6 +28,18 @@ export interface CompileOptions {
    * Example: { "windows-assets/titlebutton-close.png": "/abs/path/to/titlebutton-close.png" }
    */
   assetMap?: Map<string, string>;
+  /**
+   * libadwaita's stylesheet directory, for a GTK theme made for libadwaita
+   * apps. GTK loads such a theme over libadwaita's stylesheet, as the user's
+   * gtk.css (GTK_STYLE_PROVIDER_PRIORITY_USER over libadwaita's _THEME), so
+   * libadwaita styles what the theme doesn't, and the theme outranks it
+   * whatever the specificity. That stylesheet, built for the same scheme, goes
+   * first in the `gtk-libadwaita` cascade layer (GTK_LAYERS). Its custom
+   * properties (`--window-bg-color: @window_bg_color`, …) are added to the
+   * theme's CSS too, with the theme's named colors: libadwaita draws with
+   * them, and so does CSS written for it (`var(--sidebar-bg-color)`).
+   */
+  libadwaita?: string;
 }
 
 /**
@@ -68,6 +81,36 @@ function makeGtkAssetPlugin(scssDir: string, assetMap?: Map<string, string>): Pl
   };
 }
 
+/** Runs sassc with `args`, on `input` when given (`-s`). */
+function sassc(args: string[], input?: string): string {
+  const result = spawnSync("sassc", ["-t", "expanded", ...args], {
+    input,
+    maxBuffer: 256 * 1024 * 1024,
+  });
+
+  if (result.status !== 0) {
+    const reason =
+      result.error?.message ??
+      (result.signal != null ? `killed by ${result.signal}` : `exit ${result.status}`);
+    throw new Error(`sassc compilation failed (${reason}):\n${result.stderr?.toString()}`);
+  }
+
+  return result.stdout.toString();
+}
+
+/**
+ * libadwaita's custom properties (_colors.scss's `:root` rules), without its
+ * named colors: they're resolved from the theme's.
+ */
+export function libadwaitaCustomProperties(stylesheetDir: string): string {
+  // default.scss's own setting, which _colors.scss reads.
+  const css = sassc(
+    ["-s", "-I", stylesheetDir],
+    "$contrast: 'normal';\n@import 'palette';\n@import 'colors';\n",
+  );
+  return css.replace(/@define-color\s+\S+\s+[^;]+;\s*/g, "").replace(/@media[^{]*\{\s*\}\s*/g, "");
+}
+
 /**
  * Compiles a GTK/libadwaita SCSS file to web-compatible CSS.
  *
@@ -77,16 +120,8 @@ function makeGtkAssetPlugin(scssDir: string, assetMap?: Map<string, string>): Pl
  */
 export async function compileGtkCSS(scssPath: string, options?: CompileOptions): Promise<string> {
   // Step 1: Compile SCSS → raw CSS using sassc (matches upstream)
-  const result = spawnSync("sassc", ["-t", "expanded", scssPath], { maxBuffer: 256 * 1024 * 1024 });
-
-  if (result.status !== 0) {
-    const reason =
-      result.error?.message ??
-      (result.signal != null ? `killed by ${result.signal}` : `exit ${result.status}`);
-    throw new Error(`sassc compilation failed (${reason}):\n${result.stderr?.toString()}`);
-  }
-
-  const rawCSS = result.stdout.toString();
+  let rawCSS = sassc([scssPath]);
+  if (options?.libadwaita) rawCSS += `\n${libadwaitaCustomProperties(options.libadwaita)}`;
 
   // Step 2: Text preprocessing — strip @define-color and other non-CSS syntax
   const preprocessed = preprocess(rawCSS, options);
@@ -96,5 +131,9 @@ export async function compileGtkCSS(scssPath: string, options?: CompileOptions):
   const pipeline = buildGtkToWeb(assetPlugin, options?.scheme);
   const transformed = await pipeline.process(preprocessed, { from: scssPath });
 
-  return transformed.css;
+  if (!options?.libadwaita) return transformed.css;
+  const libadwaita = await compileGtkCSS(join(options.libadwaita, "default.scss"), {
+    scheme: options.scheme,
+  });
+  return `${GTK_LAYERS}\n@layer gtk-libadwaita {\n${libadwaita}\n}\n${transformed.css}`;
 }

@@ -148,6 +148,7 @@ enum Command {
     FrameDefault,
     FrameLabelXalign,
     HeaderbarControlsPressed,
+    HeaderbarTallControls,
     HeaderbarDefault,
     HeaderbarNarrowTitle,
     HeaderbarStartEnd,
@@ -520,6 +521,7 @@ impl Command {
             Self::FrameDefault => Some("frame-default"),
             Self::FrameLabelXalign => Some("frame-label-xalign"),
             Self::HeaderbarControlsPressed => Some("headerbar-controls-pressed"),
+            Self::HeaderbarTallControls => Some("headerbar-tall-controls"),
             Self::HeaderbarDefault => Some("headerbar-default"),
             Self::HeaderbarNarrowTitle => Some("headerbar-narrow-title"),
             Self::HeaderbarStartEnd => Some("headerbar-start-end"),
@@ -1033,6 +1035,9 @@ fn create_widget_for_case(name: &str) -> Option<(gtk::Widget, bool)> {
         }
         "headerbar-controls-pressed" => {
             widget_case!(cases::headerbar_controls_pressed::HeaderbarControlsPressed, false)
+        }
+        "headerbar-tall-controls" => {
+            widget_case!(cases::headerbar_tall_controls::HeaderbarTallControls, false)
         }
         "headerbar-default" => {
             widget_case!(cases::headerbar_default::HeaderbarDefault, false)
@@ -1686,6 +1691,7 @@ fn is_known_case(name: &str) -> bool {
             | "frame-label-xalign"
             | "frame-no-label"
             | "headerbar-controls-pressed"
+            | "headerbar-tall-controls"
             | "headerbar-default"
             | "headerbar-narrow-title"
             | "headerbar-start-end"
@@ -1917,6 +1923,21 @@ fn configure_rendering() {
 
     let style_manager = adw::StyleManager::default();
     style_manager.set_color_scheme(adw::ColorScheme::ForceLight);
+
+    // $GTK_JS_TEST_THEME: compare in another theme of themes/, loaded over
+    // libadwaita's like a user stylesheet (~/.config/gtk-4.0/gtk.css). The
+    // web client loads the same theme (tests/client.tsx).
+    if let Ok(theme) = std::env::var("GTK_JS_TEST_THEME") {
+        let path = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+            .join(format!("../../themes/{theme}/dist/gtk-4.0/gtk.css"));
+        let provider = gtk::CssProvider::new();
+        provider.load_from_path(&path);
+        gtk::style_context_add_provider_for_display(
+            &gtk::gdk::Display::default().expect("No display"),
+            &provider,
+            gtk::STYLE_PROVIDER_PRIORITY_USER,
+        );
+    }
 }
 
 fn render_snapshot_json(widget: &gtk::Widget, use_inner: bool) -> Result<String, String> {

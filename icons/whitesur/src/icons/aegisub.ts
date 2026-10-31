@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const Aegisub = createGtkIcon("aegisub", [["rect",{"width":"56.002","height":"56.002","x":"4","y":"3.969","fill":"currentColor","rx":"13.002","ry":"13.002"}],["path",{"d":"M32 19c-12.375 0-22 10.111-22 13.237C10 36.333 19.625 45 32 45s22-10.111 22-12.763C54 29.111 44.375 19 32 19","opacity":".15"}],["path",{"fill":"currentColor","d":"M32 19c-12.375 0-22 10.111-22 13.237C10 36.333 19.625 45 32 45s22-10.111 22-12.763C54 29.111 44.375 19 32 19"}],["circle",{"cx":"32","cy":"32","r":"11","fill":"currentColor"}],["circle",{"cx":"32","cy":"32","r":"6","fill":"currentColor"}]]);

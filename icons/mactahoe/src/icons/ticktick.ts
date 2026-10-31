@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const Ticktick = createGtkIcon("ticktick", [["rect",{"width":"56.002","height":"56.002","x":"4","y":"3.969","fill":"currentColor","rx":"13.002","ry":"13.002"}],["path",{"fill":"currentColor","d":"M49.5 32c1.38 0 2.516 1.124 2.344 2.494a20 20 0 1 1-22.338-22.338c1.37-.172 2.494.963 2.494 2.344s-1.127 2.479-2.489 2.708a15.002 15.002 0 0 0-8.118 25.398 15 15 0 0 0 25.399-8.118C47.021 33.127 48.119 32 49.5 32","clipPath":"url(#c)"}],["path",{"fill":"currentColor","d":"M32.906 37.606a2 2 0 0 1-2.828 0l-7.602-7.601 4.01-4.01 5.006 5.021L45.514 16.98l4.009 4.01z","clipPath":"url(#e)"}],["path",{"fill":"currentColor","d":"M0 0h64v64H0z"}],["path",{"fill":"currentColor","d":"M0 0h64v64H0z"}]]);
