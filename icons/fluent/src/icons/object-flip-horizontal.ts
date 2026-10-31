@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const ObjectFlipHorizontal = createGtkIcon("object-flip-horizontal", [["path",{"d":"M13 7v1H3V7z","fontFamily":"sans-serif","fontWeight":"400","overflow":"visible","whiteSpace":"normal"}],["path",{"d":"M5 5l-.002 5a36.975 36.975 0 0 1-2.323-1.166A44.8 44.8 0 0 1 .416 7.5a51.555 51.555 0 0 1 2.26-1.32A42.81 42.81 0 0 1 4.999 5zM11 5l.002 5c.76-.348 1.535-.737 2.323-1.166A44.8 44.8 0 0 0 15.584 7.5a51.555 51.555 0 0 0-2.26-1.32A43.084 43.084 0 0 0 11.001 5z","overflow":"visible"}]]);

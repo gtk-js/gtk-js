@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const Bank = createGtkIcon("bank", [["path",{"d":"m8 0-6.9277 4h-0.072266v0.041016 0.95898h0.33789 13.324 0.33789v-0.95898-0.041016h-0.072266l-6.9277-4zm0 1.1543 4.9297 2.8457h-9.8594l4.9297-2.8457z","fill":"currentColor","stopColor":"#000000"}],["rect",{"x":"3","y":"6","width":"1","height":"6","fill":"currentColor","stopColor":"#000000"}],["rect",{"x":"7.5","y":"6","width":"1","height":"6","fill":"currentColor","stopColor":"#000000"}],["rect",{"x":"12","y":"6","width":"1","height":"6","fill":"currentColor","stopColor":"#000000"}],["path",{"d":"m2 13c-0.554 0-1 0.446-1 1v1h1v-1h12v1h1v-1c0-0.554-0.446-1-1-1h-12z","fill":"currentColor","stopColor":"#000000"}]]);

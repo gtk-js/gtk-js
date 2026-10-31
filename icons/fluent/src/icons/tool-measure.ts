@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const ToolMeasure = createGtkIcon("tool-measure", [["path",{"d":"M4 0h1v16H4z"}],["path",{"d":"M4 15h8v1H4zM8 0v1h2c.554 0 1 .446 1 1v2h1V2c0-1.108-.892-2-2-2H8z"}],["rect",{"width":"4","height":"1","x":"4","rx":"0","ry":"0"}],["path",{"d":"M11 4h1v12h-1zM5 2h2v1H5zM5 4h1v1H5zM5 6h1v1H5zM5 8h2v1H5zM5 10h1v1H5zM5 12h1v1H5z"}]]);

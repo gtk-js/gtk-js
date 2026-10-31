@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const Folder = createGtkIcon("folder", [["path",{"d":"m2 1c-1.108 0-2 0.892-2 2v10c0 1.108 0.892 2 2 2h12c1.108 0 2-0.892 2-2v-8c0-1.108-0.892-2-2-2h-6l-2-2zm0 1h3.5859l1.4961 1.5039-1.4961 1.4961h-4.5859v-2c0-0.554 0.446-1 1-1zm6 2h6c0.554 0 1 0.446 1 1v8c0 0.554-0.446 1-1 1h-12c-0.554 0-1-0.446-1-1v-7h5z","fill":"currentColor","strokeLinecap":"round","strokeLinejoin":"round","strokeWidth":"1.5"}]]);
+export const Folder = createGtkIcon("folder", [["path",{"d":"M2 4.5V6h3.59a.5.5 0 0 0 .35-.15L7.29 4.5 5.94 3.15A.5.5 0 0 0 5.59 3H3.5C2.67 3 2 3.67 2 4.5m-1 0A2.5 2.5 0 0 1 3.5 2h2.09c.4 0 .78.16 1.06.44L8.2 4h4.29A2.5 2.5 0 0 1 15 6.5v5a2.5 2.5 0 0 1-2.5 2.5h-9A2.5 2.5 0 0 1 1 11.5zM2 7v4.5c0 .83.67 1.5 1.5 1.5h9c.83 0 1.5-.67 1.5-1.5v-5c0-.83-.67-1.5-1.5-1.5H8.2L6.66 6.56A1.5 1.5 0 0 1 5.59 7z"}]]);

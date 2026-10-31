@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const GoPrevious = createGtkIcon("go-previous", [["path",{"d":"m10.363 1.6367-6.3633 6.3633 6.3633 6.3633 0.70703-0.70703-5.6562-5.6562 5.6562-5.6562-0.70703-0.70703z"}]]);
+export const GoPrevious = createGtkIcon("go-previous", [["path",{"d":"M13.5 8.5a.5.5 0 0 0 0-1H3.8l4.03-3.63a.5.5 0 1 0-.66-.74l-5 4.5a.5.5 0 0 0 0 .74l5 4.5a.5.5 0 1 0 .66-.74L3.8 8.5z"}]]);

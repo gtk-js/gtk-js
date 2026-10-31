@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const NetworkCellularSignalLow = createGtkIcon("network-cellular-signal-low", [["rect",{"y":"11","width":"3","height":"3","rx":"0","ry":"0","fill":"currentColor"}],["path",{"d":"m4 8v6h3v-6h-3zm1 1h1v4h-1v-4z","fill":"currentColor"}],["path",{"d":"m8 5v9h3v-9h-3zm1 1h1v7h-1v-7z","fill":"currentColor"}],["path",{"d":"m12 2v12h3v-12zm1 1h1v10h-1z","fill":"currentColor"}]]);

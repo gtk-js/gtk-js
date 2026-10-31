@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const CinnamonExpo = createGtkIcon("cinnamon-expo", [["path",{"d":"m2 6c-0.554 0-1 0.446-1 1v1c0 0.554 0.446 1 1 1h1c0.554 0 1-0.446 1-1v-1c0-0.554-0.446-1-1-1zm0 1h1v1h-1z","fill":"currentColor","strokeLinecap":"round","strokeLinejoin":"round"}],["path",{"d":"m7 6c-0.554 0-1 0.446-1 1v1c0 0.554 0.446 1 1 1h1c0.554 0 1-0.446 1-1v-1c0-0.554-0.446-1-1-1zm0 1h1v1h-1z","fill":"currentColor","strokeLinecap":"round","strokeLinejoin":"round"}],["path",{"d":"m12 6c-0.554 0-1 0.446-1 1v1c0 0.554 0.446 1 1 1h1c0.554 0 1-0.446 1-1v-1c0-0.554-0.446-1-1-1zm0 1h1v1h-1z","fill":"currentColor","strokeLinecap":"round","strokeLinejoin":"round"}]]);

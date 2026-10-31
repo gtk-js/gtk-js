@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const ZoomFitWidth = createGtkIcon("zoom-fit-width", [["path",{"d":"M12.803 2.197a7.5 7.5 0 0 0-10.606 0 7.5 7.5 0 0 0 0 10.606 7.5 7.5 0 0 0 10.606 0 7.5 7.5 0 0 0 0-10.606zm-.707.707a6.5 6.5 0 0 1 0 9.192 6.5 6.5 0 0 1-9.192 0 6.5 6.5 0 0 1 0-9.192 6.5 6.5 0 0 1 9.192 0z"}],["path",{"d":"M17.107-.5h6v1h-6zM10.496-3.889h4v1h-4z","transform":"rotate(45)"}],["path",{"d":"M3 7h9v1H3z"}],["path",{"d":"M-.111-14.496h4v1h-4z","transform":"scale(1 -1) rotate(45)"}],["path",{"d":"M-.111 6.718h4v1h-4z","transform":"scale(-1 1) rotate(45)"}],["path",{"d":"M-10.718-3.889h4v1h-4z","transform":"rotate(-135)"}]]);

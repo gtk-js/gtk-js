@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const TextFlowIntoFrame = createGtkIcon("text-flow-into-frame", [["path",{"d":"M2 2v2l1-1h2.5v6l-1 1h3l-1-1V3H9l1 1V2Z"}],["path",{"d":"M2 0C.892 0 0 .892 0 2v12c0 1.108.892 2 2 2h12c1.108 0 2-.892 2-2V2c0-1.108-.892-2-2-2H2zm0 1h12c.554 0 1 .446 1 1v12c0 .554-.446 1-1 1H2c-.554 0-1-.446-1-1V2c0-.554.446-1 1-1z"}],["rect",{"width":"1","height":"6","x":"10.5","y":"7","rx":"0","ry":"0"}],["path",{"d":"M13.678 1.121h4v1h-4z","transform":"rotate(45)"}],["path",{"d":"M-1.879 16.678h4v1h-4z","transform":"scale(-1 1) rotate(45)"}]]);

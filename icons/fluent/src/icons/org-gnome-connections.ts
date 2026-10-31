@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const OrgGnomeConnections = createGtkIcon("org-gnome-connections", [["path",{"d":"m0.81641 0 5.2266 15.672 3.4062-2.918 2.2148 2.6562c0.57813 0.69531 1.6055 0.78906 2.2969 0.21094 0.69531-0.57812 0.78906-1.6055 0.21094-2.2969l-2.2461-2.6953 3.2578-2.793-1.1836-0.64844v0.8125h-2v-1.9023l-0.17969-0.097656h-5.8203v-2h-2v-2h0.48438zm5.1836 4h2.1484l-2.1484-1.1719z"}],["path",{"d":"m8 2h2v2h-2z"}],["path",{"d":"m12 4h2v2h-2z"}],["path",{"d":"m6 4h2v2h-2z"}]]);

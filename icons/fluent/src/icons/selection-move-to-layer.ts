@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const SelectionMoveToLayer = createGtkIcon("selection-move-to-layer", [["path",{"d":"M1 10.005h1v-1H1Zm2 0h1v-1H3Zm2 0h1v-1H5Zm2-.01h1v-1H7Zm2 0h1v-1H9ZM1 4h1V3H1Zm2 0h1V3H3Zm2 0h1V3H5Zm2 0h1V3H7Zm2 0h1V3H9Zm0 1.998h1v-1H9Zm0 1.998h1v-1H9Z"}],["path",{"d":"M5.5 11h1v4h-1z","transform":"matrix(0 1 1 0 0 0)"}],["path",{"d":"M10.556 6.071h5v1h-5z","transform":"scale(1 -1) rotate(-45)"}],["path",{"d":"M2.071 14.556h5v1h-5z","transform":"rotate(-45)"}],["rect",{"width":"8","height":"1","y":"6","rx":"0","ry":"0"}],["path",{"d":"M2 14h12v1H2z"}]]);

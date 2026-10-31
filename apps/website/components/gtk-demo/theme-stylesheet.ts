@@ -22,16 +22,18 @@ export const ADWAITA_ACCENT_PRESETS = [
   "#f5c211",
 ];
 
+/** Windows' accent colors (Settings > Personalization > Colors). */
 export const FLUENT_ACCENT_PRESETS = [
-  "#1A73E8",
-  "#9C27B0",
-  "#E91E63",
-  "#F44336",
-  "#FF9800",
-  "#FFEB3B",
-  "#4CAF50",
-  "#009688",
-  "#9E9E9E",
+  "#0078d4",
+  "#0099bc",
+  "#00b294",
+  "#107c10",
+  "#ffb900",
+  "#f7630c",
+  "#e74856",
+  "#e3008c",
+  "#881798",
+  "#7a7574",
 ];
 
 export interface ThemeChoice {
@@ -39,17 +41,13 @@ export interface ThemeChoice {
   colorScheme: "light" | "dark" | "auto";
   adwaitaAccent: string;
   fluentAccent: string;
-  fluentTitlebutton: "circular" | "square";
-  fluentWindow: "default" | "round";
 }
 
 export const DEFAULT_CHOICE: ThemeChoice = {
   themeName: "adwaita",
   colorScheme: "auto",
   adwaitaAccent: "#3584e4",
-  fluentAccent: "#1A73E8",
-  fluentTitlebutton: "square",
-  fluentWindow: "default",
+  fluentAccent: "#0078d4",
 };
 
 export const ALLOWED: { [K in keyof ThemeChoice]: readonly ThemeChoice[K][] } = {
@@ -57,8 +55,6 @@ export const ALLOWED: { [K in keyof ThemeChoice]: readonly ThemeChoice[K][] } = 
   colorScheme: ["light", "dark", "auto"],
   adwaitaAccent: ADWAITA_ACCENT_PRESETS,
   fluentAccent: FLUENT_ACCENT_PRESETS,
-  fluentTitlebutton: ["circular", "square"],
-  fluentWindow: ["default", "round"],
 };
 
 export const STORAGE_KEY = "gtk-js-docs-theme";
@@ -104,9 +100,10 @@ export function themeStylesheet(
     };
   }
   if (choice.themeName === "fluent") {
+    // FluentTheme: the stylesheet's :root derives the accent fills from it.
     return {
-      href: `${dir}${scheme}_${choice.fluentTitlebutton}_${choice.fluentWindow}.css`,
-      css: `[data-gtk-provider] { --fluent-accent: ${choice.fluentAccent}; }`,
+      href: `${dir}${scheme}.css`,
+      css: `:root { --fluent-accent: ${choice.fluentAccent}; }`,
     };
   }
   return { href: `${dir}${scheme}_default.css`, css: "" };

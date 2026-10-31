@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const TransformRotate = createGtkIcon("transform-rotate", [["path",{"d":"M1 3c0-.554.446-1 1-1h5c.554 0 1 .446 1 1v5c0 .554-.446 1-1 1H2c-.554 0-1-.446-1-1Zm1 0v5h5V3Z"}],["path",{"d":"M10 5h1v5h-1z"}],["path",{"d":"M10 9h5v1h-5z"}],["path",{"d":"M10 0v1a4 4 0 0 1 4 4 4 4 0 0 1-4 4v1a5 5 0 0 0 5-5 5 5 0 0 0-5-5z"}],["path",{"d":"M11-5h1v5h-1z","transform":"rotate(90)"}],["path",{"d":"M11-1h5v1h-5z","transform":"rotate(90)"}],["path",{"d":"M10 11H9a4 4 0 0 1-4 4 4 4 0 0 1-4-4H0a5 5 0 0 0 5 5 5 5 0 0 0 5-5z"}]]);

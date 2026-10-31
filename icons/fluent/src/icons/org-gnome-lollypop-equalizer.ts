@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const OrgGnomeLollypopEqualizer = createGtkIcon("org-gnome-lollypop-equalizer", [["path",{"d":"M1 4h1v12H1zM3 1h1v15H3zM5 3h1v13H5zM7 6h1v10H7zM9 10h1v6H9zM11 7h1v9h-1zM13 5h1v11h-1z"}]]);

@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const FormatTextUnderline = createGtkIcon("format-text-underline", [["path",{"d":"m2 14v1h12v-1z","fill":"currentColor","overflow":"visible","strokeWidth":".70711"}],["path",{"d":"m4 2v1h6c1.108 0 2 0.892 2 2v1h-6c-1.662 0-3 1.338-3 3 0 1.662 1.338 3 3 3h7v-7c0-1.662-1.338-3-3-3zm2 5h6v4h-6c-1.108 0-2-0.892-2-2 0-1.108 0.892-2 2-2z","fill":"currentColor"}]]);
+export const FormatTextUnderline = createGtkIcon("format-text-underline", [["path",{"d":"M4.5 2c.28 0 .5.22.5.5V8c0 1.62 1.38 3 3 3s3-1.38 3-3V2.5a.5.5 0 0 1 1 0V8c0 2.18-1.82 4-4 4s-4-1.82-4-4V2.5c0-.28.22-.5.5-.5M4 13.5c0-.28.22-.5.5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5"}]]);

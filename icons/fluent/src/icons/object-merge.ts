@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const ObjectMerge = createGtkIcon("object-merge", [["path",{"d":"m7.5 2-3.5352 3.5352 0.70703 0.70703 2.3281-2.3281v5.0859a4 4 0 0 1-4 4h-3v1h3a5 5 0 0 0 4.5-2.832 5 5 0 0 0 4.5 2.832h3v-1h-3a4 4 0 0 1-4-4v-5.0859l2.3281 2.3281 0.70703-0.70703-3.5352-3.5352z","fill":"currentColor"}]]);

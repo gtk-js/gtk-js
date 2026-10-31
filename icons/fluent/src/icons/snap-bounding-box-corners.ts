@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const SnapBoundingBoxCorners = createGtkIcon("snap-bounding-box-corners", [["path",{"d":"M0 14h3.992v1.004H0zm6 0h4v1H6zm8-8h1v4h-1zm0-6h1v4h-1zm-.293 10.172a.998.998 0 0 0-1.414 0l-2.121 2.12a.998.998 0 0 0 0 1.415l2.12 2.121a.998.998 0 0 0 1.415 0l2.121-2.12a.998.998 0 0 0 0-1.415zm-.707.707L15.121 13 13 15.121 10.879 13Z"}],["path",{"d":"M16.885-1.5h3v3h-3z","transform":"rotate(45)"}],["path",{"d":"M9 4h1v6H9z"}],["path",{"d":"M4 9h6v1H4z"}]]);

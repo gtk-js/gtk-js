@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const MailRead = createGtkIcon("mail-read", [["path",{"d":"M8 3C5.241 3 3 5.241 3 8s2.241 5 5 5 5-2.241 5-5-2.241-5-5-5zm0 1c2.207 0 4 1.793 4 4s-1.793 4-4 4-4-1.793-4-4 1.793-4 4-4z","fill":"currentColor","overflow":"visible"}]]);
+export const MailRead = createGtkIcon("mail-read", [["path",{"d":"M8.24 1.56a.5.5 0 0 0-.48 0L1.8 4.78A1.5 1.5 0 0 0 1 6.1V12c0 1.1.9 2 2 2h10a2 2 0 0 0 2-2V6.1c0-.55-.3-1.06-.79-1.32zm-5.98 4.1L8 2.56l5.74 3.1.15.13L8 8.93 2.1 5.8a1 1 0 0 1 .16-.13M2 6.86l5.76 3.08a.5.5 0 0 0 .48 0L14 6.87V12a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1z"}]]);

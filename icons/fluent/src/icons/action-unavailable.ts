@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const ActionUnavailable = createGtkIcon("action-unavailable", [["path",{"d":"M8 0C3.588 0 0 3.588 0 8s3.588 8 8 8 8-3.588 8-8-3.588-8-8-8zm0 1c3.872 0 7 3.128 7 7a6.968 6.968 0 0 1-1.71 4.582L3.417 2.711A6.968 6.968 0 0 1 8 1zM2.711 3.418l9.871 9.871A6.968 6.968 0 0 1 8 15c-3.872 0-7-3.128-7-7 0-1.756.647-3.355 1.711-4.582z","fontWeight":"400","fontFamily":"sans-serif","overflow":"visible","fill":"currentColor"}]]);
+export const ActionUnavailable = createGtkIcon("action-unavailable", [["path",{"d":"M11.87 3.42a6 6 0 0 0-8.45 8.45zm.71.7-8.45 8.46a6 6 0 0 0 8.45-8.45M3.05 3.06a7 7 0 1 1 9.9 9.9 7 7 0 0 1-9.9-9.9"}]]);

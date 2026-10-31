@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const ShapebuilderToolDifference = createGtkIcon("shapebuilder-tool-difference", [["path",{"d":"m31.5 1a4.5 4.5 0 0 0-4.5 4.5 4.5 4.5 0 0 0 4.5 4.5 4.5 4.5 0 0 0 4.5-4.5 4.5 4.5 0 0 0-4.5-4.5zm0 1a3.5 3.5 0 0 1 3.5 3.5 3.5 3.5 0 0 1-3.5 3.5 3.5 3.5 0 0 1-3.5-3.5 3.5 3.5 0 0 1 3.5-3.5zm-2.5 3v1h5v-1h-5z","opacity":".45"}],["path",{"d":"m36.963 6a5.5 5.5 0 0 1-4.9629 4.9629v4.0371h9v-9z","fillRule":"evenodd","strokeLinecap":"round","strokeLinejoin":"round","strokeWidth":"2"}]]);

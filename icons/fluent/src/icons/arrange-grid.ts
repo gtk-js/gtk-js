@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const ArrangeGrid = createGtkIcon("arrange-grid", [["path",{"fill":"currentColor","d":"M1 1v4h4V1H1zm5 0v4h4V1H6zm5 0v4h4V1h-4zM2 2h2v2H2V2zm5 0h2v2H7V2zm5 0h2v2h-2V2zM1 6v4h4V6H1zm5 0v4h4V6H6zm5 0v4h4V6h-4zM2 7h2v2H2V7zm5 0h2v2H7V7zm5 0h2v2h-2V7zM1 11v4h4v-4H1zm5 0v4h4v-4H6zm5 0v4h4v-4h-4zm-9 1h2v2H2v-2zm5 0h2v2H7v-2zm5 0h2v2h-2v-2z"}]]);

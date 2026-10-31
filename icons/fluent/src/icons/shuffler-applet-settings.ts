@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const ShufflerAppletSettings = createGtkIcon("shuffler-applet-settings", [["path",{"d":"m17.177 23.356v5h4v-5h-4zm1 1h2v3h-2v-3z","stopColor":"#000000","strokeLinecap":"round","strokeLinejoin":"round","strokeWidth":"2"}],["path",{"d":"m13.177 23.356v5h3v-5h-3zm1 1h1v3h-1v-3z","stopColor":"#000000","strokeLinecap":"round","strokeLinejoin":"round","strokeWidth":"2"}],["path",{"d":"m13.177 29.356v3h3v-3h-3zm1 1h1v1h-1v-1z","stopColor":"#000000","strokeLinecap":"round","strokeLinejoin":"round","strokeWidth":"2.4495"}],["path",{"d":"m17.177 29.356v3h4v-3h-4zm1 1h2v1h-2v-1z","stopColor":"#000000","strokeLinecap":"round","strokeLinejoin":"round","strokeWidth":"2.4495"}],["path",{"d":"m23.177 32.356 2 7 4-4z"}]]);

@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const MeshGradientFit = createGtkIcon("mesh-gradient-fit", [["path",{"fill":"currentColor","d":"M13.463 2.537c4.682 4.683-3.122 7.804 0 10.925-4.682 4.683-7.804-3.121-10.925 0-4.682-4.682 3.121-7.803 0-10.925 4.682-4.682 7.804 3.122 10.925 0z","opacity":".35"}],["path",{"fill":"currentColor","d":"M2 0C.892 0 0 .892 0 2v12c0 1.108.892 2 2 2h12c1.108 0 2-.892 2-2V2c0-1.108-.892-2-2-2Zm0 1h12c.554 0 1 .446 1 1v12c0 .554-.446 1-1 1H2c-.554 0-1-.446-1-1V2c0-.554.446-1 1-1Z"}]]);

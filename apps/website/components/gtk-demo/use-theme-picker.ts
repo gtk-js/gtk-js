@@ -87,8 +87,6 @@ export interface ThemePickerState extends ThemeChoice {
   setColorScheme: (s: "light" | "dark" | "auto") => void;
   setAdwaitaAccent: (c: string) => void;
   setFluentAccent: (c: string) => void;
-  setFluentTitlebutton: (t: "circular" | "square") => void;
-  setFluentWindow: (w: "default" | "round") => void;
   /** Loads the stylesheets one click in the picker away, so switching to them doesn't wait. */
   preloadOptions: () => void;
 }
@@ -104,8 +102,7 @@ export function useThemePickerState(): ThemePickerState {
   // hydration has to render the same.
   const [saved, setSaved] = useState<ThemeChoice | null>(null);
   const choice = saved ?? DEFAULT_CHOICE;
-  const { themeName, colorScheme, adwaitaAccent, fluentAccent, fluentTitlebutton, fluentWindow } =
-    choice;
+  const { themeName, colorScheme, adwaitaAccent, fluentAccent } = choice;
 
   // A state update from a layout effect renders synchronously, before the browser
   // paints the hydrated page, so the default theme never shows.
@@ -125,12 +122,8 @@ export function useThemePickerState(): ThemePickerState {
   const scheme = colorScheme === "auto" ? (dark ? "dark" : "light") : colorScheme;
   const stylesheet = useMemo(
     () =>
-      themeStylesheet(
-        { themeName, colorScheme, adwaitaAccent, fluentAccent, fluentTitlebutton, fluentWindow },
-        scheme,
-        BASE_PATH,
-      ),
-    [themeName, colorScheme, adwaitaAccent, fluentAccent, fluentTitlebutton, fluentWindow, scheme],
+      themeStylesheet({ themeName, colorScheme, adwaitaAccent, fluentAccent }, scheme, BASE_PATH),
+    [themeName, colorScheme, adwaitaAccent, fluentAccent, scheme],
   );
 
   // An "auto" scheme switches to the other scheme's file when the system's
@@ -153,22 +146,11 @@ export function useThemePickerState(): ThemePickerState {
     setColorScheme: set("colorScheme"),
     setAdwaitaAccent: set("adwaitaAccent"),
     setFluentAccent: set("fluentAccent"),
-    setFluentTitlebutton: set("fluentTitlebutton"),
-    setFluentWindow: set("fluentWindow"),
     preloadOptions: () => {
       const options: ThemeChoice[] = [
         ...ALLOWED.themeName.map((name) => ({ ...choice, themeName: name })),
         { ...choice, colorScheme: scheme === "dark" ? "light" : "dark" },
       ];
-      if (themeName === "fluent") {
-        options.push(
-          {
-            ...choice,
-            fluentTitlebutton: choice.fluentTitlebutton === "square" ? "circular" : "square",
-          },
-          { ...choice, fluentWindow: choice.fluentWindow === "round" ? "default" : "round" },
-        );
-      }
       for (const option of options) {
         const optionScheme =
           option.colorScheme === "auto" ? scheme : (option.colorScheme as "light" | "dark");

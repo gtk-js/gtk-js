@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const ShapeItem = createGtkIcon("shape-item", [["path",{"d":"M2 1c-.554 0-1 .446-1 1v3c0 .554.446 1 1 1h3c.554 0 1-.446 1-1V2c0-.554-.446-1-1-1H2zm0 1h3v3H2V2z"}],["path",{"d":"M11 1c-.554 0-1 .446-1 1v3c0 .554.446 1 1 1h3c.554 0 1-.446 1-1V2c0-.554-.446-1-1-1Zm0 1h3v3h-3z"}],["path",{"d":"M2 10c-.554 0-1 .446-1 1v3c0 .554.446 1 1 1h3c.554 0 1-.446 1-1v-3c0-.554-.446-1-1-1Zm0 1h3v3H2Z"}],["path",{"d":"M11 10c-.554 0-1 .446-1 1v3c0 .554.446 1 1 1h3c.554 0 1-.446 1-1v-3c0-.554-.446-1-1-1zm0 1h3v3h-3z"}],["path",{"d":"M3 5h1v6H3z"}],["path",{"d":"M5 3h6v1H5z"}],["path",{"d":"M12 5h1v6h-1z"}],["path",{"d":"M5 12h6v1H5z"}]]);

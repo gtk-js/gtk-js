@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const ImageDenoise = createGtkIcon("image-denoise", [["path",{"d":"M1 1h2v2H1zM3 1h2v2H3zM5 1h2v2H5zM5 3h2v2H5zM3 5h2v2H3zM1 7h2v2H1zM3 9h2v2H3zM5 7h2v2H5zM7 5h2v2H7zM9 5h2v2H9zM9 1h2v2H9zM11 3h2v2h-2zM11 9h2v2h-2zM7 11h2v2H7zM9 13h2v2H9zM3 13h2v2H3zM13 11h2v2h-2zM13 13h2v2h-2z","fill":"currentColor"}],["path",{"d":"M13 13h2v2h-2z","fill":"currentColor"}]]);

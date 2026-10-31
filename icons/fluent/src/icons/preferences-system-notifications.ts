@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const PreferencesSystemNotifications = createGtkIcon("preferences-system-notifications", [["path",{"d":"M7.72 3c.116.318.187.654.231 1H14v8H2V8.725a4.56 4.56 0 0 1-1-.504V12c0 .55.45 1 1 1h7l2 2 2-2h1c.55 0 1-.45 1-1V4c0-.55-.45-1-1-1H7.72z","fill":"currentColor"}],["path",{"d":"M3.5 1C1.57 1 0 2.57 0 4.5S1.57 8 3.5 8 7 6.43 7 4.5 5.43 1 3.5 1zM3 2h1v3H3zm0 4h1v1H3z","fill":"currentColor"}]]);
+export const PreferencesSystemNotifications = createGtkIcon("preferences-system-notifications", [["path",{"d":"M8 2a4.5 4.5 0 0 0-4.5 4.5v2.4l-.96 2.41A.5.5 0 0 0 3 12h3a2 2 0 1 0 4 0h3a.5.5 0 0 0 .46-.69l-.96-2.4V6.5A4.5 4.5 0 0 0 8 2m1 10a1 1 0 0 1-1 1 1 1 0 0 1-1-1zM4.5 6.5a3.5 3.5 0 1 1 7 0V9q0 .09.04.18l.72 1.82H3.74l.72-1.82L4.5 9z"}]]);

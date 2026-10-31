@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const ViewPin = createGtkIcon("view-pin", [["path",{"d":"M5 1l1 1v4L4 8h7L9 6V2l1-1zm2 8v4.75a16.197 16.197 0 0 0 .5 1.5 18.757 18.757 0 0 0 .5-1.5V9z","fill":"currentColor"}]]);
+export const ViewPin = createGtkIcon("view-pin", [["path",{"d":"M10.06 2.45a1.5 1.5 0 0 0-2.39.35L5.65 6.59l-2.8.94a.5.5 0 0 0-.2.82l2.14 2.15-2.64 2.65L2 14l.85-.15 2.65-2.64 2.15 2.14a.5.5 0 0 0 .82-.2l.94-2.8 3.78-2.03a1.5 1.5 0 0 0 .35-2.38zm-1.5.82a.5.5 0 0 1 .8-.12l3.48 3.5a.5.5 0 0 1-.12.8l-3.96 2.1a.5.5 0 0 0-.23.3l-.75 2.22-3.85-3.85 2.23-.75a.5.5 0 0 0 .28-.23z"}]]);

@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const WeatherStormTornado = createGtkIcon("weather-storm-tornado", [["path",{"d":"M3.5 4.002a.499.499 0 1 0 0 1h9a.499.499 0 1 0 0-1h-9zm1.5 2a.499.499 0 1 0 0 1h6a.499.499 0 1 0 0-1H5zm1.5 2a.499.499 0 1 0 0 1h5a.499.499 0 1 0 0-1h-5zm.5 2a.499.499 0 1 0 0 1h2.5a.499.499 0 1 0 0-1H7zm0 2a.499.499 0 1 0 0 1h.5a.499.499 0 1 0 0-1H7z","fill":"currentColor"}]]);

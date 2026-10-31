@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const FocusWindows = createGtkIcon("focus-windows", [["path",{"d":"m3 6c-1.108 0-2 0.892-2 2v5c0 1.108 0.892 2 2 2h7c1.108 0 2-0.892 2-2v-2h-1v2c0 0.554-0.446 1-1 1h-7c-0.554 0-1-0.446-1-1v-4c0-0.554 0.446-1 1-1h1v-2h-1z","fill":"currentColor","opacity":".35","strokeLinecap":"round","strokeLinejoin":"round","strokeWidth":"2"}],["path",{"d":"m7 1c-1.108 0-2 0.892-2 2v5c0 1.108 0.892 2 2 2h7c1.108 0 2-0.892 2-2v-5c0-1.108-0.892-2-2-2h-7zm0 2h7c0.554 0 1 0.446 1 1v4c0 0.554-0.446 1-1 1h-7c-0.554 0-1-0.446-1-1v-4c0-0.554 0.446-1 1-1z","fill":"currentColor","strokeLinecap":"round","strokeLinejoin":"round","strokeWidth":"2"}]]);

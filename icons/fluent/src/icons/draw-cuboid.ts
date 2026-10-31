@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const DrawCuboid = createGtkIcon("draw-cuboid", [["path",{"d":"m410.548 637.094 10.2-3.849v-10.978l-10.14 3.925z","transform":"matrix(.66667 0 0 .69185 -272 -429.81)"}],["path",{"d":"m411.513 638.21 10.084-3.776 7.04 5.414-9.972 3.786z","transform":"matrix(.66667 0 0 .69185 -272 -429.81)"}],["path",{"d":"m422.226 633.13 7.685 6.13-.1-10.278-7.517-6.717z","transform":"matrix(.66667 0 0 .69185 -272 -429.81)"}]]);

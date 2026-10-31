@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const PanUp = createGtkIcon("pan-up", [["path",{"d":"m13 10-5-5-5 5z","fill":"currentColor"}]]);
+export const PanUp = createGtkIcon("pan-up", [["path",{"d":"M3.15 10.35c.2.2.5.2.7 0L8 6.21l4.15 4.14a.5.5 0 0 0 .7-.7l-4.5-4.5a.5.5 0 0 0-.7 0l-4.5 4.5a.5.5 0 0 0 0 .7"}]]);

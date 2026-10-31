@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const DistributeHorizontalGaps = createGtkIcon("distribute-horizontal-gaps", [["path",{"d":"M1162 708.362v7.5h1.482v-3h4.517v3h1.483v-3h.017v-1.5h-.017v-3h-1.483v3h-4.517v-3h-1.483zm10.517 0v3h-.018v1.5h.018v3h1.482v-3h4.5v3h1.518v-7.5h-1.518v3h-4.5v-3h-1.482zm-13.518 9v12h4.5v-12h-4.5zm9 0v9h6v-9h-6zm10.5 0v13.5h4.5v-13.5h-4.5zm-18 1.5h1.5v9h-1.5v-9zm9 0h3v6h-3v-6zm10.5 0h1.5v10.5h-1.5v-10.5z"}]]);

@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const Tennis = createGtkIcon("tennis", [["path",{"d":"m9.9453 0.33984a3.5 5 30 0 0-5.5311 2.5801 3.5 5 30 0 0 0.12542 5.7828l-3.0273 5.2435 0.86603 0.5 3.0273-5.2435a3.5 5 30 0 0 5.0707-2.7828 3.5 5 30 0 0-0.53109-6.0801zm-0.5 0.86603a2.4818 4 30 0 1 0.14984 4.7053 2.4818 4 30 0 1-4.1498 2.2229 2.4818 4 30 0 1-0.14984-4.7053 2.4818 4 30 0 1 4.1498-2.2229z","fill":"currentColor","strokeLinecap":"round","strokeLinejoin":"round","strokeWidth":"2.0197"}],["path",{"d":"m12 10a2 2 0 0 0-2 2 2 2 0 0 0 2 2 2 2 0 0 0 2-2 2 2 0 0 0-2-2zm0 1a1 1 0 0 1 1 1 1 1 0 0 1-1 1 1 1 0 0 1-1-1 1 1 0 0 1 1-1z","fill":"currentColor","strokeLinecap":"round","strokeLinejoin":"round","strokeWidth":"2"}]]);

@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const NemoProgress0 = createGtkIcon("nemo-progress-0", [["path",{"d":"m4 4c-0.554 0-1 0.446-1 1v1.5 0.5 4c0 0.554 0.446 1 1 1h8c0.554 0 1-0.446 1-1v-4-1c0-0.034625-0.002458-0.067864-0.005859-0.10156-0.051028-0.50548-0.47477-0.89844-0.99414-0.89844h-1-3c0-0.554-0.446-1-1-1h-3zm0 1h3v0.64844l-0.26562 0.35156h-2.7344v-1zm4 1h3 1v1 4h-8v-4h3.2812l0.71875-1z","fill":"currentColor","strokeLinecap":"round","strokeLinejoin":"round"}]]);

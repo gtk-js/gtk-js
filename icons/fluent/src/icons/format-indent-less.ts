@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const FormatIndentLess = createGtkIcon("format-indent-less", [["path",{"overflow":"visible","d":"M1 1h14v1H1zM1 4h8v1H1zM1 10h8v1H1zM1 13h14v1H1zM1 7h8v1H1zM15.001 10L15 5c-.76.348-1.535.737-2.323 1.166A44.8 44.8 0 0 0 10.418 7.5c.725.449 1.478.889 2.26 1.32.788.43 1.562.823 2.323 1.18z"}]]);
+export const FormatIndentLess = createGtkIcon("format-indent-less", [["path",{"d":"M11.5 3a.5.5 0 0 1 0 1h-6a.5.5 0 0 1 0-1zm3 4a.5.5 0 0 1 0 1h-9a.5.5 0 0 1 0-1zm-5 4a.5.5 0 0 1 0 1h-4a.5.5 0 0 1 0-1zM2.65 5.65a.5.5 0 0 1 .7.7L2.21 7.5l1.14 1.15a.5.5 0 0 1-.7.7l-1.5-1.5a.5.5 0 0 1 0-.7z"}]]);

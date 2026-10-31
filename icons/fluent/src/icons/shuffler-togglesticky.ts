@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const ShufflerTogglesticky = createGtkIcon("shuffler-togglesticky", [["path",{"d":"m3 3v3h3v-3h-3zm1 1h1v1h-1v-1z","fill":"currentColor","stopColor":"#000000","strokeLinecap":"round","strokeLinejoin":"round","strokeWidth":"2"}],["path",{"d":"m7 7v6h6v-6h-6zm1 1h4v4h-4v-4z","fill":"currentColor","stopColor":"#000000","strokeLinecap":"round","strokeLinejoin":"round","strokeWidth":"2"}],["path",{"d":"m3 7v3h3v-3zm1 1h1v1h-1z","fill":"currentColor","stopColor":"#000000","strokeLinecap":"round","strokeLinejoin":"round","strokeWidth":"2"}],["path",{"d":"m7 3v3h3v-3zm1 1h1v1h-1z","fill":"currentColor","stopColor":"#000000","strokeLinecap":"round","strokeLinejoin":"round","strokeWidth":"2"}]]);

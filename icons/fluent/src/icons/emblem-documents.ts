@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const EmblemDocuments = createGtkIcon("emblem-documents", [["path",{"d":"m3 0c-0.554 0-1 0.446-1 1v14c0 0.554 0.446 1 1 1h10c0.554 0 1-0.446 1-1v-10h-0.0078l0.0059-0.00586-4.998-4.9922v-0.0019525h-6zm0 1h5v5h5v9h-10zm6 0.41016 3.5957 3.5898h-3.5957z","fill":"currentColor"}]]);
+export const EmblemDocuments = createGtkIcon("emblem-documents", [["path",{"d":"M5 1a2 2 0 0 0-2 2v10c0 1.1.9 2 2 2h6a2 2 0 0 0 2-2V5.41c0-.4-.16-.78-.44-1.06L9.65 1.44A1.5 1.5 0 0 0 8.59 1zM4 3a1 1 0 0 1 1-1h3v2.5C8 5.33 8.67 6 9.5 6H12v7a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1zm7.8 2H9.5a.5.5 0 0 1-.5-.5V2.2z"}]]);

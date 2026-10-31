@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const ChangesAllow = createGtkIcon("changes-allow", [["path",{"fill":"currentColor","d":"m8 0c-2.216 0-4 1.784-4 4h1c0-1.662 1.338-3 3-3s3 1.338 3 3v2h-5-1-1c-1.108 0-2 0.892-2 2v5c0 1.108 0.892 2 2 2h8c1.108 0 2-0.892 2-2v-5c0-1.108-0.892-2-2-2v-2c0-2.216-1.784-4-4-4zm-4 7h8c0.554 0 1 0.446 1 1v5c0 0.554-0.446 1-1 1h-8c-0.554 0-1-0.446-1-1v-5c0-0.554 0.446-1 1-1z"}]]);
+export const ChangesAllow = createGtkIcon("changes-allow", [["path",{"d":"M12 1a3 3 0 0 1 3 3v.5a.5.5 0 0 1-1 0V4a2 2 0 1 0-4 0v2h1a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8c0-1.1.9-2 2-2h4V4a3 3 0 0 1 3-3M5 7a1 1 0 0 0-1 1v5a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V8a1 1 0 0 0-1-1zm3 2.5a1 1 0 1 1 0 2 1 1 0 0 1 0-2"}]]);

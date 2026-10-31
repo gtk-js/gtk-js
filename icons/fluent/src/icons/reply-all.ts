@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const ReplyAll = createGtkIcon("reply-all", [["path",{"d":"M6.5 1.5L.03 6l6.47 4.5V9.457L1.53 6 6.5 2.543z","overflow":"visible","enableBackground":"accumulate"}],["path",{"d":"M10 1.503l-6.469 4.5 6.469 4.5v-2.5h.5c1.365 0 2.572.874 2.938 2 .437 1.348-1.438 4-1.438 4s4-1.5 4-4.75c0-3.123-2-5.25-5-5.25h-1v-2.5zM9 3.41v1.593h2c1.264 0 2.226.44 2.906 1.157.68.716 1.094 1.745 1.094 3.093 0 .672-.243 1.22-.594 1.72.058-.416.118-.822-.03-1.282-.52-1.597-2.085-2.688-3.876-2.688H9V8.597L5.25 6.003 9 3.41z","overflow":"visible","enableBackground":"accumulate"}]]);

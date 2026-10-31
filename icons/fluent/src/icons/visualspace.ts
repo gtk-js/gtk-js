@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const Visualspace = createGtkIcon("visualspace", [["circle",{"cx":"3","cy":"8","r":"2","fill":"currentColor","stopColor":"#000000","strokeLinecap":"round","strokeLinejoin":"round","strokeWidth":"1.6"}],["path",{"d":"m8 6a2 2 0 0 0-2 2 2 2 0 0 0 2 2 2 2 0 0 0 2-2 2 2 0 0 0-2-2zm0 1a1 1 0 0 1 1 1 1 1 0 0 1-1 1 1 1 0 0 1-1-1 1 1 0 0 1 1-1z","fill":"currentColor","stopColor":"#000000","strokeLinecap":"round","strokeLinejoin":"round","strokeWidth":"1.6"}],["path",{"d":"m13 6a2 2 0 0 0-2 2 2 2 0 0 0 2 2 2 2 0 0 0 2-2 2 2 0 0 0-2-2zm0 1a1 1 0 0 1 1 1 1 1 0 0 1-1 1 1 1 0 0 1-1-1 1 1 0 0 1 1-1z","fill":"currentColor","stopColor":"#000000","strokeLinecap":"round","strokeLinejoin":"round","strokeWidth":"1.6"}]]);

@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const EphyDownloadDone = createGtkIcon("ephy-download-done", [["path",{"d":"M12.754 6.66c.176-.2.262-.46.246-.726A1.006 1.006 0 0 0 11.934 5c-.266.02-.512.14-.688.34l-4.297 5.195-2.242-2.242a1 1 0 1 0-1.414 1.414l3 3a1.005 1.005 0 0 0 1.46-.047z","fill":"currentColor"}]]);
