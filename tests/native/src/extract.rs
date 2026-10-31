@@ -103,6 +103,68 @@ fn rgba_to_color(rgba: &gdk::RGBA) -> Color {
     }
 }
 
+unsafe extern "C" {
+    fn gdk_color_state_get_oklab() -> *const std::ffi::c_void;
+    fn gdk_color_state_get_oklch() -> *const std::ffi::c_void;
+    fn gdk_color_state_get_srgb_linear() -> *const std::ffi::c_void;
+}
+
+/// The sRGB color of a color, inset shadow or outset shadow node, from what
+/// its C getter returns: a pointer to the components of the node's GdkColor,
+/// in whatever color state it has ("only correct for nodes with sRGB
+/// colors", gskcolornode.c), so an oklch() or color-mix(in oklab, …) color
+/// gives oklch or oklab components. (The Rust getters return a copy.)
+/// GdkColor is { GdkColorState *color_state; float values[4]; }
+/// (gdkcolorprivate.h), so its color state is the pointer before the values.
+/// Converted like gtkcolorutils.c does, without gamut mapping, as the web side
+/// does (tests/harness.ts).
+fn node_color(values: *const gdk::ffi::GdkRGBA) -> Color {
+    let (state, v) = unsafe {
+        (
+            *((values as *const u8).sub(std::mem::size_of::<*const std::ffi::c_void>())
+                as *const *const std::ffi::c_void),
+            *values,
+        )
+    };
+    let (c0, c1, c2) = (v.red, v.green, v.blue);
+    let gamma = |c: f32| {
+        if c > 0.0031308 {
+            1.055 * c.powf(1.0 / 2.4) - 0.055
+        } else {
+            12.92 * c
+        }
+    };
+    let from_oklab = |l: f32, a: f32, b: f32| {
+        let l_ = l + 0.396_337_78 * a + 0.215_803_76 * b;
+        let m_ = l - 0.105_561_346 * a - 0.063_854_17 * b;
+        let s_ = l - 0.089_484_18 * a - 1.291_485_5 * b;
+        let (l, m, s) = (l_ * l_ * l_, m_ * m_ * m_, s_ * s_ * s_);
+        (
+            gamma(4.076_741_7 * l - 3.307_711_6 * m + 0.230_969_93 * s),
+            gamma(-1.268_438 * l + 2.609_757_4 * m - 0.341_319_4 * s),
+            gamma(-0.004_196_086_3 * l - 0.703_418_6 * m + 1.707_614_7 * s),
+        )
+    };
+    let (r, g, b) = unsafe {
+        if state == gdk_color_state_get_oklab() {
+            from_oklab(c0, c1, c2)
+        } else if state == gdk_color_state_get_oklch() {
+            let h = c2.to_radians();
+            from_oklab(c0, c1 * h.cos(), c1 * h.sin())
+        } else if state == gdk_color_state_get_srgb_linear() {
+            (gamma(c0), gamma(c1), gamma(c2))
+        } else {
+            (c0, c1, c2)
+        }
+    };
+    Color {
+        r,
+        g,
+        b,
+        a: v.alpha,
+    }
+}
+
 #[allow(deprecated)]
 pub fn extract_with_widget<W: IsA<gtk::Widget>>(
     node: &gsk::RenderNode,
@@ -315,7 +377,11 @@ fn walk_node(node: &gsk::RenderNode, snapshot: &mut WidgetSnapshot) {
                 let area = bounds.width() * bounds.height();
                 let min_bg_area = snapshot.width * snapshot.height * 0.1;
                 if area >= min_bg_area {
-                    snapshot.background_color = Some(rgba_to_color(&color_node.color()));
+                    snapshot.background_color = Some(node_color(unsafe {
+                        gsk::ffi::gsk_color_node_get_color(
+                            color_node.as_ptr() as *const gsk::ffi::GskColorNode
+                        )
+                    }));
                 }
             }
         }
@@ -441,7 +507,11 @@ fn walk_node(node: &gsk::RenderNode, snapshot: &mut WidgetSnapshot) {
         RenderNodeType::InsetShadowNode => {
             let inset_node: gsk::InsetShadowNode = node.clone().downcast().unwrap();
             snapshot.inset_shadows.push(InsetShadowInfo {
-                color: rgba_to_color(&inset_node.color()),
+                color: node_color(unsafe {
+                    gsk::ffi::gsk_inset_shadow_node_get_color(
+                        inset_node.as_ptr() as *const gsk::ffi::GskInsetShadowNode
+                    )
+                }),
                 dx: inset_node.dx(),
                 dy: inset_node.dy(),
                 spread: inset_node.spread(),
@@ -473,7 +543,11 @@ fn walk_node(node: &gsk::RenderNode, snapshot: &mut WidgetSnapshot) {
         RenderNodeType::OutsetShadowNode => {
             let outset_node: gsk::OutsetShadowNode = node.clone().downcast().unwrap();
             snapshot.shadows.push(ShadowInfo {
-                color: rgba_to_color(&outset_node.color()),
+                color: node_color(unsafe {
+                    gsk::ffi::gsk_outset_shadow_node_get_color(
+                        outset_node.as_ptr() as *const gsk::ffi::GskOutsetShadowNode
+                    )
+                }),
                 dx: outset_node.dx(),
                 dy: outset_node.dy(),
                 spread: outset_node.spread(),
