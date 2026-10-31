@@ -381,7 +381,11 @@ export const AdwNavigationSplitView = forwardRef<HTMLDivElement, AdwNavigationSp
               minHeight: 0,
               outline: "none",
               display: shown ? undefined : "none",
-              zIndex: isMoving ? 2 : 0,
+              // Ordered against the dimming, shadow and shield only during a
+              // transition: at rest a z-index would make the page a stacking
+              // context, and the popovers in it couldn't rise above the pages and
+              // panes after it, as their own surfaces do in GTK.
+              zIndex: isMoving ? 2 : transition ? 0 : undefined,
               transform: isMoving ? undefined : "none",
               willChange: isMoving ? "transform" : undefined,
             }}
