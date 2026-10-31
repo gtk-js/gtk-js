@@ -1,4 +1,4 @@
-import { GtkButton, GtkScrolledWindow, wrapStyle } from "@gtk-js/gtk4";
+import { GtkButton, GtkScrolledWindow, useWindowElement, wrapStyle } from "@gtk-js/gtk4";
 import {
   forwardRef,
   type HTMLAttributes,
@@ -155,6 +155,9 @@ export const AdwAlertDialog = forwardRef<HTMLDivElement, AdwAlertDialogProps>(
     const [compact, setCompact] = useState(false);
     const [width, setWidth] = useState<number | null>(null);
     const [smallHeading, setSmallHeading] = useState(false);
+    // A dialog open from the start moves into its window once the window's
+    // element is known (FloatingSheet): its elements are new then.
+    const windowElement = useWindowElement();
     useLayoutEffect(() => {
       const contents = contentsRef.current;
       const area = responseAreaRef.current;
@@ -264,7 +267,7 @@ export const AdwAlertDialog = forwardRef<HTMLDivElement, AdwAlertDialogProps>(
       const ro = new ResizeObserver(measure);
       ro.observe(contents);
       return () => ro.disconnect();
-    }, [visible, responses, heading, body, preferWideLayout, isShort]);
+    }, [visible, responses, heading, body, preferWideLayout, isShort, windowElement]);
 
     // Upstream: .message-area gets .has-heading / .has-body conditionally,
     // which the SCSS uses for border-spacing (10px when both, 24px otherwise).
