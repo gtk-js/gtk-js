@@ -1,5 +1,26 @@
 # @gtk-js/theme-mactahoe
 
+## [0.0.10](https://github.com/gtk-js/gtk-js/compare/theme-mactahoe-v0.0.9...theme-mactahoe-v0.0.10) (2026-10-31)
+
+
+### Features
+
+* MacTahoeProvider and WhiteSurProvider, macOS themes as one provider ([#160](https://github.com/gtk-js/gtk-js/issues/160)) ([1bf59b9](https://github.com/gtk-js/gtk-js/commit/1bf59b9dc59771e600bcbdaec8ee58be816dc55b))
+
+
+### Bug Fixes
+
+* layer libadwaita's stylesheet under the mac themes, as GTK does ([#158](https://github.com/gtk-js/gtk-js/issues/158)) ([a9e0d23](https://github.com/gtk-js/gtk-js/commit/a9e0d237916d7bdc65c4c07b3f1b51d0427629c2))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @gtk-js/gtk-css bumped from 0.1.8 to 0.1.9
+    * @gtk-js/gtk4 bumped from 0.1.11 to 0.1.12
+    * @gtk-js/icons-mactahoe bumped from 0.1.6 to 0.1.7
+
 ## [0.0.9](https://github.com/gtk-js/gtk-js/compare/theme-mactahoe-v0.0.8...theme-mactahoe-v0.0.9) (2026-10-20)
 
 

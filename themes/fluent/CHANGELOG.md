@@ -1,5 +1,23 @@
 # @gtk-js/theme-fluent
 
+## [0.1.0](https://github.com/gtk-js/gtk-js/compare/theme-fluent-v0.0.9...theme-fluent-v0.1.0) (2026-10-31)
+
+
+### ⚠ BREAKING CHANGES
+
+* **theme-fluent:** rebuild Fluent as Windows 11's own look ([#161](https://github.com/gtk-js/gtk-js/issues/161))
+
+### Features
+
+* **theme-fluent:** rebuild Fluent as Windows 11's own look ([#161](https://github.com/gtk-js/gtk-js/issues/161)) ([e123de3](https://github.com/gtk-js/gtk-js/commit/e123de3f8c19a8646f55fd4e549263562ecb147c))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @gtk-js/gtk-css bumped from 0.1.8 to 0.1.9
+
 ## [0.0.9](https://github.com/gtk-js/gtk-js/compare/theme-fluent-v0.0.8...theme-fluent-v0.0.9) (2026-10-20)
 
 

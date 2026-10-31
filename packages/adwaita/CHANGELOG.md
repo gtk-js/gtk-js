@@ -1,5 +1,30 @@
 # @gtk-js/adwaita
 
+## [0.1.12](https://github.com/gtk-js/gtk-js/compare/adwaita-v0.1.11...adwaita-v0.1.12) (2026-10-31)
+
+
+### Features
+
+* GtkProvider decorationLayout, GtkSettings' window button layout ([#159](https://github.com/gtk-js/gtk-js/issues/159)) ([3631dda](https://github.com/gtk-js/gtk-js/commit/3631ddac5c0ce60761136efc002720a340f19556))
+* MacTahoeProvider and WhiteSurProvider, macOS themes as one provider ([#160](https://github.com/gtk-js/gtk-js/issues/160)) ([1bf59b9](https://github.com/gtk-js/gtk-js/commit/1bf59b9dc59771e600bcbdaec8ee58be816dc55b))
+
+
+### Bug Fixes
+
+* **adwaita:** alert dialog layout in a window and with long headings ([#163](https://github.com/gtk-js/gtk-js/issues/163)) ([5f11c08](https://github.com/gtk-js/gtk-js/commit/5f11c08beddb819f2c608561ac1e69b9598c3961))
+* **adwaita:** popovers in a navigation view's page rise above the other pane ([#164](https://github.com/gtk-js/gtk-js/issues/164)) ([014f42f](https://github.com/gtk-js/gtk-js/commit/014f42f7c1182bcc367dc58364cd64c93c51e1f1))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @gtk-js/icons-adwaita bumped from 0.1.6 to 0.1.7
+    * @gtk-js/gtk4 bumped from 0.1.11 to 0.1.12
+    * @gtk-js/theme-adwaita bumped from 0.0.9 to 0.0.10
+  * devDependencies
+    * @gtk-js/gtk-css bumped from 0.1.8 to 0.1.9
+
 ## [0.1.11](https://github.com/gtk-js/gtk-js/compare/adwaita-v0.1.10...adwaita-v0.1.11) (2026-10-28)
 
 

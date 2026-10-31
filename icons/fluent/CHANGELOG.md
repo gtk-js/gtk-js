@@ -1,5 +1,21 @@
 # @gtk-js/icons-fluent
 
+## [0.2.0](https://github.com/gtk-js/gtk-js/compare/icons-fluent-v0.1.6...icons-fluent-v0.2.0) (2026-10-31)
+
+
+### ⚠ BREAKING CHANGES
+
+* **theme-fluent:** rebuild Fluent as Windows 11's own look ([#161](https://github.com/gtk-js/gtk-js/issues/161))
+
+### Features
+
+* **theme-fluent:** rebuild Fluent as Windows 11's own look ([#161](https://github.com/gtk-js/gtk-js/issues/161)) ([e123de3](https://github.com/gtk-js/gtk-js/commit/e123de3f8c19a8646f55fd4e549263562ecb147c))
+
+
+### Bug Fixes
+
+* draw mac icons like GTK, from the icons GTK picks ([#157](https://github.com/gtk-js/gtk-js/issues/157)) ([c7b1ac4](https://github.com/gtk-js/gtk-js/commit/c7b1ac4eebee4c26dce77a30ea00db7e1b2a2868))
+
 ## [0.1.6](https://github.com/gtk-js/gtk-js/compare/icons-fluent-v0.1.5...icons-fluent-v0.1.6) (2026-10-15)
 
 

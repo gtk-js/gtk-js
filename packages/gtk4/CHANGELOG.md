@@ -1,5 +1,28 @@
 # @gtk-js/gtk4
 
+## [0.1.12](https://github.com/gtk-js/gtk-js/compare/gtk4-v0.1.11...gtk4-v0.1.12) (2026-10-31)
+
+
+### Features
+
+* GtkProvider decorationLayout, GtkSettings' window button layout ([#159](https://github.com/gtk-js/gtk-js/issues/159)) ([3631dda](https://github.com/gtk-js/gtk-js/commit/3631ddac5c0ce60761136efc002720a340f19556))
+* MacTahoeProvider and WhiteSurProvider, macOS themes as one provider ([#160](https://github.com/gtk-js/gtk-js/issues/160)) ([1bf59b9](https://github.com/gtk-js/gtk-js/commit/1bf59b9dc59771e600bcbdaec8ee58be816dc55b))
+
+
+### Bug Fixes
+
+* **gtk4:** a scrollbar's slider doesn't keep its scrolled window wide ([#167](https://github.com/gtk-js/gtk-js/issues/167)) ([f166719](https://github.com/gtk-js/gtk-js/commit/f1667190c9c8d89a1b4387da848f0a26d251cca2))
+* **gtk4:** window controls fill a header bar taller than its buttons ([#165](https://github.com/gtk-js/gtk-js/issues/165)) ([a7bb718](https://github.com/gtk-js/gtk-js/commit/a7bb71802d5a01c3114f08e7ececcaf4b3160b23))
+* layer libadwaita's stylesheet under the mac themes, as GTK does ([#158](https://github.com/gtk-js/gtk-js/issues/158)) ([a9e0d23](https://github.com/gtk-js/gtk-js/commit/a9e0d237916d7bdc65c4c07b3f1b51d0427629c2))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @gtk-js/gtk-css bumped from 0.1.8 to 0.1.9
+    * @gtk-js/icons-gtk4 bumped from 0.1.6 to 0.1.7
+
 ## [0.1.11](https://github.com/gtk-js/gtk-js/compare/gtk4-v0.1.10...gtk4-v0.1.11) (2026-10-28)
 
 
