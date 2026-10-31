@@ -235,6 +235,10 @@ export const FloatingSheet = forwardRef<HTMLDivElement, FloatingSheetProps>(func
 ) {
   const windowElement = useWindowElement();
   const hostInWindow = portal === false && windowElement !== null;
+  // The window's element is known after its first render, so a dialog open
+  // from the start moves into it then: new elements, which the effects that
+  // hold the dialog's elements (focus, wheel, animation, size) take up again
+  // by depending on hostInWindow.
   // The host's size before the dialog is laid out: the window, or the viewport.
   const hostBreakpoint = (): Breakpoint => {
     if (typeof window === "undefined") return { narrow: false, short: false };
@@ -313,7 +317,7 @@ export const FloatingSheet = forwardRef<HTMLDivElement, FloatingSheetProps>(func
     if (last instanceof HTMLElement && last.isConnected && !last.closest("[inert]")) {
       last.focus({ preventScroll: true });
     }
-  }, [open, focusInitial]);
+  }, [open, focusInitial, hostInWindow]);
 
   // While presented, the page behind can't take the focus: Tab cycles through
   // the dialog's widgets (adw-dialog.c's tab bindings), and in a window the
@@ -384,7 +388,7 @@ export const FloatingSheet = forwardRef<HTMLDivElement, FloatingSheetProps>(func
     };
     dialog.addEventListener("wheel", handleWheel, { passive: false });
     return () => dialog.removeEventListener("wheel", handleWheel);
-  }, [mounted]);
+  }, [mounted, hostInWindow]);
 
   const handleKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
     onKeyDown?.(e);
@@ -457,7 +461,7 @@ export const FloatingSheet = forwardRef<HTMLDivElement, FloatingSheetProps>(func
       },
     });
     return () => animation.current?.cancel();
-  }, [open, mounted]);
+  }, [open, mounted, hostInWindow]);
 
   // Switching presentations keeps the progress: update_presentation() opens
   // the new sheet right away.
@@ -489,7 +493,7 @@ export const FloatingSheet = forwardRef<HTMLDivElement, FloatingSheetProps>(func
       if (fixHeight) sheet.style.height = "";
     };
     // Only when presented, like upstream: sheetStyle is read once.
-  }, [mounted, followsContentSize]);
+  }, [mounted, followsContentSize, hostInWindow]);
 
   // The host's size: the breakpoints, and how close to its edges the sheet
   // gets.
@@ -522,7 +526,7 @@ export const FloatingSheet = forwardRef<HTMLDivElement, FloatingSheetProps>(func
     observer.observe(container, { box: "border-box" });
     observer.observe(sheet, { box: "border-box" });
     return () => observer.disconnect();
-  }, [mounted, bottomSheet]);
+  }, [mounted, bottomSheet, hostInWindow]);
 
   useLayoutEffect(() => {
     if (mounted) breakpointRef.current?.(breakpoint.narrow, breakpoint.short);
@@ -587,6 +591,9 @@ export const FloatingSheet = forwardRef<HTMLDivElement, FloatingSheetProps>(func
               position: "relative",
               opacity: bottomSheet ? undefined : 0,
               transform: bottomSheet ? "translateY(100%)" : `scale(${MIN_SCALE})`,
+              // gtk_widget_set_overflow (self->sheet_bin, GTK_OVERFLOW_HIDDEN) in
+              // adw_floating_sheet_init(): clipped to its rounded corners.
+              overflow: bottomSheet ? undefined : "clip",
               // Within the padding (see sheetPadding()), like the allocation.
               maxWidth: bottomSheet ? undefined : "100%",
               maxHeight: "100%",
