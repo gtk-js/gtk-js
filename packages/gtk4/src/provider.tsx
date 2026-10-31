@@ -1,4 +1,4 @@
-import { type GtkTheme, type SystemColorScheme } from "@gtk-js/gtk-css";
+import { GTK_LAYERS, type GtkTheme, type SystemColorScheme } from "@gtk-js/gtk-css";
 import * as defaultIcons from "@gtk-js/icons-gtk4";
 import {
   type CSSProperties,
@@ -104,7 +104,12 @@ const RESET_ID = "gtk-js-reset";
  */
 const THEME_ID = "gtk-js-theme";
 const THEME_TEXT_ID = "gtk-js-theme-text";
-const BASE_CSS = resetCSS + "\n" + weighGtkNodeClasses(layoutCSS);
+/**
+ * The reset is in the lowest cascade layer (GTK_LAYERS): like the browser's
+ * defaults it strips, it's under everything, libadwaita's stylesheet under a
+ * theme for libadwaita apps included. Layout is unlayered, weighed with the theme.
+ */
+const BASE_CSS = `${GTK_LAYERS}\n@layer gtk-reset {\n${resetCSS}\n}\n${weighGtkNodeClasses(layoutCSS)}`;
 
 /**
  * Takes over the server-rendered element for `id`, if there is one. Each has a
