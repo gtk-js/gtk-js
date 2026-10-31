@@ -2040,3 +2040,56 @@ menubutton.flat > button:checked,
 headerbar menubutton > button:checked {
   color: inherit;
 }
+
+/*************
+ * Calendars *
+ *************/
+
+// CalendarView: round day cells, today filled with the accent, the selected
+// day ringed with it.
+calendar {
+  border-color: var(--fluent-card-stroke);
+  border-radius: $fluent_overlay_radius;
+
+  > header {
+    border-bottom-color: var(--fluent-divider-stroke);
+
+    > button {
+      border-radius: $fluent_control_radius;
+    }
+  }
+
+  > grid > label.day-number {
+    min-width: 22px;
+    min-height: 22px;
+    border-radius: 999px;
+
+    &:hover:not(:selected) {
+      background-color: var(--fluent-subtle-fill-secondary);
+    }
+
+    &.today {
+      box-shadow: none;
+      background-color: var(--accent-bg-color);
+      color: var(--accent-fg-color);
+      font-weight: 600;
+    }
+
+    &:selected {
+      border-radius: 999px;
+      background-color: transparent;
+      color: var(--accent-color);
+      box-shadow: inset 0 0 0 1px var(--accent-bg-color);
+
+      &.today {
+        background-color: var(--accent-bg-color);
+        color: var(--accent-fg-color);
+        box-shadow: inset 0 0 0 1px var(--accent-bg-color), inset 0 0 0 3px var(--view-bg-color);
+      }
+    }
+
+    &:checked {
+      border-radius: 999px;
+    }
+  }
+}
