@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const Xfce4ClipmanPlugin = createGtkIcon("xfce4-clipman-plugin", [["rect",{"width":"22","height":"22","fill":"currentColor","rx":"6","ry":"6"}],["path",{"d":"M14 8c-.554 0-1 .446-1 1h-2c-1.108 0-2 .892-2 2v11c0 1.108.892 2 2 2h10c1.108 0 2-.892 2-2V11c0-1.108-.892-2-2-2h-2c0-.554-.446-1-1-1Zm0 1h4v1h-4zm-3 1.033h2.002A.997.997 0 0 0 14 11h4c.543 0 .98-.429.998-.967H21c.554 0 1 .446 1 1v10.934c0 .554-.446 1-1 1H11c-.554 0-1-.446-1-1V11.033c0-.554.446-1 1-1"}],["rect",{"width":"6","height":"1","x":"13","y":"16","rx":".429","ry":".5"}],["rect",{"width":"6","height":"1","x":"13","y":"19","rx":".429","ry":".5"}],["rect",{"width":"6","height":"1","x":"13","y":"13","rx":".429","ry":".5"}]]);

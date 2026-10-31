@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const WindowRestore = createGtkIcon("window-restore", [["path",{"d":"M8 2.293l-.354.353L2.293 8 8 13.707 13.707 8zm0 1.414L12.293 8 8 12.293 3.707 8z","fill":"currentColor"}]]);
+export const WindowRestore = createGtkIcon("window-restore", [["path",{"d":"m6 6c-1.108 0-2 0.892-2 2v2c0 1.108 0.892 2 2 2h2c1.108 0 2-0.892 2-2v-2c0-1.108-0.892-2-2-2zm0 1h2c0.554 0 1 0.446 1 1v2c0 0.554-0.446 1-1 1h-2c-0.554 0-1-0.446-1-1v-2c0-0.554 0.446-1 1-1z","fill":"currentColor","strokeLinecap":"round","strokeLinejoin":"round","strokeWidth":"8"}],["path",{"d":"m8 4c-1.108 0-2 0.892-2 2h1c0-0.554 0.446-1 1-1h2c0.554 0 1 0.446 1 1v2c0 0.554-0.446 1-1 1v1c1.108 0 2-0.892 2-2v-2c0-1.108-0.892-2-2-2h-2z","fill":"currentColor","opacity":".35","strokeLinecap":"round","strokeLinejoin":"round","strokeWidth":"8"}]]);

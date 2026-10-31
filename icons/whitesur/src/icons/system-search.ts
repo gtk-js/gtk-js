@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const SystemSearch = createGtkIcon("system-search", [["path",{"d":"m35 4a9 9 0 0 0-9 9 9 9 0 0 0 9 9 9 9 0 0 0 5.994141-2.298828l8.298828 8.298828 0.707031-0.707031-8.300781-8.300782a9 9 0 0 0 2.300781-5.992187 9 9 0 0 0-9-9zm0 1a8 8 0 0 1 8 8 8 8 0 0 1-8 8 8 8 0 0 1-8-8 8 8 0 0 1 8-8z","fill":"currentColor"}],["path",{"d":"m22 0v32h32v-32z","fill":"none"}]]);
+export const SystemSearch = createGtkIcon("system-search", [["g",{"transform":"rotate(45 7.7071 8.7071)","fill":"currentColor"},[["path",{"d":"m6 3a5 5 0 0 0-5 5 5 5 0 0 0 5 5 5 5 0 0 0 5-5 5 5 0 0 0-5-5zm0 1a4 4 0 0 1 4 4 4 4 0 0 1-4 4 4 4 0 0 1-4-4 4 4 0 0 1 4-4z"}],["rect",{"x":"10","y":"7.5","width":"7","height":"1","strokeWidth":".93541"}]]]]);

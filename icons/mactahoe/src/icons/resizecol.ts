@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const Resizecol = createGtkIcon("resizecol", [["path",{"d":"M 7.5 2 L 7.5 14 L 8.5 14 L 8.5 2 L 7.5 2 z M 4.5 6 L 2.5 8 L 4.5 10 L 4.5 9 L 6.5 9 L 6.5 7 L 4.5 7 L 4.5 6 z M 11.5 6 L 11.5 7 L 9.5 7 L 9.5 9 L 11.5 9 L 11.5 10 L 13.5 8 L 11.5 6 z "}]]);

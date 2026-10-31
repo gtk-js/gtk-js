@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const LabplotShiftLeftX = createGtkIcon("labplot-shift-left-x", [["path",{"d":"m11 3l-2 4h4l-2-4m4 6v4l4-2-4-2m-4 1c-.554 0-1 .446-1 1 0 .554.446 1 1 1 .554 0 1-.446 1-1 0-.554-.446-1-1-1m-2 5l2 4 2-4h-4"}]]);

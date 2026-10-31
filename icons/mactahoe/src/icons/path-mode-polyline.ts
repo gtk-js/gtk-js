@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const PathModePolyline = createGtkIcon("path-mode-polyline", [["path",{"d":"M 2 2 L 2 5 L 4.125 5 L 9 11.5 L 9 14 L 12 14 L 12 11 L 9.875 11 L 5 4.4980469 L 5 4 L 11 4 L 11 5 L 14 5 L 14 2 L 11 2 L 11 3 L 5 3 L 5 2 L 2 2 z M 3 3 L 4 3 L 4 4 L 3.9980469 4 L 3 4 L 3 3 z M 12 3 L 13 3 L 13 4 L 12 4 L 12 3 z M 10 12 L 11 12 L 11 13 L 10 13 L 10 12 z "}]]);
+export const PathModePolyline = createGtkIcon("path-mode-polyline", [["path",{"d":"M7.105.512a.5.5 0 0 0-.382.072l-6 4a.5.5 0 0 0 .029.85l4.059 2.32-1.766 7.125a.5.5 0 0 0 .807.504l5.775-4.88 5.125 2.93a.5.5 0 0 0 .682-.185.5.5 0 0 0-.186-.682l-4.809-2.748 2.883-2.435a.5.5 0 0 0 .06-.705.5.5 0 0 0-.704-.06l-3.164 2.67-3.551-2.026 1.521-6.14a.5.5 0 0 0-.379-.61Zm-.9 1.619L5.061 6.746l-3.112-1.78ZM5.713 8.27 8.7 9.977l-4.314 3.642Z","fill":"currentColor","strokeLinecap":"round","strokeLinejoin":"round","fillOpacity":"1"}]]);

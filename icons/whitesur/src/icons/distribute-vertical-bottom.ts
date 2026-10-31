@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const DistributeVerticalBottom = createGtkIcon("distribute-vertical-bottom", [["path",{"d":"M 3 2 L 3 4 L 3 5 L 3 6 L 2 6 L 2 7 L 3 7 L 9 7 L 10 7 L 10 6 L 9 6 L 9 5 L 9 4 L 9 2 L 3 2 z M 4 3 L 8 3 L 8 6 L 4 6 L 4 3 z M 12 7 L 10 10 L 14 10 L 12 7 z M 3 9 L 3 13 L 2 13 L 2 14 L 10 14 L 10 13 L 9 13 L 9 9 L 4 9 L 3 9 z M 4 10 L 8 10 L 8 13 L 4 13 L 4 10 z M 10 11 L 12 14 L 14 11 L 10 11 z "}]]);
+export const DistributeVerticalBottom = createGtkIcon("distribute-vertical-bottom", [["g",{"transform":"matrix(0 -.66667 .66665 0 -472.233 712)"},[["path",{"d":"M1068 711.362h-9v-3h-1.5v19.5h1.5v-3h9zm-1.5 1.5v10.5h-7.5v-10.5zm-9 16.5-4.5-3v6zm-3-15h-9v-6h-1.5v19.5h1.5v-3h9zm-1.5 1.5v7.5h-7.5v-7.5zm-3 10.5-4.5 3 4.5 3z","fill":"currentColor","fillOpacity":"1"}]]]]);

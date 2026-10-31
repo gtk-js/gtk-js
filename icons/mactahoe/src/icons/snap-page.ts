@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const SnapPage = createGtkIcon("snap-page", [["path",{"d":"m4 15c-1.108 0-2-0.892-2-2v-10c0-1.108 0.892-2 2-2h8c1.108 0 2 0.892 2 2v7l-5 5h-1zm0-1h4v-5h5v-6c0-0.554-0.446-1-1-1h-8c-0.554 0-1 0.446-1 1v10c0 0.554 0.446 1 1 1zm5-0.41406 3.5859-3.5859h-3.5859z","fill":"currentColor"}]]);
+export const SnapPage = createGtkIcon("snap-page", [["path",{"d":"M4 1c-1.108 0-2 .892-2 2v10c0 1.108.892 2 2 2h8c1.108 0 2-.892 2-2V3c0-1.108-.892-2-2-2H4zm.018 1h7.964C12.546 2 13 2.454 13 3.018v9.964c0 .564-.454 1.018-1.018 1.018H4.018A1.015 1.015 0 0 1 3 12.982V3.018C3 2.454 3.454 2 4.018 2z","opacity":"1","fill":"currentColor","fillRule":"evenodd","strokeLinecap":"round","strokeLinejoin":"round"}]]);

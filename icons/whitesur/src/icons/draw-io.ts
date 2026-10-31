@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const DrawIo = createGtkIcon("draw-io", [["rect",{"width":"56.002","height":"56.002","x":"4","y":"3.969","fill":"currentColor","rx":"13.002","ry":"13.002"}],["path",{"fill":"currentColor","d":"M28 25.59 18 42.91l2.598 1.5 10-17.32zm8 0-2.598 1.5 10 17.32L46 42.91z","opacity":".5"}],["path",{"fill":"currentColor","d":"M28 16c-1.662 0-3 1.338-3 3v6c0 1.662 1.338 3 3 3h8c1.662 0 3-1.338 3-3v-6c0-1.662-1.338-3-3-3zM17 36c-1.662 0-3 1.338-3 3v6c0 1.662 1.338 3 3 3h8c1.662 0 3-1.338 3-3v-6c0-1.662-1.338-3-3-3zm22 0c-1.662 0-3 1.338-3 3v6c0 1.662 1.338 3 3 3h8c1.662 0 3-1.338 3-3v-6c0-1.662-1.338-3-3-3z"}]]);

@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const DistributeUnclump = createGtkIcon("distribute-unclump", [["path",{"d":"M 3 4 L 3 19 L 7 19 L 7 18 L 7 5 L 7 4 L 3 4 z M 14 4 L 14 8 L 19 8 L 19 4 L 14 4 z M 8 5 L 8 6 L 13 6 L 13 5 L 8 5 z M 16 9 L 16 14 L 17 14 L 17 9 L 16 9 z M 14 15 L 14 19 L 19 19 L 19 15 L 14 15 z M 8 17 L 8 18 L 13 18 L 13 17 L 8 17 z "}]]);
+export const DistributeUnclump = createGtkIcon("distribute-unclump", [["g",{"transform":"translate(-721.333 -548.908) scale(.66667)"},[["path",{"d":"M1082 823.362v22.5h6v-22.5h-6zm16.5 0v6h7.5v-6h-7.5zm-15 1.5h3v19.5h-3v-19.5zm6 0v1.5h7.5v-1.5h-7.5zm10.5 0h4.5v3h-4.5v-3zm1.5 6v7.5h1.5v-7.5h-1.5zm-3 9v6h7.5v-6h-7.5zm1.5 1.5h4.5v3h-4.5v-3zm-10.5 1.5v1.5h7.5v-1.5h-7.5z","fill":"currentColor","fillOpacity":"1"}]]]]);

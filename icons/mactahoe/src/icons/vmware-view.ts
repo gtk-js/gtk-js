@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const VmwareView = createGtkIcon("vmware-view", [["rect",{"width":"56","height":"56","x":"4","y":"4","fill":"currentColor","rx":"13.002","ry":"13.002"}],["path",{"fill":"currentColor","d":"M16.916 16C15.3 16 14 17.267 14 18.842v21.316C14 41.732 15.3 43 16.916 43h29.168C47.7 43 49 41.732 49 40.158V18.842C49 17.267 47.7 16 46.084 16zM17 19h29v21H17z"}],["path",{"fill":"currentColor","d":"M30 42h3v7h-3z"}],["rect",{"width":"3","height":"17","x":"47","y":"-40","fill":"currentColor","rx":"1.5","ry":"1.417","transform":"rotate(90)"}],["path",{"fill":"currentColor","d":"M29 21h5v4h-5zm-4 6h5v4h-5zm8 0h5v4h-5zm-4 6h5v4h-5zm-8 0h5v4h-5zm16 0h5v4h-5z"}]]);

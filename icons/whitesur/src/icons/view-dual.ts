@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const ViewDual = createGtkIcon("view-dual", [["path",{"d":"m6 3c-1.662 0-3 1.338-3 3v10c0 1.662 1.338 3 3 3h4.5 1 4.5c1.662 0 3-1.338 3-3v-10c0-1.662-1.338-3-3-3h-4.5-1-4.5zm0 1h4.5v14h-4.5c-1.108 0-2-0.892-2-2v-10c0-1.108 0.892-2 2-2zm5.5 0h4.5c1.108 0 2 0.892 2 2v10c0 1.108-0.892 2-2 2h-4.5v-14z","fill":"currentColor"}]]);
+export const ViewDual = createGtkIcon("view-dual", [["path",{"d":"M0 1v13h6c.975 0 1.602.8 1.602.8l.39.518.4-.51s.652-.793 1.612-.808H16V1h-6c-1.036 0-1.635.465-2 .82C7.635 1.465 7.036 1 6 1zm1 1h5c.983 0 1.6.799 1.6.799l.4.535.4-.535S9.017 2 10 2h5v11H9.992c-1.025.015-1.624.478-1.988.824A2.791 2.791 0 0 0 6 13H1zm1 2v1h4V4zm7 0v1h4V4zM2 6v1h4V6zm7 0v1h4V6zM2 8v1h4V8zm7 0v1h4V8zm-7 2v1h4v-1zm7 0v1h4v-1z","fontWeight":"400","fontFamily":"sans-serif","whiteSpace":"normal","overflow":"visible","fill":"currentColor"}]]);

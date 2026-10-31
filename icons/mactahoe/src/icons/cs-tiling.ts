@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const CsTiling = createGtkIcon("cs-tiling", [["rect",{"width":"22","height":"22","rx":"6","ry":"6"}],["path",{"d":"m6 0c-3.324 0-6 2.676-6 6v1h22v-1c0-3.324-2.676-6-6-6h-10z","fill":"currentColor","opacity":".35"}],["rect",{"width":"22","height":"1","y":"7","rx":"0","ry":"0"}],["circle",{"cx":"5","cy":"4","r":"1"}],["rect",{"width":"9.429","height":"4.714","x":"3","y":"9","fill":"currentColor","opacity":".75","rx":".786","ry":".786"}],["rect",{"width":"14.929","height":"4.714","x":"3","y":"14.5","fill":"currentColor","opacity":".75","rx":".786","ry":".786"}]]);

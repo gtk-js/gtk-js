@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const ApplicationXShellscript = createGtkIcon("application-x-shellscript", [["path",{"fill":"currentColor","d":"M9.525.264H2.91a.53.53 0 0 0-.529.53V15.61c0 .293.236.529.53.529h11.111c.293 0 .53-.236.53-.53V5.292c0-.142-.049-.33-.148-.53h-3.821a.53.53 0 0 1-.53-.53V.377a1.3 1.3 0 0 0-.527-.113z"}],["path",{"fill":"currentColor","d":"M10.049.375v3.857c0 .293.236.529.53.529h3.826a2 2 0 0 0-.382-.53L10.583.793a1.4 1.4 0 0 0-.529-.416z"}],["path",{"fill":"currentColor","d":"m4.936 5.368-.17.511 1.724.692-1.724.691.17.51 2.218-.938v-.527zM7.15 8.474v.522h2.638v-.522z"}]]);

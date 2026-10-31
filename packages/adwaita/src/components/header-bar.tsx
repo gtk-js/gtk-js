@@ -3,6 +3,7 @@ import {
   GtkWindowControls,
   GtkWindowHandle,
   useCenterLayout,
+  useDecorationLayout,
   useIcon,
   useWindowControls,
   windowControlButtons,
@@ -141,8 +142,8 @@ export const AdwHeaderBar = forwardRef<HTMLDivElement, AdwHeaderBarProps>(functi
   // to know (update_box_visibility()).
   const BackIcon = useIcon("GoPrevious");
   const controls = useWindowControls();
-  const decorationLayout =
-    decorationLayoutProp ?? controls?.decorationLayout ?? "appmenu:minimize,maximize,close";
+  const settingsLayout = useDecorationLayout();
+  const decorationLayout = decorationLayoutProp ?? controls?.decorationLayout ?? settingsLayout;
   const nav = useNavigation();
   // AdwHeaderBar and GtkWindowHandle are GtkBinLayout widgets: the window
   // handle and its center box get the bar's full height (adw-header-bar.c).

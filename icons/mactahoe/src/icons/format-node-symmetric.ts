@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const FormatNodeSymmetric = createGtkIcon("format-node-symmetric", [["path",{"d":"M 3 9 L 3 12 L 6 12 L 6 9 L 3 9 z M 16 9 L 16 12 L 19 12 L 19 9 L 16 9 z M 4 10 L 5 10 L 5 11 L 4 11 L 4 10 z M 17 10 L 18 10 L 18 11 L 17 11 L 17 10 z "}],["path",{"d":"M 9 8 L 9 10 L 6 10 L 6 11 L 9 11 L 9 12 L 13 12 L 13 11 L 16 11 L 16 10 L 13 10 L 13 8 L 9 8 z M 10 9 L 12 9 L 12 11 L 10 11 L 10 9 z "}]]);

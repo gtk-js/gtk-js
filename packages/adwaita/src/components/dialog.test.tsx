@@ -1,3 +1,4 @@
+import { DecorationLayout, GtkProvider } from "@gtk-js/gtk4";
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, test } from "vite-plus/test";
 import { AdwAlertDialog } from "./alert-dialog.tsx";
@@ -42,6 +43,27 @@ describe("AdwDialog", () => {
       </AdwDialog>,
     );
     expect(html).toContain("gtk-windowcontrols gtk-box-layout horizontal end");
+  });
+});
+
+describe("AdwDialog window buttons", () => {
+  const side = (html: string) =>
+    [...html.matchAll(/gtk-windowcontrols gtk-box-layout horizontal (start|end)/g)].map(
+      (m) => m[1],
+    );
+  const dialog = (layout?: string) =>
+    renderToStaticMarkup(
+      <GtkProvider decorationLayout={layout}>
+        <AdwDialog visible>
+          <AdwHeaderBar />
+        </AdwDialog>
+      </GtkProvider>,
+    );
+
+  test("only close, on the side the system layout puts it, like AdwSheetControls", () => {
+    expect(side(dialog())).toEqual(["end"]);
+    expect(side(dialog(DecorationLayout.MACOS))).toEqual(["start"]);
+    expect(dialog(DecorationLayout.MACOS)).not.toContain('aria-label="Minimize"');
   });
 });
 

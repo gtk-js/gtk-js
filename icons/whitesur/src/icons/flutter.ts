@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const Flutter = createGtkIcon("flutter", [["rect",{"width":"56.002","height":"56.002","x":"4","y":"3.969","fill":"currentColor","rx":"13.002","ry":"13.002"}],["path",{"fill":"currentColor","d":"M35.232 12.674 16.015 31.891l5.948 5.949L47.13 12.674zM30.78 46.745l5.937-5.937 10.412-10.412h-12.03l-10.29 10.29z"}],["path",{"fill":"currentColor","d":"m30.78 46.745 4.52 4.52h11.829L36.716 40.808z"}],["path",{"fill":"currentColor","d":"m24.742 40.752 5.948-5.948 6.026 6.004-5.937 5.937z"}],["path",{"fill":"currentColor","fillOpacity":".8","d":"m121.133 279.531 40.56-13.459 4.029-31.13z","transform":"translate(16.015 12.674)scale(.12189)"}]]);

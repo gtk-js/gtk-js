@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const FormatJustifyLeft = createGtkIcon("format-justify-left", [["path",{"d":"M 2 2 L 2 3 L 14 3 L 14 2 L 2 2 z M 2 4 L 2 5 L 9 5 L 9 4 L 2 4 z M 2 7 L 2 8 L 12 8 L 12 7 L 2 7 z M 2 9 L 2 10 L 7 10 L 7 9 L 2 9 z M 2 12 L 2 13 L 10 13 L 10 12 L 2 12 z M 12 13 L 12 14 L 14 14 L 14 13 L 12 13 z "}]]);
+export const FormatJustifyLeft = createGtkIcon("format-justify-left", [["g",{"transform":"translate(-613 -77)"},[["rect",{"fill":"currentColor","height":"1","overflow":"visible","width":"14","x":"614","y":"78"}],["rect",{"fill":"currentColor","height":"1","overflow":"visible","width":"10","x":"614","y":"81"}],["rect",{"fill":"currentColor","height":"1","overflow":"visible","width":"10","x":"614","y":"87"}],["rect",{"fill":"currentColor","height":"1","overflow":"visible","width":"14","x":"614","y":"90"}],["rect",{"fill":"currentColor","height":"1","overflow":"visible","width":"14","x":"614","y":"84"}]]]]);

@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const PreferencesDesktopTouchpad = createGtkIcon("preferences-desktop-touchpad", [["rect",{"width":"22","height":"22","rx":"6","ry":"6"}],["path",{"d":"M8.039 4.673a2.154 2.154 0 0 0-2.154 2.154A2.154 2.154 0 0 0 7.5 8.912V7.757a1.08 1.08 0 0 1-.54-.93A1.077 1.077 0 0 1 8.04 5.75a1.077 1.077 0 0 1 1.077 1.077 1 1 0 0 1-.01.145l.908.707a2.2 2.2 0 0 0 .179-.852 2.154 2.154 0 0 0-2.154-2.154m0 2.154.007 10.5 3.224-4.308h4.846z"}],["path",{"d":"M.158 16.49A6.98 6.98 0 0 0 6.984 22h3.536v-5.51zm11.281 0V22h3.577a6.98 6.98 0 0 0 6.826-5.51z"}]]);

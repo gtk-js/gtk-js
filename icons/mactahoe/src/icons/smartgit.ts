@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const Smartgit = createGtkIcon("smartgit", [["rect",{"width":"56.002","height":"56.002","x":"4","y":"3.969","fill":"currentColor","rx":"13.002","ry":"13.002"}],["path",{"d":"m37.472 20.644-1.291 6.436 7.816 4.884-10.055 6.283-1.724 8.597 22.279-14.852zm-5.474-3.645L9.5 31.998l17.27 11.513 1.303-6.498L20 31.97l10.388-6.491 1.688-8.425z"}],["path",{"fill":"currentColor","d":"m37.472 20.644-1.291 6.436 7.816 4.884-10.055 6.283-1.724 8.597 22.279-14.852z","transform":"translate(2.134 2.206)scale(.93337)"}],["path",{"fill":"currentColor","d":"M31.998 16.999 9.5 31.998l17.27 11.513 1.303-6.498L20 31.97l10.388-6.491 1.688-8.425z","transform":"translate(2.134 2.206)scale(.93337)"}]]);

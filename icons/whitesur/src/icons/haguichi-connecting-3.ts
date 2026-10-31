@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const HaguichiConnecting3 = createGtkIcon("haguichi-connecting-3", [["path",{"d":"m 11.23773,2.79071 -7.52344,8 7.52344,8 5.47656,0 -7.59375,-8.06836 7.59375,-7.93164 z m 0.26953,0.99609 3.02344,0 -8.08594,8.35547 -1.38867,-1.39062 z m -2.95026,7.82894 6.01081,6.17888 -2.86915,-0.0391 -4.72564,-5.07536 z"}]]);

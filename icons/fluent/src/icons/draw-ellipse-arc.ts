@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const DrawEllipseArc = createGtkIcon("draw-ellipse-arc", [["path",{"d":"M5.094 2.766A6 6 0 0 0 2 8a6 6 0 0 0 6 6 6 6 0 0 0 6-6 6 6 0 0 0-.09-1h-1.015A5 5 0 0 1 13 8a5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 2.725-4.445Z"}],["path",{"d":"M5.72 3.55a5 5 0 1 0 7.281 4.449 4.916 4.916 0 0 0-.104-.99S5.716 3.532 5.719 3.55"}]]);
+export const DrawEllipseArc = createGtkIcon("draw-ellipse-arc", [["path",{"d":"M5.094 2.766A6 6 0 0 0 2 8a6 6 0 0 0 6 6 6 6 0 0 0 6-6 6 6 0 0 0-.09-1h-1.015A5 5 0 0 1 13 8a5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 2.725-4.445Z","fill":"currentColor","fillOpacity":"1"}],["path",{"d":"M5.72 3.55a5 5 0 1 0 7.281 4.449 4.916 4.916 0 0 0-.104-.99S5.716 3.532 5.719 3.55","fill":"currentColor","fillOpacity":"1","opacity":".45"}]]);

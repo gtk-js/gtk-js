@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const WeatherOvercastSmall = createGtkIcon("weather-overcast-small", [["path",{"d":"m14.125 1028.9v15h9.4922a7.3828 7.5 0 0 0 7.3828-7.5 7.3828 7.5 0 0 0-7.3828-7.5z","fill":"currentColor","strokeWidth":"1.063"}],["circle",{"cx":"15.062","cy":"1033.6","r":"10.312","fill":"currentColor","strokeWidth":"1.0312"}],["path",{"d":"m8.5 1038.3v11.25h6.1364c2.8242 0 5.1136-2.5184 5.1136-5.6249 0-3.1067-2.2895-5.6251-5.1136-5.6251z","fill":"currentColor","strokeWidth":"1.0726"}],["circle",{"cx":"8.5","cy":"1042","r":"7.5","fill":"currentColor","strokeWidth":"1.0714"}]]);

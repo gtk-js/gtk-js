@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const LabplotZoomOutX = createGtkIcon("labplot-zoom-out-x", [["path",{"d":"m9 18-5 5 5 5 0.70703-0.70703-3.793-3.793h11.086v-1h-11.086l3.793-3.793z","fill":"currentColor"}],["path",{"d":"m16 4v1h9c1.108 0 2 0.892 2 2v18c0 1.108-0.892 2-2 2h-9v1h9c1.662 0 3-1.338 3-3v-18c0-1.662-1.338-3-3-3z","fill":"currentColor"}],["path",{"d":"m14 6c0-1.108-0.892-2-2-2h-2v1h2c0.554 0 1 0.446 1 1v2h1zm0 4h-1v2c0 0.554-0.446 1-1 1h-2v1h2c1.108 0 2-0.892 2-2zm-6-6h-2c-1.108 0-2 0.892-2 2v2h1v-2c0-0.554 0.446-1 1-1h2zm0 9h-2c-0.554 0-1-0.446-1-1v-2h-1v2c0 1.108 0.892 2 2 2h2z","fill":"currentColor"}]]);

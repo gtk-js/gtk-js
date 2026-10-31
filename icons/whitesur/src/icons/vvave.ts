@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const Vvave = createGtkIcon("vvave", [["rect",{"width":"56.002","height":"56.002","x":"4","y":"1062.5","fill":"currentColor","rx":"13.002","ry":"13.002"}],["path",{"fill":"currentColor","d":"M24 1076.5v4h4v-4zm12 0v4h4v-4zm-18 2v4h4v-4zm24 0v4h4v-4zm-30 2v4h4v-4zm18 0v4h4v-4zm18 0v4h4v-4zm-24 2v4h4v-4zm12 0v4h4v-4zm-18 2v4h4v-4zm24 0v4h4v-4zm-30 2v4h4v-4zm18 0v4h4v-4zm18 0v4h4v-4zm-24 2v4h4v-4zm12 0v4h4v-4zm-18 2v4h4v-4zm24 0v4h4v-4zm-30 2v4h4v-4zm18 0v4h4v-4zm18 0v4h4v-4zm-24 2v4h4v-4zm12 0v4h4v-4zm-18 2v4h4v-4zm24 0v4h4v-4zm-12 2v4h4v-4zm-6 2v4h4v-4zm12 0v4h4v-4zm-6 4v4h4v-4z"}]]);

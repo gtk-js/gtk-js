@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const DialogInformation = createGtkIcon("dialog-information", [["path",{}]]);
+export const DialogInformation = createGtkIcon("dialog-information", [["path",{"d":"M 8,0 A 8,8 0 0 1 16,8 8,8 0 0 1 8,16 8,8 0 0 1 0,8 8,8 0 0 1 8,0 Z M 8,1 A 7,7 0 0 0 1,8 7,7 0 0 0 8,15 7,7 0 0 0 15,8 7,7 0 0 0 8,1 Z m 0,2.75 a 1.25,1.25 0 1 1 0,2.5 1.25,1.25 0 0 1 0,-2.5 z M 9,7 v 5 H 7 V 7 h 1 z","fill":"currentColor"}]]);

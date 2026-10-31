@@ -2,8 +2,10 @@
  * GTK-JS CSS Reset
  *
  * Strips browser defaults inside the GtkProvider boundary so the
- * Adwaita/GTK theme CSS has full control. Uses :where() for zero
- * specificity so theme rules always win.
+ * Adwaita/GTK theme CSS has full control. GtkProvider puts it in the lowest
+ * cascade layer (gtk-reset, see GTK_LAYERS in @gtk-js/gtk-css), so theme
+ * rules always win, libadwaita's stylesheet under a theme for libadwaita
+ * apps included.
  */
 
 html:has(body > [data-gtk-provider]:not([data-gtk-portal])),

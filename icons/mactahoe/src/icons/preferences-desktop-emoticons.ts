@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const PreferencesDesktopEmoticons = createGtkIcon("preferences-desktop-emoticons", [["rect",{"width":"22","height":"22","fill":"currentColor","rx":"6","ry":"6"}],["circle",{"cx":"13.143","cy":"13.143","r":"1.143","fill":"currentColor"}],["circle",{"cx":"18.858","cy":"13.143","r":"1.143","fill":"currentColor"}],["path",{"fill":"currentColor","d":"M12.957 17.889A3.518 4.221 0 0 0 16.001 20a3.518 4.221 0 0 0 3.04-2.11h-.427a3.518 4.221 0 0 1-2.613 1.406 3.518 4.221 0 0 1-2.615-1.407z"}],["path",{"fill":"currentColor","fillRule":"evenodd","d":"M16 7a9 9 0 0 0-9 9 9 9 0 0 0 9 9 9 9 0 0 0 9-9 9 9 0 0 0-9-9m0 1a8 8 0 0 1 8 8 8 8 0 0 1-8 8 8 8 0 0 1-8-8 8 8 0 0 1 8-8"}]]);

@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const FormatSegmentLine = createGtkIcon("format-segment-line", [["path",{"d":"M 16 3 L 16 4 L 16 5 L 16 6 L 19 6 L 19 3 L 16 3 z M 17 4 L 18 4 L 18 5 L 17 5 L 17 4 z M 3 16 L 3 19 L 6 19 L 6 16 L 5 16 L 4 16 L 3 16 z M 4 17 L 5 17 L 5 18 L 4 18 L 4 17 z "}],["path",{"d":"M 16 5.3125 L 5.3125 16 L 6 16 L 6 16.6875 L 16.6875 6 L 16 6 L 16 5.3125 z "}]]);
