@@ -55,6 +55,17 @@ describe("AdwNavigationSplitView", () => {
     );
   });
 
+  test("at rest, its pages aren't stacking contexts, so their popovers rise above the other pane", () => {
+    // A page's z-index orders it against a transition's dimming and shadow;
+    // at rest it would trap the popovers in it (GTK draws them on their own
+    // surfaces), e.g. a sidebar menu overhanging the content pane.
+    for (const html of [render(split()), render(split({ collapsed: true }))]) {
+      const pages = html.match(/class="gtk-navigation-view-page[^"]*" [^>]*style="[^"]*"/g) ?? [];
+      expect(pages.length).toBeGreaterThan(0);
+      for (const page of pages) expect(page).not.toContain("z-index");
+    }
+  });
+
   test("collapsed, the pages are in a navigation view", () => {
     const html = render(split({ collapsed: true }));
     expect(html).toMatch(
