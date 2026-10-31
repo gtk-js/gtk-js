@@ -2712,6 +2712,25 @@ if (caseName === "alert-dialog-body") {
       </AdwaitaProvider>,
     ),
   );
+} else if (caseName === "scrolled-window-shrink") {
+  // Page for tests/cases/scrolled-window-shrink.test.ts: a scrolled window
+  // with a wrapping text view, in a box the test narrows after it renders.
+  createRoot(container).render(
+    <TestProvider colorScheme="light">
+      <div id="shrink-box" style={{ display: "grid", width: 600 }}>
+        <GtkScrolledWindow hasFrame minContentHeight={100}>
+          <GtkTextView
+            value={
+              'couldn\'t list files: Propfind "http://127.0.0.1:8099/": dial tcp 127.0.0.1:8099: connect: connection refused'
+            }
+            editable={false}
+            monospace
+            wrapMode="word-char"
+          />
+        </GtkScrolledWindow>
+      </div>
+    </TestProvider>,
+  );
 } else if (caseName === "alert-dialog-long-heading") {
   // Page for tests/cases/alert-dialog-long-heading.test.ts: a heading longer
   // on one line than the widest the dialog gets.
