@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const PreferencesDesktopDefaultApplications = createGtkIcon("preferences-desktop-default-applications", [["rect",{"width":"22","height":"22","rx":"6","ry":"6"}],["path",{"d":"M11 3 8.528 8.267 3 9.11l4 4.1L6.056 19 11 16.267 15.944 19 15 13.212l4-4.1-5.528-.845Z"}]]);
+export const PreferencesDesktopDefaultApplications = createGtkIcon("preferences-desktop-default-applications", [["path",{"d":"m8 3.0004 1.325 3.6108 3.675 0.20833-2.8583 2.4417 0.9475 3.7383-3.0892-2.1025-3.0892 2.1025 0.9475-3.7383-2.8583-2.4417 3.675-0.20833z","fill":"currentColor","strokeWidth":".83333"}],["path",{"d":"m8 0a8 8 0 0 0-8 8 8 8 0 0 0 8 8 8 8 0 0 0 8-8 8 8 0 0 0-8-8zm-0.09375 1a7 7 0 0 1 0.09375 0 7 7 0 0 1 7 7 7 7 0 0 1-7 7 7 7 0 0 1-7-7 7 7 0 0 1 6.9062-7z","fill":"currentColor","strokeLinecap":"round","strokeLinejoin":"round","strokeWidth":"1.1446"}]]);

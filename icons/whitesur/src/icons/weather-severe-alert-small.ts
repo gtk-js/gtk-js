@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const WeatherSevereAlertSmall = createGtkIcon("weather-severe-alert-small", [["path",{"d":"m7 5v8h5.0625a3.9375 4 0 0 0 3.9375-4 3.9375 4 0 0 0-3.9375-4z","fill":"currentColor","strokeWidth":".56695"}],["circle",{"cx":"6","cy":"7","r":"6","fill":"currentColor","strokeWidth":".6"}],["circle",{"cx":"8.5","cy":"12.5","r":"3.5","fill":"currentColor","stopColor":"#000000"}],["rect",{"x":"8","y":"10","width":"1","height":"3","rx":".5","ry":".5","fill":"currentColor","stopColor":"#000000"}],["rect",{"x":"8","y":"14","width":"1","height":"1","rx":".5","ry":".5","fill":"currentColor","stopColor":"#000000"}]]);

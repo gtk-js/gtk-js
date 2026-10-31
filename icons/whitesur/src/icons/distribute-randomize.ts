@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const DistributeRandomize = createGtkIcon("distribute-randomize", [["path",{"d":"M 13 4 L 13 8 L 18 8 L 18 4 L 13 4 z M 3 5 L 3 9 L 8 9 L 8 5 L 3 5 z M 14 9 L 14 13 L 19 13 L 19 9 L 14 9 z M 8 10 L 8 14 L 13 14 L 13 10 L 8 10 z M 3 15 L 3 19 L 8 19 L 8 15 L 3 15 z M 9 15 L 9 19 L 14 19 L 14 15 L 9 15 z "}]]);
+export const DistributeRandomize = createGtkIcon("distribute-randomize", [["g",{"transform":"translate(-696 -548.908) scale(.66667)"},[["path",{"d":"M1050 824.862v4.5h6v-4.5h-6zm9 0v4.5h6v-4.5h-6zm-7.5 1.5h3v1.5h-3v-1.5zm9 0h3v1.5h-3v-1.5zm-14.971 4.497v4.5h6v-4.5h-6zm14.97.003v4.5h6v-4.5h-6zm-13.5 1.5h3v1.5h-3v-1.5zm6 0v4.5h6v-4.5h-6zm9 0h3v1.5h-3v-1.5zm-7.5 1.5h3v1.5h-3v-1.5zm-9 3v4.5h6v-4.5h-6zm1.5 1.5h3v1.5h-3v-1.5zm13.5 0v4.5h6v-4.5h-6zm1.5 1.5h3v1.5h-3v-1.5zm-9 1.5v4.5h6v-4.5h-6zm1.5 1.5h3v1.5h-3v-1.5z","opacity":"1","strokeWidth":"1.06066","fill":"currentColor","fillOpacity":"1"}]]]]);

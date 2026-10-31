@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const NetworkServerDatabase = createGtkIcon("network-server-database", [["path",{"d":"M 8,2 A 6,2 0 0 0 2,4 l 0,8 a 6,2 0 0 0 6,2 6,2 0 0 0 6,-2 L 14,4 A 6,2 0 0 0 8,2 Z M 8,3 A 5,1 0 0 1 13,4 5,1 0 0 1 8,5 5,1 0 0 1 3,4 5,1 0 0 1 8,3 Z M 3,5.1 A 6,2 0 0 0 8,6 6,2 0 0 0 13,5.1 L 13,8 A 5,1 0 0 1 8,9 5,1 0 0 1 3,8 L 3,5.1 Z m 0,4 A 6,2 0 0 0 8,10 6,2 0 0 0 13,9.1 L 13,12 A 5,1 0 0 1 8,13 5,1 0 0 1 3,12 L 3,9.1 Z"}]]);
+export const NetworkServerDatabase = createGtkIcon("network-server-database", [["path",{"d":"m8 2a6 2 0 0 0-6 2v8a6 2 0 0 0 6 2 6 2 0 0 0 6-2v-8a6 2 0 0 0-6-2zm0 1a5 1 0 0 1 5 1 5 1 0 0 1-5 1 5 1 0 0 1-5-1 5 1 0 0 1 5-1zm-5 2.1016a6 2 0 0 0 5 0.89844 6 2 0 0 0 5-0.89648v2.8965a5 1 0 0 1-5 1 5 1 0 0 1-5-1v-2.8984zm0 4a6 2 0 0 0 5 0.89844 6 2 0 0 0 5-0.89648v2.8965a5 1 0 0 1-5 1 5 1 0 0 1-5-1v-2.8984z","style":"fill: currentColor"}]]);

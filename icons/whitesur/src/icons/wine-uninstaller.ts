@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const WineUninstaller = createGtkIcon("wine-uninstaller", [["rect",{"width":"56.002","height":"56.002","x":"4","y":"3.969","fill":"currentColor","rx":"13.002","ry":"13.002"}],["path",{"fill":"currentColor","d":"m18.339 31-.011-9.751 10.938-1.63V31zm12.752-11.671 14.578-2.328v14H31.091zM45.673 33l-.004 14-14.578-2.249v-11.75zM29.27 44.498l-10.931-1.644v-9.857h10.927v11.498z"}],["circle",{"cx":"46","cy":"46","r":"16","fill":"currentColor"}],["path",{"fill":"currentColor","d":"m53.778 39.636-1.414-1.414L46 44.586l-6.364-6.364-1.414 1.414L44.586 46l-6.364 6.364 1.414 1.414L46 47.414l6.364 6.364 1.414-1.414L47.414 46z"}]]);

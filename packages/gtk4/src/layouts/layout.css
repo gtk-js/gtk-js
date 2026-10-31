@@ -1169,7 +1169,7 @@
    it unless their valign says otherwise. Window controls are as tall as the
    header bar, in a theme whose buttons are shorter than it. */
 .gtk-center-layout:not(.vertical)
-  > .gtk-box-layout.horizontal:is(.gtk-center-layout-start, .gtk-center-layout-end) {
+> .gtk-box-layout.horizontal:is(.gtk-center-layout-start, .gtk-center-layout-end) {
   align-self: stretch;
   align-items: stretch;
 }

@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const FormatTextDirectionLtr = createGtkIcon("format-text-direction-ltr", [["path",{"d":"M 2 2 L 2 6 L 6 6 L 6 2 L 2 2 z M 7 2 L 7 3 L 14 3 L 14 2 L 7 2 z M 7 4 L 7 5 L 9 5 L 9 4 L 7 4 z M 2 7 L 2 8 L 12 8 L 12 7 L 2 7 z M 2 9 L 2 10 L 7 10 L 7 9 L 2 9 z M 2 12 L 2 13 L 10 13 L 10 12 L 2 12 z M 12 13 L 12 14 L 14 14 L 14 13 L 12 13 z "}]]);
+export const FormatTextDirectionLtr = createGtkIcon("format-text-direction-ltr", [["g",{"transform":"translate(-533 -57)"},[["rect",{"fill":"currentColor","height":"1","overflow":"visible","width":"14","x":"534","y":"58"}],["rect",{"fill":"currentColor","height":"1","overflow":"visible","width":"14","x":"534","y":"61"}],["path",{"d":"M534 67h10v1h-10zM546 68v2h-10v1h10v2l3-2.5z","fill":"currentColor","overflow":"visible"}],["rect",{"fill":"currentColor","height":"1","overflow":"visible","width":"14","x":"534","y":"64"}]]]]);

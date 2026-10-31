@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const ViewFilterSymbolicRtl = createGtkIcon("view-filter-symbolic-rtl", [["path",{}]]);
+export const ViewFilterSymbolicRtl = createGtkIcon("view-filter-symbolic-rtl", [["g",{"transform":"translate(-893 -57)"},[["path",{"d":"M902.001 59v12h-1V59zm6 1v1h-4v-1zm-9.5 0s.5 0 .5.5v3s0 .5-.5.5h-3s-.5 0-.5-.5v-3s0-.5.5-.5zm-.5 1h-2v2h2zm10 2v1h-4v-1zm0 3v1h-4v-1zm-9.5 0s.5 0 .5.5v3s0 .5-.5.5h-3s-.5 0-.5-.5v-3s0-.5.5-.5zm-.5 1h-2v2h2zm10 2v1h-4v-1z","fill":"currentColor","overflow":"visible"}]]]]);

@@ -2,19 +2,17 @@ import { forwardRef, type HTMLAttributes } from "react";
 import { noFocusOnClick } from "../focus-on-click.ts";
 import { useIcon } from "../icon-context.tsx";
 import { alignAttrs, type GtkAlignProps } from "../types.ts";
-import { useWindowControls } from "../window-controls-context.tsx";
+import { useDecorationLayout, useWindowControls } from "../window-controls-context.tsx";
 
 export interface GtkWindowControlsProps extends HTMLAttributes<HTMLDivElement>, GtkAlignProps {
   /** Which side of the decoration layout to show. */
   side: "start" | "end";
   /**
    * The decoration layout, e.g. "appmenu:minimize,maximize,close". Defaults to
-   * the enclosing window's (or dialog's), then to that one.
+   * the enclosing window's (or dialog's), then to GtkProvider's (GtkSettings).
    */
   decorationLayout?: string;
 }
-
-const DEFAULT_DECORATION_LAYOUT = "appmenu:minimize,maximize,close";
 
 /** The window controls' accessible labels (gtkwindowcontrols.c). */
 const CONTROL_LABELS: Record<string, string> = {
@@ -95,7 +93,8 @@ export const GtkWindowControls = forwardRef<HTMLDivElement, GtkWindowControlsPro
     ref,
   ) {
     const controls = useWindowControls();
-    const layout = decorationLayout ?? controls?.decorationLayout ?? DEFAULT_DECORATION_LAYOUT;
+    const settingsLayout = useDecorationLayout();
+    const layout = decorationLayout ?? controls?.decorationLayout ?? settingsLayout;
     const buttons = windowControlButtons(layout, side);
     if (buttons.length === 0) return null;
 

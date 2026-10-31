@@ -1,0 +1,3 @@
+import { createGtkIcon } from "@gtk-js/icon-helpers";
+
+export const ApplicationXml = createGtkIcon("application-xml", [["path",{"d":"m9.025 4-2.91 8h0.861l2.91-8zm-5.255 1.333-3.77 2.222v0.89l3.77 2.222v-0.889l-2.932-1.776 2.932-1.78zm8.46 0v0.889l2.932 1.78-2.932 1.776v0.889l3.77-2.222v-0.89z","fill":"currentColor","overflow":"visible"}]]);

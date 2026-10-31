@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const EditTableDeleteColumn = createGtkIcon("edit-table-delete-column", [["path",{"d":"m2 2v12h12v-12h-11zm1 1h10v3h-2v1h2v2h-2v1h2v3h-10v-3h2v-1h-2v-2h2v-1h-2z"}],["path",{"d":"m5 3v10h1.719l3.281-3.281v3.281h1v-10h-1v1.281l-4 4v-2.563l2.719-2.719h-1.438l-1.281 1.281v-1.281zm5 2.719v2.563l-4 4v-2.563z"}]]);

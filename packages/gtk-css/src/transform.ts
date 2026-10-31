@@ -26,6 +26,9 @@ export function preprocess(rawCSS: string, options?: CompileOptions): string {
     ["accent_fg_color", "white"],
   ]);
 
+  // The runtime colors above, until the stylesheet defines them.
+  const seeded = new Set(["accent_bg_color", "accent_fg_color"]);
+
   let insideDarkMedia = false;
   let braceDepth = 0;
 
@@ -54,7 +57,8 @@ export function preprocess(rawCSS: string, options?: CompileOptions): string {
         darkColors.set(m[1]!, m[2]!);
       } else {
         lightColors.set(m[1]!, m[2]!);
-        if (!darkColors.has(m[1]!)) {
+        // A theme that defines the accent itself (a fixed one) replaces the seed in both.
+        if (!darkColors.has(m[1]!) || seeded.delete(m[1]!)) {
           darkColors.set(m[1]!, m[2]!);
         }
       }

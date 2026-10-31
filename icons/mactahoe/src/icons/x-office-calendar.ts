@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const XOfficeCalendar = createGtkIcon("x-office-calendar", [["path",{"d":"m5 0v1h1v-1zm1 1v1h-1v-1h-2c-1.108 0-2 0.892-2 2v10c0 1.108 0.892 2 2 2h10c1.108 0 2-0.892 2-2v-10c0-1.108-0.892-2-2-2h-2v1h-1v-1zm4 0h1v-1h-1zm-7 4h10c0.554 0 1 0.446 1 1v7c0 0.554-0.446 1-1 1h-10c-0.554 0-1-0.446-1-1v-7c0-0.554 0.446-1 1-1zm1 2v1h2v-1zm3 0v1h2v-1zm3 0v1h2v-1zm-6 2v1h2v-1zm3 0v1h2v-1zm3 0v1h2v-1zm-6 2v1h2v-1zm3 0v1h2v-1z","fill":"currentColor"}]]);
+export const XOfficeCalendar = createGtkIcon("x-office-calendar", [["path",{"d":"M5.5 1c-.277 0-.5.227-.5.5V2h1v-.5c0-.277-.223-.5-.5-.5zM6 2v.5a.5.5 0 1 1-1 0V2H3.5C2.669 2 2 2.669 2 3.5v9c0 .831.669 1.5 1.5 1.5h9c.831 0 1.5-.669 1.5-1.5v-9c0-.831-.669-1.5-1.5-1.5H11v.5a.5.5 0 1 1-1 0V2zm4 0h1v-.5a.5.5 0 1 0-1 0zM3.5 6h9c.277 0 .5.223.5.5v6c0 .277-.223.5-.5.5h-9a.499.499 0 0 1-.5-.5v-6c0-.277.223-.5.5-.5z","fill":"currentColor","overflow":"visible"}]]);

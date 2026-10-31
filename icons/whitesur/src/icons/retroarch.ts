@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const Retroarch = createGtkIcon("retroarch", [["rect",{"width":"56.002","height":"56.002","x":"4","y":"3.969","fill":"currentColor","rx":"13.002","ry":"13.002"}],["path",{"fill":"currentColor","d":"m22 18 4 6h-8l-1 4h-4.5l1.5-6h-3L8 34h7.2L14 38h7l-5 6h6l4-6h12l4 6h6l-5-6h7l-1.2-4H56l-3-12h-3l1.5 6H47l-1-4h-8l4-6h-3l-4 6h-6l-4-6z"}],["path",{"d":"M38 28v5h5v-5z","opacity":".2"}],["path",{"fill":"currentColor","d":"M38 27v5h5v-5z"}],["path",{"d":"M21 28v5h5v-5z","opacity":".2"}],["path",{"fill":"currentColor","d":"M21 27v5h5v-5z"}]]);

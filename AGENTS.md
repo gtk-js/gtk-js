@@ -60,6 +60,7 @@ When implementing OR modifying a widget, component, or stylesheet:
 - `image()` replacement needs balanced-paren matching for nested `color-mix()`.
 - Convert `background-image: image(X)` to a `linear-gradient` (NOT `background-color`) — this preserves layering so hover overlays (background-image) render on top of base background-color correctly. A single-color overlay is drawn as two layers that transition with `background`, because browsers can't interpolate images and GTK cross-fades them: the registered `--gtk-background-overlay` color, and currentColor at the registered `--gtk-background-tint` percentage for `alpha(currentColor, …)` overlays (a registered color can't fade to a mix of currentColor; a percentage can, and keeps the widget's actual color).
 - The selector map in `selectors.ts` must cover ALL bare GTK selectors. Audit after any upstream update.
+- A GTK theme made for libadwaita apps (WhiteSur, MacTahoe) is loaded natively over libadwaita's stylesheet as the user's `gtk.css`, which outranks it whatever the specificity. `compileGtkCSS`'s `libadwaita` option builds it that way: libadwaita's stylesheet in the `gtk-libadwaita` cascade layer, then the theme unlayered, with libadwaita's custom properties (`--window-bg-color`, …) resolved from the theme's named colors. GtkProvider's reset is in the lower `gtk-reset` layer (`GTK_LAYERS`), so it can't override that base.
 - GTK node names keep a type selector's specificity: `row` becomes `:where(.gtk-row):not(_)`, not `.gtk-row`. As plain classes, rules like `list.boxed-list > row` and `row.entry.focused` would tie and the later one would win. gtk-js's own `layout.css` is weighed the same way when injected.
 - `--gtk-current-color` mirrors every `color` declaration. Widgets whose own color changes with a state (`switch:checked`, `button:drop(active)`; only GTK's state pseudo-classes count, not `:not()`) read currentColor through it, overlays included: GTK resolves currentcolor before transitioning, browsers resolve it against the element's new color. Everything else keeps plain `currentColor`, so it follows colors set by app CSS. Plain app CSS that recolors one of those widgets has to set `--gtk-current-color` too (CSS run through `gtkToWeb` does).
 
@@ -72,8 +73,10 @@ GTK uses `content-box` sizing — `min-height` refers to content only, padding i
 - `@gtk-js/icon-helpers` — shared `createGtkIcon` factory and SVG parsing/build helpers
 - `@gtk-js/gtk4-icons` — GTK4 base icons from `upstream/gtk/gtk/icons/`
 - `@gtk-js/adwaita-icons` — Adwaita theme icons from `upstream/adwaita-icon-theme/`
-- Icons are React components generated at build time from upstream SVGs
+- Icons are React components generated at build time from upstream SVGs, keeping their groups (transforms, opacity), their viewBox, and the parts GTK paints from the theme's palette (`class="warning"` → `var(--warning-color)`)
+- Widgets ask for symbolic icons, so a theme's package holds its `-symbolic` icons only, each from the directory GtkIconTheme would pick at 16px (`iconThemeFiles()`). The vinceliuice themes' installers merge `links/` (aliases) into `src/`: their builds do too
 - Both icon packages export the same component names — the Provider's `icons` prop selects which set
+- `AdwaitaProvider`, `MacTahoeProvider` and `WhiteSurProvider` (in the theme packages) each give a theme with its icon set; the `icons` an app passes go over the set's. The mac ones also set macOS's window button order through GtkProvider's `decorationLayout` (GtkSettings:gtk-decoration-layout), which header bars and dialogs (only close, on its side, like AdwSheetControls) follow
 - Widgets load icons from context, never by importing an icon package directly
 - The website (`apps/website/`) should prefer Adwaita icons (`@gtk-js/adwaita-icons`) over GTK4 icons
 

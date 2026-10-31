@@ -125,9 +125,7 @@ function parseColor(value: string): Color | null {
         const H = (parseFloat(oklch[3]) * Math.PI) / 180;
         return [value, oklch[1], `${C * Math.cos(H)}`, `${C * Math.sin(H)}`, oklch[4]];
       })()
-    : value.match(
-        /oklab\(([-\d.e+]+)\s+([-\d.e+]+)\s+([-\d.e+]+)(?:\s*\/\s*([-\d.e+]+))?\)/,
-      );
+    : value.match(/oklab\(([-\d.e+]+)\s+([-\d.e+]+)\s+([-\d.e+]+)(?:\s*\/\s*([-\d.e+]+))?\)/);
   if (oklab) {
     const L = parseFloat(oklab[1]!),
       a = parseFloat(oklab[2]!),

@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const GnumericColumnSize = createGtkIcon("gnumeric-column-size", [["path",{"d":"m9 3v7h-2v-2l-4 3 4 3v-2h2v7h4v-7h2v2l4-3-4-3v2h-2v-7h-3zm1 1h2v2h-2zm0 3h2v2h-2zm0 3h2v2h-2zm0 3h2v2h-2zm0 3h2v2h-2z","fill":"currentColor"}]]);

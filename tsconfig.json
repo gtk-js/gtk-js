@@ -27,7 +27,12 @@
     "noUnusedParameters": false,
     "noPropertyAccessFromIndexSignature": false
   },
-  "include": ["packages/*/src/**/*.ts", "packages/*/src/**/*.tsx", "themes/*/src/**/*.ts"],
+  "include": [
+    "packages/*/src/**/*.ts",
+    "packages/*/src/**/*.tsx",
+    "themes/*/src/**/*.ts",
+    "themes/*/src/**/*.tsx"
+  ],
   "exclude": [
     "packages/adwaita-icons/src/icons/**",
     "packages/gtk4-icons/src/icons/**",

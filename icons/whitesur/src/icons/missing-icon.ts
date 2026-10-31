@@ -1,0 +1,3 @@
+import { createGtkIconFromSvg } from "@gtk-js/icon-helpers";
+
+export const MissingIcon = createGtkIconFromSvg("image-missing", "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\" version=\"1.1\">\n  <defs id=\"defs3\">\n    <style id=\"current-color-scheme\" type=\"text/css\">\n      .ColorScheme-Text { color:#363636; }\n    </style>\n  </defs>\n<path style=\"fill:currentColor\" class=\"ColorScheme-Text\"\nd=\"M8 0C3.588 0 0 3.588 0 8s3.588 8 8 8 8-3.588 8-8-3.588-8-8-8zm0 1c3.872 0 7 3.128 7 7a6.968 6.968 0 0 1-1.71 4.582L3.417 2.711A6.968 6.968 0 0 1 8 1zM2.711 3.418l9.871 9.871A6.968 6.968 0 0 1 8 15c-3.872 0-7-3.128-7-7 0-1.756.647-3.355 1.711-4.582z\"/>\n</svg>\n");

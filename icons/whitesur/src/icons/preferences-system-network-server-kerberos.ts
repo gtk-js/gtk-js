@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const PreferencesSystemNetworkServerKerberos = createGtkIcon("preferences-system-network-server-kerberos", [["rect",{"width":"22","height":"22","rx":"6","ry":"6"}],["path",{"d":"M.287 5A7 7 0 0 0 0 7v1h22V7c0-.696-.1-1.367-.287-2ZM0 14v1c0 .696.1 1.367.287 2h21.426A7 7 0 0 0 22 15v-1z"}],["rect",{"width":"16","height":"16","x":"3","y":"3","rx":"3","ry":"3"}],["path",{"fill":"currentColor","d":"m14 4.5-2 2-2 1-1 1-5 1v2l1 1v1l1 1v1l1 1h7l1 1 3-3-1-1-1-5-2 2-2 1-1 1-4.654.932L6 13.086v-.766l4.494-.9 1.1-1.1 2-1 1.642-1.642L15 6.5l-2 2-2 1-1 1-4.654.932L5 11.086v-.766l4.494-.9 1.1-1.1 2-1 1.642-1.642z"}]]);

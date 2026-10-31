@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const EditSelect = createGtkIcon("edit-select", [["path",{"d":"m4.75 2c-.393 0-.75.357-.75.75 0 .393.357.75.75.75.393 0 .75-.357.75-.75 0-.393-.357-.75-.75-.75m.75 2.25l.005 9.75 2.995-4h4.5z"}]]);
+export const EditSelect = createGtkIcon("edit-select", [["path",{"d":"m 0,3 v 4 l 4,4 V 3 Z m 12,3 v 8 h 4 v -4 z","fill":"currentColor","overflow":"visible"}]]);

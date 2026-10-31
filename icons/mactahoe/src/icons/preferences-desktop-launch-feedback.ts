@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const PreferencesDesktopLaunchFeedback = createGtkIcon("preferences-desktop-launch-feedback", [["rect",{"width":"22","height":"22","fill":"currentColor","rx":"6","ry":"6"}],["circle",{"cx":"16","cy":"16","r":"9","fill":"currentColor","fillRule":"evenodd"}],["path",{"fill":"currentColor","d":"M16 9a7 7 0 0 0-7 7 7 7 0 0 0 7 7 7 7 0 0 0 7-7 7 7 0 0 0-7-7m0 1a6 6 0 0 1 6 6 6 6 0 0 1-6 6 6 6 0 0 1-6-6 6 6 0 0 1 6-6"}],["path",{"fill":"currentColor","d":"M16 9a7 7 0 0 0-7 7 7 7 0 0 0 7 7 7 7 0 0 0 4.948-2.053l-.707-.707a6 6 0 0 1-4.24 1.76 6 6 0 0 1-6-6 6 6 0 0 1 6-6z"}]]);

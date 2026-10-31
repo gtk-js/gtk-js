@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const ApplicationInfo = createGtkIcon("application-info", [["path",{"fill":"currentColor","d":"m35.979.996-25 .004c-1.108 0-2 .892-2 2v55.998c0 1.108.892 2 2 2h42c1.108 0 2-.892 2-2V19.996c0-.535-.181-1.245-.557-2.002H39.98c-1.108 0-2-.892-2-2V1.422a5 5 0 0 0-2-.426z"}],["path",{"fill":"currentColor","d":"M37.979 1.419v14.575c0 1.108.892 2 2 2h14.465a7.6 7.6 0 0 0-1.445-2l-13-13c-.63-.797-1.33-1.279-2-1.574z"}],["path",{"fill":"currentColor","fillRule":"evenodd","d":"M32 26a13 13 0 0 0-13 13 13 13 0 0 0 13 13 13 13 0 0 0 13-13 13 13 0 0 0-13-13m0 5a1 1 0 0 1 1 1 1 1 0 0 1-1 1 1 1 0 0 1-1-1 1 1 0 0 1 1-1m0 4c.554 0 1 .446 1 1v11c0 .554-.446 1-1 1s-1-.446-1-1V36c0-.554.446-1 1-1","opacity":".75"}]]);

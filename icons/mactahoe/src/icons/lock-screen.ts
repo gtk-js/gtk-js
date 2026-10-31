@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const LockScreen = createGtkIcon("lock-screen", [["rect",{"width":"56","height":"56","x":"4","y":"4","fill":"currentColor","rx":"13.002","ry":"13.002"}],["path",{"fillRule":"evenodd","d":"M32 18c-4.432 0-8 3.568-8 8v6c-2.216 0-4 1.784-4 4v8c0 2.216 1.784 4 4 4h16c2.216 0 4-1.784 4-4v-8c0-2.216-1.784-4-4-4v-6c0-4.432-3.568-8-8-8m0 2c3.324 0 6 2.676 6 6v6H26v-6c0-3.324 2.676-6 6-6","opacity":".15"}],["path",{"fill":"currentColor","fillRule":"evenodd","d":"M32 17c-4.432 0-8 3.568-8 8v6c-2.216 0-4 1.784-4 4v8c0 2.216 1.784 4 4 4h16c2.216 0 4-1.784 4-4v-8c0-2.216-1.784-4-4-4v-6c0-4.432-3.568-8-8-8m0 2c3.324 0 6 2.676 6 6v6H26v-6c0-3.324 2.676-6 6-6"}]]);

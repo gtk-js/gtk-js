@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const KalarmDisabled = createGtkIcon("kalarm-disabled", [["rect",{"y":"534.36218","x":"326","height":"22","width":"22"}],["path",{"transform":"translate(304,534.3622)","d":"M 33 3 A 1.5 1.5 0 0 0 31.5 4.5 A 1.5 1.5 0 0 0 31.667969 5.1855469 A 5 5 0 0 0 28 10 A 3.5 6 0 0 1 25 15.931641 L 25 16.953125 L 25 17 L 35 17 L 35 16 L 26.804688 16 A 4.5 7 0 0 0 29 10 A 4 4 0 0 1 33 6 A 4 4 0 0 1 37 10 A 4.5 7 0 0 0 37.443359 13 L 38.472656 13 A 3.5 6 0 0 1 38 10 A 5 5 0 0 0 34.333984 5.1816406 A 1.5 1.5 0 0 0 34.5 4.5 A 1.5 1.5 0 0 0 33 3 z "}],["path",{"transform":"translate(304,534.3622)","d":"M 36 14 L 36 20 L 38 20 L 38 14 L 36 14 z M 39 14 L 39 20 L 41 20 L 41 14 L 39 14 z "}]]);

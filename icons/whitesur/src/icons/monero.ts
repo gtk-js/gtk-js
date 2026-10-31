@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const Monero = createGtkIcon("monero", [["path",{"fill":"currentColor","d":"m13.739 14.957-9.74 25.565v6.087l15.827 2.435h24.348L60 46.609v-6.087l-9.74-25.565z"}],["path",{"fill":"currentColor","d":"M58.824 28v14.609H42.998v.396A12.974 12.974 0 0 0 56 55.97h29.996c7.19 0 12.982-5.779 13.002-12.965v-.396H83.172V28L70.998 40.174z","transform":"translate(-38.998 4)"}],["path",{"fill":"currentColor","d":"M55.373 0a12.96 12.96 0 0 0-12.375 12.971v23.551h9.738V13.391l18.262 18.262L89.26 13.391v23.131H99v-23.59A12.96 12.96 0 0 0 86.626 0H55.374z","transform":"translate(-38.998 4)"}]]);

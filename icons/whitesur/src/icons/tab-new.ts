@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const TabNew = createGtkIcon("tab-new", [["path",{"d":"m17.5 12c-1.933 0-3.5 1.567-3.5 3.5s1.567 3.5 3.5 3.5 3.5-1.567 3.5-3.5-1.567-3.5-3.5-3.5zm-0.5 1h1v2h2v1h-2v2h-1v-2h-2v-1h2v-2z","fill":"currentColor"}],["path",{"d":"m5 4c-1.662 0-3 1.338-3 3v8c0 1.662 1.338 3 3 3h8v-1h-8c-1.108 0-2-0.892-2-2v-7h8v1h8v2h1v-4c0-1.662-1.338-3-3-3zm0 1h12c1.108 0 2 0.892 2 2h-16c0-1.108 0.892-2 2-2z","fill":"currentColor"}]]);
+export const TabNew = createGtkIcon("tab-new", [["rect",{"x":"7","y":"2","width":"1","height":"13","fill":"currentColor"}],["rect",{"transform":"rotate(90)","x":"8","y":"-14","width":"1","height":"13","fill":"currentColor"}]]);

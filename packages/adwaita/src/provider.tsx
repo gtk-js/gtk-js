@@ -9,6 +9,11 @@ export interface AdwaitaProviderProps
   colorScheme?: "light" | "dark" | "auto";
   /** Accent color (hex). Defaults to GNOME blue via AdwaitaTheme. */
   accentColor?: string;
+  /**
+   * Icons over the Adwaita icon theme's, e.g. the app's own. Names neither
+   * has fall back to GTK's own icons.
+   */
+  icons?: GtkProviderProps["icons"];
   children: ReactNode;
 }
 
@@ -21,11 +26,13 @@ export interface AdwaitaProviderProps
 export function AdwaitaProvider({
   colorScheme = "auto",
   accentColor,
+  icons,
   ...rest
 }: AdwaitaProviderProps) {
   const theme = useMemo(
     () => new AdwaitaTheme({ colorScheme, accentColor }),
     [colorScheme, accentColor],
   );
-  return <GtkProvider theme={theme} icons={adwaitaIcons} {...rest} />;
+  const iconMap = useMemo(() => (icons ? { ...adwaitaIcons, ...icons } : adwaitaIcons), [icons]);
+  return <GtkProvider theme={theme} icons={iconMap} {...rest} />;
 }

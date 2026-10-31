@@ -37,3 +37,13 @@ export function resolveColorScheme(
   }
   return "light";
 }
+
+/**
+ * gtk-js's cascade layers, lowest first: GtkProvider's reset, then
+ * libadwaita's stylesheet under a theme made for libadwaita apps
+ * (CompileOptions.libadwaita). Themes are unlayered, so they outrank both
+ * whatever their selectors' specificity, as GTK's style provider priorities
+ * do. Each stylesheet that uses them starts with this, so the order holds
+ * whichever loads first.
+ */
+export const GTK_LAYERS = "@layer gtk-reset, gtk-libadwaita;";

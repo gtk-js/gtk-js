@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const MediaPlaylistNormal = createGtkIcon("media-playlist-normal", [["path",{"d":"M 16 5 L 16 7 L 3 7 L 3 8 L 16 8 L 16 10 L 19 7.5 L 16 5 z M 16 12 L 16 14 L 3 14 L 3 15 L 16 15 L 16 17 L 19 14.5 L 16 12 z "}]]);

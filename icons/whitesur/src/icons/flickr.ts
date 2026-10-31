@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const Flickr = createGtkIcon("flickr", [["rect",{"width":"14.817","height":"14.817","x":"1.058","y":"1.05","fill":"currentColor","rx":"3.44","ry":"3.44"}],["path",{"d":"M7.408 8.424a1.852 1.852 0 1 1-3.703 0 1.852 1.852 0 0 1 3.703 0","opacity":".15"}],["path",{"fill":"currentColor","d":"M7.408 8.424a1.852 1.852 0 1 1-3.703 0 1.852 1.852 0 0 1 3.703 0"}],["path",{"d":"M13.228 8.424a1.852 1.852 0 1 1-3.703 0 1.852 1.852 0 0 1 3.703 0","opacity":".15"}],["path",{"fill":"currentColor","d":"M13.228 8.424a1.852 1.852 0 1 1-3.703 0 1.852 1.852 0 0 1 3.703 0"}]]);

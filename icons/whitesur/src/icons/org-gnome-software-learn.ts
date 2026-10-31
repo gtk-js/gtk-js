@@ -1,3 +1,0 @@
-import { createGtkIcon } from "@gtk-js/icon-helpers";
-
-export const OrgGnomeSoftwareLearn = createGtkIcon("org-gnome-software-learn", [["rect",{"x":"1","y":"1","width":"30","height":"30","rx":"8","ry":"8","fill":"currentColor"}],["path",{"d":"m64 4 60 100h-120z","fill":"currentColor"}],["path",{"d":"m64 5.5039v90.496h8z","fill":"currentColor"}],["path",{"d":"m69.879 72-5.8789 12 8 20h52l-18.773-31.875z","fill":"currentColor"}],["path",{"d":"m64 5.5039v90.496h-8z","fill":"currentColor"}],["path",{"d":"m23.199 72-19.199 32h52l8-20-5.8789-12z","fill":"currentColor"}],["path",{"d":"m58.121 72 5.8789 12v44l-8-24z","fill":"currentColor"}],["path",{"d":"m69.879 72-5.8789 12v44l8-24z","fill":"currentColor"}]]);

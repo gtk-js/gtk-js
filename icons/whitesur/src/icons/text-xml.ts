@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const TextXml = createGtkIcon("text-xml", [["path",{"fill":"currentColor","strokeWidth":".1","d":"M9.09 2L5.944 13.74l.967.26 3.146-11.74zM5.285 4L2.324 7.145 2 7.493l.324.346 2.943 3.162.715-.695-2.621-2.813L6 4.696zm5.43 0L10 4.695l2.639 2.797-2.621 2.813.715.695 2.943-3.162.324-.346-.324-.348z"}]]);
+export const TextXml = createGtkIcon("text-xml", [["path",{"d":"m9.025 4-2.91 8h0.861l2.91-8zm-5.255 1.333-3.77 2.222v0.89l3.77 2.222v-0.889l-2.932-1.776 2.932-1.78zm8.46 0v0.889l2.932 1.78-2.932 1.776v0.889l3.77-2.222v-0.89z","fill":"currentColor","overflow":"visible"}]]);

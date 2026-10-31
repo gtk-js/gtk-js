@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const ObjectColumns = createGtkIcon("object-columns", [["path",{"d":"M 2 2 L 2 14 L 5 14 L 5 2 L 2 2 z M 6 2 L 6 14 L 10 14 L 10 2 L 6 2 z M 11 2 L 11 14 L 14 14 L 14 2 L 11 2 z M 3 3 L 4 3 L 4 13 L 3 13 L 3 3 z M 7 3 L 9 3 L 9 13 L 7 13 L 7 3 z M 12 3 L 13 3 L 13 13 L 12 13 L 12 3 z "}]]);
+export const ObjectColumns = createGtkIcon("object-columns", [["path",{"d":"M2 2h1v12H2zm6 0h1v12H8zm6 0h1v12h-1z","fill":"currentColor","strokeLinecap":"round","strokeLinejoin":"round"}]]);

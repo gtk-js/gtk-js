@@ -1,3 +1,3 @@
 import { createGtkIcon } from "@gtk-js/icon-helpers";
 
-export const DocumentImportWeb = createGtkIcon("document-import-web", [["path",{"d":"M3 13c2.197 0 4-1.803 4-4S5.197 5 3 5m0 2c1.116 0 2 .884 2 2s-.884 2-2 2"}],["path",{"fill":"currentColor","d":"M4 0C2.338 0 1 1.338 1 3v10c0 1.662 1.338 3 3 3h8c1.662 0 3-1.338 3-3V4l-4-4Zm0 1h6v2c0 1.108.892 2 2 2h2v8c0 1.108-.892 2-2 2H4c-1.108 0-2-.892-2-2V3c0-1.108.892-2 2-2Z"}]]);
+export const DocumentImportWeb = createGtkIcon("document-import-web", [["path",{"d":"M3 13c2.197 0 4-1.803 4-4S5.197 5 3 5m0 2c1.116 0 2 .884 2 2s-.884 2-2 2","fill":"currentColor","fillOpacity":"1","opacity":"1"}],["path",{"d":"M4 0C2.338 0 1 1.338 1 3v10c0 1.662 1.338 3 3 3h8c1.662 0 3-1.338 3-3V4l-4-4Zm0 1h6v2c0 1.108.892 2 2 2h2v8c0 1.108-.892 2-2 2H4c-1.108 0-2-.892-2-2V3c0-1.108.892-2 2-2Z","style":"fill: currentColor"}]]);
