@@ -1,0 +1,2042 @@
+// Windows 11's look, over libadwaita's stylesheet. Colors and metrics are
+// WinUI 3's (microsoft-ui-xaml's *_themeresources.xaml); names in comments are
+// its resource keys. Rules extend libadwaita's placeholders (%button_basic,
+// %button_basic_flat, ...) where they can, so they reach every selector
+// libadwaita styles that way.
+
+/*****************
+ * Color palette *
+ *****************/
+
+:root {
+  // The system accent color (SystemAccentColor). FluentTheme sets it.
+  --fluent-accent: #0078d4;
+
+  --window-radius: #{$fluent_overlay_radius};
+
+  // AccentFillColorDefault is SystemAccentColorDark1 on light.
+  --accent-bg-color: oklch(from var(--fluent-accent) Min(l, 0.5) c h);
+  --accent-fg-color: white;
+  // AccentTextFillColorPrimary, SystemAccentColorDark2
+  --accent-color: oklch(from var(--fluent-accent) Min(l, 0.42) c h);
+
+  --destructive-bg-color: #c42b1c; // SystemFillColorCritical
+  --destructive-fg-color: white;
+  --destructive-color: #c42b1c;
+  --success-bg-color: #0f7b0f; // SystemFillColorSuccess
+  --success-fg-color: white;
+  --success-color: #0f7b0f;
+  --warning-bg-color: #9d5d00; // SystemFillColorCaution
+  --warning-fg-color: white;
+  --warning-color: #9d5d00;
+  --error-bg-color: #c42b1c;
+  --error-fg-color: white;
+  --error-color: #c42b1c;
+
+  // Mica, SolidBackgroundFillColorBase
+  --window-bg-color: #f3f3f3;
+  --window-fg-color: RGB(0 0 0 / 89.4%); // TextFillColorPrimary
+  // LayerFillColorDefault over Mica
+  --view-bg-color: #f9f9f9;
+  --view-fg-color: RGB(0 0 0 / 89.4%);
+  --headerbar-bg-color: #f3f3f3;
+  --headerbar-fg-color: RGB(0 0 0 / 89.4%);
+  --headerbar-border-color: RGB(0 0 0 / 89.4%);
+  --headerbar-backdrop-color: #f3f3f3;
+  --headerbar-shade-color: RGB(0 0 0 / 5.9%);
+  --headerbar-darker-shade-color: RGB(0 0 0 / 8%);
+  --sidebar-bg-color: #f3f3f3;
+  --sidebar-fg-color: RGB(0 0 0 / 89.4%);
+  --sidebar-backdrop-color: #f3f3f3;
+  --sidebar-border-color: RGB(0 0 0 / 5.9%);
+  --sidebar-shade-color: RGB(0 0 0 / 5.9%);
+  --secondary-sidebar-bg-color: #f9f9f9;
+  --secondary-sidebar-fg-color: RGB(0 0 0 / 89.4%);
+  --secondary-sidebar-backdrop-color: #f9f9f9;
+  --secondary-sidebar-border-color: RGB(0 0 0 / 5.9%);
+  --secondary-sidebar-shade-color: RGB(0 0 0 / 5.9%);
+  // CardBackgroundFillColorDefault over Mica
+  --card-bg-color: #fbfbfb;
+  --card-fg-color: RGB(0 0 0 / 89.4%);
+  --card-shade-color: RGB(0 0 0 / 5.9%);
+  // ContentDialog: LayerFillColorAlt
+  --dialog-bg-color: #ffffff;
+  --dialog-fg-color: RGB(0 0 0 / 89.4%);
+  // AcrylicInAppFillColorDefault, without the blur
+  --popover-bg-color: #f9f9f9;
+  --popover-fg-color: RGB(0 0 0 / 89.4%);
+  --popover-shade-color: RGB(0 0 0 / 14%);
+  --thumbnail-bg-color: #ffffff;
+  --thumbnail-fg-color: RGB(0 0 0 / 89.4%);
+  --shade-color: RGB(0 0 0 / 5.9%);
+  --scrollbar-outline-color: transparent;
+  --active-toggle-bg-color: #ffffff;
+  --active-toggle-fg-color: RGB(0 0 0 / 89.4%);
+  --overview-bg-color: #f3f3f3;
+  --overview-fg-color: RGB(0 0 0 / 89.4%);
+  --border-color: RGB(0 0 0 / 5.9%);
+
+  // Control fills and strokes
+  --fluent-text-secondary: RGB(0 0 0 / 62%); // TextFillColorSecondary
+  --fluent-text-disabled: RGB(0 0 0 / 36%); // TextFillColorDisabled
+  --fluent-text-on-accent-secondary: RGB(255 255 255 / 70%);
+  --fluent-text-on-accent-disabled: #ffffff;
+  --fluent-control-fill: RGB(255 255 255 / 70%); // ControlFillColorDefault
+  --fluent-control-fill-secondary: RGB(249 249 249 / 50%);
+  --fluent-control-fill-tertiary: RGB(249 249 249 / 30%);
+  --fluent-control-fill-disabled: RGB(249 249 249 / 30%);
+  --fluent-control-fill-input-active: #ffffff;
+  --fluent-control-strong-fill: RGB(0 0 0 / 44.7%);
+  --fluent-control-strong-fill-disabled: RGB(0 0 0 / 31.8%);
+  --fluent-control-solid-fill: #ffffff;
+  --fluent-control-alt-fill-secondary: RGB(0 0 0 / 2.4%);
+  --fluent-control-alt-fill-tertiary: RGB(0 0 0 / 5.9%);
+  --fluent-control-alt-fill-quarternary: RGB(0 0 0 / 9.4%);
+  --fluent-subtle-fill-secondary: RGB(0 0 0 / 3.7%);
+  --fluent-subtle-fill-tertiary: RGB(0 0 0 / 2.4%);
+  --fluent-control-stroke: RGB(0 0 0 / 5.9%);
+  --fluent-control-stroke-secondary: RGB(0 0 0 / 16%);
+  --fluent-control-strong-stroke: RGB(0 0 0 / 44.7%);
+  --fluent-control-strong-stroke-disabled: RGB(0 0 0 / 21.6%);
+  --fluent-accent-stroke: RGB(255 255 255 / 7.8%);
+  --fluent-accent-stroke-secondary: RGB(0 0 0 / 40%);
+  --fluent-accent-fill-disabled: RGB(0 0 0 / 21.6%);
+  --fluent-card-stroke: RGB(0 0 0 / 5.9%);
+  --fluent-surface-stroke-flyout: RGB(0 0 0 / 5.9%);
+  --fluent-divider-stroke: RGB(0 0 0 / 8%);
+  --fluent-focus-stroke-outer: RGB(0 0 0 / 89.4%);
+  --fluent-caption-close-bg: #c42b1c;
+  --fluent-flyout-shadow: 0 8px 16px RGB(0 0 0 / 14%);
+  --fluent-tooltip-shadow: 0 4px 8px RGB(0 0 0 / 14%);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    // AccentFillColorDefault is SystemAccentColorLight2 on dark.
+    --accent-bg-color: oklch(from var(--fluent-accent) Max(l, 0.8) calc(c * 0.85) h);
+    --accent-fg-color: black;
+    // AccentTextFillColorPrimary, SystemAccentColorLight3
+    --accent-color: oklch(from var(--fluent-accent) Max(l, 0.88) calc(c * 0.7) h);
+
+    --destructive-bg-color: #c42b1c;
+    --destructive-color: #ff99a4;
+    --success-bg-color: #6ccb5f;
+    --success-fg-color: black;
+    --success-color: #6ccb5f;
+    --warning-bg-color: #fce100;
+    --warning-fg-color: black;
+    --warning-color: #fce100;
+    --error-bg-color: #c42b1c;
+    --error-color: #ff99a4;
+
+    --window-bg-color: #202020;
+    --window-fg-color: #ffffff;
+    --view-bg-color: #272727;
+    --view-fg-color: #ffffff;
+    --headerbar-bg-color: #202020;
+    --headerbar-fg-color: #ffffff;
+    --headerbar-border-color: #ffffff;
+    --headerbar-backdrop-color: #202020;
+    --headerbar-shade-color: RGB(0 0 0 / 30%);
+    --headerbar-darker-shade-color: RGB(0 0 0 / 40%);
+    --sidebar-bg-color: #202020;
+    --sidebar-fg-color: #ffffff;
+    --sidebar-backdrop-color: #202020;
+    --sidebar-border-color: RGB(0 0 0 / 30%);
+    --sidebar-shade-color: RGB(0 0 0 / 30%);
+    --secondary-sidebar-bg-color: #272727;
+    --secondary-sidebar-fg-color: #ffffff;
+    --secondary-sidebar-backdrop-color: #272727;
+    --secondary-sidebar-border-color: RGB(0 0 0 / 30%);
+    --secondary-sidebar-shade-color: RGB(0 0 0 / 30%);
+    --card-bg-color: #2b2b2b;
+    --card-fg-color: #ffffff;
+    --card-shade-color: RGB(0 0 0 / 10%);
+    --dialog-bg-color: #2b2b2b;
+    --dialog-fg-color: #ffffff;
+    --popover-bg-color: #2c2c2c;
+    --popover-fg-color: #ffffff;
+    --popover-shade-color: RGB(0 0 0 / 26%);
+    --thumbnail-bg-color: #2b2b2b;
+    --thumbnail-fg-color: #ffffff;
+    --shade-color: RGB(0 0 0 / 25%);
+    --active-toggle-bg-color: RGB(255 255 255 / 8.4%);
+    --active-toggle-fg-color: #ffffff;
+    --overview-bg-color: #202020;
+    --overview-fg-color: #ffffff;
+    --border-color: RGB(255 255 255 / 8.4%);
+
+    --fluent-text-secondary: RGB(255 255 255 / 77.3%);
+    --fluent-text-disabled: RGB(255 255 255 / 36.5%);
+    --fluent-text-on-accent-secondary: RGB(0 0 0 / 50%);
+    --fluent-text-on-accent-disabled: RGB(255 255 255 / 53%);
+    --fluent-control-fill: RGB(255 255 255 / 6%);
+    --fluent-control-fill-secondary: RGB(255 255 255 / 8.4%);
+    --fluent-control-fill-tertiary: RGB(255 255 255 / 3.1%);
+    --fluent-control-fill-disabled: RGB(255 255 255 / 4.3%);
+    --fluent-control-fill-input-active: RGB(30 30 30 / 70%);
+    --fluent-control-strong-fill: RGB(255 255 255 / 54.5%);
+    --fluent-control-strong-fill-disabled: RGB(255 255 255 / 24.7%);
+    --fluent-control-solid-fill: #454545;
+    --fluent-control-alt-fill-secondary: RGB(0 0 0 / 10%);
+    --fluent-control-alt-fill-tertiary: RGB(255 255 255 / 4.3%);
+    --fluent-control-alt-fill-quarternary: RGB(255 255 255 / 7%);
+    --fluent-subtle-fill-secondary: RGB(255 255 255 / 6%);
+    --fluent-subtle-fill-tertiary: RGB(255 255 255 / 4%);
+    --fluent-control-stroke: RGB(255 255 255 / 7%);
+    --fluent-control-stroke-secondary: RGB(255 255 255 / 9.4%);
+    --fluent-control-strong-stroke: RGB(255 255 255 / 54.5%);
+    --fluent-control-strong-stroke-disabled: RGB(255 255 255 / 15.7%);
+    --fluent-accent-stroke: RGB(255 255 255 / 7.8%);
+    --fluent-accent-stroke-secondary: RGB(0 0 0 / 13.7%);
+    --fluent-accent-fill-disabled: RGB(255 255 255 / 15.7%);
+    --fluent-card-stroke: RGB(0 0 0 / 10%);
+    --fluent-surface-stroke-flyout: RGB(0 0 0 / 20%);
+    --fluent-divider-stroke: RGB(255 255 255 / 8.4%);
+    --fluent-focus-stroke-outer: #ffffff;
+    --fluent-flyout-shadow: 0 8px 16px RGB(0 0 0 / 26%);
+    --fluent-tooltip-shadow: 0 4px 8px RGB(0 0 0 / 26%);
+  }
+}
+
+// The elevation border of buttons and text boxes (ControlElevationBorderBrush):
+// a darker bottom edge on light, a lighter top edge on dark.
+@mixin elevation-border($accent: false) {
+  @if $accent {
+    border-color: var(--fluent-accent-stroke) var(--fluent-accent-stroke)
+      var(--fluent-accent-stroke-secondary);
+  } @else {
+    border-color: var(--fluent-control-stroke) var(--fluent-control-stroke)
+      var(--fluent-control-stroke-secondary);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    @if $accent {
+      border-color: var(--fluent-accent-stroke) var(--fluent-accent-stroke)
+        var(--fluent-accent-stroke-secondary);
+    } @else {
+      border-color: var(--fluent-control-stroke-secondary) var(--fluent-control-stroke)
+        var(--fluent-control-stroke);
+    }
+  }
+}
+
+/*********
+ * Fonts *
+ *********/
+
+// Segoe UI Variable, 14px (Body). Selawik is Microsoft's open metric-compatible
+// stand-in where Segoe UI isn't installed.
+window,
+popover,
+tooltip {
+  font-family: "Segoe UI Variable Text", "Segoe UI", Selawik, "Noto Sans", "Open Sans", sans-serif;
+  font-size: 10.5pt;
+}
+
+// The type ramp: Title, Subtitle, Body Strong, Caption.
+.title-1 {
+  font-size: 286%; // Title Large, 40px
+  font-weight: 600;
+}
+
+.title-2 {
+  font-size: 200%; // Title, 28px
+  font-weight: 600;
+}
+
+.title-3 {
+  font-size: 143%; // Subtitle, 20px
+  font-weight: 600;
+}
+
+.title-4 {
+  font-size: 129%; // Body Large, 18px
+  font-weight: 400;
+}
+
+.heading {
+  font-weight: 600;
+}
+
+.caption,
+.caption-heading {
+  font-size: 86%;
+}
+
+.caption-heading {
+  font-weight: 600;
+}
+
+/**********
+ * Window *
+ **********/
+
+window.csd {
+  border-radius: var(--window-radius);
+  outline: none;
+  box-shadow: 0 0 0 1px RGB(0 0 0 / 20%), 0 2px 21px RGB(0 0 0 / 22%),
+    0 32px 64px RGB(0 0 0 / 28%);
+
+  &:backdrop {
+    box-shadow: 0 0 0 1px RGB(0 0 0 / 15%), 0 2px 10.67px RGB(0 0 0 / 15%),
+      0 16px 32px RGB(0 0 0 / 19%);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    box-shadow: 0 0 0 1px RGB(117 117 117 / 40%), 0 2px 21px RGB(0 0 0 / 37%),
+      0 32px 64px RGB(0 0 0 / 37%);
+
+    &:backdrop {
+      box-shadow: 0 0 0 1px RGB(117 117 117 / 40%), 0 2px 10.67px RGB(0 0 0 / 30%),
+        0 16px 32px RGB(0 0 0 / 30%);
+    }
+  }
+
+  &.dialog.message,
+  &.messagedialog {
+    box-shadow: 0 0 0 1px RGB(0 0 0 / 20%), 0 8px 16px RGB(0 0 0 / 14%);
+  }
+}
+
+/*************************
+ * Title bars, header bars *
+ *************************/
+
+// A Windows 11 title bar on Mica: no border or shadow, the title in Caption
+// type, and the caption buttons flush with the top right corner.
+headerbar {
+  min-height: 40px;
+  box-shadow: none;
+  margin-left: 0;
+  margin-right: 0;
+
+  > windowhandle > box {
+    padding: 0;
+
+    // Room for the window's corner, as the title bar's start padding.
+    > box.start:dir(ltr),
+    > box.end:dir(rtl) {
+      margin-left: 4px;
+    }
+
+    > box.start:dir(rtl),
+    > box.end:dir(ltr) {
+      margin-right: 0;
+    }
+
+    > box.start,
+    > box.end {
+      border-spacing: 4px;
+
+      > :not(windowcontrols) {
+        margin-top: 4px;
+        margin-bottom: 4px;
+      }
+    }
+
+    > widget > box.start,
+    > widget > box.end {
+      > :not(windowcontrols) {
+        margin-top: 4px;
+        margin-bottom: 4px;
+      }
+    }
+  }
+
+  &:backdrop {
+    > windowhandle {
+      filter: none;
+    }
+
+    // The title and caption glyphs dim, like an inactive window's.
+    .title {
+      color: var(--fluent-text-disabled);
+    }
+
+    windowcontrols > button:not(:hover):not(:active) {
+      filter: opacity(0.45);
+    }
+  }
+
+  &.default-decoration {
+    min-height: 32px;
+
+    > windowhandle > box {
+      padding: 0;
+    }
+  }
+}
+
+window:not(.ssd-frame) > {
+  .titlebar:not(.flat) {
+    box-shadow: none;
+  }
+
+  .titlebar headerbar:not(.flat) {
+    box-shadow: none;
+  }
+
+  headerbar.titlebar,
+  .titlebar headerbar {
+    min-height: 40px;
+
+    > windowhandle > box {
+      padding-bottom: 0;
+    }
+
+    &.default-decoration {
+      min-height: 32px;
+
+      > windowhandle > box {
+        padding-bottom: 0;
+      }
+    }
+  }
+}
+
+%headerbar-flat {
+  min-height: 40px;
+
+  > windowhandle > box {
+    padding-bottom: 0;
+  }
+
+  &.default-decoration {
+    min-height: 32px;
+
+    > windowhandle > box {
+      padding-bottom: 0;
+    }
+  }
+}
+
+%headerbar-shrunk {
+  min-height: 40px;
+
+  > windowhandle > box {
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+}
+
+headerbar,
+windowtitle {
+  .title {
+    font-weight: 400;
+    font-size: 86%; // Caption, 12px
+  }
+
+  .subtitle {
+    font-size: 86%;
+  }
+}
+
+/***********
+ * Buttons *
+ ***********/
+
+// Button: ButtonPadding 11,5,11,6 and a 1px elevation border, 32px tall.
+button,
+%button_basic {
+  min-height: 20px;
+  padding: 5px 11px;
+  border: 1px solid transparent;
+  font-weight: 400;
+
+  &:disabled {
+    filter: none;
+    color: var(--fluent-text-disabled);
+  }
+
+  &.image-button {
+    min-width: 16px;
+    padding-left: 7px;
+    padding-right: 7px;
+  }
+
+  &.text-button {
+    padding-left: 11px;
+    padding-right: 11px;
+  }
+
+  &.text-button.image-button,
+  &.image-text-button {
+    padding-left: 11px;
+    padding-right: 11px;
+
+    > box,
+    > box > box {
+      border-spacing: 8px;
+
+      > label {
+        padding-left: 0;
+        padding-right: 0;
+      }
+    }
+  }
+
+  &.arrow-button {
+    padding-left: 11px;
+    padding-right: 11px;
+
+    > box {
+      border-spacing: 8px;
+    }
+  }
+}
+
+// Default (elevated) buttons: ControlFillColorDefault,
+// ControlFillColorSecondary on hover, ControlFillColorTertiary pressed.
+button,
+%button_basic_raised {
+  background-color: var(--fluent-control-fill);
+  background-clip: padding-box;
+  @include elevation-border;
+
+  &:hover {
+    background-color: var(--fluent-control-fill-secondary);
+  }
+
+  &.keyboard-activating,
+  &:active {
+    background-color: var(--fluent-control-fill-tertiary);
+    border-color: var(--fluent-control-stroke);
+    color: var(--fluent-text-secondary);
+  }
+
+  // A checked ToggleButton is an accent button.
+  &:checked {
+    color: var(--accent-fg-color);
+    background-color: var(--accent-bg-color);
+    @include elevation-border($accent: true);
+
+    &:hover {
+      background-color: color-mix(in srgb, var(--accent-bg-color) 90%, transparent);
+    }
+
+    &.keyboard-activating,
+    &:active {
+      background-color: color-mix(in srgb, var(--accent-bg-color) 80%, transparent);
+      border-color: transparent;
+      color: var(--fluent-text-on-accent-secondary);
+    }
+  }
+
+  &:disabled {
+    background-color: var(--fluent-control-fill-disabled);
+    border-color: var(--fluent-control-stroke);
+
+    &:checked {
+      color: var(--fluent-text-on-accent-disabled);
+      background-color: var(--fluent-accent-fill-disabled);
+      border-color: transparent;
+    }
+  }
+}
+
+button {
+  &.opaque {
+    @include elevation-border;
+    background-image: none;
+  }
+
+  // AccentButtonStyle
+  &.suggested-action {
+    @include elevation-border($accent: true);
+  }
+}
+
+// AccentFillColorSecondary and Tertiary are the accent at 90% and 80%: the
+// window's background shows through. An overlay of it does the same here, on
+// the button or on a split or menu button holding it.
+%opaque_button {
+  background-clip: padding-box;
+
+  &:hover {
+    background-image: image(color-mix(in srgb, var(--window-bg-color) 10%, transparent));
+  }
+
+  &.keyboard-activating,
+  &:active {
+    background-image: image(color-mix(in srgb, var(--window-bg-color) 20%, transparent));
+    color: var(--fluent-text-on-accent-secondary);
+    border-color: transparent;
+  }
+
+  &:checked {
+    background-image: none;
+
+    &:hover {
+      background-image: image(color-mix(in srgb, var(--window-bg-color) 10%, transparent));
+    }
+
+    &.keyboard-activating,
+    &:active {
+      background-image: image(color-mix(in srgb, var(--window-bg-color) 20%, transparent));
+    }
+  }
+
+  &:disabled {
+    filter: none;
+    color: var(--fluent-text-on-accent-disabled);
+    background-color: var(--fluent-accent-fill-disabled);
+    background-image: none;
+    border-color: transparent;
+  }
+}
+
+// The raised buttons' state backgrounds would win over these.
+button.suggested-action {
+  &:hover,
+  &.keyboard-activating,
+  &:active,
+  &:checked {
+    background-color: var(--accent-bg-color);
+  }
+
+  &:disabled {
+    background-color: var(--fluent-accent-fill-disabled);
+  }
+}
+
+button.opaque {
+  &:hover,
+  &.keyboard-activating,
+  &:active {
+    background-color: color-mix(in srgb, var(--window-bg-color) 85%, var(--window-fg-color));
+  }
+}
+
+// Windows has no destructive buttons: they're accent buttons in
+// SystemFillColorCritical.
+%destructive_button {
+  --accent-bg-color: var(--destructive-bg-color);
+  --accent-fg-color: var(--destructive-fg-color);
+  color: var(--destructive-fg-color);
+  background-color: var(--destructive-bg-color);
+  @include elevation-border($accent: true);
+
+  &:hover {
+    background-color: color-mix(in srgb, var(--destructive-bg-color) 90%, transparent);
+  }
+
+  &:active,
+  &.keyboard-activating {
+    background-color: color-mix(in srgb, var(--destructive-bg-color) 80%, transparent);
+    color: var(--fluent-text-on-accent-secondary);
+    border-color: transparent;
+  }
+
+  &:checked {
+    background-color: color-mix(in srgb, var(--destructive-bg-color) 80%, black);
+
+    &:hover {
+      background-color: color-mix(in srgb, var(--destructive-bg-color) 70%, black);
+    }
+
+    &.keyboard-activating,
+    &:active {
+      background-color: color-mix(in srgb, var(--destructive-bg-color) 60%, black);
+    }
+  }
+
+  &:disabled {
+    color: var(--fluent-text-on-accent-disabled);
+    background-color: var(--fluent-accent-fill-disabled);
+    border-color: transparent;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  button.destructive-action,
+  menubutton.destructive-action > button {
+    --fluent-text-on-accent-secondary: RGB(255 255 255 / 70%);
+  }
+}
+
+// Subtle buttons (SubtleButtonStyle, AppBarButton): transparent, then
+// SubtleFillColorSecondary and SubtleFillColorTertiary.
+button.flat,
+%button_basic_flat {
+  border-color: transparent;
+  background: transparent;
+
+  &:hover {
+    background: var(--fluent-subtle-fill-secondary);
+  }
+
+  &.keyboard-activating,
+  &:active {
+    background: var(--fluent-subtle-fill-tertiary);
+    color: var(--fluent-text-secondary);
+  }
+
+  &:checked {
+    background: var(--fluent-subtle-fill-secondary);
+    color: var(--accent-color);
+
+    &:hover {
+      background: color-mix(in srgb, currentColor 9%, transparent);
+    }
+
+    &.keyboard-activating,
+    &:active {
+      background: var(--fluent-subtle-fill-tertiary);
+    }
+  }
+
+  &:disabled:not(:checked) {
+    filter: none;
+    color: var(--fluent-text-disabled);
+  }
+}
+
+button.circular,
+%circular_button {
+  min-width: 30px;
+  min-height: 30px;
+  padding: 0;
+}
+
+button.pill,
+%pill_button {
+  padding: 9px 31px;
+  border-radius: $fluent_control_radius;
+}
+
+button.card {
+  background-color: var(--card-bg-color);
+  border: 1px solid var(--fluent-card-stroke);
+  border-radius: $fluent_control_radius;
+
+  &:hover {
+    background-image: none;
+    background-color: var(--fluent-control-fill-secondary);
+  }
+
+  &.keyboard-activating,
+  &:active {
+    background-image: none;
+    background-color: var(--fluent-control-fill-tertiary);
+  }
+}
+
+// Linked buttons share their borders.
+.linked:not(.vertical) > button:not(:first-child),
+.linked:not(.vertical) > menubutton:not(:first-child) > button,
+.linked:not(.vertical) > dropdown:not(:first-child) > button,
+.linked:not(.vertical) > splitbutton:not(:first-child) > button {
+  margin-left: -1px;
+}
+
+.linked.vertical > button:not(:first-child),
+.linked.vertical > menubutton:not(:first-child) > button,
+.linked.vertical > dropdown:not(:first-child) > button {
+  margin-top: -1px;
+}
+
+// SplitButton: one border around both halves, a divider between them.
+splitbutton {
+  border-radius: $fluent_control_radius;
+
+  > button,
+  > menubutton > button {
+    min-height: 20px;
+  }
+
+  > menubutton > button {
+    padding-left: 7px;
+    padding-right: 7px;
+  }
+
+  > separator {
+    background-color: var(--fluent-control-stroke-secondary);
+    margin-top: 6px;
+    margin-bottom: 6px;
+  }
+
+  &.suggested-action > separator {
+    background-color: var(--fluent-accent-stroke-secondary);
+  }
+}
+
+/**************
+ * Text boxes *
+ **************/
+
+// TextBox: TextControlThemePadding 10,5,6,6, 32px tall, a strong bottom edge
+// that turns into a 2px accent line on focus.
+%entry,
+entry {
+  min-height: 30px;
+  padding-left: 10px;
+  padding-right: 6px;
+  border: 1px solid;
+  border-color: var(--fluent-control-stroke) var(--fluent-control-stroke)
+    var(--fluent-control-strong-stroke);
+  border-radius: $fluent_control_radius;
+  background-color: var(--fluent-control-fill);
+  background-clip: padding-box;
+  outline: none;
+  transition: $button_transition;
+
+  &:hover {
+    background-color: var(--fluent-control-fill-secondary);
+  }
+
+  &:focus-within {
+    outline: none;
+    background-color: var(--fluent-control-fill-input-active);
+    border-bottom-color: var(--accent-bg-color);
+    box-shadow: inset 0 -1px var(--accent-bg-color);
+  }
+
+  &:disabled {
+    filter: none;
+    color: var(--fluent-text-disabled);
+    background-color: var(--fluent-control-fill-disabled);
+    border-color: var(--fluent-control-stroke);
+  }
+
+  &.error,
+  &.warning,
+  &.success {
+    outline: none;
+  }
+
+  &.error {
+    border-bottom-color: var(--error-color);
+    box-shadow: inset 0 -1px var(--error-color);
+  }
+
+  &.warning {
+    border-bottom-color: var(--warning-color);
+  }
+
+  &.success {
+    border-bottom-color: var(--success-color);
+  }
+
+  &.flat {
+    &,
+    &:focus-within,
+    &:disabled {
+      border-color: transparent;
+      background-color: transparent;
+      box-shadow: none;
+    }
+  }
+
+  > image {
+    color: var(--fluent-text-secondary);
+  }
+
+  > text > placeholder {
+    color: var(--fluent-text-secondary);
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  entry {
+    border-color: var(--fluent-control-stroke-secondary) var(--fluent-control-stroke)
+      var(--fluent-control-strong-stroke);
+
+    &:focus-within {
+      border-bottom-color: var(--accent-bg-color);
+    }
+  }
+}
+
+spinbutton {
+  &:not(.vertical) {
+    min-height: 30px;
+    padding: 0;
+    border: 1px solid;
+    border-color: var(--fluent-control-stroke) var(--fluent-control-stroke)
+      var(--fluent-control-strong-stroke);
+    border-radius: $fluent_control_radius;
+    background-color: var(--fluent-control-fill);
+    background-clip: padding-box;
+    outline: none;
+    box-shadow: none;
+
+    &:hover {
+      background-color: var(--fluent-control-fill-secondary);
+    }
+
+    &:focus-within {
+      outline: none;
+      background-color: var(--fluent-control-fill-input-active);
+      border-bottom-color: var(--accent-bg-color);
+      box-shadow: inset 0 -1px var(--accent-bg-color);
+    }
+
+    > text {
+      padding-left: 10px;
+    }
+
+    > button.image-button {
+      min-height: 20px;
+      min-width: 16px;
+      margin: 4px 2px;
+      padding: 1px 6px;
+      border: none;
+      color: var(--fluent-text-secondary);
+    }
+
+    > button.image-button.up:dir(ltr),
+    > button.image-button.down:dir(rtl) {
+      margin-right: 4px;
+    }
+  }
+}
+
+/*************************
+ * Check boxes and radios *
+ *************************/
+
+// CheckBox: 20px, ControlAltFillColorSecondary with a strong stroke when
+// unchecked, the accent with a 12px glyph when checked.
+checkbutton {
+  border-spacing: 8px;
+  padding: 6px 0;
+  border-radius: $fluent_control_radius;
+
+  &.text-button {
+    padding: 6px 0;
+  }
+}
+
+check,
+radio {
+  min-width: 12px;
+  min-height: 12px;
+  -gtk-icon-size: 12px;
+  padding: 3px;
+  border: 1px solid var(--fluent-control-strong-stroke);
+  background-color: var(--fluent-control-alt-fill-secondary);
+  box-shadow: none;
+
+  &:not(:checked):not(:indeterminate) {
+    &:hover {
+      box-shadow: none;
+      background-color: var(--fluent-control-alt-fill-tertiary);
+    }
+
+    &:active {
+      box-shadow: none;
+      background-color: var(--fluent-control-alt-fill-quarternary);
+      border-color: var(--fluent-control-strong-stroke-disabled);
+    }
+  }
+
+  &:checked,
+  &:indeterminate {
+    border-color: var(--accent-bg-color);
+    background-color: var(--accent-bg-color);
+    color: var(--accent-fg-color);
+
+    &:hover {
+      background-image: none;
+      border-color: color-mix(in srgb, var(--accent-bg-color) 90%, transparent);
+      background-color: color-mix(in srgb, var(--accent-bg-color) 90%, transparent);
+    }
+
+    &:active {
+      background-image: none;
+      border-color: color-mix(in srgb, var(--accent-bg-color) 80%, transparent);
+      background-color: color-mix(in srgb, var(--accent-bg-color) 80%, transparent);
+      color: var(--fluent-text-on-accent-secondary);
+    }
+  }
+
+  &:disabled {
+    filter: none;
+    border-color: var(--fluent-control-strong-stroke-disabled);
+    background-color: transparent;
+
+    &:checked,
+    &:indeterminate {
+      border-color: var(--fluent-accent-fill-disabled);
+      background-color: var(--fluent-accent-fill-disabled);
+      color: var(--fluent-text-on-accent-disabled);
+    }
+  }
+}
+
+check {
+  border-radius: $fluent_control_radius;
+
+  &:checked {
+    -gtk-icon-source: -gtk-recolor(url("assets/check-fluent.svg"));
+  }
+}
+
+check,
+radio {
+  &:indeterminate {
+    -gtk-icon-source: -gtk-recolor(url("assets/dash-fluent.svg"));
+  }
+}
+
+// RadioButton: a 12px dot (14px on hover, 10px pressed) in TextOnAccent.
+radio {
+  border-radius: 100%;
+
+  &:checked {
+    -gtk-icon-source: -gtk-recolor(url("assets/bullet-fluent.svg"));
+    -gtk-icon-size: 8px;
+    padding: 5px;
+
+    &:hover {
+      -gtk-icon-size: 10px;
+      padding: 4px;
+    }
+
+    &:active {
+      -gtk-icon-size: 6px;
+      padding: 6px;
+    }
+  }
+}
+
+/************
+ * Switches *
+ ************/
+
+// ToggleSwitch: a 40×20 pill, a 12px knob (14px on hover). Off, the knob and
+// stroke are ControlStrongFillColorDefault; on, it's the accent with a white
+// knob.
+switch {
+  border-radius: 10px;
+  padding: 0 1px;
+  border: 1px solid var(--fluent-control-strong-stroke);
+  background-color: var(--fluent-control-alt-fill-secondary);
+
+  &:hover {
+    background-color: var(--fluent-control-alt-fill-tertiary);
+  }
+
+  &:active {
+    background-color: var(--fluent-control-alt-fill-quarternary);
+  }
+
+  > slider {
+    min-width: 12px;
+    min-height: 12px;
+    margin: 3px;
+    border-radius: 999px;
+    background-color: var(--fluent-control-strong-fill);
+    box-shadow: none;
+    transition: margin 167ms $fluent_ease, min-width 167ms $fluent_ease,
+      min-height 167ms $fluent_ease, background-color 83ms linear;
+  }
+
+  &:hover > slider,
+  &:active > slider {
+    min-width: 14px;
+    min-height: 14px;
+    margin: 2px;
+    background: var(--fluent-control-strong-fill);
+  }
+
+  &:active > slider {
+    min-width: 17px;
+    margin: 2px 0 2px 2px;
+  }
+
+  &:checked {
+    border-color: var(--accent-bg-color);
+    background-color: var(--accent-bg-color);
+    color: var(--accent-fg-color);
+
+    &:hover {
+      background-image: none;
+      border-color: color-mix(in srgb, var(--accent-bg-color) 90%, transparent);
+      background-color: color-mix(in srgb, var(--accent-bg-color) 90%, transparent);
+    }
+
+    &:active {
+      background-image: none;
+      border-color: color-mix(in srgb, var(--accent-bg-color) 80%, transparent);
+      background-color: color-mix(in srgb, var(--accent-bg-color) 80%, transparent);
+    }
+
+    > slider,
+    &:hover > slider,
+    &:active > slider {
+      background: var(--accent-fg-color);
+    }
+
+    &:active > slider {
+      margin: 2px 2px 2px 0;
+    }
+  }
+
+  &:disabled {
+    filter: none;
+    border-color: var(--fluent-control-strong-stroke-disabled);
+    background-color: transparent;
+
+    > slider {
+      background: var(--fluent-control-strong-fill-disabled);
+    }
+
+    &:checked {
+      border-color: transparent;
+      background-color: var(--fluent-accent-fill-disabled);
+
+      > slider {
+        background: var(--fluent-text-on-accent-disabled);
+      }
+    }
+  }
+}
+
+/***********
+ * Sliders *
+ ***********/
+
+// Slider: a 4px ControlStrongFill track, the accent before the thumb, and a
+// 20px ControlSolidFill thumb with a 12px accent dot (14px on hover, 10px
+// pressed).
+scale {
+  > trough {
+    min-height: 4px;
+    border-radius: 2px;
+    background-color: var(--fluent-control-strong-fill);
+
+    > highlight {
+      border-radius: 2px;
+      background-color: var(--accent-bg-color);
+    }
+
+    > slider {
+      min-width: 20px;
+      min-height: 20px;
+      margin: -8px;
+      border-radius: 100%;
+      background-color: var(--accent-bg-color);
+      box-shadow: inset 0 0 0 4px var(--fluent-control-solid-fill), 0 0 0 1px var(--fluent-control-stroke-secondary);
+      transition: box-shadow 167ms $fluent_ease;
+    }
+  }
+
+  &:hover > trough,
+  &:active > trough {
+    background-color: var(--fluent-control-strong-fill);
+
+    > highlight {
+      background-color: var(--accent-bg-color);
+    }
+
+    > slider {
+      background-color: var(--accent-bg-color);
+      box-shadow: inset 0 0 0 3px var(--fluent-control-solid-fill), 0 0 0 1px var(--fluent-control-stroke-secondary);
+    }
+  }
+
+  &:active > trough > slider {
+    box-shadow: inset 0 0 0 5px var(--fluent-control-solid-fill), 0 0 0 1px var(--fluent-control-stroke-secondary);
+  }
+
+  &:disabled {
+    filter: none;
+
+    > trough {
+      background-color: var(--fluent-control-strong-fill-disabled);
+
+      > highlight,
+      > slider {
+        background-color: var(--fluent-accent-fill-disabled);
+      }
+    }
+  }
+
+  &.horizontal > trough {
+    min-height: 4px;
+  }
+
+  &.vertical > trough {
+    min-width: 4px;
+  }
+}
+
+/*****************
+ * Progress bars *
+ *****************/
+
+// ProgressBar: a 1px ControlStrongStroke track under a 3px accent bar.
+progressbar {
+  &.horizontal > trough {
+    min-height: 3px;
+    border-radius: 1.5px;
+    background-image: linear-gradient(
+      to bottom,
+      transparent 1px,
+      var(--fluent-control-strong-stroke) 1px,
+      var(--fluent-control-strong-stroke) 2px,
+      transparent 2px
+    );
+    background-color: transparent;
+
+    > progress {
+      min-height: 3px;
+      border-radius: 1.5px;
+    }
+  }
+
+  &.vertical > trough {
+    min-width: 3px;
+    border-radius: 1.5px;
+    background-image: linear-gradient(
+      to right,
+      transparent 1px,
+      var(--fluent-control-strong-stroke) 1px,
+      var(--fluent-control-strong-stroke) 2px,
+      transparent 2px
+    );
+    background-color: transparent;
+
+    > progress {
+      min-width: 3px;
+      border-radius: 1.5px;
+    }
+  }
+
+  > trough > progress {
+    background-color: var(--accent-bg-color);
+  }
+
+  &.osd > trough {
+    background-image: none;
+  }
+}
+
+levelbar {
+  > trough > block {
+    border-radius: 2px;
+
+    &.empty {
+      background-color: var(--fluent-control-strong-fill-disabled);
+    }
+
+    &.low {
+      background-color: var(--warning-bg-color);
+    }
+
+    &.high,
+    &:not(.empty) {
+      background-color: var(--accent-bg-color);
+    }
+
+    &.full {
+      background-color: var(--success-bg-color);
+    }
+  }
+}
+
+/**********************
+ * Lists, views, cards *
+ **********************/
+
+// ListViewItem: 4px corners, SubtleFill backgrounds, and a 3×16 accent pill
+// at the start of the selected item.
+%fluent_selection_pill {
+  background-image: linear-gradient(var(--accent-bg-color), var(--accent-bg-color));
+  background-repeat: no-repeat;
+  background-size: 3px 16px;
+  background-position: left center;
+}
+
+.navigation-sidebar,
+listview.navigation-sidebar,
+list.navigation-sidebar {
+  background-color: transparent;
+
+  > row,
+  > listitem {
+    min-height: 20px;
+    padding: 8px 12px;
+    margin: 2px 4px;
+    border-radius: $fluent_control_radius;
+
+    &:hover {
+      background-color: var(--fluent-subtle-fill-secondary);
+    }
+
+    &:active {
+      background-color: var(--fluent-subtle-fill-tertiary);
+    }
+
+    &:selected {
+      color: inherit;
+      background-color: var(--fluent-subtle-fill-secondary);
+      @extend %fluent_selection_pill;
+
+      &:hover {
+        background-color: var(--fluent-subtle-fill-tertiary);
+      }
+    }
+  }
+}
+
+listview,
+list {
+  > row,
+  > listitem {
+    &:selected {
+      color: inherit;
+    }
+  }
+}
+
+listview > row,
+list > row,
+gridview > child,
+columnview > listview > row {
+  border-radius: $fluent_control_radius;
+
+  &:selected {
+    background-color: var(--fluent-subtle-fill-secondary);
+
+    &:hover {
+      background-color: color-mix(in srgb, currentColor 9%, transparent);
+    }
+
+    &:active {
+      background-color: var(--fluent-subtle-fill-tertiary);
+    }
+  }
+}
+
+listview > row:selected,
+list > row:selected {
+  @extend %fluent_selection_pill;
+}
+
+list.boxed-list > row:selected,
+listview.boxed-list > row:selected {
+  background-image: none;
+}
+
+// Cards and boxed lists: CardBackgroundFillColorDefault, a CardStroke
+// border and 8px corners, like Settings' cards.
+%card,
+.card {
+  background-color: var(--card-bg-color);
+  border: 1px solid var(--fluent-card-stroke);
+  box-shadow: none;
+  background-clip: padding-box;
+}
+
+list.boxed-list > row,
+list.content > row,
+listview.boxed-list > row {
+  border-radius: 0;
+}
+
+list.boxed-list,
+list.content,
+listview.boxed-list {
+  background-color: var(--card-bg-color);
+  border: 1px solid var(--fluent-card-stroke);
+  box-shadow: none;
+  background-clip: padding-box;
+
+  > row {
+    min-height: 48px;
+
+    &:not(:last-child) {
+      box-shadow: inset 0 -1px var(--fluent-divider-stroke);
+    }
+  }
+
+  > row.activatable,
+  > row button.flat.activatable {
+    &:hover {
+      background-color: var(--fluent-subtle-fill-tertiary);
+    }
+
+    &:active {
+      background-color: var(--fluent-subtle-fill-secondary);
+    }
+  }
+}
+
+row {
+  &.expander {
+    > box > list > row {
+      box-shadow: inset 0 1px var(--fluent-divider-stroke);
+    }
+  }
+}
+
+.view,
+textview > text,
+iconview {
+  &:selected {
+    background-color: color-mix(in srgb, var(--accent-bg-color) 25%, transparent);
+  }
+}
+
+separator {
+  background-color: var(--fluent-divider-stroke);
+}
+
+/***************************
+ * Popovers, menus, tooltips *
+ ***************************/
+
+// Flyouts: 8px corners, a SurfaceStrokeColorFlyout border and a soft shadow.
+popover.background,
+popover {
+  > contents {
+    border-radius: $fluent_overlay_radius;
+    border: 1px solid var(--fluent-surface-stroke-flyout);
+    box-shadow: var(--fluent-flyout-shadow);
+    background-clip: padding-box;
+  }
+
+  // Flyouts have no arrow, only the gap it leaves.
+  > arrow {
+    background: transparent;
+    border-color: transparent;
+    box-shadow: none;
+  }
+}
+
+// MenuFlyout: 32px items with 4px margins and corners.
+popover.menu {
+  > contents {
+    padding: 4px 0;
+    min-width: 120px;
+  }
+
+  modelbutton,
+  menuitem {
+    min-height: 20px;
+    min-width: 40px;
+    padding: 6px 11px;
+    margin: 0 4px;
+    border-radius: $fluent_control_radius;
+
+    &:hover,
+    &:selected,
+    &:focus {
+      background-color: var(--fluent-subtle-fill-secondary);
+    }
+
+    &:active {
+      background-color: var(--fluent-subtle-fill-tertiary);
+      color: var(--fluent-text-secondary);
+    }
+
+    &:disabled {
+      color: var(--fluent-text-disabled);
+    }
+
+    accelerator {
+      color: var(--fluent-text-secondary);
+    }
+  }
+
+  separator {
+    margin: 2px 0;
+  }
+}
+
+// ToolTip: 12px text, 8,5,8,7 padding, 4px corners on the flyout surface.
+tooltip.background,
+tooltip {
+  padding: 5px 8px 7px;
+  border-radius: $fluent_control_radius;
+  border: 1px solid var(--fluent-surface-stroke-flyout);
+  background-color: var(--popover-bg-color);
+  color: var(--popover-fg-color);
+  box-shadow: var(--fluent-tooltip-shadow);
+  font-size: 9pt;
+
+  > box {
+    border-spacing: 6px;
+  }
+}
+
+/*************
+ * Dropdowns *
+ *************/
+
+// ComboBox: a default button with the chevron at the end.
+dropdown,
+combobox {
+  > button > box {
+    border-spacing: 8px;
+
+    > stack > row.activatable:hover {
+      background: none;
+    }
+  }
+
+  arrow {
+    color: var(--fluent-text-secondary);
+  }
+}
+
+dropdown > popover.menu,
+combobox popover.menu {
+  > contents {
+    padding: 2px 0;
+  }
+
+  listview > row {
+    min-height: 20px;
+    padding: 6px 11px;
+    margin: 2px 4px;
+    border-radius: $fluent_control_radius;
+
+    &:selected {
+      background-color: var(--fluent-subtle-fill-secondary);
+      @extend %fluent_selection_pill;
+    }
+  }
+}
+
+/**************
+ * Scrollbars *
+ **************/
+
+// ScrollBar: a thin ControlStrongFill line that widens to 6px on hover, over
+// a flyout-colored track.
+scrollbar {
+  > range > trough > slider {
+    min-width: 6px;
+    min-height: 6px;
+    background-color: var(--fluent-control-strong-fill);
+
+    &:hover,
+    &:active {
+      background-color: var(--fluent-control-strong-fill);
+    }
+  }
+
+  &.overlay-indicator {
+    > range > trough > slider {
+      outline: none;
+    }
+
+    &:not(.hovering) > range > trough > slider {
+      min-width: 2px;
+      min-height: 2px;
+    }
+
+    &.hovering > range > trough {
+      background-color: color-mix(in srgb, var(--popover-bg-color) 90%, transparent);
+    }
+
+    &.horizontal.hovering > range > trough > slider {
+      min-height: 6px;
+    }
+
+    &.vertical.hovering > range > trough > slider {
+      min-width: 6px;
+    }
+  }
+}
+
+/*************
+ * Notebooks *
+ *************/
+
+// TabView on top: the tabs on Mica, the selected one joined to the content.
+// Elsewhere, Pivot-like tabs: subtle, with an accent line on the selected one.
+notebook {
+  > header {
+    background-color: var(--window-bg-color);
+    box-shadow: none;
+
+    > tabs > tab {
+      min-height: 20px;
+      padding: 6px 12px;
+      border-radius: $fluent_control_radius;
+      color: var(--fluent-text-secondary);
+      font-weight: 400;
+
+      &:hover {
+        color: var(--window-fg-color);
+        background-color: var(--fluent-subtle-fill-secondary);
+      }
+
+      &:checked {
+        color: var(--window-fg-color);
+      }
+    }
+
+    &.top > tabs,
+    &.bottom > tabs,
+    &.left > tabs,
+    &.right > tabs {
+      > tab,
+      > tab:hover,
+      > tab:checked {
+        box-shadow: none;
+      }
+    }
+
+    &.bottom > tabs > tab:checked {
+      box-shadow: inset 0 3px var(--accent-bg-color);
+    }
+
+    &.left > tabs > tab:checked {
+      box-shadow: inset -3px 0 var(--accent-bg-color);
+    }
+
+    &.right > tabs > tab:checked {
+      box-shadow: inset 3px 0 var(--accent-bg-color);
+    }
+
+    &.top {
+      padding: 0;
+
+      > tabs {
+        margin: 0;
+        padding: 4px 4px 0;
+
+        > tab {
+          padding: 8px 12px;
+          margin: 0;
+          border: 1px solid transparent;
+          border-bottom: none;
+          border-radius: $fluent_overlay_radius $fluent_overlay_radius 0 0;
+
+          &:checked {
+            background-color: var(--view-bg-color);
+            border-color: var(--fluent-card-stroke);
+          }
+        }
+      }
+    }
+  }
+
+  > stack:not(:only-child) {
+    background-color: var(--view-bg-color);
+  }
+}
+
+/**************************************
+ * Toggle groups, view switchers, tabs *
+ **************************************/
+
+// SelectorBar and segmented controls: subtle items with an accent pill under
+// the selected one.
+toggle-group {
+  background-color: var(--fluent-control-alt-fill-secondary);
+  border: 1px solid var(--fluent-control-stroke);
+  border-radius: $fluent_control_radius;
+  padding: 2px;
+
+  > toggle {
+    border-radius: 3px;
+    font-weight: 400;
+
+    &:checked {
+      font-weight: 600;
+      color: var(--window-fg-color);
+      background-color: var(--fluent-control-fill);
+      box-shadow: 0 0 0 1px var(--fluent-control-stroke);
+    }
+  }
+}
+
+viewswitcher button.toggle {
+  font-weight: 400;
+
+  &:checked {
+    font-weight: 600;
+    background-color: transparent;
+    color: inherit;
+    background-image: linear-gradient(var(--accent-bg-color), var(--accent-bg-color));
+    background-repeat: no-repeat;
+    background-size: 16px 3px;
+    background-position: center bottom;
+  }
+}
+
+tabbar {
+  .box {
+    background-color: var(--window-bg-color);
+    box-shadow: none;
+  }
+
+  tab {
+    border-radius: $fluent_overlay_radius $fluent_overlay_radius 0 0;
+
+    &:selected {
+      background-color: var(--view-bg-color);
+      box-shadow: 0 0 0 1px var(--fluent-card-stroke);
+    }
+  }
+}
+
+/**********
+ * Labels *
+ **********/
+
+.dim-label,
+.dimmed {
+  opacity: 1;
+  color: var(--fluent-text-secondary);
+}
+
+label {
+  &:disabled {
+    filter: none;
+    color: var(--fluent-text-disabled);
+  }
+
+  &.subtitle {
+    color: var(--fluent-text-secondary);
+    opacity: 1;
+  }
+}
+
+link,
+button.link {
+  color: var(--accent-color);
+
+  &:visited {
+    color: var(--accent-color);
+  }
+
+  &:hover {
+    color: color-mix(in srgb, var(--accent-color) 80%, transparent);
+  }
+
+  &:active {
+    color: color-mix(in srgb, var(--accent-color) 60%, transparent);
+  }
+}
+
+/**********************
+ * Sidebars and panes *
+ **********************/
+
+// NavigationView: the pane is on Mica, the content on a layer with a stroke
+// and a rounded top-start corner.
+.sidebar-pane {
+  background-color: var(--sidebar-bg-color);
+  box-shadow: none;
+}
+
+.content-pane {
+  background-color: var(--view-bg-color);
+}
+
+/***********
+ * Dialogs *
+ ***********/
+
+// ContentDialog: 8px corners, a 20px semibold title, and the buttons on a
+// SolidBackgroundFillColorBase strip along the bottom.
+dialog-host > dialog.alert sheet,
+window.messagedialog.csd:not(.solid-csd),
+window.dialog-window.alert.csd:not(.solid-csd),
+window.dialog.message.csd:not(.solid-csd) {
+  border-radius: $fluent_overlay_radius;
+}
+
+dialog-host > dialog.alert sheet,
+window.dialog-window.alert {
+  .body-scrolled-window > viewport {
+    border-top-left-radius: $fluent_overlay_radius;
+    border-top-right-radius: $fluent_overlay_radius;
+  }
+}
+
+window.messagedialog,
+dialog.alert {
+  .message-area {
+    padding-top: 24px;
+    padding-bottom: 24px;
+    border-spacing: 12px;
+
+    &.has-heading.has-body {
+      border-spacing: 12px;
+
+      > .child {
+        margin-top: 12px;
+      }
+    }
+
+    > .heading-bin,
+    > .body,
+    > .child {
+      padding-left: 24px;
+      padding-right: 24px;
+    }
+
+    .title-2,
+    .heading {
+      font-size: 143%;
+      font-weight: 600;
+    }
+  }
+
+  .response-area {
+    padding: 24px;
+    border-spacing: 8px;
+    background-color: var(--window-bg-color);
+    box-shadow: inset 0 1px var(--fluent-card-stroke);
+
+    > button {
+      min-height: 20px;
+      min-width: 0;
+      padding: 5px 11px;
+      border-radius: $fluent_control_radius;
+    }
+  }
+
+  &.short {
+    .message-area {
+      padding-top: 24px;
+      border-spacing: 12px;
+
+      > .heading-bin,
+      > .body,
+      > .child {
+        padding-left: 24px;
+        padding-right: 24px;
+      }
+    }
+
+    .response-area {
+      padding: 24px;
+
+      > button {
+        min-width: 0;
+        padding: 5px 11px;
+      }
+    }
+  }
+}
+
+window.dialog.message.csd .dialog-action-area {
+  padding: 24px;
+  border-spacing: 8px;
+  background-color: var(--window-bg-color);
+  box-shadow: inset 0 1px var(--fluent-card-stroke);
+
+  > button {
+    min-height: 20px;
+    padding: 5px 11px;
+    border-radius: $fluent_control_radius;
+  }
+}
+
+floating-sheet > sheet,
+dialog-host > dialog.floating sheet {
+  border-radius: $fluent_overlay_radius;
+  box-shadow: 0 0 0 1px var(--fluent-surface-stroke-flyout),
+    0 32px 64px RGB(0 0 0 / 19%), 0 2px 21px RGB(0 0 0 / 15%);
+}
+
+/**************************
+ * Banners, toasts, misc. *
+ **************************/
+
+// InfoBar
+banner > revealer > widget {
+  background-color: color-mix(in srgb, var(--accent-bg-color) 12%, var(--card-bg-color));
+  border-bottom: 1px solid var(--fluent-card-stroke);
+}
+
+toast {
+  border-radius: $fluent_control_radius;
+  border: 1px solid var(--fluent-surface-stroke-flyout);
+}
+
+avatar {
+  font-weight: 600;
+}
+
+expander-widget > box > title {
+  border-radius: $fluent_control_radius;
+}
+
+/*******************
+ * Caption buttons *
+ *******************/
+
+// After the button rules, which they override.
+// Caption buttons: 46px wide, as tall as the title bar, with Segoe Fluent
+// Icons' chrome glyphs. Close turns red.
+windowcontrols {
+  border-spacing: 0;
+
+  > button,
+  > button.image-button {
+    min-width: 46px;
+    min-height: 32px;
+    padding: 0;
+    margin: 0;
+    border-radius: 0;
+    border-color: transparent;
+    color: var(--window-fg-color);
+    background-color: transparent;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 16px 16px;
+    box-shadow: none;
+
+    // The glyphs are the button's background image, so they follow the
+    // window's state rather than the icon theme.
+    > image {
+      opacity: 0;
+      background: none;
+      padding: 0;
+    }
+
+    &:hover,
+    &:active,
+    &:hover > image,
+    &:active > image {
+      box-shadow: none;
+    }
+
+    &:not(.raised):not(.suggested-action):not(.destructive-action):not(.opaque).image-button {
+      &,
+      &:hover,
+      &:active {
+        box-shadow: none;
+        background-image: none;
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: 16px 16px;
+      }
+
+      &:hover {
+        background-color: var(--fluent-subtle-fill-secondary);
+      }
+
+      &:active {
+        background-color: var(--fluent-subtle-fill-tertiary);
+      }
+
+      &.minimize {
+        background-image: url("assets/caption-minimize.svg");
+      }
+
+      &.maximize {
+        background-image: url("assets/caption-maximize.svg");
+      }
+
+      &.close {
+        background-image: url("assets/caption-close.svg");
+
+        &:hover {
+          background-color: var(--fluent-caption-close-bg);
+          background-image: url("assets/caption-close-hover.svg");
+        }
+
+        &:active {
+          background-color: color-mix(in srgb, var(--fluent-caption-close-bg) 90%, transparent);
+          background-image: url("assets/caption-close-hover.svg");
+        }
+      }
+
+      @media (prefers-color-scheme: dark) {
+        &.minimize {
+          background-image: url("assets/caption-minimize-dark.svg");
+        }
+
+        &.maximize {
+          background-image: url("assets/caption-maximize-dark.svg");
+        }
+
+        &.close {
+          background-image: url("assets/caption-close-dark.svg");
+
+          &:hover,
+          &:active {
+            background-image: url("assets/caption-close-hover.svg");
+          }
+        }
+      }
+    }
+
+    &:disabled {
+      filter: opacity($disabled_opacity);
+    }
+  }
+
+  > .icon {
+    margin: 8px 12px;
+  }
+}
+
+window.maximized windowcontrols > button.maximize:not(.raised):not(.suggested-action):not(.destructive-action):not(.opaque).image-button {
+  background-image: url("assets/caption-restore.svg");
+
+  @media (prefers-color-scheme: dark) {
+    background-image: url("assets/caption-restore-dark.svg");
+  }
+}
+
+// The window's top corners clip the end caption button.
+window.csd:not(.maximized):not(.fullscreen):not(.tiled):not(.tiled-top):not(.tiled-left):not(.tiled-right):not(.tiled-bottom) {
+  windowcontrols.end > button:last-child:dir(ltr),
+  windowcontrols.start > button:first-child:dir(rtl) {
+    border-top-right-radius: var(--window-radius);
+  }
+
+  windowcontrols.start > button:first-child:dir(ltr),
+  windowcontrols.end > button:last-child:dir(rtl) {
+    border-top-left-radius: var(--window-radius);
+  }
+}
+
+/**************
+ * Font weights *
+ **************/
+
+// Windows sets buttons in regular type and headings in semibold, where
+// libadwaita uses bold.
+buttoncontent > box > label,
+button.font > box > box > label {
+  font-weight: 400;
+}
+
+tabbutton label,
+popover.menu label.title,
+toggle-group > toggle:checked {
+  font-weight: 600;
+}
+
+menubutton.suggested-action > button,
+menubutton.opaque > button,
+splitbutton.suggested-action > button,
+splitbutton.suggested-action > menubutton > button,
+splitbutton.opaque > button,
+splitbutton.opaque > menubutton > button {
+  border-color: transparent;
+}
+
+// A menu button or dropdown with its flyout open looks pressed, not like a
+// checked ToggleButton.
+menubutton:not(.flat):not(.suggested-action):not(.destructive-action) > button:checked,
+dropdown > button:checked,
+combobox > box > button:checked,
+splitbutton:not(.flat):not(.suggested-action):not(.destructive-action) > menubutton > button:checked {
+  color: inherit;
+  background-color: var(--fluent-control-fill-tertiary);
+  @include elevation-border;
+
+  &:hover {
+    background-color: var(--fluent-control-fill-secondary);
+  }
+}
+
+menubutton.flat > button:checked,
+headerbar menubutton > button:checked {
+  color: inherit;
+}

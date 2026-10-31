@@ -1,37 +1,27 @@
-import { GtkTheme, resolveColorScheme, type SystemColorScheme } from "@gtk-js/gtk-css";
-import dark_circular_default from "../dist/dark_circular_default.css?raw";
-import dark_circular_round from "../dist/dark_circular_round.css?raw";
-import dark_square_default from "../dist/dark_square_default.css?raw";
-import dark_square_round from "../dist/dark_square_round.css?raw";
-import light_circular_default from "../dist/light_circular_default.css?raw";
-import light_circular_round from "../dist/light_circular_round.css?raw";
-import light_square_default from "../dist/light_square_default.css?raw";
-import light_square_round from "../dist/light_square_round.css?raw";
-
-const CSS_MAP = {
-  light_circular_default,
-  light_circular_round,
-  light_square_default,
-  light_square_round,
-  dark_circular_default,
-  dark_circular_round,
-  dark_square_default,
-  dark_square_round,
-} as const;
+import { GtkTheme, type SystemColorScheme } from "@gtk-js/gtk-css";
+import autoCSS from "../dist/auto.css?raw";
+import darkCSS from "../dist/dark.css?raw";
+import lightCSS from "../dist/light.css?raw";
 
 /**
- * The Fluent theme — a Fluent Design / Windows-style GTK theme.
+ * The Fluent theme — Windows 11's look (WinUI 3, Fluent 2) for GTK widgets:
+ * Mica backgrounds, elevated 4px-corner controls, accent buttons, Windows
+ * caption buttons and flyouts. Its colors and metrics are WinUI 3's theme
+ * resources.
  *
- * Supports runtime accent color and light/dark/auto color scheme.
- * Window button style and corner style are selected at construction time,
- * picking from pre-compiled CSS variants.
+ * Supports a free-pick accent color (Windows' system accent color, from which
+ * the theme derives the fills and text colors like Windows does) and
+ * light/dark/auto color scheme.
+ *
+ * The package also ships the native GTK stylesheet in `dist/gtk-4.0/`, to
+ * theme native GTK 4/libadwaita apps the same way.
  *
  * @example
- * // Default (auto color scheme, square buttons, Fluent blue accent):
+ * // Default (auto color scheme, Windows blue accent):
  * const theme = new FluentTheme();
  *
- * // Forced dark with circular buttons, rounded corners, custom accent:
- * const theme = new FluentTheme({ colorScheme: "dark", titlebutton: "circular", window: "round", accentColor: "#e66100" });
+ * // Forced dark with a custom accent:
+ * const theme = new FluentTheme({ colorScheme: "dark", accentColor: "#e74856" });
  *
  * // Immutable — create a new instance when settings change:
  * const theme = useMemo(() => new FluentTheme({ colorScheme, accentColor }), [colorScheme, accentColor]);
@@ -39,35 +29,28 @@ const CSS_MAP = {
  */
 export class FluentTheme extends GtkTheme {
   readonly colorScheme: "light" | "dark" | "auto";
-  /** Window button style. "square" is the native Fluent/Windows look. */
-  readonly titlebutton: "circular" | "square";
-  /** Corner style. "round" increases corner radii throughout. */
-  readonly window: "default" | "round";
-  /** Accent color as a CSS color string. Defaults to Fluent blue (#1A73E8). */
+  /** Windows' system accent color, as a CSS color. Defaults to Windows blue (#0078d4). */
   readonly accentColor: string;
 
   constructor({
     colorScheme = "auto",
-    titlebutton = "square",
-    window = "default",
-    accentColor = "#1A73E8",
+    accentColor = "#0078d4",
   }: {
     colorScheme?: "light" | "dark" | "auto";
-    titlebutton?: "circular" | "square";
-    window?: "default" | "round";
     accentColor?: string;
   } = {}) {
     super();
     this.colorScheme = colorScheme;
-    this.titlebutton = titlebutton;
-    this.window = window;
     this.accentColor = accentColor;
   }
 
   getCSS(systemScheme?: SystemColorScheme) {
-    const scheme = resolveColorScheme(this.colorScheme, systemScheme);
-    const key = `${scheme}_${this.titlebutton}_${this.window}` as keyof typeof CSS_MAP;
-    const base = CSS_MAP[key];
-    return base + `\n[data-gtk-provider] { --fluent-accent: ${this.accentColor}; }\n`;
+    const scheme = this.colorScheme === "auto" ? systemScheme : this.colorScheme;
+    // Until the system scheme is known (server HTML, hydration), auto.css follows
+    // prefers-color-scheme itself.
+    const base = scheme === "dark" ? darkCSS : scheme === "light" ? lightCSS : autoCSS;
+
+    // The stylesheet's :root derives the accent fills from it.
+    return base + `\n:root { --fluent-accent: ${this.accentColor}; }\n`;
   }
 }

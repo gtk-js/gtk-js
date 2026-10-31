@@ -13,9 +13,6 @@
 [submodule "upstream/mactahoe-gtk-theme"]
 	path = upstream/mactahoe-gtk-theme
 	url = https://github.com/vinceliuice/MacTahoe-gtk-theme
-[submodule "upstream/fluent-gtk-theme"]
-	path = upstream/fluent-gtk-theme
-	url = https://github.com/vinceliuice/Fluent-gtk-theme
 [submodule "upstream/whitesur-icon-theme"]
 	path = upstream/whitesur-icon-theme
 	url = https://github.com/vinceliuice/WhiteSur-icon-theme
