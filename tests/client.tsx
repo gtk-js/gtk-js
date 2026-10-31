@@ -89,6 +89,7 @@ import {
 } from "react";
 import { createRoot } from "react-dom/client";
 import { renderToStaticMarkup } from "react-dom/server";
+import { TestProvider } from "./test-provider.tsx";
 
 const caseName = window.location.pathname.slice(1);
 const isGallery = caseName === "gallery";
@@ -2715,7 +2716,7 @@ if (caseName === "alert-dialog-body") {
   void import("./provider-gate.tsx").then((m) => m.render(caseName, container));
 } else if (isGallery) {
   createRoot(container).render(
-    <AdwaitaProvider colorScheme="light">
+    <TestProvider>
       <div style={{ display: "grid", gridTemplateColumns: "repeat(4, max-content)", gap: 24 }}>
         {Object.entries(cases).map(([name, renderCase]) => (
           <div
@@ -2727,15 +2728,13 @@ if (caseName === "alert-dialog-body") {
           </div>
         ))}
       </div>
-    </AdwaitaProvider>,
+    </TestProvider>,
   );
 } else {
   const renderCase = cases[caseName];
   if (!renderCase) {
     container.textContent = `Unknown case: ${caseName}`;
   } else {
-    createRoot(container).render(
-      <AdwaitaProvider colorScheme="light">{renderCase()}</AdwaitaProvider>,
-    );
+    createRoot(container).render(<TestProvider>{renderCase()}</TestProvider>);
   }
 }
