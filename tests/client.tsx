@@ -2686,6 +2686,44 @@ if (caseName === "alert-dialog-body") {
       </AdwaitaProvider>,
     ),
   );
+} else if (caseName === "alert-dialog-in-window") {
+  // Page for tests/cases/alert-dialog-in-window.test.ts: open from the start,
+  // the dialog moves into its window once the window's element is known.
+  void import("@gtk-js/adwaita").then(({ AdwAlertDialog }) =>
+    createRoot(container).render(
+      <AdwaitaProvider colorScheme="light">
+        <GtkWindow style={{ width: 760, height: 480 }}>
+          <AdwAlertDialog
+            visible
+            heading="Save Changes?"
+            body="Your changes will be lost if you don’t save them."
+            responses={[
+              { id: "cancel", label: "Cancel" },
+              { id: "discard", label: "Don’t Save" },
+              { id: "save", label: "Save", appearance: "suggested" },
+            ]}
+          />
+        </GtkWindow>
+      </AdwaitaProvider>,
+    ),
+  );
+} else if (caseName === "alert-dialog-long-heading") {
+  // Page for tests/cases/alert-dialog-long-heading.test.ts: a heading longer
+  // on one line than the widest the dialog gets.
+  void import("@gtk-js/adwaita").then(({ AdwAlertDialog }) =>
+    createRoot(container).render(
+      <AdwaitaProvider colorScheme="light">
+        <GtkWindow style={{ width: 760, height: 480 }}>
+          <AdwAlertDialog
+            visible
+            heading="Unable to Connect to the Synchronization Server"
+            body="Try again."
+            responses={[{ id: "ok", label: "OK", appearance: "suggested" }]}
+          />
+        </GtkWindow>
+      </AdwaitaProvider>,
+    ),
+  );
 } else if (caseName === "about-dialog-toast") {
   // Page for tests/cases/about-dialog-toast.test.ts. The copy goes to a stub,
   // so the toast doesn't depend on the browser granting clipboard access.
