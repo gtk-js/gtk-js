@@ -76,6 +76,7 @@ GTK uses `content-box` sizing — `min-height` refers to content only, padding i
 - Icons are React components generated at build time from upstream SVGs, keeping their groups (transforms, opacity), their viewBox, and the parts GTK paints from the theme's palette (`class="warning"` → `var(--warning-color)`)
 - Widgets ask for symbolic icons, so a theme's package holds its `-symbolic` icons only, each from the directory GtkIconTheme would pick at 16px (`iconThemeFiles()`). The vinceliuice themes' installers merge `links/` (aliases) into `src/`: their builds do too
 - Both icon packages export the same component names — the Provider's `icons` prop selects which set
+- `AdwaitaProvider`, `MacTahoeProvider` and `WhiteSurProvider` (in the theme packages) each give a theme with its icon set; the `icons` an app passes go over the set's. The mac ones also set macOS's window button order through GtkProvider's `decorationLayout` (GtkSettings:gtk-decoration-layout), which header bars and dialogs (only close, on its side, like AdwSheetControls) follow
 - Widgets load icons from context, never by importing an icon package directly
 - The website (`apps/website/`) should prefer Adwaita icons (`@gtk-js/adwaita-icons`) over GTK4 icons
 

@@ -25,6 +25,7 @@ export function Preview({ source, children }: PreviewProps) {
         cssHref={state.cssHref}
         cssText={state.cssText}
         icons={state.icons}
+        decorationLayout={state.decorationLayout}
         hideUntilReady={false}
       >
         {/* .background paints the window colors behind the tab bar and the example,
